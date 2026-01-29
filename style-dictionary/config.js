@@ -1,20 +1,31 @@
 import { register } from '@tokens-studio/sd-transforms';
 import StyleDictionary from 'style-dictionary';
 
-// Register sd-transforms
-register(StyleDictionary);
-
 const sd = new StyleDictionary({
-  source: ['tokens/**/*.json'],
-  preprocessors: ['tokens-studio'], // Important!
+  source: ["../tokens/tokens.json"],
+  log: {
+    verbosity: "verbose"
+  },
+  preprocessors: ["tokens-studio"],
   platforms: {
     css: {
-      transformGroup: 'tokens-studio',
-      buildPath: 'build/css/',
-      files: [{
-        destination: 'variables.css',
-        format: 'css/variables'
-      }]
+      buildPath: "../style/",
+      transformGroup: "tokens-studio",
+      "transforms": [
+        "name/kebab",
+        "size/pxToRem"
+      ],
+      files: [
+        {
+          destination: "../style/_variables.css",
+          format: "css/variables"
+        }
+      ]
     }
   }
 });
+
+register(sd, {
+  excludeParentKeys: true,
+});
+await sd.buildAllPlatforms();

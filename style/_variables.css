@@ -3,222 +3,297 @@
  */
 
 :root {
-  --color-neutraal-wit: #ffffff;
-  --color-neutraal-zwart: #000000;
-  --color-neutraal-transparent: rgba(0, 0, 0, 0);
-  --color-neutraal-gebroken-zwart: #3b3b3b;
-  --color-cool-gray-50: #f8fafc;
-  --color-cool-gray-100: #f1f5f9;
-  --color-cool-gray-200: #e2e8f0;
-  --color-cool-gray-300: #cbd5e1;
-  --color-cool-gray-400: #94a3b8;
-  --color-cool-gray-500: #64748b;
-  --color-cool-gray-600: #475569;
-  --color-cool-gray-700: #334155;
-  --color-cool-gray-800: #1e293b;
-  --color-cool-gray-900: #0f172a;
-  --color-lintblauw-50: #dce3ea;
-  --color-lintblauw-100: #b8c6d5;
-  --color-lintblauw-200: #95a9c0;
-  --color-lintblauw-300: #738eab;
-  --color-lintblauw-400: #4f7196;
-  --color-lintblauw-500: #154273;
-  --color-lichtblauw-50: #eef7fb;
-  --color-lichtblauw-100: #ddeff8;
-  --color-lichtblauw-200: #cce7f4;
-  --color-lichtblauw-300: #bcdff0;
-  --color-lichtblauw-400: #abd7ed;
-  --color-lichtblauw-500: #8fcae7;
-  --color-hemelblauw-50: #d9ebf7;
-  --color-hemelblauw-100: #b3d7ee;
-  --color-hemelblauw-200: #8cc3e6;
-  --color-hemelblauw-300: #66afdd;
-  --color-hemelblauw-400: #409cd5;
-  --color-hemelblauw-500: #007bc7;
-  --color-donkerblauw-50: #d9e8f0;
-  --color-donkerblauw-100: #b3d2e1;
-  --color-donkerblauw-200: #8cbbd2;
-  --color-donkerblauw-300: #66a4c3;
-  --color-donkerblauw-400: #408eb4;
-  --color-donkerblauw-500: #01689b;
-  --color-paars-50: #e3dce7;
-  --color-paars-100: #c6b9cf;
-  --color-paars-200: #a995b7;
-  --color-paars-300: #8d729f;
-  --color-paars-400: #714f87;
-  --color-paars-500: #42145f;
-  --color-violet-50: #f2d9e7;
-  --color-violet-100: #e5b3d0;
-  --color-violet-200: #d88cb7;
-  --color-violet-300: #cb66a0;
-  --color-violet-400: #be4088;
-  --color-violet-500: #a90061;
-  --color-robijnrood-50: #f7d9e7;
-  --color-robijnrood-100: #efb3ce;
-  --color-robijnrood-200: #e78cb6;
-  --color-robijnrood-300: #df669d;
-  --color-robijnrood-400: #d74085;
-  --color-robijnrood-500: #ca005d;
-  --color-rood-50: #f9dfdd;
-  --color-rood-100: #f2bfbc;
-  --color-rood-200: #ec9f99;
-  --color-rood-300: #e67f78;
-  --color-rood-400: #df6056;
-  --color-rood-500: #d52b1e;
-  --color-roze-50: #fdeff8;
-  --color-roze-100: #fbdef0;
-  --color-roze-200: #f8cee8;
-  --color-roze-300: #f6bde1;
-  --color-roze-400: #f4add9;
-  --color-roze-500: #f092cd;
-  --color-donkergroen-50: #dfe6e1;
-  --color-donkergroen-100: #becdc3;
-  --color-donkergroen-200: #9db4a4;
-  --color-donkergroen-300: #7d9b87;
-  --color-donkergroen-400: #5d8269;
-  --color-donkergroen-500: #275937;
-  --color-groen-50: #e1eddb;
-  --color-groen-100: #c4dbb6;
-  --color-groen-200: #a5c991;
-  --color-groen-300: #88b76d;
-  --color-groen-400: #6aa549;
-  --color-groen-500: #39870c;
-  --color-mosgroen-50: #ebebd9;
-  --color-mosgroen-100: #d6d7b3;
-  --color-mosgroen-200: #c1c38c;
-  --color-mosgroen-300: #adaf66;
-  --color-mosgroen-400: #999c40;
-  --color-mosgroen-500: #777b00;
-  --color-mintgroen-50: #eaf8f4;
-  --color-mintgroen-100: #d6f2e9;
-  --color-mintgroen-200: #c1ebde;
-  --color-mintgroen-300: #ace4d3;
-  --color-mintgroen-400: #98ddc8;
-  --color-mintgroen-500: #76d2b6;
-  --color-donkerbruin-50: #e8e0df;
-  --color-donkerbruin-100: #d1c2be;
-  --color-donkerbruin-200: #baa39d;
-  --color-donkerbruin-300: #a3847d;
-  --color-donkerbruin-400: #8d665d;
-  --color-donkerbruin-500: #673327;
-  --color-bruin-50: #efeada;
-  --color-bruin-100: #dfd4b6;
-  --color-bruin-200: #cfbf90;
-  --color-bruin-300: #bfa96c;
-  --color-bruin-400: #af9447;
-  --color-bruin-500: #94710a;
-  --color-oranje-50: #fbead9;
-  --color-oranje-100: #f6d4b3;
-  --color-oranje-200: #f1be8c;
-  --color-oranje-300: #eda966;
-  --color-oranje-400: #e89440;
-  --color-oranje-500: #e17000;
-  --color-donkergeel-50: #fff4db;
-  --color-donkergeel-100: #ffe9b8;
-  --color-donkergeel-200: #fdde94;
-  --color-donkergeel-300: #fdd370;
-  --color-donkergeel-400: #fdc84d;
-  --color-donkergeel-500: #ffb612;
-  --color-geel-50: #fefbdd;
-  --color-geel-100: #fdf6bc;
-  --color-geel-200: #fcf199;
-  --color-geel-300: #fbed78;
-  --color-geel-400: #fae856;
-  --color-geel-500: #f9e11e;
+  --color-lintblauw-50: #dce3ea; /** Lintblauw 15% */
+  --color-lintblauw-100: #b8c6d5; /** Lintblauw 30% */
+  --color-lintblauw-200: #95a9c0; /** Lintblauw 45% */
+  --color-lintblauw-300: #738eab; /** Lintblauw 60% */
+  --color-lintblauw-400: #4f7196; /** Lintblauw 75% */
+  --color-lintblauw-500: #154273; /** Lintblauw 100% */
+  --color-paars-50: #e3dce7; /** Paars 15% */
+  --color-paars-100: #c6b9cf; /** Paars 30% */
+  --color-paars-200: #a995b7; /** Paars 45% */
+  --color-paars-300: #8d729f; /** Paars 60% */
+  --color-paars-400: #714f87; /** Paars 75% */
+  --color-paars-500: #42145f; /** Paars 100% */
+  --color-violet-50: #f2d9e7; /** Violet 15% */
+  --color-violet-100: #e5b3d0; /** Violet 30% */
+  --color-violet-200: #d88cb7; /** Violet 45% */
+  --color-violet-300: #cb66a0; /** Violet 60% */
+  --color-violet-400: #be4088; /** Violet 75% */
+  --color-violet-500: #a90061; /** Violet 100% */
+  --color-robijnrood-50: #f7d9e7; /** Robijnrood 15% */
+  --color-robijnrood-100: #efb3ce; /** Robijnrood 30% */
+  --color-robijnrood-200: #e78cb6; /** Robijnrood 45% */
+  --color-robijnrood-300: #df669d; /** Robijnrood 60% */
+  --color-robijnrood-400: #d74085; /** Robijnrood 75% */
+  --color-robijnrood-500: #ca005d; /** Robijnrood 100% */
+  --color-roze-50: #fdeff8; /** Roze 15% */
+  --color-roze-100: #fbdef0; /** Roze 30% */
+  --color-roze-200: #f8cee8; /** Roze 45% */
+  --color-roze-300: #f6bde1; /** Roze 60% */
+  --color-roze-400: #f4add9; /** Roze 75% */
+  --color-roze-500: #f092cd; /** Roze 100% */
+  --color-rood-50: #f9dfdd; /** Rood 15% */
+  --color-rood-100: #f2bfbc; /** Rood 30% */
+  --color-rood-200: #ec9f99; /** Rood 45% */
+  --color-rood-300: #e67f78; /** Rood 60% */
+  --color-rood-400: #df6056; /** Rood 75% */
+  --color-rood-500: #d52b1e; /** Rood 100%^ */
+  --color-oranje-50: #fbead9; /** Oranje 15% */
+  --color-oranje-100: #f6d4b3; /** Oranje 30% */
+  --color-oranje-200: #f1be8c; /** Oranje 45% */
+  --color-oranje-300: #eda966; /** Oranje 60% */
+  --color-oranje-400: #e89440; /** Oranje 75% */
+  --color-oranje-500: #e17000; /** Oranje 100% */
+  --color-donkergeel-50: #fff4db; /** Donkergeel 15% */
+  --color-donkergeel-100: #ffe9b8; /** Donkergeel 30% */
+  --color-donkergeel-200: #fdde94; /** Donkergeel 45% */
+  --color-donkergeel-300: #fdd370; /** Donkergeel 60% */
+  --color-donkergeel-400: #fdc84d; /** Donkergeel 75% */
+  --color-donkergeel-500: #ffb612; /** Donkergeel 100% */
+  --color-geel-50: #fefbdd; /** Geel 15% */
+  --color-geel-100: #fdf6bb; /** Geel 30% */
+  --color-geel-200: #fcf199; /** Geel 45% */
+  --color-geel-300: #fbed78; /** Geel 60% */
+  --color-geel-400: #fae856; /** Geel 75% */
+  --color-geel-500: #f9e11e; /** Geel 100% */
+  --color-donkerbruin-50: #e8e0df; /** Donkerbruin 15% */
+  --color-donkerbruin-100: #d1c2be; /** Donkerbruin 30% */
+  --color-donkerbruin-200: #baa39d; /** Donkerbruin 45% */
+  --color-donkerbruin-300: #a3847d; /** Donkerbruin 60% */
+  --color-donkerbruin-400: #8d665d; /** Donkerbruin 75% */
+  --color-donkerbruin-500: #673327; /** Donkerbruin 100% */
+  --color-bruin-50: #efeada; /** Bruin 15% */
+  --color-bruin-100: #dfd4b6; /** Bruin 30% */
+  --color-bruin-200: #cfbf90; /** Bruin 45% */
+  --color-bruin-300: #bfa96c; /** Bruin 60% */
+  --color-bruin-400: #af9447; /** Bruin 75% */
+  --color-bruin-500: #94710a; /** Bruin 100% */
+  --color-donkergroen-50: #dfe6e1; /** Donkergroen 15% */
+  --color-donkergroen-100: #becdc3; /** Donkergroen 30% */
+  --color-donkergroen-200: #9db4a4; /** Donkergroen 45% */
+  --color-donkergroen-300: #7d9b87; /** Donkergroen 60% */
+  --color-donkergroen-400: #5d8269; /** Donkergroen 75% */
+  --color-donkergroen-500: #275937; /** Donkergroen 100% */
+  --color-groen-50: #e1eddb; /** Groen 15% */
+  --color-groen-100: #c4dbb6; /** Groen 30% */
+  --color-groen-200: #a5c991; /** Groen 45% */
+  --color-groen-300: #88b76d; /** Groen 60% */
+  --color-groen-400: #6aa549; /** Groen 75% */
+  --color-groen-500: #39870c; /** Groen 100% */
+  --color-mosgroen-50: #ebebd9; /** Mosgroen 15% */
+  --color-mosgroen-100: #d6d7b3; /** Mosgroen 30% */
+  --color-mosgroen-200: #c1c38c; /** Mosgroen 45% */
+  --color-mosgroen-300: #adaf66; /** Mosgroen 60% */
+  --color-mosgroen-400: #999c40; /** Mosgroen 75% */
+  --color-mosgroen-500: #777b00; /** Mosgroen 100% */
+  --color-mintgroen-50: #eaf8f4; /** Mintgroen 15% */
+  --color-mintgroen-100: #d6f2e9; /** Mintgroen 30% */
+  --color-mintgroen-200: #c1ebde; /** Mintgroen 45% */
+  --color-mintgroen-300: #ace4d3; /** Mintgroen 60% */
+  --color-mintgroen-400: #98ddc8; /** Mintgroen 75% */
+  --color-mintgroen-500: #76d2b6; /** Mintgroen 100% */
+  --color-donkerblauw-50: #d9e8f0; /** Donkerblauw 15% */
+  --color-donkerblauw-100: #b3d2e1; /** Donkerblauw 30% */
+  --color-donkerblauw-200: #8cbbd2; /** Donkerblauw 45% */
+  --color-donkerblauw-300: #66a4c3; /** Donkerblauw 60% */
+  --color-donkerblauw-400: #408eb4; /** Donkerblauw 75% */
+  --color-donkerblauw-500: #01689b; /** Donkerblauw 100% */
+  --color-hemelblauw-50: #d9ebf7; /** Hemelblauw 15% */
+  --color-hemelblauw-100: #b3d7ee; /** Hemelblauw 30% */
+  --color-hemelblauw-200: #8cc3e6; /** Hemelblauw 45% */
+  --color-hemelblauw-300: #66afdd; /** Hemelblauw 60% */
+  --color-hemelblauw-400: #409cd5; /** Hemelblauw 75% */
+  --color-hemelblauw-500: #007bc7; /** Hemelblauw 100% */
+  --color-lichtblauw-50: #eef7fb; /** Lichtblauw 15% */
+  --color-lichtblauw-100: #ddeff8; /** Lichtblauw 30% */
+  --color-lichtblauw-200: #cce7f4; /** Lichtblauw 45% */
+  --color-lichtblauw-300: #bcdff0; /** Lichtblauw 60% */
+  --color-lichtblauw-400: #abd7ed; /** Lichtblauw 75% */
+  --color-lichtblauw-500: #8fcae7; /** Lichtblauw 100% */
+  --color-cool-gray-50: #f8fafc; /** Cool gray 50 */
+  --color-cool-gray-100: #f1f5f9; /** Cool gray 100 */
+  --color-cool-gray-200: #e2e8f0; /** Cool gray 200 */
+  --color-cool-gray-300: #cbd5e1; /** Cool gray 300 */
+  --color-cool-gray-400: #94a3b8; /** Cool gray 400 */
+  --color-cool-gray-500: #64748b; /** Cool gray 500 */
+  --color-cool-gray-600: #475569; /** Cool gray 600 */
+  --color-cool-gray-700: #334155; /** Cool gray 700 */
+  --color-cool-gray-800: #1e293b; /** Cool gray 800 */
+  --color-cool-gray-900: #0f172a; /** Cool gray 900 */
+  --color-neutraal-wit: #ffffff; /** Wit */
+  --color-neutraal-zwart: #000000; /** Zwart */
+  --color-neutraal-transparent: rgba(0, 0, 0, 0); /** Transparant */
+  --color-neutraal-gebroken-zwart: #3b3b3b; /** Gebroken zwart */
+  --color-grijs-100: #f3f3f3; /** Grijs 1 */
+  --color-grijs-200: #e6e6e6; /** Grijs 2 */
+  --color-grijs-300: #cccccc; /** Grijs 3 */
+  --color-grijs-400: #b4b4b4; /** Grijs 4 */
+  --color-grijs-500: #999999; /** Grijs 5 */
+  --color-grijs-600: #696969; /** Grijs 6 */
+  --color-grijs-700: #535353; /** Grijs 7 */
+  --color-interactive-idle: #154273; /** Primaire interactiekleur. Deze kleur duidt aan dat een element interactief is en een actie kan uitvoeren. De kleur wordt toegepast in de standaardstaat van een interactief element, voordat er sprake is van interactie zoals hover of selectie. */
+  --color-interactive-input-border-idle: #3b3b3b;
+  --color-interactive-input-border-hover: #154273;
+  /**
+   * Voorgrondkleur voor interactieve elementen voor tekst of iconen die op een interactieve achtergrond zijn geplaatst.
+   * Combineren met interactie achtergrondkleuren.
+   */
+  --color-interactive-foreground: #ffffff;
+  /**
+   * Hover-staat. Toegepast wanneer een gebruiker met de cursor over een interactief element beweegt. De hover-staat biedt visuele feedback dat het element interactief is en gereed is om een actie uit te voeren, zonder dat de actie al is geactiveerd.
+   * Alleen te gebruiken om verandering van staat weer te geven.
+   */
+  --color-interactive-hover: #1e293b;
+  /**
+   * Focus-staat. Gebruikt om aan te geven dat een interactief element focus heeft, bijvoorbeeld via toetsenbordnavigatie. De focus-staat helpt gebruikers te identificeren welk element actief is voor interactie, zodat toegankelijkheid en navigatie duidelijk zijn.
+   * Alleen te gebruiken om verandering van staat weer te geven én in combinatie met een focus-ring (zie kaders).
+   */
+  --color-interactive-focus: #1e293b;
+  --color-interactive-active: #475569; /** Actieve staat. Toegepast wanneer een interactief element wordt geactiveerd, bijvoorbeeld bij het klikken of aanraken. De actieve-staat geeft visuele feedback dat de actie wordt uitgevoerd of recent is uitgevoerd. */
+  --color-interactive-disabled: #696969; /** Uitgeschakelde staat. Deze kleur wordt gebruikt voor elementen die momenteel niet interactief zijn. De uitgeschakelde staat geeft aan dat het element niet beschikbaar is voor interactie en dat er geen actie kan worden uitgevoerd. */
+  --color-interactive-background-idle: #ffffff;
+  --color-input-background: #ffffff;
+  --color-input-control-checked: #154273;
+  --color-logo-foreground: #ffffff;
+  --color-logo-background: #154273;
+  --color-surface-page: #ffffff; /** Standaard oppervlakte achtergrondkleur */
+  --color-surface-wayfinding: #154273; /** Achtergrondkleur voor groepering van hoog-over oriëntatievoorziening */
+  --color-surface-muted: #f3f3f3; /** Achtergrond voor secundaire inhoud */
+  --color-text-body: #3b3b3b; /** Standaardtekstkleur. Omwille van de toegankelijkheid wordt geen gebruikgemaakt van puur zwarte tekst op een puur witte achtergrond, vanwege het te grote contrastverschil. Er wordt een neutrale grijstint zonder kleurtint toegepast om variaties in kleurweergave bij eindgebruikers te minimaliseren. */
+  --color-text-muted: #535353; /** Ondersteunende tekst, secundair aan primaire inhoud. */
+  --color-text-wayfinding: #ffffff;
+  --color-icon-static: #3b3b3b; /** Kleur van een standaard, niet-interactief, pictogram. */
+  --color-icon-static-inverse: #ffffff; /** Kleur van een standaard, niet-interactief, pictogram. */
+  /**
+   * Kleur voor het communiceren van een succesvol uitgevoerde actie van gebruiker of vanuit een systeem.
+   * Te combineren met color.feedback.success.b.
+   */
+  --color-feedback-success-a: #39870c;
+  /**
+   * Kleur voor het communiceren van een succesvol uitgevoerde actie van gebruiker of vanuit een systeem.
+   * Te combineren met color.feedback.success.a.
+   */
+  --color-feedback-success-b: #e1eddb;
+  /**
+   * Kleur om nadruk te leggen op belangrijke informatie.
+   * Te combineren met color.feedback.info.b.
+   */
+  --color-feedback-info-a: #007bc7;
+  /**
+   * Kleur om nadruk te leggen op belangrijke informatie.
+   * Te combineren met color.feedback.info.a.
+   */
+  --color-feedback-info-b: #d9ebf7;
+  /**
+   * Kleur voor het communiceren van een waarschuwing.
+   * Te combineren met color.feedback.warning.b.
+   */
+  --color-feedback-warning-a: #ffb612;
+  /**
+   * Kleur voor het communiceren van een waarschuwing.
+   * Te combineren met color.feedback.warning.a.
+   */
+  --color-feedback-warning-b: #fff4db;
+  /**
+   * Kleur voor het communiceren van een foutief resultaat op een actie van gebruiker of vanuit een systeem, een gebruiker kan niet verder zonder de fout te herstellen.
+   * Te combineren met color.feedback.error.b.
+   */
+  --color-feedback-error-a: #d52b1e;
+  /**
+   * Kleur voor het communiceren van een foutief resultaat op een actie van gebruiker of vanuit een systeem, een gebruiker kan niet verder zonder de fout te herstellen.
+   * Te combineren met color.feedback.error.b.
+   */
+  --color-feedback-error-b: #f9dfdd;
   --size-0: 0;
-  --size-1: 1px;
-  --size-2: 2px;
-  --size-base: 8px; /** Base size for calculation. Defaults to 8 to follow 8px grid. */
-  --size-surface-page-max-width: 1140px;
+  --size-1: 0.0625rem;
+  --size-2: 0.125rem;
+  --size-4: 0.25rem;
+  --size-8: 0.5rem;
+  --size-12: 0.75rem;
+  --size-16: 1rem;
+  --size-24: 1.5rem;
+  --size-32: 2rem;
+  --size-40: 2.5rem;
+  --size-48: 3rem;
+  --size-56: 3.5rem;
+  --size-64: 4rem;
+  --size-72: 4.5rem;
+  --size-80: 5rem;
+  --size-88: 5.5rem;
+  --size-base: 0.5rem; /** Base size for calculation. Defaults to 8 to follow 8px grid. */
+  --size-logo-height: 5.5rem;
+  --size-logo-width: 3rem;
+  --size-control-min-area: 1.5rem;
+  --size-control-area: 3rem;
+  --size-surface-page-max-width: 71.25rem;
+  --size-main-nav-nav-item-height: 2.5rem;
+  --size-icon-sm: 1rem;
+  --size-icon-md: 1.5rem;
+  --size-icon-lg: 2rem;
   --typeface-rijks-sans: RijksSansVF; /** Rijksoverheid Sans variable font */
-  --border-1: 1px;
-  --border-2: 2px;
-  --space-1: 1px;
-  --space-2: 2px;
-  --space-base: 8px; /** Base spacing-size for calculation. Defaults to 8 to follow 8px grid. */
+  --border-1: 0.0625rem;
+  --border-2: 0.125rem;
+  --border-input-selection: 0.125rem;
+  --space-1: 0.0625rem;
+  --space-2: 0.125rem;
+  --space-4: 0.25rem;
+  --space-8: 0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-40: 2.5rem;
+  --space-48: 3rem;
+  --space-56: 3.5rem;
+  --space-64: 4rem;
+  --space-72: 4.5rem;
+  --space-80: 5rem;
+  --space-base: 0.5rem; /** Base spacing-size for calculation. Defaults to 8 to follow 8px grid. */
   --font-weight-regular: 400;
-  --font-weight-semi-bold: 500;
+  --font-weight-semi-bold: 600;
   --font-weight-bold: 700;
-  --font-size-base: 16px;
+  --font-size-base: 1rem;
+  --font-size-sm: roundTo(1rem / 1.3, 0);
+  --font-size-md: 1rem;
+  --font-size-lg: roundTo(1rem * 1.1, 0);
+  --font-size-xl-5: 1.25rem;
+  --font-size-xl-4: 1.5rem;
+  --font-size-xl-3: 2rem;
+  --font-size-xl-2: 2.5rem;
+  --font-size-xl-1: 3rem;
   --line-height-loose: 1.5;
   --line-height-tight: 1.25;
-  --color-interactive-primary-background-idle: var(--color-lintblauw-500);
-  --color-interactive-input-border-idle: var(--color-neutraal-gebroken-zwart);
-  --color-input-background: var(--color-neutraal-wit);
-  --color-logo-foreground: var(--color-neutraal-wit);
-  --color-logo-background: var(--color-lintblauw-500);
-  --color-surface-page: var(--color-neutraal-wit);
-  --color-surface-wayfinding: var(--color-lintblauw-500);
-  --color-text-body: var(--color-neutraal-gebroken-zwart);
-  --color-text-wayfinding: var(--color-neutraal-wit);
-  --size-4: calc(var(--size-base) / 2);
-  --size-8: var(--size-base);
-  --size-12: calc(var(--size-base) * 1.5);
-  --size-16: calc(var(--size-base) * 2);
-  --size-24: calc(var(--size-base) * 3);
-  --size-32: calc(var(--size-base) * 4);
-  --size-40: calc(var(--size-base) * 5);
-  --size-48: calc(var(--size-base) * 6);
-  --size-56: calc(var(--size-base) * 7);
-  --size-64: calc(var(--size-base) * 8);
-  --size-72: calc(var(--size-base) * 9);
-  --size-80: calc(var(--size-base) * 10);
-  --size-88: calc(var(--size-base) * 11);
-  --border-input-selection: var(--border-2);
-  --space-4: calc(var(--size-base) / 2);
-  --space-8: var(--size-base);
-  --space-12: calc(var(--size-base) * 1.5);
-  --space-16: calc(var(--size-base) * 2);
-  --space-24: calc(var(--size-base) * 3);
-  --space-32: calc(var(--size-base) * 4);
-  --space-40: calc(var(--size-base) * 5);
-  --space-48: calc(var(--size-base) * 6);
-  --space-56: calc(var(--size-base) * 7);
-  --space-64: calc(var(--size-base) * 8);
-  --space-72: calc(var(--size-base) * 9);
-  --space-80: calc(var(--size-base) * 10);
-  --font-size-sm: roundTo(var(--font-size-base) / 1.3, 0);
-  --font-size-md: var(--font-size-base);
-  --font-size-lg: roundTo(var(--font-size-base) * 1.1, 0);
-  --font-size-xl-5: var(--font-size-base) * 1.25;
-  --font-size-xl-4: var(--font-size-base) * 1.5;
-  --font-size-xl-3: var(--font-size-base) * 2;
-  --font-size-xl-2: var(--font-size-base) * 2.5;
-  --font-size-xl-1: var(--font-size-base) * 3;
-  --font-family-primary: var(--typeface-rijks-sans);
-  --color-interactive-input-border-hover: var(--color-interactive-primary-background-idle);
-  --color-input-control-checked: var(--color-interactive-primary-background-idle);
-  --size-logo-height: var(--size-88);
-  --size-logo-width: var(--size-48);
-  --size-control-min-area: var(--size-24);
-  --size-control-area: var(--size-48);
-  --size-main-nav-nav-item-height: var(--size-40);
-  --size-icon-sm: var(--size-16);
-  --size-icon-md: var(--size-24);
-  --size-icon-lg: var(--size-32);
-  --spacing-relation-intimate: var(--space-4);
-  --spacing-relation-close: var(--space-8);
-  --spacing-relation-friendly: var(--space-12);
-  --spacing-relation-acquaintance: var(--space-16);
-  --spacing-relation-neighbor: var(--space-24);
-  --spacing-relation-distant: var(--space-32);
-  --spacing-relation-stranger: var(--space-48);
-  --spacing-padding-horizontal-start-end-4: var(--space-4);
-  --spacing-padding-horizontal-start-end-8: var(--space-8);
-  --spacing-padding-horizontal-start-end-12: var(--space-12);
-  --spacing-padding-horizontal-start-end-16: var(--space-16);
-  --spacing-padding-vertical-start-end-4: var(--space-4);
-  --spacing-padding-vertical-start-end-8: var(--space-8);
-  --spacing-padding-vertical-start-end-12: var(--space-12);
-  --spacing-padding-vertical-start-end-16: var(--space-16);
-  --typography-heading-h1: var(--font-weight-semi-bold) var(--font-size-xl-2)/var(--line-height-tight) var(--font-family-primary);
-  --typography-heading-h2: var(--font-weight-semi-bold) var(--font-size-xl-3)/var(--line-height-tight) var(--font-family-primary);
-  --typography-heading-h3: var(--font-weight-semi-bold) var(--font-size-xl-4)/var(--line-height-tight) var(--font-family-primary);
-  --typography-heading-h4: var(--font-weight-semi-bold) var(--font-size-xl-5)/var(--line-height-tight) var(--font-family-primary);
-  --typography-heading-h5: var(--font-weight-semi-bold) var(--font-size-lg)/var(--line-height-tight) var(--font-family-primary);
-  --typography-heading-h6: var(--font-weight-semi-bold) var(--font-size-base)/var(--line-height-tight) var(--font-family-primary);
-  --typography-paragraph-p: var(--font-weight-regular) var(--font-size-md)/var(--line-height-loose) var(--font-family-primary);
-  --typography-paragraph-p-intro: var(--font-weight-regular) var(--font-size-lg)/var(--line-height-loose) var(--font-family-primary);
-  --typography-nav-main-nav: var(--typography-heading-h4);
-  --typography-footer-link: var(--typography-heading-h5);
+  --typography-spacing-paragraph-default: 0.5rem;
+  --typography-nav-main-nav: 600 1.25rem/1.25 RijksSansVF;
+  --typography-heading-h1: 600 2.5rem/1.25 RijksSansVF;
+  --typography-heading-h2: 600 2rem/1.25 RijksSansVF;
+  --typography-heading-h3: 600 1.5rem/1.25 RijksSansVF;
+  --typography-heading-h4: 600 1.25rem/1.25 RijksSansVF;
+  --typography-heading-h5: 600 roundTo(1rem * 1.1, 0)/1.25 RijksSansVF;
+  --typography-heading-h6: 600 1rem/1.25 RijksSansVF;
+  --typography-footer-link: 600 roundTo(1rem * 1.1, 0)/1.25 RijksSansVF;
+  --typography-paragraph-p-regular: 400 1rem/1.5 RijksSansVF;
+  --typography-paragraph-p-semibold: 600 1rem/1.5 RijksSansVF;
+  --typography-paragraph-p-intro: 400 roundTo(1rem * 1.1, 0)/1.5 RijksSansVF;
+  --typography-smalltext-regular: 400 roundTo(1rem / 1.3, 0)/1.5 RijksSansVF;
+  --typography-smalltext-semibold: 600 roundTo(1rem / 1.3, 0)/1.5 RijksSansVF;
+  --font-family-primary: RijksSansVF;
+  --spacing-padding-horizontal-start-end-4: 0.25rem;
+  --spacing-padding-horizontal-start-end-8: 0.5rem;
+  --spacing-padding-horizontal-start-end-12: 0.75rem;
+  --spacing-padding-horizontal-start-end-16: 1rem;
+  --spacing-padding-vertical-start-end-4: 0.25rem;
+  --spacing-padding-vertical-start-end-8: 0.5rem;
+  --spacing-padding-vertical-start-end-12: 0.75rem;
+  --spacing-padding-vertical-start-end-16: 1rem;
+  --spacing-container-base: 1rem;
+  --spacing-grouping-2: 0.125rem;
+  --spacing-grouping-4: 0.25rem;
+  --spacing-grouping-8: 0.5rem;
+  --spacing-grouping-12: 0.75rem;
+  --spacing-grouping-16: 1rem;
+  --spacing-grouping-24: 1.5rem;
+  --spacing-separation-32: 2rem;
+  --spacing-separation-48: 3rem;
 }
