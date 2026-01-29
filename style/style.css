@@ -91,6 +91,9 @@ button, [type=button], [type=submit] {
     border-radius: var(--border-radius-form-input);
     color: var(--color-text-body);
     padding: var(--spacing-padding-textinput)
+    &:hover {
+        border-color: var(--color-interactive-primary-border-hover);
+    }
 }
 
 /* Formulier: Selectie */
