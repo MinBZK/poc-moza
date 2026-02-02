@@ -344,7 +344,7 @@
   --border-radius-sm: 0.125rem;
   --border-radius-md: 0.25rem;
   --box-shadow-sm: 0 2px 6px 0 #000000;
-  --box-shadow-sm-copy: 0 8px 16px 0 #000000;
+  --box-shadow-md: 0 8px 16px 0 #000000;
   --pointer-target-min-block-size: 1.5rem;
   --pointer-target-min-inline-size: 1.5rem;
   --page-max-inline-size: 71.25rem;

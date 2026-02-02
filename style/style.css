@@ -58,20 +58,16 @@ fieldset {
 }
 button, input, select, textarea {
     font: inherit;
+    border: var(--form-control-border-width);
 }
 
 /* Formulieren: Labeling */
 label, legend, .form-helper-text {
     display: block;
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-regular);
-    margin-bottom: var(--space-4);
 }
 legend, label {
-    font-weight: var(--font-weight-semi-bold);
 }
 .form-helper-text {
-    color: var(--color-text-muted);
 }
 
 /* Formulier: Knoppen */
@@ -80,9 +76,6 @@ button {
 
 /* Formulier: Tekstinvoer */
 [type=email], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=url] {
-    border: var(--border-form-textinput);
-    border-radius: var(--border-radius-sm);
-    color: var(--color-text-body);
     max-width: var(--form-control-max-inline-size);
     &:hover {
     }
