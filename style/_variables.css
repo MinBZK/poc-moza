@@ -259,10 +259,8 @@
   --text-line-height-xl: 1.25;
   --text-line-height-2xl: 1.25;
   --text-line-height-4xl: 1.25;
-  --border-1: 0.0625rem;
-  --border-2: 0.125rem;
-  --border-input-selection: 0.125rem;
-  --border-form-textinput: 0.0625rem solid #3b3b3b;
+  --border-width-sm: 0.0625rem;
+  --border-width-md: 0.125rem;
   --space-1: 0.0625rem;
   --space-2: 0.125rem;
   --space-4: 0.25rem;
@@ -345,11 +343,23 @@
   --border-radius-4: 0.25rem;
   --border-radius-sm: 0.125rem;
   --border-radius-md: 0.25rem;
+  --box-shadow-sm: 0 2px 6px 0 #000000;
+  --box-shadow-sm-copy: 0 8px 16px 0 #000000;
   --pointer-target-min-block-size: 1.5rem;
   --pointer-target-min-inline-size: 1.5rem;
   --page-max-inline-size: 71.25rem;
   --heading-font-family: RijksSansVF;
   --heading-font-weight: 700;
+  --form-control-border-width: 0.0625rem;
+  --form-control-font-family: RijksSansVF;
+  --form-control-font-weight: 400;
+  --form-control-line-height: 1.5;
+  --form-control-max-inline-size: 1.5625rem;
+  --form-control-active-border-width: 0.125rem;
+  --form-control-focus-border-width: 0.125rem;
+  --form-control-hover-border-width: 0.125rem;
+  --form-control-invalid-border-width: 0.125rem;
+  --border-form-textinput: 0.0625rem solid #3b3b3b;
   --spacing-padding-horizontal-start-end-4: 0.25rem;
   --spacing-padding-horizontal-start-end-8: 0.5rem;
   --spacing-padding-horizontal-start-end-12: 0.75rem;
@@ -368,8 +378,5 @@
   --spacing-grouping-24: 1.5rem;
   --spacing-separation-32: 2rem;
   --spacing-separation-48: 3rem;
-  --form-control-font-family: RijksSansVF;
-  --form-control-font-weight: 400;
-  --form-control-line-height: 1.5;
-  --form-control-max-inline-size: 25rem;
+  --focus-outline-width: 0.125rem;
 }
