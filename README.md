@@ -39,7 +39,7 @@ Dit resulteert in wijzigingen in `_variables.css`. Dit variabelen bestand wordt 
 
 ## Design tokens in Figma
 
-Om met de design tokens in Figma te werken dient gebruik gemaakt te worden van [de Tokens Studio plugin]([url](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma)). Wanneer deze geïnstalleerd is kan je [middels deze uitleg de tokens in Figma importeren]([url](https://docs.tokens.studio/token-storage/remote/sync-git-github)) (en vervolgens optioneel omzetten in Figma variabelen en/of stijlen).
+Om met de design tokens in Figma te werken dient gebruik gemaakt te worden van [de Tokens Studio plugin](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma). Wanneer deze geïnstalleerd is kan je [middels deze uitleg de tokens in Figma importeren](https://docs.tokens.studio/token-storage/remote/sync-git-github) (en vervolgens optioneel omzetten in Figma variabelen en/of stijlen).
 
 In Tokens Studio verwijs je vervolgens naar deze repository en folder/bestand `tokens/tokens.json`.
 
