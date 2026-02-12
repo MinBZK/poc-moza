@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json uit de MOx repository.
- * Gegenereerd op 12-2-2026, 17:06:57
+ * Gegenereerd op 12-2-2026, 17:09:15
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _mox.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _mox.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -117,7 +117,7 @@
   --mox-text-font-weight-bold: var(--rijkshuisstijl-text-weight-bold);
   --mox-text-font-weight-regular: var(--rijkshuisstijl-text-weight-default);
   --mox-text-font-weight-semi-bold: var(--rijkshuisstijl-text-weight-semibold);
-  --mox-text-heading-h1: var(--mox-text-font-weight-semi-bold) var(--rijkshuisstijl-text-font-size-4xl)/var(--rijkshuisstijl-text-line-height-lg) var(--mox-text-font-family-body);
+  --mox-text-heading-h1: var(--mox-text-font-weight-semi-bold) 900px/var(--rijkshuisstijl-text-line-height-lg) var(--mox-text-font-family-body);
   --mox-text-heading-h2: var(--mox-text-font-weight-semi-bold) var(--rijkshuisstijl-text-font-size-3xl)/var(--rijkshuisstijl-text-line-height-lg) var(--mox-text-font-family-body);
   --mox-text-heading-h3: var(--mox-text-font-weight-semi-bold) var(--rijkshuisstijl-text-font-size-2xl)/var(--rijkshuisstijl-text-line-height-lg) var(--mox-text-font-family-body);
   --mox-text-heading-h4: var(--mox-text-font-weight-semi-bold) var(--rijkshuisstijl-text-font-size-xl)/var(--rijkshuisstijl-text-line-height-lg) var(--mox-text-font-family-body);

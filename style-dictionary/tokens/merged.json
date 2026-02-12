@@ -1350,7 +1350,7 @@
         "$value": {
           "fontFamily": "{text.font-family.body}",
           "fontWeight": "{text.font-weight.semi-bold}",
-          "fontSize": "{text.font-size.4xl}",
+          "fontSize": "900px",
           "lineHeight": "{text.line-height.lg}"
         }
       },
