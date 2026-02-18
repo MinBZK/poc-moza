@@ -4,17 +4,16 @@ title: "MijnOverheid Zakelijk: Home"
 bodyClass: moza
 headerType: overheid
 footerType: overheid
+subNav:
+  - label: Home
+    url: /moza/
+  - label: Actualiteiten
+    url: /moza/actueel/
+  - label: Mijn Bedrijfsgegevens
+    url: "#"
 ---
 
-<aside>
-    <nav class="sub-nav">
-        <ul>
-            <li><a href="/moza/" aria-current="page">Home</a></li>
-            <li><a href="/moza/actueel/">Actualiteiten</a></li>
-            <li><a href="#">Mijn Bedrijfsgegevens</a></li>
-        </ul>
-    </nav>
-</aside>
+{% include "sub-nav-overheid.njk" %}
 
 <article>
 

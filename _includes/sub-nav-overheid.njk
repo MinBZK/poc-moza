@@ -1,0 +1,9 @@
+<aside>
+    <nav class="sub-nav">
+        <ul>
+            {% for item in subNav %}
+            <li><a href="{{ item.url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+</aside>

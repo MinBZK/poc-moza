@@ -33,7 +33,11 @@
 
 body {
     color: var(--mox-color-text-default);
+    display: flex;
+    flex-direction: column;
     font-family: var(--mox-text-font-family-body), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 header {
@@ -60,8 +64,10 @@ header {
 }
 
 main {
+    flex: 1;
     margin: 0 auto;
     max-width: var(--mox-page-max-inline-size);
+    width: 100%;
     @media (min-width: 30em) {
        display: flex;
     }
