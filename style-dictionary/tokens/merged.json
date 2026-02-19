@@ -1361,9 +1361,9 @@
       }
     },
     "icon": {
-      "sm": {
+      "xs": {
         "$type": "sizing",
-        "$value": "{size.16}"
+        "$value": "{size.8}"
       },
       "md": {
         "$type": "sizing",
@@ -1795,9 +1795,29 @@
       "md": {
         "$type": "spacing",
         "$value": "{space.md}"
+      },
+      "lg": {
+        "$type": "spacing",
+        "$value": "{space.lg}"
+      },
+      "xl": {
+        "$type": "spacing",
+        "$value": "{space.xl}"
+      },
+      "2xl": {
+        "$type": "spacing",
+        "$value": "{space.2xl}"
       }
     },
     "margin": {
+      "2xs": {
+        "$type": "spacing",
+        "$value": "{space.xs}"
+      },
+      "xs": {
+        "$type": "spacing",
+        "$value": "{space.md}"
+      },
       "sm": {
         "$type": "spacing",
         "$value": "{space.lg}"
@@ -1809,6 +1829,14 @@
       "lg": {
         "$type": "spacing",
         "$value": "{space.2xl}"
+      }
+    },
+    "component": {
+      "card": {
+        "padding": {
+          "$type": "spacing",
+          "$value": "{space.padding.xl}"
+        }
       }
     }
   },
@@ -1914,6 +1942,11 @@
       "$type": "other",
       "$value": "background .2s ease, border .2s ease, color .2s ease",
       "$description": "Standaard transitie die toegepast wordt op alle CSS properties."
+    },
+    "transform": {
+      "$type": "other",
+      "$value": "transform .2s ease",
+      "$description": "Transitie die toegepast wordt op transform:"
     }
   },
   "border": {
@@ -1941,18 +1974,6 @@
         "width": "1px",
         "style": "solid",
         "color": "{color.grijs.300}"
-      }
-    }
-  },
-  "component": {
-    "text": {
-      "badge": {
-        "$type": "typography",
-        "$value": {
-          "fontFamily": "{text.font-family.body}",
-          "fontWeight": "{text.font-weight.bold}",
-          "fontSize": "{text.font-size.sm}"
-        }
       }
     }
   }

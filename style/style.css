@@ -96,9 +96,13 @@ h3 { font: var(--mox-text-heading-h3); }
 h4 { font: var(--mox-text-heading-h4); }
 h5 { font: var(--mox-text-heading-h5); }
 h6 { font: var(--mox-text-heading-h6); }
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: var(--mox-space-margin-2xs);
+}
 
 p {
     font: var(--mox-text-paragraph-default);
+    margin-bottom: var(--mox-space-margin-2xs);
     &.intro {font: var(--mox-text-paragraph-intro);}
 }
 
@@ -415,6 +419,38 @@ footer {
 }
 
 
+/* Lijsten */
+
+ul, ol {}
+li {
+    margin-bottom: var(--mox-space-margin-2xs);
+}
+
+
+/* Uitklapblok */
+
+details {
+    border: var(--mox-border-default);
+    padding: var(--mox-space-padding-md);
+    &[open] h4::before {
+        transform: rotate(90deg);
+        transition: var(--mox-transition-transform);
+    }
+}
+summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h4::before {
+        content: url("/assets/icons/icon-chevron.svg");
+        display: inline-block;
+        height: var(--mox-size-icon-xs);
+        transition: var(--mox-transition-transform);
+        width: var(--mox-size-icon-xs);
+    }
+}
+
 /* MijnOverheid Zakelijk */
 
 body.moza {
@@ -438,21 +474,22 @@ body.moza {
     padding: var(--mox-space-padding-xs) var(--mox-space-padding-md);
 }
 
-.moza article {
+/* .moza article {
     display: flex;
     flex-direction: column;
     row-gap: var(--mox-space-margin-sm);
-}
+} */
 
 .card {
-    background: var(--mox-color-background-default);
+background: var(--mox-color-background-default);
     border: var(--mox-border-subtle);
     border-radius: var(--mox-border-radius-md);
     box-shadow: var(--mox-border-card-default);
     display: flex;
     flex-direction: column;
     gap: var(--mox-space-padding-md);
-    padding: var(--mox-space-padding-md) var(--mox-space-padding-md);
+    margin-bottom: var(--mox-space-margin-md);
+    padding: var(--mox-space-component-card-padding);
     section {
         padding: 0 0 var(--mox-space-padding-md);
         &:not(:last-of-type) {

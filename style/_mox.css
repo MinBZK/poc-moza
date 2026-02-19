@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json uit de MOx repository.
- * Gegenereerd op 18-2-2026, 18:04:13
+ * Gegenereerd op 19-2-2026, 12:11:45
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _mox.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _mox.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -101,7 +101,6 @@
   --mox-color-text-inverse: var(--rijkshuisstijl-color-neutraal-wit); /** Tekst op color.background.inverse of op color.feedback.*.emphasis-oppervlakken */
   --mox-color-text-subtle-1: var(--rijkshuisstijl-color-grijs-700); /** Secundaire tekst: beschrijvingen, hulptekst, bijschriften, tijdstempels */
   --mox-color-text-subtle-2: var(--rijkshuisstijl-color-grijs-600); /** Tertiaire tekst: placeholders, metadata */
-  --mox-component-text-badge: var(--mox-text-font-weight-bold) var(--rijkshuisstijl-text-font-size-sm) var(--mox-text-font-family-body);
   --mox-focus-outline: var(--mox-border-width-lg) dotted var(--mox-color-interactive-focus-outline);
   --mox-opacity-interactive-disabled: 0.5;
   --mox-page-max-inline-size: 71.25rem;
@@ -114,8 +113,8 @@
   --mox-size-component-subnav-width: 13rem;
   --mox-size-icon-lg: var(--rijkshuisstijl-size-32);
   --mox-size-icon-md: var(--rijkshuisstijl-size-24);
-  --mox-size-icon-sm: var(--rijkshuisstijl-size-16);
   --mox-size-icon-xl: var(--rijkshuisstijl-size-48);
+  --mox-size-icon-xs: var(--rijkshuisstijl-size-8);
   --mox-size-lg: var(--rijkshuisstijl-size-64);
   --mox-size-logo-height: var(--rijkshuisstijl-size-88);
   --mox-size-logo-width: var(--rijkshuisstijl-size-48);
@@ -131,14 +130,20 @@
   --mox-space-4xl: var(--rijkshuisstijl-space-56);
   --mox-space-4xs: var(--rijkshuisstijl-space-1);
   --mox-space-5xl: var(--rijkshuisstijl-space-64);
+  --mox-space-component-card-padding: var(--mox-space-padding-xl);
   --mox-space-lg: var(--rijkshuisstijl-space-24);
+  --mox-space-margin-2xs: var(--mox-space-xs);
   --mox-space-margin-lg: var(--mox-space-2xl);
   --mox-space-margin-md: var(--mox-space-xl);
   --mox-space-margin-sm: var(--mox-space-lg);
+  --mox-space-margin-xs: var(--mox-space-md);
   --mox-space-md: var(--rijkshuisstijl-space-16);
+  --mox-space-padding-2xl: var(--mox-space-2xl);
   --mox-space-padding-2xs: var(--mox-space-2xs);
+  --mox-space-padding-lg: var(--mox-space-lg);
   --mox-space-padding-md: var(--mox-space-md);
   --mox-space-padding-sm: var(--mox-space-sm);
+  --mox-space-padding-xl: var(--mox-space-xl);
   --mox-space-padding-xs: var(--mox-space-xs);
   --mox-space-sm: var(--rijkshuisstijl-space-12);
   --mox-space-xl: var(--rijkshuisstijl-space-32);
@@ -164,4 +169,5 @@
   --mox-text-smalltext: var(--rijkshuisstijl-text-weight-default) var(--rijkshuisstijl-text-font-size-sm)/var(--rijkshuisstijl-text-line-height-sm) var(--mox-text-font-family-body);
   --mox-text-text-decoration-hyperlink: underline solid currentColor var(--mox-border-width-xs);
   --mox-transition-default: background .2s ease, border .2s ease, color .2s ease; /** Standaard transitie die toegepast wordt op alle CSS properties. */
+  --mox-transition-transform: transform .2s ease; /** Transitie die toegepast wordt op transform: */
 }
