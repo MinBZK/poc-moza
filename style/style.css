@@ -485,7 +485,7 @@ summary {
 /* Cards */
 
 .card {
-background: var(--mox-color-background-default);
+    background: var(--mox-color-background-default);
     border: var(--mox-border-subtle);
     border-radius: var(--mox-border-radius-md);
     box-shadow: var(--mox-border-card-default);
@@ -498,13 +498,15 @@ background: var(--mox-color-background-default);
         font-size: var(--mox-text-size-title-lg);
     }
     a:not(.btn-cta) {
-        text-decoration: none;
+        color: var(--mox-color-text-default);
         padding-block-end: var(--mox-space-padding-md);
+        text-decoration: none;
         &:not(:last-of-type) {
             border-block-end: var(--mox-border-default);
         }
         &:hover {
             h3, h4 {
+                color: var(--mox-color-interactive-hover-text);
                 text-decoration: underline;
             }
         }
