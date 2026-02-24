@@ -7,6 +7,7 @@
         "tokens": "cd style-dictionary && npm run build"
     },
     "devDependencies": {
+        "@11ty/eleventy": "^3.1.2",
         "concurrently": "^9.1.2",
         "chokidar-cli": "^3.0.0"
     }
