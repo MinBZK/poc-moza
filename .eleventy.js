@@ -17,7 +17,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("gebruikersonderzoek");
 
     return {
-        pathPrefix: "/poc-moza/",
+        pathPrefix: "/",
         dir: {
             input: ".",
             includes: "_includes",

@@ -4,3 +4,4 @@ style-dictionary/node_modules/*
 node_modules/
 storybook-static/
 *.crdownload
+.claude/settings.local.json
