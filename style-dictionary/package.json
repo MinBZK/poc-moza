@@ -4,7 +4,7 @@
 		"build": "node config.js"
 	},
 	"dependencies": {
-		"style-dictionary": "^3.8.0",
+		"style-dictionary": "^5.2.0",
 		"@tokens-studio/sd-transforms": "^2.0.3"
 	}
 }
