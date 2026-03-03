@@ -64,6 +64,7 @@ header {
 		gap: var(--mox-space-padding-md);
 	}
 	.side-nav-secret-toggle {
+		/* Tijdelijk voor gebruikersonderzoeken */
 		position: absolute;
 		inset-block-start: 0;
 		inset-inline-end: 0;
@@ -779,13 +780,14 @@ summary {
 /* Badge component */
 .badge {
 	background: var(--mox-color-component-badge-background);
+	block-size: var(--mox-size-icon-sm);
 	border-radius: var(--mox-border-radius-round);
 	color: var(--mox-color-component-badge-text);
 	font: var(--mox-text-component-text-badge);
-	block-size: var(--mox-size-icon-sm);
 	margin-inline-start: auto;
+	min-inline-size: var(--mox-size-icon-sm);
+	padding: 0 var(--mox-space-padding-2xs);
 	text-align: center;
-	inline-size: var(--mox-size-icon-sm);
 }
 
 /* Notificaties */
