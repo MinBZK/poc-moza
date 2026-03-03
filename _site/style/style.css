@@ -104,6 +104,10 @@ main {
 		inline-size: var(--mox-size-logo-width);
 	}
 }
+
+aside {
+}
+
 footer {
 	background: var(--mox-color-component-footer-background);
 	color: var(--mox-color-text-inverse);
@@ -521,7 +525,7 @@ button.side-nav-toggle {
 .side-nav {
 	padding-inline: var(--mox-space-padding-md);
 	li {
-		inline-size: var(--mox-size-component-subnav-width);
+		max-inline-size: var(--mox-size-component-subnav-width);
 		a {
 			align-items: center;
 			background: var(--mox-color-interactive-alternate-default-background);
@@ -712,6 +716,10 @@ summary {
 		li {
 			margin-block-end: 0;
 		}
+		.status-unread {
+			&::before {
+			}
+		}
 	}
 	.content-link {
 		display: block;
@@ -780,7 +788,7 @@ summary {
 /* Badge component */
 .badge {
 	background: var(--mox-color-component-badge-background);
-	block-size: var(--mox-size-icon-sm);
+	min-block-size: var(--mox-size-icon-sm);
 	border-radius: var(--mox-border-radius-round);
 	color: var(--mox-color-component-badge-text);
 	font: var(--mox-text-component-text-badge);
