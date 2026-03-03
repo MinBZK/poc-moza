@@ -68,6 +68,6 @@ jobs:
           api-key: ${{ secrets.ZAD_API_KEY }}
           project-id: pm-5sj
           deployment-name: poc
-          component: frontend
+          component: proef
           image: ${{ needs.build.outputs.image }}
           wait-for-ready: true
