@@ -734,7 +734,14 @@ summary {
 			margin-block-end: 0;
 		}
 		.status-unread {
-			&::before {
+			h3 {
+				font-weight: var(--mox-text-font-weight-bold);
+				&::before {
+					color: var(--mox-color-feedback-info-icon);
+					content: "\25CF";
+					inline-size: 0.5rem;
+					margin-inline-end: 0.25rem;
+				}
 			}
 		}
 	}
@@ -809,9 +816,8 @@ summary {
 	border-radius: var(--mox-border-radius-round);
 	color: var(--mox-color-component-badge-text);
 	font: var(--mox-text-component-text-badge);
-	line-height: 1.5;
 	margin-inline-start: auto;
-	min-inline-size: var(--mox-size-icon-sm);
+	min-inline-size: var(--mox-size-icon-xs);
 	padding: 0 var(--mox-space-padding-xs);
 	text-align: center;
 }
@@ -942,9 +948,6 @@ body.moza {
 		border-block-end: var(--mox-border-default);
 		border-color: var(--mox-color-interactive-disabled-border);
 		margin-block-end: var(--mox-space-margin-xs);
-	}
-	.badge {
-		font-size: 10px;
 	}
 }
 .temp-moza-subnav-preview-heading {

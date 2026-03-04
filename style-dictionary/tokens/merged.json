@@ -1429,6 +1429,10 @@
         "$value": "16",
         "$description": "Modifier voor de schaal van overige groottes."
       },
+      "2xs": {
+        "$type": "fontSizes",
+        "$value": "{text.font-size.base} / 1.5"
+      },
       "xs": {
         "$type": "fontSizes",
         "$value": "{text.font-size.base} / 1.25"
@@ -1647,13 +1651,18 @@
           "$value": {
             "fontFamily": "{text.font-family.body}",
             "fontWeight": "{text.font-weight.bold}",
-            "fontSize": "{text.size.body.xs}"
+            "fontSize": "{text.size.body.2xs}",
+            "lineHeight": "{text.line-height.md}"
           }
         }
       }
     },
     "size": {
       "body": {
+        "2xs": {
+          "$type": "fontSizes",
+          "$value": "{text.font-size.2xs}"
+        },
         "xs": {
           "$type": "fontSizes",
           "$value": "{text.font-size.xs}"

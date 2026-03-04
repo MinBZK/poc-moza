@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json uit de MOx repository.
- * Gegenereerd op 3-3-2026, 19:52:51
+ * Gegenereerd op 4-3-2026, 10:53:40
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _mox.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _mox.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -152,7 +152,7 @@
   --mox-space-xl: var(--rijkshuisstijl-space-32);
   --mox-space-xs: var(--rijkshuisstijl-space-8);
   --mox-text-code: var(--mox-text-font-weight-semi-bold) var(--mox-text-size-body-sm) monospace;
-  --mox-text-component-text-badge: var(--mox-text-font-weight-bold) var(--mox-text-size-body-xs) var(--mox-text-font-family-body);
+  --mox-text-component-text-badge: var(--mox-text-font-weight-bold) var(--mox-text-size-body-2xs)/var(--rijkshuisstijl-text-line-height-md) var(--mox-text-font-family-body);
   --mox-text-font-family-body: var(--rijkshuisstijl-text-font-family-default);
   --mox-text-font-weight-bold: var(--rijkshuisstijl-text-weight-bold);
   --mox-text-font-weight-regular: var(--rijkshuisstijl-text-weight-default);
@@ -169,6 +169,7 @@
   --mox-text-nav-side-nav: var(--mox-text-font-weight-regular) var(--mox-text-size-body-md) var(--rijkshuisstijl-text-font-family-default);
   --mox-text-paragraph-default: var(--rijkshuisstijl-text-weight-default) var(--mox-text-size-body-md)/var(--rijkshuisstijl-text-line-height-sm) var(--mox-text-font-family-body);
   --mox-text-paragraph-intro: var(--rijkshuisstijl-text-weight-default) var(--mox-text-size-body-lg)/var(--rijkshuisstijl-text-line-height-sm) var(--mox-text-font-family-body);
+  --mox-text-size-body-2xs: var(--rijkshuisstijl-text-font-size-2xs);
   --mox-text-size-body-lg: var(--rijkshuisstijl-text-font-size-lg);
   --mox-text-size-body-md: var(--rijkshuisstijl-text-font-size-md);
   --mox-text-size-body-sm: var(--rijkshuisstijl-text-font-size-sm);
