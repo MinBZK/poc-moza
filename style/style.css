@@ -103,6 +103,7 @@ main {
 		grid-template-columns: auto 1fr;
 	}
 	> article:first-of-type {
+		container-type: inline-size;
 		margin-block-end: var(--mox-space-margin-lg);
 		padding-inline: var(--mox-space-padding-md);
 		inline-size: 100%;
@@ -119,7 +120,9 @@ main {
 }
 
 aside {
-	inline-size: var(--mox-size-component-subnav-width);
+	@media (min-width: 800px) {
+		min-inline-size: var(--mox-size-component-subnav-width);
+	}
 }
 
 footer {
@@ -319,6 +322,10 @@ a.btn-cta {
 	background: var(--mox-color-interactive-default-background);
 	color: var(--mox-color-text-inverse);
 	cursor: pointer;
+	@container (max-inline-size: 280px) {
+		inline-size: 100%;
+		text-align: center;
+	}
 	span {
 		display: inline-block;
 	}
@@ -358,6 +365,7 @@ a.btn-cta {
 	display: inline-block;
 	text-decoration: none;
 }
+
 .link-button,
 .icon-button {
 	background: none;
@@ -536,6 +544,7 @@ button.side-nav-toggle {
 		display: none;
 		margin-block-end: var(--mox-space-margin-lg);
 		padding: var(--mox-space-padding-md);
+		width: 100%;
 	}
 	li {
 		inline-size: 100%;
@@ -692,7 +701,7 @@ summary {
 	}
 	&::before {
 		content: url("../assets/icons/icon-chevron.svg");
-		display: inline-block;
+		flex-shrink: 0;
 		margin-inline-end: var(--mox-space-margin-2xs);
 		transition: var(--mox-transition-transform);
 		inline-size: var(--mox-size-icon-xs);
@@ -705,6 +714,7 @@ summary {
 	background: var(--mox-color-background-default);
 	border-radius: var(--mox-border-radius-md);
 	box-shadow: var(--mox-border-card-default);
+	container-type: inline-size;
 	display: flex;
 	flex-direction: column;
 	padding: var(--mox-space-component-card-padding);
@@ -782,10 +792,16 @@ summary {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: var(--mox-space-margin-sm);
+	@container (max-inline-size: 624px) {
+		grid-template-columns: 1fr;
+	}
 	.card {
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
 		gap: var(--mox-space-margin-sm);
+		.btn-cta {
+			margin-block-start: auto;
+		}
 	}
 }
 
