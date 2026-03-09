@@ -2,7 +2,8 @@
 
 Zie [Ontwerpprincipes](ontwerp-principes.md) voor de ontwerpprincipes, technische keuzes en relevante onderzoeken die ten grondslag liggen aan dit prototype.
 
-## Omgeving installeren
+1. Clone deze repository lokaal
+2. Installeer dependancies met `npm i`
 
 Clone deze repository lokaal.
 
