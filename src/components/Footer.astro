@@ -3,29 +3,29 @@ import { MoxBox, MoxContainerGrid, MoxHeading, MoxPageGrid, MoxStack, MoxChevron
 import { FooterExternalLink } from '@/components/FooterExternalLink';
 ---
 
-<MoxBox as="footer" backgroundColor="neutral" paddingBlock="md">
+<MoxBox as="footer" backgroundColor="neutral" paddingBlock="xl">
 	<MoxPageGrid>
-		<MoxContainerGrid itemSize="quarter">
+		<MoxContainerGrid itemSize={{mobileMax: 'full', tabletMax: 'half', tabletMin:'quarter'}} rowGap="4xl" columnGap="xl">
 			<MoxStack gap="md">
 				<MoxHeading level={3}>Over deze site</MoxHeading>
-				<MoxStack gap="2xs" as="ul">
+				<MoxStack gap="md" as="ul">
 					<li><MoxChevronLink href="#"><MoxTextBlock>Wat is MijnOverheid Zakelijk</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>Toegankelijkheid</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>Sitemap</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>English</MoxTextBlock></MoxChevronLink></li>
 				</MoxStack>
 			</MoxStack>
-			<MoxStack gap="md">
+			<MoxStack gap="xl">
 				<MoxHeading level={3}>Gegevensverwerking</MoxHeading>
-				<MoxStack gap="2xs" as="ul">
+				<MoxStack gap="md" as="ul">
 					<li><MoxChevronLink href="#"><MoxTextBlock>Veiligheid</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>Privacyverklaring</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>Wet- en regelgeving</MoxTextBlock></MoxChevronLink></li>
 				</MoxStack>
 			</MoxStack>
-			<MoxStack gap="md">
+			<MoxStack gap="xl">
 				<MoxHeading level={3}>Service</MoxHeading>
-				<MoxStack gap="2xs" as="ul">
+				<MoxStack gap="md" as="ul">
 					<li><MoxChevronLink href="#"><MoxTextBlock>Mededelingen</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>Herken oplichting</MoxTextBlock></MoxChevronLink></li>
 					<li><MoxChevronLink href="#"><MoxTextBlock>Veelgestelde vragen</MoxTextBlock></MoxChevronLink></li>
@@ -33,9 +33,9 @@ import { FooterExternalLink } from '@/components/FooterExternalLink';
 					<li><MoxChevronLink href="#"><MoxTextBlock>Klachtafhandeling</MoxTextBlock></MoxChevronLink></li>
 				</MoxStack>
 			</MoxStack>
-			<MoxStack gap="md">
+			<MoxStack gap="xl">
 				<MoxHeading level={3}>Partners</MoxHeading>
-				<MoxStack gap="2xs" as="ul">
+				<MoxStack gap="md" as="ul">
 					<li><MoxChevronLink href="#"><MoxTextBlock>Aangesloten organisaties</MoxTextBlock></MoxChevronLink></li>
 					<li><FooterExternalLink href="#"><MoxTextBlock>Overheid.nl</MoxTextBlock></FooterExternalLink></li>
 					<li><FooterExternalLink href="#"><MoxTextBlock>Rijksoverheid.nl</MoxTextBlock></FooterExternalLink></li>

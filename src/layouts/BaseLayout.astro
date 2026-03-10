@@ -21,12 +21,22 @@ import SideNav from '@/components/SideNav.astro';
     <link rel="icon" sizes="192x192" href="/assets/favicon/touch-icon.png">
     <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
     <slot name="extra-styles" />
+    <style>
+        @layer tokens {
+            body {
+                --mox-space-md-min: 16px;
+                --mox-space-md-max: 16px;
+                --mox-space-lg-min: 18px;
+                --mox-space-lg-max: 18px;
+            }
+        }
+    </style>
 </head>
 <body class={bodyClass}>
     {loggedIn === true ? <Header /> : <HeaderLoggedOut />}
     <MoxBox as="main" backgroundColor={'neutral-subtle-2'} paddingBlock="xl">
         <MoxPageGrid>
-            {loggedIn === true ? <MoxContainerGrid itemSize="sixth"><MoxGridItem style={{gridColumn:'span 2'}}><SideNav /></MoxGridItem><MoxGridItem style={{gridColumn:'span 4'}}><slot /></MoxGridItem></MoxContainerGrid> : <slot />}
+            {loggedIn === true ? <MoxContainerGrid itemSize="sixth" columnGap="2xl"><MoxGridItem style={{gridColumn:'span 2'}}><SideNav /></MoxGridItem><MoxGridItem style={{gridColumn:'span 4'}}><slot /></MoxGridItem></MoxContainerGrid> : <slot />}
         </MoxPageGrid>
     </MoxBox>
     <Footer />

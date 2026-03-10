@@ -5,76 +5,17 @@ Zie [Ontwerpprincipes](ontwerp-principes.md) voor de ontwerpprincipes, technisch
 1. Clone deze repository lokaal
 2. Installeer dependancies met `npm i`
 
-Clone deze repository lokaal.
+## NPM scripts
 
-### Vereisten
+| Script           | Commando                    | Beschrijving                    |
+| ---------------- | --------------------------- | ------------------------------- |
+| `npm run dev`    | Astro serve + token watcher | Beide parallel, met live reload |
+| `npm run build`  | Tokens + Astro              | Volledige productie-build       |
+| `npm run tokens` | Alleen Style Dictionary     | Handmatig tokens bouwen         |
 
-- [Node.js](https://nodejs.org/en/download)
-- [npm](https://www.npmjs.com/)
+## (lokale) Design tokens
 
----
-
-## Statische site-generator installeren
-
-[Eleventy](https://www.11ty.dev/) wordt gebruikt om herhalende componenten zoals headers en footers als includes te beheren. Installeer Eleventy in de root van het project:
-
-``` bash
-npm install @11ty/eleventy
-```
-
-### Pagina's bouwen
-
-Om de HTML pagina's te bouwen voer je dit commando uit vanuit de root van het project:
-
-``` bash
-npx @11ty/eleventy
-```
-
-De gebouwde pagina's worden in de map `_site` geplaatst.
-
-### Lokaal bekijken
-
-Start een lokale server met live reload:
-
-``` bash
-npx @11ty/eleventy --serve
-```
-
-De site is vervolgens te bekijken op [`localhost:8080`](http://localhost:8080).
-
-### Includes
-
-Herhalende componenten staan in de `_includes` map:
-
-| Bestand | Beschrijving |
-| ------- | ------------ |
-| `base.njk` | Basis layout |
-| `header-rijksoverheid.njk` | Rijksoverheid header met logo en navigatie |
-| `header-overheid.njk` | Overheid header header met logo |
-| `footer-overheid.njk` | Overheid footer |
-| `side-nav-overheid.njk` | Overheid hoofdnavigatie |
-
-Elke pagina selecteert diens layout en opties bovenaan het bestand:
-
-``` yaml
----
-layout: base.njk
-title: "Pagina titel"
-headerType: overheid
-footerType: overheid
----
-```
-
----
-
-## Design tokens
-
-Design tokens zijn ontwerp-waarden — zoals kleuren, typografie, maatvoering — opgeslagen in een platformonafhankelijk formaat (JSON). Ze vormen een gedeelde taal tussen ontwerp en ontwikkeling: in plaats van bijvoorbeeld losse hex-codes of pixelwaarden door te geven, verwijzen beide disciplines naar dezelfde bron. Hierdoor blijven ontwerp en code altijd synchroon en is een wijziging op één plek (bijvoorbeeld een merkkleur) direct overal doorgevoerd.
-
-Het bestand `tokens/tokens.json` is de *single source of truth* voor alle ontwerp-waarden én toepassingen (kleur, typografie, spacing, etc.). Dit bestand is in twee richtingen te bewerken:
-
-- **Figma** — via de [Tokens Studio](https://docs.tokens.studio/) plugin kunnen ontwerpers tokens ophalen, aanpassen en terugschrijven naar Git.
-- **IDE** — ontwikkelaars kunnen het JSON-bestand ophalen, aanpassen en terugschrijven naar Git in een code-editor.
+Er zijn nog design-tokens en een manier om die naar CSS om te zetten in dit project. Deze zijn geschikt om snel dingen op te zetten, maar uiteindelijk zal het meerendeel uit de MOX-nlds package gebruikt kunnen worden. De CSS en tokens uit package wordt in de `baseLayout.astro` geladen.
 
 ### Style Dictionary
 
@@ -102,7 +43,7 @@ Beide bestanden worden automatisch gegenereerd en mogen niet handmatig bewerkt w
 
 Gebruik dit commando om design tokens handmatig naar CSS variabelen om te zetten:
 
-``` bash
+```bash
 npm run tokens
 ```
 
@@ -165,30 +106,26 @@ npm install
 
 ## Structuur
 
-``` text
-📂 _includes                herhalende consistente elementen die in meerdere pagina’s toegegepast worden
-📂 _site                    statische site gegenereerd door Eleventy.js
+```text
 📂 assets
-    📁 favicon              favicons voor diverse platformen
-    📁 fonts                Rijkslettertype webfonts
-    📁 icons                iconen
-    📁 images               afbeeldingen
-📂 moza                     prototype voor MijnOverheid Zakelijk, gebaseerd op deze omgeving
-📂 stories                  ‘stories’ om componenten weer te geven in Storybook
+    📁 favicon          favicons voor diverse platformen
+    📁 fonts            Rijksoverheid lettertype webfonts
+    📁 icons            pictogrammen voor de interface
+    📁 images           afbeeldingen
+📂 src
+    📁 components       Astro en React componenten
+    📁 layouts          Layout bestanden voor pagina's
+    📁 pages            Pagina's met file-based routing
 📂 style
-    📄 _reset.css           cross-browser stijl normalisatie
-    📄 _rijkshuisstijl.css  opties uit de Rijkshuisstijl
-    📄 _toepassing.css      semantische toepassing van de opties uit de Rijkshuisstijl
-    📄 style.css            algemene CSS styling
+    📄 _reset.css       Cross-browser stijl normalisatie, opgenomen in style.css
+    📄 _variables.css   CSS variabelen vertaald van design tokens, opgenomen in style.css
+    📄 style.css        Algemene CSS stijl gelinkt vanuit HTML
 📁 style-dictionary
-    📄 config.json          configuratiebestand voor Style Dictionary
+    📄 config.json      Configuratiebestand voor Style Dictionary om design tokens naar CSS variabelen te vertalen
 📁 tokens
-    📄 tokens.json          design tokens JSON bestand
-📄 index.html               homepagina van het MijnOverheid Zakelijk prototype
-📄 package.json             build dependencies
-📄 package-lock.json        locked dependency versions
-📄 README.md                dit bestand
-
+    📄 tokens.json      Design tokens die als basis dienen voor CSS variabelen
+📄 README.md            Dit bestand met nadere uitleg
+📄 astro.config.mjs     Configuratiebestand voor Astro
 ```
 
 ## CSS conventies
@@ -219,19 +156,17 @@ Voorbeelden:
 
 In de stylesheets worden [CSS ‘logical’ properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) gebruikt in plaats van ‘physical’ properties. Logical properties passen zich automatisch aan op basis van de schrijfrichting (`direction`) en schrijfmodus (`writing-mode`), wat de CSS toekomstbestendig en beter geschikt maakt voor meertalige ondersteuning.
 
-Voorbeelden van physical properties en hun logical equivalenten:
-
-| Physical | Logical |
-| ------ | ------- |
-| `width` | `inline-size` |
-| `height` | `block-size` |
-| `max-width` | `max-inline-size` |
-| `min-height` | `min-block-size` |
-| `margin-top` / `margin-bottom` | `margin-block-start` / `margin-block-end` |
-| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
-| `padding-top` / `padding-bottom` | `padding-block-start` / `padding-block-end` |
+| Fysiek                           | Logisch                                       |
+| -------------------------------- | --------------------------------------------- |
+| `width`                          | `inline-size`                                 |
+| `height`                         | `block-size`                                  |
+| `max-width`                      | `max-inline-size`                             |
+| `min-height`                     | `min-block-size`                              |
+| `margin-top` / `margin-bottom`   | `margin-block-start` / `margin-block-end`     |
+| `margin-left` / `margin-right`   | `margin-inline-start` / `margin-inline-end`   |
+| `padding-top` / `padding-bottom` | `padding-block-start` / `padding-block-end`   |
 | `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
-| `border-top` / `border-bottom` | `border-block-start` / `border-block-end` |
+| `border-top` / `border-bottom`   | `border-block-start` / `border-block-end`     |
 
 ---
 
@@ -283,4 +218,6 @@ Voorbeeld: `↩️ wijzigingen van vorige commit ongedaan gemaakt omdat deze per
 `🔀 IDE ↔︎ Figma`
 Twee-wegverkeer tussen IDE en Figma, met name om design tokens in beide omgevingen te kunnen aanpassen en testen (Style Dictionary → CSS variabelen en Figma Tokens Studio)
 
-Voorbeeld: `🔀 tokens voor knoppen aangepast in Figma`
+## MijnOverheid Zakelijk prototype
+
+[![Deploy Astro to GitHub Pages](https://github.com/rogier-barendregt/MOx/actions/workflows/astro.yml/badge.svg)](https://github.com/rogier-barendregt/MOx/actions/workflows/astro.yml)
