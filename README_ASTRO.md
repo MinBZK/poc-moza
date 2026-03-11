@@ -127,7 +127,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="My Page">
   <h1>My Page</h1>
-  <a href="/moza/">Link</a>
+  <a href="/">Link</a>
 </BaseLayout>
 ```
 
