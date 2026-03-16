@@ -541,9 +541,6 @@ button.side-nav-toggle {
 		display: none;
 		margin-block-end: var(--mox-space-margin-lg);
 		padding: var(--mox-space-padding-md);
-		width: 100%;
-	}
-	li {
 		inline-size: 100%;
 	}
 }
