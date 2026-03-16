@@ -226,13 +226,19 @@ pre {
 }
 
 /* Opties die door gebruiker al goedgekeurd zijn en niet meer gewijzigd kunnen worden */
-.option--confirmed input[disabled] {
-	accent-color: var(--mox-color-feedback-success-emphasis); /* Werkt niet in Chromium */
-}
 li.option--confirmed {
-	border-block-end: var(--mox-border-default);
-	margin-block-end: var(--mox-space-margin-xs);
-	padding-block-end: var(--mox-space-padding-sm);
+	&::before {
+		background-color: var(--mox-color-feedback-success-icon);
+		block-size: var(--mox-size-icon-md);
+		content: "";
+		display: inline-block;
+		inline-size: var(--mox-size-icon-md);
+		mask-image: url("../assets/icons/icon-succes.svg");
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: contain;
+		vertical-align: middle;
+	}
 }
 
 /* Formulier elementen */
@@ -244,7 +250,18 @@ fieldset {
 }
 
 button,
-input,
+[type="date"],
+[type="datetime-local"],
+[type="email"],
+[type="month"],
+[type="number"],
+[type="password"],
+[type="search"],
+[type="tel"],
+[type="text"],
+[type="time"],
+[type="url"],
+[type="week"],
 select,
 textarea,
 .btn-cta {
@@ -383,13 +400,18 @@ a.btn-cta {
 
 /* Formulier: Tekstinvoer */
 
+[type="date"],
+[type="datetime-local"],
 [type="email"],
+[type="month"],
 [type="number"],
 [type="password"],
 [type="search"],
 [type="tel"],
 [type="text"],
-[type="url"] {
+[type="time"],
+[type="url"],
+[type="week"] {
 	&:hover {
 	}
 	&:focus {
@@ -430,13 +452,41 @@ ul.selection {
 }
 [type="checkbox"],
 [type="radio"] {
-	accent-color: var(--mox-color-interactive-default-background);
-	min-block-size: var(--mox-size-icon-md);
-	min-inline-size: var(--mox-size-icon-md);
+	appearance: none;
+	background: var(--mox-color-interactive-default-surface);
+	border: var(--mox-border-width-md) solid var(--mox-color-interactive-default-border);
+	border-radius: var(--mox-border-radius-md);
+	cursor: pointer;
+	display: inline-grid;
+	block-size: var(--mox-size-icon-md);
+	inline-size: var(--mox-size-icon-md);
+	place-content: center;
 	transition: var(--mox-transition-default);
 	vertical-align: top;
+	&::before {
+		block-size: var(--mox-size-icon-sm);
+		content: "";
+		inline-size: var(--mox-size-icon-sm);
+		transform: scale(0);
+		transition: var(--mox-transition-transform);
+	}
+	&:checked {
+		background: var(--mox-color-interactive-default-background);
+		border-color: var(--mox-color-interactive-default-background);
+		transition: var(--mox-transition-default);
+		&::before {
+			transform: scale(1);
+			transition: var(--mox-transition-transform);
+		}
+	}
 	&:hover {
-		accent-color: var(--mox-color-interactive-hover-background);
+		border-color: var(--mox-color-interactive-hover-border);
+		transition: var(--mox-transition-default);
+		&:checked {
+			background: var(--mox-color-interactive-hover-background);
+			border-color: var(--mox-color-interactive-hover-background);
+			transition: var(--mox-transition-default);
+		}
 	}
 	+ label {
 		display: inline-block;
@@ -446,7 +496,25 @@ ul.selection {
 		color: var(--mox-color-interactive-disabled-text);
 	}
 }
+[type="checkbox"]::before {
+	background-color: var(--mox-color-text-inverse);
+	mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
+}
 [type="radio"] {
+	border-radius: var(--mox-border-radius-round);
+	&::before {
+		border-radius: var(--mox-border-radius-round);
+	}
+	&:checked {
+		background: var(--mox-color-interactive-default-background);
+		outline: 2px solid var(--mox-color-interactive-default-surface);
+		outline-offset: -4px;
+		transition: var(--mox-transition-default);
+		&:hover {
+			background: var(--mox-color-interactive-hover-background);
+			transition: var(--mox-transition-default);
+		}
+	}
 }
 select {
 }
