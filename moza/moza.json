@@ -16,6 +16,11 @@
 			"badge": "3"
 		},
 		{
+			"label": "Digitale Assistent",
+			"url": "/moza/digitale-assistent/",
+			"icon": "/assets/icons/icon-assistent.svg"
+		},
+		{
 			"label": "Bedrijfsgegevens",
 			"url": "/moza/bedrijfsgegevens/",
 			"icon": "/assets/icons/icon-gegevens.svg"

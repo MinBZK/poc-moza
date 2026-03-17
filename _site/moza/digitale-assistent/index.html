@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MijnOverheid Zakelijk: Berichtenbox</title>
+    <title>MijnOverheid Zakelijk: Digitale Assistent</title>
     <link rel="stylesheet" href="/style/style.css">
     <meta name="description" content="MijnOverheid Zakelijk">
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico" type="image/x-icon">
@@ -85,7 +85,7 @@
 			 <!-- tijdelijk, voor de preview van functionaliteit tijdens gebruikers onderzoeken -->
 			
 			<li>
-				<a href="/moza/digitale-assistent/">
+				<a href="/moza/digitale-assistent/" aria-current="page">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 	<path fill="none" d="M0 0h24v24H0z" />
 	<path fill="currentColor" d="M12 2C6.48 2 2 5.58 2 10c0 2.24 1.12 4.27 2.94 5.72L4 20l4.46-2.23C9.56 18.24 10.74 18.5 12 18.5c5.52 0 10-3.58 10-8S17.52 2 12 2zM8 11.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
@@ -189,30 +189,41 @@
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="/moza/">Home</a></li>
-			<li aria-current="page">Berichtenbox</li>
+			<li aria-current="page">Digitale Assistent</li>
 		</ol>
 	</nav>
 
-	<h1>Berichtenbox</h1>
+	<h1>Digitale Assistent</h1>
 
-	<section class="card">
-		<h2>Binnenkort beschikbaar <span class="badge">najaar 2026</span></h2>
-		<p>Straks vindt u hier al uw officiële berichten van overheidsorganisaties op één plek. Denk aan kennisgevingen en bevestigingen van de Belastingdienst, KVK, RVO en andere instanties.</p>
-	</section>
+	<section class="card chat-container">
+		<div class="chat-header">
+			<p>Stel een vraag over regelgeving, vergunningen, subsidies of uw bedrijfsregistratie.</p>
+			<fieldset class="mode-switch" role="radiogroup" aria-label="Kies assistent">
+				<legend class="visually-hidden">Assistent-modus</legend>
+				<label class="mode-option">
+					<input type="radio" name="chat-mode" value="vlam" checked>
+					<span>VLAM</span>
+				</label>
+				<label class="mode-option">
+					<input type="radio" name="chat-mode" value="claude">
+					<span>Claude</span>
+				</label>
+			</fieldset>
+		</div>
 
-	<section class="card">
-		<video controls style="inline-size: 100%; aspect-ratio: 16 / 9; background: var(--mox-color-background-subtle)" src="https://placeholdervideo.dev/1920x1080" poster="/gebruikersonderzoek/video-placeholder-poster.png">
-			<p>Uw browser ondersteunt geen video.</p>
-		</video>
-	</section>
+		<div class="chat-status" id="chat-status" aria-live="polite"></div>
 
-	<section class="card">
-		<h2>Wat kunt u zoal verwachten?</h2>
-		<ul>
-			<li>Bekijk berichten van de Belastingdienst, KVK, RVO en andere organisaties</li>
-			<li>Zie in één oogopslag of er nieuwe berichten voor u klaarstaan</li>
-			<li>Stel e-mailmeldingen in zodat u niks mist</li>
-		</ul>
+		<div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+			<div class="chat-message chat-message-assistant">
+				<p>Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?</p>
+			</div>
+		</div>
+
+		<form class="chat-input-form" id="chat-form">
+			<label for="chat-input" class="visually-hidden">Uw vraag</label>
+			<textarea id="chat-input" name="message" rows="1" placeholder="Stel uw vraag..." required></textarea>
+			<button type="submit">Verstuur</button>
+		</form>
 	</section>
 
 	<section class="card card-faq">
@@ -220,36 +231,169 @@
 
 		<details name="faq">
 			<summary>
-				<h4>Welke berichten ontvang ik in mijn Berichtenbox?</h4>
+				<h4>Wat kan de digitale assistent voor mij doen?</h4>
 			</summary>
 			<section>
-				<p>In uw Berichtenbox ontvangt u officiële berichten van overheidsorganisaties die betrekking hebben op uw onderneming. Denk aan beschikkingen, kennisgevingen, bevestigingen van aanvragen en berichten van de Belastingdienst of de KVK.</p>
+				<p>De digitale assistent kan u helpen met vragen over regelgeving, subsidies, vergunningen en uw bedrijfsregistratie. De assistent raadpleegt actuele bronnen zoals het Handelsregister (KvK), de Regelingenbank (KOOP) en RVO.</p>
 			</section>
 		</details>
 
 		<details name="faq">
 			<summary>
-				<h4>Kan ik een melding krijgen als er een nieuw bericht binnenkomt?</h4>
+				<h4>Hoe betrouwbaar zijn de antwoorden?</h4>
 			</summary>
 			<section>
-				<p>
-					Ja, via uw contactvoorkeuren kunt u instellen dat u per e-mail een notificatie ontvangt wanneer er een nieuw bericht in uw Berichtenbox staat. Ga naar
-					<a href="/moza/contactvoorkeuren/">Contactvoorkeuren</a>
-					om dit in te stellen.
-				</p>
+				<p>De assistent verwijst waar mogelijk naar officiële bronnen. Controleer belangrijke informatie altijd bij de betreffende overheidsinstantie. De assistent is een hulpmiddel, geen juridisch advies.</p>
 			</section>
 		</details>
 
 		<details name="faq">
 			<summary>
-				<h4>Waarom ontvang ik niet van alle overheidsorganisaties berichten?</h4>
+				<h4>Worden mijn gegevens opgeslagen?</h4>
 			</summary>
 			<section>
-				<p>Op dit moment verschijnen in uw Berichtenbox alleen berichten van overheidsorganisaties die zijn aangesloten op MijnOverheid Zakelijk. Het aantal aangesloten organisaties wordt stapsgewijs uitgebreid. Berichten van nog niet aangesloten organisaties ontvangt u via de gebruikelijke kanalen, zoals post of e-mail.</p>
+				<p>Uw gesprek wordt alleen voor de duur van uw sessie bewaard en daarna verwijderd. Er worden geen persoonsgegevens opgeslagen zonder uw toestemming.</p>
 			</section>
 		</details>
 	</section>
 </article>
+
+<script>
+(function () {
+	var API_BASE = "http://localhost:8000";
+	var form = document.getElementById("chat-form");
+	var input = document.getElementById("chat-input");
+	var messages = document.getElementById("chat-messages");
+	var statusEl = document.getElementById("chat-status");
+	var modeInputs = document.querySelectorAll('input[name="chat-mode"]');
+	var sessionId = null;
+	var serverStatus = null;
+
+	var SERVER_LABELS = {
+		kvk: "KvK Handelsregister",
+		koop: "KOOP Regelingenbank",
+		regelrecht: "RegelRecht",
+		rvo: "RVO",
+	};
+
+	function getMode() {
+		return document.querySelector('input[name="chat-mode"]:checked').value;
+	}
+
+	function addMessage(text, role) {
+		var div = document.createElement("div");
+		div.className = "chat-message chat-message-" + role;
+		var p = document.createElement("p");
+		p.textContent = text;
+		div.appendChild(p);
+		messages.appendChild(div);
+		messages.scrollTop = messages.scrollHeight;
+	}
+
+	function setLoading(loading) {
+		var btn = form.querySelector("button");
+		if (loading) {
+			btn.setAttribute("aria-disabled", "true");
+			addMessage("Een moment geduld...", "loading");
+		} else {
+			btn.removeAttribute("aria-disabled");
+			var loader = messages.querySelector(".chat-message-loading");
+			if (loader) loader.remove();
+		}
+	}
+
+	function renderStatus(data) {
+		serverStatus = data;
+		var servers = data.servers || {};
+		var keys = Object.keys(servers);
+		if (keys.length === 0 && data.tools === 0) {
+			statusEl.innerHTML =
+				'<p class="chat-status-warning">Geen MCP-bronnen verbonden — de assistent antwoordt op basis van eigen kennis.</p>';
+			return;
+		}
+		var items = keys.map(function (key) {
+			var connected = servers[key] === "verbonden";
+			var label = SERVER_LABELS[key] || key;
+			var dot = connected ? "connected" : "disconnected";
+			return '<li class="chat-status-' + dot + '">' + label + "</li>";
+		});
+		statusEl.innerHTML =
+			"<p>Verbonden bronnen:</p><ul>" + items.join("") + "</ul>";
+	}
+
+	function renderStatusOffline() {
+		statusEl.innerHTML =
+			'<p class="chat-status-warning">Host niet bereikbaar — de assistent kan geen vragen beantwoorden.</p>';
+	}
+
+	// Haal status op bij laden
+	fetch(API_BASE + "/health")
+		.then(function (r) { return r.json(); })
+		.then(renderStatus)
+		.catch(renderStatusOffline);
+
+	// Wis het gesprek bij wisselen van modus
+	modeInputs.forEach(function (radio) {
+		radio.addEventListener("change", function () {
+			sessionId = null;
+			messages.innerHTML = "";
+			var mode = getMode();
+			var welkom = mode === "vlam"
+				? "Welkom! Ik ben VLAM, de digitale assistent van de Rijksoverheid. Waarmee kan ik u helpen?"
+				: "Welkom! Ik ben Claude, digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?";
+			addMessage(welkom, "assistant");
+		});
+	});
+
+	input.addEventListener("input", function () {
+		this.style.blockSize = "auto";
+		this.style.blockSize = this.scrollHeight + "px";
+	});
+
+	input.addEventListener("keydown", function (e) {
+		if (e.key === "Enter" && !e.shiftKey) {
+			e.preventDefault();
+			form.requestSubmit();
+		}
+	});
+
+	form.addEventListener("submit", async function (e) {
+		e.preventDefault();
+		var message = input.value.trim();
+		if (!message) return;
+
+		addMessage(message, "user");
+		input.value = "";
+		input.style.blockSize = "auto";
+		setLoading(true);
+
+		try {
+			var response = await fetch(API_BASE + "/chat", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					message: message,
+					session_id: sessionId,
+					mode: getMode(),
+				}),
+			});
+
+			if (!response.ok) throw new Error("Server niet bereikbaar");
+
+			var data = await response.json();
+			sessionId = data.session_id;
+			setLoading(false);
+			addMessage(data.reply, "assistant");
+		} catch (err) {
+			setLoading(false);
+			addMessage(
+				"Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.",
+				"error"
+			);
+		}
+	});
+})();
+</script>
 
     </main>
 

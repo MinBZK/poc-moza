@@ -5,3 +5,5 @@ node_modules/
 storybook-static/
 *.crdownload
 .claude/settings.local.json
+.env
+mcp/host/.env
