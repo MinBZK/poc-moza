@@ -17,12 +17,8 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image: ${{ steps.full-image.outputs.full }}
+      image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
     steps:
-      - name: Lowercase image name
-        id: image
-        run: echo "name=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -40,14 +36,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=sha,format=short,priority=300
             type=raw,value=latest
-
-      - name: Full image reference
-        id: full-image
-        run: echo "full=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:${{ steps.meta.outputs.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Build and push container image
         uses: docker/build-push-action@v6
