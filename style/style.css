@@ -1,8 +1,8 @@
 /* Importeer Rijkhuisstijl design tokens als variabelen */
 @import "_rijkshuisstijl.css";
 
-/* Importeer MOx common design tokens als variabelen */
-@import "_mox.css";
+/* Importeer toepassing design tokens als variabelen */
+@import "_toepassing.css";
 
 /* Importeer reset stijlen */
 @import "_reset.css";
@@ -26,11 +26,11 @@
 /* Basis en layout */
 
 body {
-	color: var(--mox-color-text-default);
+	color: var(--toepassing-color-text-default);
 	display: flex;
 	flex-direction: column;
 	font-family:
-		var(--mox-text-font-family-body),
+		var(--toepassing-text-font-family-body),
 		system-ui,
 		-apple-system,
 		"Segoe UI",
@@ -46,12 +46,12 @@ body {
 
 header {
 	position: relative;
-	margin-block-end: var(--mox-space-margin-md);
+	margin-block-end: var(--toepassing-space-margin-md);
 	.logo {
-		margin-block-end: var(--mox-space-margin-xs);
+		margin-block-end: var(--toepassing-space-margin-xs);
 		text-align: center;
 		img {
-			inline-size: var(--mox-size-logo-width);
+			inline-size: var(--toepassing-size-logo-width);
 		}
 		nav {
 			li {
@@ -61,7 +61,7 @@ header {
 	}
 	.user-menu {
 		display: flex;
-		gap: var(--mox-space-padding-md);
+		gap: var(--toepassing-space-padding-md);
 	}
 	.side-nav-secret-toggle {
 		/* Tijdelijk voor gebruikersonderzoeken */
@@ -89,14 +89,14 @@ header {
 	margin-inline: auto;
 	max-inline-size: 1140px;
 	.title {
-		font: var(--mox-text-heading-h1);
+		font: var(--toepassing-text-heading-h1);
 	}
 }
 
 main {
 	flex: 1;
 	margin-inline: auto;
-	max-inline-size: var(--mox-page-max-inline-size);
+	max-inline-size: var(--toepassing-page-max-inline-size);
 	inline-size: 100%;
 	@media (min-width: 800px) {
 		display: grid;
@@ -104,69 +104,69 @@ main {
 	}
 	> article:first-of-type {
 		container-type: inline-size;
-		margin-block-end: var(--mox-space-margin-lg);
-		padding-inline: var(--mox-space-padding-md);
+		margin-block-end: var(--toepassing-space-margin-lg);
+		padding-inline: var(--toepassing-space-padding-md);
 		inline-size: 100%;
 	}
 	&::after {
-		background: var(--mox-color-logo-background);
+		background: var(--toepassing-color-logo-background);
 		content: "";
 		display: block;
 		grid-column: 1 / -1;
-		block-size: var(--mox-size-sm);
+		block-size: var(--toepassing-size-sm);
 		margin-inline: auto;
-		inline-size: var(--mox-size-logo-width);
+		inline-size: var(--toepassing-size-logo-width);
 	}
 }
 
 aside {
 	@media (min-width: 800px) {
-		min-inline-size: var(--mox-size-component-subnav-width);
+		min-inline-size: var(--toepassing-size-component-subnav-width);
 	}
 }
 
 footer {
-	background: var(--mox-color-component-footer-background);
-	color: var(--mox-color-text-inverse);
-	padding: var(--mox-space-padding-xl) var(--mox-space-padding-md);
+	background: var(--toepassing-color-component-footer-background);
+	color: var(--toepassing-color-text-inverse);
+	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
 /* Typografie */
 
 h1 {
-	font: var(--mox-text-heading-h1);
+	font: var(--toepassing-text-heading-h1);
 }
 h2 {
-	font: var(--mox-text-heading-h2);
+	font: var(--toepassing-text-heading-h2);
 }
 h3 {
-	font: var(--mox-text-heading-h3);
+	font: var(--toepassing-text-heading-h3);
 }
 h4 {
-	font: var(--mox-text-heading-h4);
+	font: var(--toepassing-text-heading-h4);
 }
 h5 {
-	font: var(--mox-text-heading-h5);
+	font: var(--toepassing-text-heading-h5);
 }
 h6 {
-	font: var(--mox-text-heading-h6);
+	font: var(--toepassing-text-heading-h6);
 }
 
 p {
-	font: var(--mox-text-paragraph-default);
+	font: var(--toepassing-text-paragraph-default);
 	&.intro {
-		font: var(--mox-text-paragraph-intro);
+		font: var(--toepassing-text-paragraph-intro);
 	}
-	margin-block-end: var(--mox-space-margin-2xs);
+	margin-block-end: var(--toepassing-space-margin-2xs);
 }
 
 small {
-	font: var(--mox-text-smalltext-default);
+	font: var(--toepassing-text-smalltext-default);
 }
 
 strong,
 b {
-	font-weight: var(--mox-text-font-weight-bold);
+	font-weight: var(--toepassing-text-font-weight-bold);
 }
 em,
 i {
@@ -174,16 +174,16 @@ i {
 }
 
 a {
-	color: var(--mox-color-interactive-default-text);
-	text-decoration: var(--mox-text-text-decoration-hyperlink);
+	color: var(--toepassing-color-interactive-default-text);
+	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 	text-underline-offset: 3px; /* Vaste waarde voor onderstreping offset, niet in design tokens gedefinieerd omdat deze slechts eenmaal voorkomt */
 	text-decoration-skip-ink: auto;
 	&:hover {
-		color: var(--mox-color-interactive-hover-text);
+		color: var(--toepassing-color-interactive-hover-text);
 		text-decoration: none;
 	}
 	&:active {
-		color: var(--mox-color-interactive-active-text);
+		color: var(--toepassing-color-interactive-active-text);
 	}
 }
 
@@ -192,11 +192,11 @@ kbd,
 pre,
 samp,
 var {
-	background: var(--mox-color-background-subtle);
-	font: var(--mox-text-code);
+	background: var(--toepassing-color-background-subtle);
+	font: var(--toepassing-text-code);
 }
 pre {
-	padding: var(--mox-space-padding-sm);
+	padding: var(--toepassing-space-padding-sm);
 }
 
 /* Generieke interactie stijlen */
@@ -204,10 +204,10 @@ pre {
 &:hover,
 :active,
 &:checked {
-	transition: var(--mox-transition-default);
+	transition: var(--toepassing-transition-default);
 }
 [aria-disabled] {
-	opacity: var(--mox-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
+	opacity: var(--toepassing-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
 }
 
 /* Focus voor keyboard, spraak en switch gebruikers */
@@ -215,24 +215,24 @@ pre {
 	outline: none; /* Verberg focus outline voor muis-gebruikers, behoud focus outline voor alle andere gebruikers (toetsenbord, spraak, switch) */
 }
 :focus-visible {
-	outline: var(--mox-focus-outline);
-	outline-offset: var(--mox-size-5xs);
+	outline: var(--toepassing-focus-outline);
+	outline-offset: var(--toepassing-size-5xs);
 	&[aria-disabled] {
-		outline-color: var(--mox-color-interactive-disabled-border);
+		outline-color: var(--toepassing-color-interactive-disabled-border);
 	}
 	&.negative {
-		outline-color: var(--mox-color-feedback-error-border);
+		outline-color: var(--toepassing-color-feedback-error-border);
 	}
 }
 
 /* Opties die door gebruiker al goedgekeurd zijn en niet meer gewijzigd kunnen worden */
 li.option--confirmed {
 	&::before {
-		background-color: var(--mox-color-feedback-success-icon);
-		block-size: var(--mox-size-icon-md);
+		background-color: var(--toepassing-color-feedback-success-icon);
+		block-size: var(--toepassing-size-icon-md);
 		content: "";
 		display: inline-block;
-		inline-size: var(--mox-size-icon-md);
+		inline-size: var(--toepassing-size-icon-md);
 		mask-image: url("../assets/icons/icon-succes.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
@@ -266,33 +266,33 @@ select,
 textarea,
 .btn-cta {
 	align-self: flex-start; /* Voorkomt dat elementen de volledige breedte aannemen in een flexbox container */
-	background: var(--mox-color-interactive-default-surface);
-	border: var(--mox-border-width-md) solid var(--mox-color-interactive-default-border);
-	border-radius: var(--mox-border-radius-sm);
+	background: var(--toepassing-color-interactive-default-surface);
+	border: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-default-border);
+	border-radius: var(--toepassing-border-radius-sm);
 	font: inherit;
-	min-block-size: var(--mox-pointer-target-min-size);
-	min-inline-size: var(--mox-pointer-target-min-size);
-	padding-block: var(--mox-space-padding-sm);
-	padding-inline: var(--mox-space-padding-md);
-	transition: var(--mox-transition-default);
+	min-block-size: var(--toepassing-pointer-target-min-size);
+	min-inline-size: var(--toepassing-pointer-target-min-size);
+	padding-block: var(--toepassing-space-padding-sm);
+	padding-inline: var(--toepassing-space-padding-md);
+	transition: var(--toepassing-transition-default);
 	&:hover {
-		border-color: var(--mox-color-interactive-hover-border);
+		border-color: var(--toepassing-color-interactive-hover-border);
 	}
 	&:active {
-		border-color: var(--mox-color-interactive-active-border);
+		border-color: var(--toepassing-color-interactive-active-border);
 	}
 	&[aria-invalid] {
-		border-color: var(--mox-color-feedback-error-border);
+		border-color: var(--toepassing-color-feedback-error-border);
 	}
 	&.negative {
-		border-color: var(--mox-color-feedback-error-border);
+		border-color: var(--toepassing-color-feedback-error-border);
 	}
 }
 .btn-cta::after {
 	content: url("../assets/icons/icon-link-intern.svg");
 	display: inline-block;
-	inline-size: var(--mox-size-icon-xs);
-	margin-inline-start: var(--mox-space-margin-2xs);
+	inline-size: var(--toepassing-size-icon-xs);
+	margin-inline-start: var(--toepassing-space-margin-2xs);
 	vertical-align: middle;
 }
 
@@ -301,15 +301,15 @@ textarea,
 legend,
 label {
 	display: block;
-	font: var(--mox-text-label);
+	font: var(--toepassing-text-label);
 	/* &:has(+ [aria-disabled]) {
-		opacity: var(--mox-opacity-interactive-disabled);
+		opacity: var(--toepassing-opacity-interactive-disabled);
 	} */
 }
 
 .form-field-helper-text {
-	color: var(--mox-color-text-subtle-1);
-	font: var(--mox-text-smalltext-default);
+	color: var(--toepassing-color-text-subtle-1);
+	font: var(--toepassing-text-smalltext-default);
 }
 
 /* Actiegroep; groeperen van gerelateerde acties */
@@ -317,8 +317,8 @@ label {
 .action-group {
 	display: flex;
 	flex-direction: column;
-	gap: var(--mox-space-padding-md);
-	margin-block-start: var(--mox-space-margin-sm);
+	gap: var(--toepassing-space-padding-md);
+	margin-block-start: var(--toepassing-space-margin-sm);
 	button,
 	a.btn-cta {
 		inline-size: 100%;
@@ -336,8 +336,8 @@ label {
 
 button,
 a.btn-cta {
-	background: var(--mox-color-interactive-default-background);
-	color: var(--mox-color-text-inverse);
+	background: var(--toepassing-color-interactive-default-background);
+	color: var(--toepassing-color-text-inverse);
 	cursor: pointer;
 	@container (max-inline-size: 280px) {
 		inline-size: 100%;
@@ -348,33 +348,33 @@ a.btn-cta {
 	}
 	&.secondary,
 	&[type="reset"] {
-		background: var(--mox-color-interactive-default-surface);
-		border-color: var(--mox-color-interactive-default-border);
-		color: var(--mox-color-interactive-default-text);
+		background: var(--toepassing-color-interactive-default-surface);
+		border-color: var(--toepassing-color-interactive-default-border);
+		color: var(--toepassing-color-interactive-default-text);
 	}
 	&:hover,
 	&:focus {
-		background: var(--mox-color-interactive-hover-background);
-		border-color: var(--mox-color-interactive-hover-border);
-		color: var(--mox-color-text-inverse);
+		background: var(--toepassing-color-interactive-hover-background);
+		border-color: var(--toepassing-color-interactive-hover-border);
+		color: var(--toepassing-color-text-inverse);
 	}
 	&:active {
-		background: var(--mox-color-interactive-active-background);
-		border-color: var(--mox-color-interactive-active-border);
+		background: var(--toepassing-color-interactive-active-background);
+		border-color: var(--toepassing-color-interactive-active-border);
 	}
 	&[aria-disabled] {
 		cursor: not-allowed;
 	}
 	&.negative {
-		background: var(--mox-color-feedback-error-default);
+		background: var(--toepassing-color-feedback-error-default);
 		&:hover,
 		&:focus-visible {
-			background: var(--mox-color-feedback-error-emphasis);
-			border-color: var(--mox-color-feedback-error-border);
+			background: var(--toepassing-color-feedback-error-emphasis);
+			border-color: var(--toepassing-color-feedback-error-border);
 		}
 		&:active {
-			background: var(--mox-color-interactive-active-background);
-			border-color: var(--mox-color-interactive-active-border);
+			background: var(--toepassing-color-interactive-active-background);
+			border-color: var(--toepassing-color-interactive-active-border);
 		}
 	}
 }
@@ -387,7 +387,7 @@ a.btn-cta {
 .icon-button {
 	background: none;
 	border: none;
-	color: var(--mox-color-interactive-default-text);
+	color: var(--toepassing-color-interactive-default-text);
 	cursor: pointer;
 	min-block-size: unset;
 	min-inline-size: unset;
@@ -443,76 +443,76 @@ ul.selection {
 	list-style: none;
 	padding: 0;
 	li:not(:has(.selection)) {
-		padding-block-end: var(--mox-space-padding-md);
+		padding-block-end: var(--toepassing-space-padding-md);
 	}
 	.selection {
-		padding-block-start: var(--mox-space-padding-md);
-		padding-inline-start: var(--mox-space-padding-md);
+		padding-block-start: var(--toepassing-space-padding-md);
+		padding-inline-start: var(--toepassing-space-padding-md);
 	}
 }
 [type="checkbox"],
 [type="radio"] {
 	appearance: none;
-	background: var(--mox-color-interactive-default-surface);
-	border: var(--mox-border-width-md) solid var(--mox-color-interactive-default-border);
-	border-radius: var(--mox-border-radius-md);
+	background: var(--toepassing-color-interactive-default-surface);
+	border: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-default-border);
+	border-radius: var(--toepassing-border-radius-md);
 	cursor: pointer;
 	display: inline-grid;
-	block-size: var(--mox-size-icon-md);
-	inline-size: var(--mox-size-icon-md);
+	block-size: var(--toepassing-size-icon-md);
+	inline-size: var(--toepassing-size-icon-md);
 	place-content: center;
-	transition: var(--mox-transition-default);
+	transition: var(--toepassing-transition-default);
 	vertical-align: top;
 	&::before {
-		block-size: var(--mox-size-icon-sm);
+		block-size: var(--toepassing-size-icon-sm);
 		content: "";
-		inline-size: var(--mox-size-icon-sm);
+		inline-size: var(--toepassing-size-icon-sm);
 		transform: scale(0);
-		transition: var(--mox-transition-transform);
+		transition: var(--toepassing-transition-transform);
 	}
 	&:checked {
-		background: var(--mox-color-interactive-default-background);
-		border-color: var(--mox-color-interactive-default-background);
-		transition: var(--mox-transition-default);
+		background: var(--toepassing-color-interactive-default-background);
+		border-color: var(--toepassing-color-interactive-default-background);
+		transition: var(--toepassing-transition-default);
 		&::before {
 			transform: scale(1);
-			transition: var(--mox-transition-transform);
+			transition: var(--toepassing-transition-transform);
 		}
 	}
 	&:hover {
-		border-color: var(--mox-color-interactive-hover-border);
-		transition: var(--mox-transition-default);
+		border-color: var(--toepassing-color-interactive-hover-border);
+		transition: var(--toepassing-transition-default);
 		&:checked {
-			background: var(--mox-color-interactive-hover-background);
-			border-color: var(--mox-color-interactive-hover-background);
-			transition: var(--mox-transition-default);
+			background: var(--toepassing-color-interactive-hover-background);
+			border-color: var(--toepassing-color-interactive-hover-background);
+			transition: var(--toepassing-transition-default);
 		}
 	}
 	+ label {
 		display: inline-block;
-		padding-inline: var(--mox-space-padding-xs);
+		padding-inline: var(--toepassing-space-padding-xs);
 	}
 	&[aria-disabled] + label {
-		color: var(--mox-color-interactive-disabled-text);
+		color: var(--toepassing-color-interactive-disabled-text);
 	}
 }
 [type="checkbox"]::before {
-	background-color: var(--mox-color-text-inverse);
+	background-color: var(--toepassing-color-text-inverse);
 	mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
 }
 [type="radio"] {
-	border-radius: var(--mox-border-radius-round);
+	border-radius: var(--toepassing-border-radius-round);
 	&::before {
-		border-radius: var(--mox-border-radius-round);
+		border-radius: var(--toepassing-border-radius-round);
 	}
 	&:checked {
-		background: var(--mox-color-interactive-default-background);
-		outline: 2px solid var(--mox-color-interactive-default-surface);
+		background: var(--toepassing-color-interactive-default-background);
+		outline: 2px solid var(--toepassing-color-interactive-default-surface);
 		outline-offset: -4px;
-		transition: var(--mox-transition-default);
+		transition: var(--toepassing-transition-default);
 		&:hover {
-			background: var(--mox-color-interactive-hover-background);
-			transition: var(--mox-transition-default);
+			background: var(--toepassing-color-interactive-hover-background);
+			transition: var(--toepassing-transition-default);
 		}
 	}
 }
@@ -543,28 +543,28 @@ nav {
 /* Navigatie: Hoofdnavigatie */
 
 .main-nav {
-	background-color: var(--mox-color-interactive-active-background);
+	background-color: var(--toepassing-color-interactive-active-background);
 	ul {
 		margin-inline: auto;
-		max-inline-size: var(--mox-page-max-inline-size);
+		max-inline-size: var(--toepassing-page-max-inline-size);
 	}
 	li {
 		display: inline-block;
 	}
 	a {
-		color: var(--mox-color-text-inverse);
+		color: var(--toepassing-color-text-inverse);
 		display: inline-block;
-		font: var(--mox-text-nav-main-nav);
-		padding: var(--mox-space-padding-md);
+		font: var(--toepassing-text-nav-main-nav);
+		padding: var(--toepassing-space-padding-md);
 		text-decoration: none;
 	}
 	[aria-current],
 	a:hover {
-		text-decoration: var(--mox-text-text-decoration-hyperlink);
+		text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 		text-underline-offset: 8px;
 	}
 	[aria-current] {
-		font-weight: var(--mox-text-font-weight-bold);
+		font-weight: var(--toepassing-text-font-weight-bold);
 	}
 }
 
@@ -573,20 +573,20 @@ nav {
 /* Responsive menu */
 button.side-nav-toggle {
 	align-items: center;
-	background: var(--mox-color-background-default);
-	color: var(--mox-color-interactive-default-text);
+	background: var(--toepassing-color-background-default);
+	color: var(--toepassing-color-interactive-default-text);
 	cursor: pointer;
 	display: none;
 	position: absolute;
-	inset-block-start: var(--mox-space-padding-sm);
+	inset-block-start: var(--toepassing-space-padding-sm);
 	&::before {
 		content: "";
 		background-color: currentColor;
-		block-size: var(--mox-size-icon-xs);
+		block-size: var(--toepassing-size-icon-xs);
 		mask: url("../assets/icons/icon-menu.svg") no-repeat center / contain;
-		margin-inline-end: var(--mox-space-margin-2xs);
-		transition: var(--mox-transition-transform);
-		inline-size: var(--mox-size-icon-sm);
+		margin-inline-end: var(--toepassing-space-margin-2xs);
+		transition: var(--toepassing-transition-transform);
+		inline-size: var(--toepassing-size-icon-sm);
 	}
 	&:hover,
 	&:active,
@@ -598,7 +598,7 @@ button.side-nav-toggle {
 	}
 	&[aria-expanded="true"]::before {
 		mask-image: url("../assets/icons/icon-chevron.svg");
-		inline-size: var(--mox-size-icon-xs);
+		inline-size: var(--toepassing-size-icon-xs);
 		transform: rotate(180deg);
 	}
 	@media (max-width: 799px) {
@@ -608,10 +608,10 @@ button.side-nav-toggle {
 }
 .side-nav ul {
 	@media (max-width: 799px) {
-		background: var(--mox-color-background-default);
+		background: var(--toepassing-color-background-default);
 		display: none;
-		margin-block-end: var(--mox-space-margin-lg);
-		padding: var(--mox-space-padding-md);
+		margin-block-end: var(--toepassing-space-margin-lg);
+		padding: var(--toepassing-space-padding-md);
 		width: 100%;
 	}
 	li {
@@ -625,44 +625,44 @@ button.side-nav-toggle {
 	display: none;
 }
 .side-nav {
-	padding-inline: var(--mox-space-padding-md);
+	padding-inline: var(--toepassing-space-padding-md);
 	li {
 		a {
 			align-items: center;
-			background: var(--mox-color-interactive-alternate-default-background);
-			border-radius: var(--mox-border-radius-md);
-			color: var(--mox-color-interactive-alternate-default-text);
-			column-gap: var(--mox-space-padding-2xs);
+			background: var(--toepassing-color-interactive-alternate-default-background);
+			border-radius: var(--toepassing-border-radius-md);
+			color: var(--toepassing-color-interactive-alternate-default-text);
+			column-gap: var(--toepassing-space-padding-2xs);
 			display: flex;
-			font: var(--mox-text-nav-side-nav);
-			gap: var(--mox-space-padding-sm);
-			margin-block-end: var(--mox-space-padding-xs);
-			padding-block: var(--mox-space-padding-2xs);
-			padding-inline: var(--mox-space-padding-md);
+			font: var(--toepassing-text-nav-side-nav);
+			gap: var(--toepassing-space-padding-sm);
+			margin-block-end: var(--toepassing-space-padding-xs);
+			padding-block: var(--toepassing-space-padding-2xs);
+			padding-inline: var(--toepassing-space-padding-md);
 			text-decoration: none;
 			&:hover,
 			&:focus {
-				background: var(--mox-color-interactive-alternate-hover-background);
-				color: var(--mox-color-interactive-alternate-default-text);
+				background: var(--toepassing-color-interactive-alternate-hover-background);
+				color: var(--toepassing-color-interactive-alternate-default-text);
 			}
 			&:active {
-				background: var(--mox-color-interactive-alternate-active-background);
-				color: var(--mox-color-interactive-alternate-active-text);
+				background: var(--toepassing-color-interactive-alternate-active-background);
+				color: var(--toepassing-color-interactive-alternate-active-text);
 			}
 		}
 		[aria-current] {
-			background: var(--mox-color-interactive-alternate-selected-background);
-			color: var(--mox-color-interactive-alternate-selected-text);
-			font-weight: var(--mox-text-font-weight-semi-bold);
+			background: var(--toepassing-color-interactive-alternate-selected-background);
+			color: var(--toepassing-color-interactive-alternate-selected-text);
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
 		}
 		svg {
-			block-size: var(--mox-size-icon-md);
+			block-size: var(--toepassing-size-icon-md);
 			flex-shrink: 0;
 		}
 	}
 }
 .side-nav-group--start {
-	margin-block-start: var(--mox-space-margin-sm);
+	margin-block-start: var(--toepassing-space-margin-sm);
 }
 
 /* Navigatie: Kruimelpad */
@@ -672,10 +672,10 @@ button.side-nav-toggle {
 		display: inline-block;
 		&:not(:last-child)::after {
 			content: " /";
-			margin-inline: var(--mox-space-padding-2xs);
+			margin-inline: var(--toepassing-space-padding-2xs);
 		}
 		&[aria-current="page"] {
-			font-weight: var(--mox-text-font-weight-semi-bold);
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
 		}
 	}
 }
@@ -684,13 +684,13 @@ button.side-nav-toggle {
 
 footer {
 	h4 {
-		margin-block-end: var(--mox-space-margin-2xs);
+		margin-block-end: var(--toepassing-space-margin-2xs);
 	}
 	a {
 		color: inherit;
 		display: inline-block;
-		font: var(--mox-text-nav-footer);
-		padding-block: var(--mox-space-padding-xs);
+		font: var(--toepassing-text-nav-footer);
+		padding-block: var(--toepassing-space-padding-xs);
 		text-decoration: none;
 		&:hover {
 			color: inherit;
@@ -702,7 +702,7 @@ footer {
 	flex-direction: column;
 	justify-content: space-between;
 	margin-inline: auto;
-	max-inline-size: var(--mox-page-max-inline-size);
+	max-inline-size: var(--toepassing-page-max-inline-size);
 	@media (min-width: 799px) {
 		flex-direction: row;
 	}
@@ -718,103 +718,103 @@ footer {
 	}
 }
 li {
-	margin-block-end: var(--mox-space-margin-2xs);
+	margin-block-end: var(--toepassing-space-margin-2xs);
 }
 
 /* Tabellen */
 
 table {
 	inline-size: 100%;
-	margin-block: var(--mox-space-margin-xs);
+	margin-block: var(--toepassing-space-margin-xs);
 }
 tr {
 	vertical-align: top;
 }
 th,
 td {
-	border-block-end: var(--mox-border-default);
-	padding-block: var(--mox-space-padding-xs);
+	border-block-end: var(--toepassing-border-default);
+	padding-block: var(--toepassing-space-padding-xs);
 	text-align: start;
 	.feedback {
-		margin-block-end: var(--mox-space-margin-xs);
+		margin-block-end: var(--toepassing-space-margin-xs);
 	}
 }
 caption {
 	caption-side: block-end; /* Logical property wordt nog niet goed ondersteund voor caption-side */
 	caption-side: bottom;
-	padding-block-start: var(--mox-space-padding-sm);
+	padding-block-start: var(--toepassing-space-padding-sm);
 	text-align: end;
 }
 
 .data-overview {
 	th {
-		inline-size: calc(var(--mox-size-xl) * 2);
+		inline-size: calc(var(--toepassing-size-xl) * 2);
 	}
 }
 
 /* Uitklapblok */
 
 details {
-	border: var(--mox-border-default);
-	border-radius: var(--mox-border-radius-md);
+	border: var(--toepassing-border-default);
+	border-radius: var(--toepassing-border-radius-md);
 	&[open] summary::before {
 		transform: rotate(90deg);
 	}
 }
 summary {
-	background: var(--mox-color-background-subtle);
+	background: var(--toepassing-color-background-subtle);
 	cursor: pointer;
 	display: flex;
-	padding: var(--mox-space-padding-sm);
+	padding: var(--toepassing-space-padding-sm);
 	&:hover,
 	&:focus {
-		background: var(--mox-color-interactive-alternate-hover-background);
+		background: var(--toepassing-color-interactive-alternate-hover-background);
 	}
 	&::before {
 		content: url("../assets/icons/icon-chevron.svg");
 		flex-shrink: 0;
-		margin-inline-end: var(--mox-space-margin-2xs);
-		transition: var(--mox-transition-transform);
-		inline-size: var(--mox-size-icon-xs);
+		margin-inline-end: var(--toepassing-space-margin-2xs);
+		transition: var(--toepassing-transition-transform);
+		inline-size: var(--toepassing-size-icon-xs);
 	}
 }
 
 /* Cards */
 
 .card {
-	background: var(--mox-color-background-default);
-	border-radius: var(--mox-border-radius-md);
-	box-shadow: var(--mox-border-card-default);
+	background: var(--toepassing-color-background-default);
+	border-radius: var(--toepassing-border-radius-md);
+	box-shadow: var(--toepassing-border-card-default);
 	container-type: inline-size;
 	display: flex;
 	flex-direction: column;
-	padding: var(--mox-space-component-card-padding);
+	padding: var(--toepassing-space-component-card-padding);
 	section:not(:last-of-type) {
-		border-block-end: var(--mox-border-default);
-		margin-block-end: var(--mox-space-margin-md);
-		padding-block-end: var(--mox-space-padding-xl);
+		border-block-end: var(--toepassing-border-default);
+		margin-block-end: var(--toepassing-space-margin-md);
+		padding-block-end: var(--toepassing-space-padding-xl);
 	}
 	h2,
 	h3,
 	h4 {
-		font-size: var(--mox-text-size-title-xl);
-		margin-block-end: var(--mox-space-margin-2xs);
+		font-size: var(--toepassing-text-size-title-xl);
+		margin-block-end: var(--toepassing-space-margin-2xs);
 		a {
-			color: var(--mox-color-interactive-default-text);
+			color: var(--toepassing-color-interactive-default-text);
 		}
 	}
 	h4 {
-		font-size: var(--mox-text-size-title-lg);
+		font-size: var(--toepassing-text-size-title-lg);
 	}
 	a:not(.btn-cta) {
 		text-decoration: none;
 		p {
-			color: var(--mox-color-text-default);
+			color: var(--toepassing-color-text-default);
 		}
 		&:hover {
 			h3,
 			h4 {
-				color: var(--mox-color-interactive-hover-text);
+				color: var(--toepassing-color-interactive-hover-text);
 				text-decoration: underline;
 			}
 		}
@@ -825,18 +825,18 @@ summary {
 		li {
 			margin-block-end: 0;
 			&:not(:last-child) {
-				border-block-end: var(--mox-border-default);
+				border-block-end: var(--toepassing-border-default);
 				.content-link {
-					margin-block-end: var(--mox-space-margin-md);
+					margin-block-end: var(--toepassing-space-margin-md);
 					padding-block-end: 0;
 				}
 			}
 		}
 		.status-unread {
 			h3 {
-				font-weight: var(--mox-text-font-weight-bold);
+				font-weight: var(--toepassing-text-font-weight-bold);
 				&::before {
-					color: var(--mox-color-feedback-info-icon);
+					color: var(--toepassing-color-feedback-info-icon);
 					content: "\25CF";
 					inline-size: 0.5rem;
 					margin-inline-end: 0.25rem;
@@ -846,13 +846,13 @@ summary {
 	}
 	.content-link {
 		display: block;
-		padding-block: var(--mox-space-padding-lg);
+		padding-block: var(--toepassing-space-padding-lg);
 		&[rel="external"] h3::after {
 			content: "";
 			display: inline-block;
-			inline-size: var(--mox-size-icon-sm);
-			block-size: var(--mox-size-icon-sm);
-			margin-inline-start: var(--mox-space-margin-2xs);
+			inline-size: var(--toepassing-size-icon-sm);
+			block-size: var(--toepassing-size-icon-sm);
+			margin-inline-start: var(--toepassing-space-margin-2xs);
 			background-color: currentColor;
 			mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
 		}
@@ -862,14 +862,14 @@ summary {
 .tiles {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap: var(--mox-space-margin-sm);
+	gap: var(--toepassing-space-margin-sm);
 	@container (max-inline-size: 624px) {
 		grid-template-columns: 1fr;
 	}
 	.card {
 		display: flex;
 		flex-direction: column;
-		gap: var(--mox-space-margin-sm);
+		gap: var(--toepassing-space-margin-sm);
 		.btn-cta {
 			margin-block-start: auto;
 		}
@@ -877,13 +877,13 @@ summary {
 }
 
 .card-faq {
-	gap: var(--mox-space-padding-2xs);
+	gap: var(--toepassing-space-padding-2xs);
 	h4 {
-		font-size: var(--mox-text-size-body-md);
+		font-size: var(--toepassing-text-size-body-md);
 		margin-block-end: 0;
 	}
 	section {
-		padding: var(--mox-space-padding-sm);
+		padding: var(--toepassing-space-padding-sm);
 	}
 }
 
@@ -892,29 +892,29 @@ summary {
 .icon-label {
 	align-items: center;
 	display: inline-flex;
-	gap: var(--mox-space-padding-xs);
+	gap: var(--toepassing-space-padding-xs);
 	text-decoration: none;
 	svg {
-		block-size: var(--mox-size-icon-sm);
+		block-size: var(--toepassing-size-icon-sm);
 	}
 }
 .icon-link {
 	&:hover {
-		color: var(--mox-color-interactive-hover-text);
+		color: var(--toepassing-color-interactive-hover-text);
 		text-decoration: underline !important;
 	}
 }
 
 /* Badge component */
 .badge {
-	background: var(--mox-color-component-badge-background);
-	min-block-size: var(--mox-size-icon-sm);
-	border-radius: var(--mox-border-radius-round);
-	color: var(--mox-color-component-badge-text);
-	font: var(--mox-text-component-text-badge);
+	background: var(--toepassing-color-component-badge-background);
+	min-block-size: var(--toepassing-size-icon-sm);
+	border-radius: var(--toepassing-border-radius-round);
+	color: var(--toepassing-color-component-badge-text);
+	font: var(--toepassing-text-component-text-badge);
 	margin-inline-start: auto;
-	min-inline-size: var(--mox-size-icon-xs);
-	padding: 0 var(--mox-space-padding-xs);
+	min-inline-size: var(--toepassing-size-icon-xs);
+	padding: 0 var(--toepassing-space-padding-xs);
 	text-align: center;
 }
 h1,
@@ -922,7 +922,7 @@ h2,
 h3,
 h4 {
 	.badge {
-		margin-inline-start: var(--mox-space-margin-2xs);
+		margin-inline-start: var(--toepassing-space-margin-2xs);
 		vertical-align: text-top;
 	}
 }
@@ -930,47 +930,47 @@ h4 {
 /* Notificaties */
 
 .feedback {
-	background: var(--mox-color-feedback-neutral-subtle);
-	border: var(--mox-border-default);
-	border-color: var(--mox-color-feedback-neutral-border);
-	border-radius: var(--mox-border-radius-md);
+	background: var(--toepassing-color-feedback-neutral-subtle);
+	border: var(--toepassing-border-default);
+	border-color: var(--toepassing-color-feedback-neutral-border);
+	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
-	padding: var(--mox-space-padding-md);
+	padding: var(--toepassing-space-padding-md);
 	svg {
 		align-self: self-start;
-		inline-size: var(--mox-size-icon-md);
-		margin-inline-end: var(--mox-space-margin-2xs);
+		inline-size: var(--toepassing-size-icon-md);
+		margin-inline-end: var(--toepassing-space-margin-2xs);
 	}
 }
 .feedback-icon-color-foreground {
-	fill: var(--mox-color-text-inverse);
+	fill: var(--toepassing-color-text-inverse);
 }
 .feedback-info {
-	background: var(--mox-color-feedback-info-subtle);
-	border-color: var(--mox-color-feedback-info-border);
+	background: var(--toepassing-color-feedback-info-subtle);
+	border-color: var(--toepassing-color-feedback-info-border);
 	svg {
-		fill: var(--mox-color-feedback-info-icon);
+		fill: var(--toepassing-color-feedback-info-icon);
 	}
 }
 .feedback-succes {
-	background: var(--mox-color-feedback-success-subtle);
-	border-color: var(--mox-color-feedback-success-border);
+	background: var(--toepassing-color-feedback-success-subtle);
+	border-color: var(--toepassing-color-feedback-success-border);
 	svg {
-		fill: var(--mox-color-feedback-success-icon);
+		fill: var(--toepassing-color-feedback-success-icon);
 	}
 }
 .feedback-warning {
-	background: var(--mox-color-feedback-warning-subtle);
-	border-color: var(--mox-color-feedback-warning-border);
+	background: var(--toepassing-color-feedback-warning-subtle);
+	border-color: var(--toepassing-color-feedback-warning-border);
 	svg {
-		fill: var(--mox-color-feedback-warning-icon);
+		fill: var(--toepassing-color-feedback-warning-icon);
 	}
 }
 .feedback-error {
-	background: var(--mox-color-feedback-error-subtle);
-	border-color: var(--mox-color-feedback-error-border);
+	background: var(--toepassing-color-feedback-error-subtle);
+	border-color: var(--toepassing-color-feedback-error-border);
 	svg {
-		fill: var(--mox-color-feedback-error-icon);
+		fill: var(--toepassing-color-feedback-error-icon);
 	}
 }
 .feedback-close {
@@ -978,42 +978,42 @@ h4 {
 	&::after {
 		content: "";
 		display: inline-block;
-		inline-size: var(--mox-size-icon-sm);
-		block-size: var(--mox-size-icon-sm);
+		inline-size: var(--toepassing-size-icon-sm);
+		block-size: var(--toepassing-size-icon-sm);
 		background-color: currentColor;
 		mask: url("../assets/icons/icon-sluiten.svg") no-repeat center / contain;
 	}
 }
 .feedback-page-banner {
 	inline-size: 100%;
-	margin-block-end: var(--mox-space-margin-md);
+	margin-block-end: var(--toepassing-space-margin-md);
 	margin-inline: auto;
-	max-inline-size: var(--mox-page-max-inline-size);
-	padding: var(--mox-space-padding-md);
+	max-inline-size: var(--toepassing-page-max-inline-size);
+	padding: var(--toepassing-space-padding-md);
 }
 
 /* MijnOverheid Zakelijk */
 
 body.moza {
-	background: var(--mox-color-background-subtle);
+	background: var(--toepassing-color-background-subtle);
 }
 
 .moza header {
-	background: var(--mox-color-background-default);
-	border-block-end: var(--mox-border-component-pageheader-border);
-	box-shadow: var(--mox-box-shadow-default);
+	background: var(--toepassing-color-background-default);
+	border-block-end: var(--toepassing-border-component-pageheader-border);
+	box-shadow: var(--toepassing-box-shadow-default);
 }
 .page-title {
-	font: var(--mox-text-heading-h2);
+	font: var(--toepassing-text-heading-h2);
 }
 .page-head {
 	align-items: baseline;
 	display: flex;
 	justify-content: space-between;
 	margin-inline: auto;
-	max-inline-size: var(--mox-page-max-inline-size);
-	padding-block: var(--mox-space-padding-xs);
-	padding-inline: var(--mox-space-padding-md);
+	max-inline-size: var(--toepassing-page-max-inline-size);
+	padding-block: var(--toepassing-space-padding-xs);
+	padding-inline: var(--toepassing-space-padding-md);
 	@media (max-width: 799px) ) {
 		/* display: none; */
 	}
@@ -1022,19 +1022,19 @@ body.moza {
 .moza article {
 	display: flex;
 	flex-direction: column;
-	row-gap: var(--mox-space-margin-sm);
+	row-gap: var(--toepassing-space-margin-sm);
 }
 
 /* Tijdelijk, voornamelijk voor gebruikersonderzoeken */
 
 /* Proof of concept banner */
 .temp-moza-poc-banner {
-	background: var(--mox-color-feedback-success-default);
-	color: var(--mox-color-text-inverse);
-	font-size: var(--mox-text-font-weight-bold);
+	background: var(--toepassing-color-feedback-success-default);
+	color: var(--toepassing-color-text-inverse);
+	font-size: var(--toepassing-text-font-weight-bold);
 	margin-inline-start: -3rem;
-	padding-block: var(--mox-space-padding-sm);
-	padding-inline: var(--mox-space-padding-lg);
+	padding-block: var(--toepassing-space-padding-sm);
+	padding-inline: var(--toepassing-space-padding-lg);
 	position: fixed;
 	inset-inline-end: -4rem;
 	text-align: center;
@@ -1044,38 +1044,38 @@ body.moza {
 	transform-origin: center;
 	inline-size: 280px;
 	&:hover {
-		background: var(--mox-color-feedback-success-emphasis);
-		color: var(--mox-color-text-inverse);
+		background: var(--toepassing-color-feedback-success-emphasis);
+		color: var(--toepassing-color-text-inverse);
 	}
 }
 
 /* Doorkijkjes navigatie */
 .temp-moza-subnav-preview {
 	display: flex;
-	/* opacity: var(--mox-opacity-interactive-disabled); */
+	/* opacity: var(--toepassing-opacity-interactive-disabled); */
 	a {
-		padding-block: var(--mox-space-padding-2xs);
-		padding-inline: var(--mox-space-padding-md);
+		padding-block: var(--toepassing-space-padding-2xs);
+		padding-inline: var(--toepassing-space-padding-md);
 		inline-size: 100%;
 	}
 	&:not(:has(~ .temp-moza-subnav-preview)) {
-		border-block-end: var(--mox-border-default);
-		border-color: var(--mox-color-interactive-disabled-border);
-		margin-block-end: var(--mox-space-margin-xs);
+		border-block-end: var(--toepassing-border-default);
+		border-color: var(--toepassing-color-interactive-disabled-border);
+		margin-block-end: var(--toepassing-space-margin-xs);
 	}
 }
 .temp-moza-subnav-preview-heading {
-	border-block-end: var(--mox-border-default);
-	border-color: var(--mox-color-interactive-disabled-border);
+	border-block-end: var(--toepassing-border-default);
+	border-color: var(--toepassing-color-interactive-disabled-border);
 	font-style: italic;
 	margin-block-start: 1rem;
 	padding: 0.5rem;
 }
 .temp-moza-disabled {
-	opacity: var(--mox-opacity-interactive-disabled);
+	opacity: var(--toepassing-opacity-interactive-disabled);
 }
 
 /* Overige tijdelijke styling */
 .card h2 + ul {
-	margin-block-start: var(--mox-space-margin-xs);
+	margin-block-start: var(--toepassing-space-margin-xs);
 }

@@ -9,9 +9,9 @@ StyleDictionary.registerFileHeader({
   fileHeader: () => {
     return [
       'Automatisch gegenereerd op basis van design tokens.',
-      'De bron is tokens.json uit de MOx repository.',
+      'De bron is tokens.json.',
       `Gegenereerd op ${new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}`,
-      '_rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _mox.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _mox.css, niet aan die in _rijkshuisstijl.css.',
+      '_rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _toepassing.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _toepassing.css, niet aan die in _rijkshuisstijl.css.',
       'CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.',
     ];
   },
@@ -123,7 +123,7 @@ const tsTransforms = StyleDictionary.hooks.transformGroups['tokens-studio']
 
 console.log('Filtered transforms:', tsTransforms);
 
-  // Deep merge: rijkshuisstijl first, then mox on top (preserving groups)
+  // Deep merge: rijkshuisstijl first, then toepassing on top (preserving groups)
   const setNames = Object.keys(sets);
   let merged = {};
   for (const setName of setNames) {
@@ -165,7 +165,7 @@ console.log('Filtered transforms:', tsTransforms);
           },
           options: {
             fileHeader: 'custom-header',
-            outputReferences: setName === 'mox',
+            outputReferences: setName === 'toepassing',
           },
         })),
       },
