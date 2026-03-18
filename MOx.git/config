@@ -5,4 +5,4 @@
 	ignorecase = true
 	precomposeunicode = true
 [remote "origin"]
-	url = https://github.com/MinBZK/poc-moza.git
+	url = https://github.com/minbzk/poc-moza.git
