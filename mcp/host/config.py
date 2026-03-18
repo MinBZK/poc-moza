@@ -31,35 +31,5 @@ MCP_SERVERS: dict[str, Path] = {
 VLAM_HOST = os.getenv("VLAM_HOST", "0.0.0.0")
 VLAM_PORT = int(os.getenv("VLAM_PORT", "8000"))
 
-# Systeemprompts — worden dynamisch samengesteld op basis van beschikbare tools
-
-_BASE_INSTRUCTIE = """
-Antwoord altijd in het Nederlands op B1-taalniveau. Wees helder en behulpzaam.
-Verwijs waar mogelijk naar de officiële bron."""
-
-_TOOL_BESCHRIJVING = """
-Je hebt toegang tot de volgende bronnen via tools:
-- KvK (Kamer van Koophandel): bedrijfsgegevens, registratie, handelsregister
-- KOOP Regelingenbank: wet- en regelgeving, besluiten, publicaties
-- RegelRecht: uitvoeringsregels en beslisbomen van MinBZK/Digilab
-- RVO: subsidies, regelingen en meldingen (O2-uploads)"""
-
-_GEEN_TOOLS_BESCHRIJVING = """
-Je hebt momenteel geen toegang tot externe bronnen. Beantwoord vragen op basis
-van je eigen kennis. Geef aan wanneer informatie mogelijk niet actueel is en
-verwijs de gebruiker naar de juiste overheidsinstantie voor verificatie."""
-
-
-def get_system_prompt(mode: str, has_tools: bool) -> str:
-    """Genereer systeemprompt op basis van modus en tool-beschikbaarheid."""
-    if mode == "vlam":
-        identiteit = "Je bent VLAM, de digitale assistent van de Rijksoverheid."
-    else:
-        identiteit = "Je bent Claude, ingezet als digitale assistent van MijnOverheid Zakelijk."
-
-    taak = """Je helpt ondernemers en burgers met vragen over regelgeving, vergunningen,
-subsidies en bedrijfsregistratie."""
-
-    bronnen = _TOOL_BESCHRIJVING if has_tools else _GEEN_TOOLS_BESCHRIJVING
-
-    return f"{identiteit}\n{taak}\n{bronnen}\n{_BASE_INSTRUCTIE}"
+# System prompt — assembled from modular blocks
+from prompts.composer import compose_system_prompt as get_system_prompt
