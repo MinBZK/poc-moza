@@ -5,3 +5,5 @@ node_modules/
 storybook-static/
 *.crdownload
 .claude/*
+_site/.claude/*
+agent-os/standards/index.yml
