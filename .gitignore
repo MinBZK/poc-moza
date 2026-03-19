@@ -4,8 +4,9 @@ style-dictionary/node_modules/*
 node_modules/
 storybook-static/
 *.crdownload
-.claude/settings.local.json
 .env
 mcp/host/.env
-_site/
 __pycache__/
+.claude/*
+_site/.claude/*
+agent-os/standards/index.yml

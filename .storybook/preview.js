@@ -19,6 +19,11 @@ const preview = {
 				date: /Date$/i,
 			},
 		},
+		docs: {
+			source: {
+				format: true,
+			},
+		},
 	},
 };
 

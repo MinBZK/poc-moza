@@ -3,15 +3,16 @@
   "private": true,
   "scripts": {
     "build": "cd style-dictionary && npm run build && cd .. && npx @11ty/eleventy",
-    "dev": "concurrently \"npx @11ty/eleventy --serve\" \"chokidar 'tokens/tokens.json' -c 'cd style-dictionary && npm run build'\"",
+    "dev": "concurrently \"npx @11ty/eleventy --serve\" \"chokidar 'tokens/tokens.json' -c 'cd style-dictionary && npm run build'\" \"chokidar 'stories/**/*.stories.js' 'style/style.css' -c 'npm run build-storybook'\"",
     "tokens": "cd style-dictionary && npm run build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "storybook build -o _site/storybook",
     "chromatic": "npx chromatic --project-token=chpt_3c3233eb69e2811"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
     "@storybook/addon-a11y": "^10.2.16",
+    "@storybook/addon-docs": "^10.3.0",
     "@storybook/html-vite": "^10.2.16",
     "chokidar-cli": "^3.0.0",
     "chromatic": "^15.2.0",

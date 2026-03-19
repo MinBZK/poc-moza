@@ -1,0 +1,41 @@
+<h1>Page Composition</h1>
+<p>All pages follow the same layout structure.</p>
+<h2>Structure</h2>
+<pre><code class="language-html">&lt;aside&gt;
+	&lt;nav class=&quot;side-nav&quot;&gt;
+		&lt;button class=&quot;side-nav-toggle&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;side-nav-menu&quot;&gt;Menu&lt;/button&gt;
+		&lt;ul id=&quot;side-nav-menu&quot;&gt;
+			
+		&lt;/ul&gt;
+	&lt;/nav&gt;
+&lt;/aside&gt;
+
+
+&lt;article&gt;
+  &lt;nav class=&quot;breadcrumb&quot;&gt;...&lt;/nav&gt;
+  &lt;h1&gt;Page title&lt;/h1&gt;
+
+  &lt;section class=&quot;card&quot;&gt;
+    &lt;!-- Content section --&gt;
+  &lt;/section&gt;
+
+  &lt;div class=&quot;tiles&quot;&gt;
+    &lt;section class=&quot;card&quot;&gt;...&lt;/section&gt;
+    &lt;section class=&quot;card&quot;&gt;...&lt;/section&gt;
+  &lt;/div&gt;
+
+  &lt;section class=&quot;card accordion&quot;&gt;
+    &lt;details name=&quot;faq&quot;&gt;...&lt;/details&gt;
+  &lt;/section&gt;
+&lt;/article&gt;
+</code></pre>
+<h2>Rules</h2>
+<ul>
+<li>Side-nav is always included first</li>
+<li>Main content goes in <code>&lt;article&gt;</code></li>
+<li>Content sections are wrapped in <code>.card</code></li>
+<li>Multi-column layouts use <code>.tiles</code> wrapper (CSS grid, 2 columns)</li>
+<li>FAQ sections use <code>&lt;details name=&quot;faq&quot;&gt;</code> for grouped accordions</li>
+<li>Data tables use <code>.data-overview</code> class</li>
+<li>CTAs use <code>a.btn-cta</code> (not button) for navigation actions</li>
+</ul>

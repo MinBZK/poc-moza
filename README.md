@@ -2,9 +2,14 @@
 
 ## Omgeving installeren
 
-1. Clone deze repository lokaal
-2. [Installeer Style Dictionary](https://styledictionary.com/getting-started/using_the_cli/#installation) in `/style-dictionary`, deze vertaald design tokens naar CSS variabelen
-3. [Instaleer SD-Transforms](https://www.npmjs.com/package/@tokens-studio/sd-transforms#installation) in `/style-dictionary`, dit is een pakketje met extra transformatie-opties die nodig zijn om design tokens uit Figma [Tokens Studio](https://docs.tokens.studio/) te vertalen
+Clone deze repository lokaal.
+
+### Vereisten
+
+- [Node.js](https://nodejs.org/en/download)
+- [npm](https://www.npmjs.com/)
+
+---
 
 ## Statische site-generator installeren
 
@@ -16,13 +21,13 @@ npm install @11ty/eleventy
 
 ### Pagina's bouwen
 
-Om de HTML pagina's te bouwen voer je het commando uit vanuit de root van het project:
+Om de HTML pagina's te bouwen voer je dit commando uit vanuit de root van het project:
 
 ``` bash
 npx @11ty/eleventy
 ```
 
-De gebouwde pagina's worden in de `_site` map geplaatst.
+De gebouwde pagina's worden in de map `_site` geplaatst.
 
 ### Lokaal bekijken
 
@@ -32,7 +37,7 @@ Start een lokale server met live reload:
 npx @11ty/eleventy --serve
 ```
 
-De site is vervolgens te bekijken op `http://localhost:8080`.
+De site is vervolgens te bekijken op [`localhost:8080`](http://localhost:8080).
 
 ### Includes
 
@@ -44,8 +49,9 @@ Herhalende componenten staan in de `_includes` map:
 | `header-rijksoverheid.njk` | Rijksoverheid header met logo en navigatie |
 | `header-overheid.njk` | Overheid header header met logo |
 | `footer-overheid.njk` | Overheid footer |
+| `side-nav-overheid.njk` | Overheid hoofdnavigatie |
 
-Elke pagina selecteert zijn layout en opties via front matter bovenaan het bestand:
+Elke pagina selecteert diens layout en opties bovenaan het bestand:
 
 ``` yaml
 ---
@@ -56,21 +62,52 @@ footerType: overheid
 ---
 ```
 
-## NPM scripts
+---
 
-Installeer eerst de dependencies in de root van het project:
+## Design tokens
+
+Design tokens zijn ontwerp-waarden — zoals kleuren, typografie, maatvoering — opgeslagen in een platformonafhankelijk formaat (JSON). Ze vormen een gedeelde taal tussen ontwerp en ontwikkeling: in plaats van bijvoorbeeld losse hex-codes of pixelwaarden door te geven, verwijzen beide disciplines naar dezelfde bron. Hierdoor blijven ontwerp en code altijd synchroon en is een wijziging op één plek (bijvoorbeeld een merkkleur) direct overal doorgevoerd.
+
+Het bestand `tokens/tokens.json` is de *single source of truth* voor alle ontwerp-waarden én toepassingen (kleur, typografie, spacing, etc.). Dit bestand is in twee richtingen te bewerken:
+
+- **Figma** — via de [Tokens Studio](https://docs.tokens.studio/) plugin kunnen ontwerpers tokens ophalen, aanpassen en terugschrijven naar Git.
+- **IDE** — ontwikkelaars kunnen het JSON-bestand ophalen, aanpassen en terugschrijven naar Git in een code-editor.
+
+### Style Dictionary
+
+Om de design tokens te vertalen naar CSS variabelen wordt [Style Dictionary](https://styledictionary.com/) gebruikt.
+
+1. [Installeer Style Dictionary](https://styledictionary.com/getting-started/using_the_cli/#installation) in `/style-dictionary`, deze vertaald design tokens naar CSS variabelen
+1. [Instaleer SD-Transforms](https://www.npmjs.com/package/@tokens-studio/sd-transforms#installation) in `/style-dictionary`, dit is een pakketje met extra transformatie-opties die nodig zijn om design tokens uit Figma [Tokens Studio](https://docs.tokens.studio/) te vertalen
+
+De pipeline ziet er zo uit:
+
+Figma met Tokens Studio óf IDE → tokens/tokens.json → Style Dictionary + SD-Transforms → CSS variabelen → Stylesheet (style.css)
+
+Style Dictionary leest `tokens.json` en transformeert de tokens naar CSS custom properties. Omdat Tokens Studio een eigen tokenformaat hanteert dat afwijkt van het [standaard Design Token Community Group (DTCG) formaat](https://www.designtokens.org/tr/2025.10/format/), wordt [SD-Transforms](https://www.npmjs.com/package/@tokens-studio/sd-transforms) als aanvulling gebruikt. Dit zorgt onder andere voor het correct oplossen van tokenreferenties, het omrekenen van `px` naar `rem` waarden en het omzetten van namen naar ‘*kebab-case*’.
+
+Het resultaat wordt opgesplitst in twee automatisch gegenereerde CSS-bestanden:
+
+- **`_rijkshuisstijl.css`** — bevat de waarden uit de Rijkshuisstijl: het kleurenpalet, typografie-instellingen, maatvoering, etc. Dit zijn de beschikbare *opties*.
+- **`_toepassing.css`** — bevat semantische variabelen die verwijzen naar de Rijkshuisstijl-waarden en daar een concrete betekenis aan geven, bijvoorbeeld `--color-text-default` of `--button-primary-background-color`. Dit zijn de *toepassingen* van de opties.
+
+Gebruik in stylesheets en componenten altijd variabelen uit `_toepassing.css` en nooit rechtstreeks uit `_rijkshuisstijl.css`. De Rijkshuisstijl-variabelen zijn de bouwstenen; de toepassingsvariabelen bepalen *hoe* die bouwstenen worden ingezet. Door deze scheiding kan een Rijkshuisstijl-waarde wijzigen zonder dat stylesheets aangepast hoeven te worden — de toepassingslaag vangt de verandering op.
+
+Beide bestanden worden automatisch gegenereerd en mogen niet handmatig bewerkt worden. Alle wijzigingen aan ontwerp-waarden horen thuis in `tokens/tokens.json`.
+
+### Design tokens vertalen naar CSS variabelen
+
+Gebruik dit commando om design tokens handmatig naar CSS variabelen om te zetten:
 
 ``` bash
-npm install
+npm run tokens
 ```
 
-| Script | Commando | Beschrijving |
-| ------ | -------- | ------------ |
-| `npm run dev` | Eleventy serve + token watcher | Beide parallel, met live reload |
-| `npm run build` | Tokens + Eleventy | Volledige productie-build |
-| `npm run tokens` | Alleen Style Dictionary | Handmatig tokens bouwen |
-| `npm run storybook` | Storybook dev server | Componentenbibliotheek lokaal bekijken |
-| `npm run build-storybook` | Storybook productie-build | Statische Storybook-site bouwen |
+Dit resulteert in wijzigingen in de CSS variabelen bestanden. Deze worden automatisch geïmporteerd in de globale `style.css` style sheet.
+
+Bij het gebruik van `npm run dev` worden design tokens automatisch opnieuw gebouwd wanneer `tokens/tokens.json` wijzigt.
+
+---
 
 ## Storybook
 
@@ -82,11 +119,15 @@ npm install
 npm run storybook
 ```
 
-Storybook is vervolgens te bekijken op `http://localhost:6006`.
+Storybook is vervolgens te bekijken op [`localhost:6006`](http://localhost:6006).
+
+### Automatisch bouwen
+
+Bij het gebruik van `npm run dev` wordt Storybook automatisch opnieuw gebouwd naar `_site/storybook` wanneer bestanden in `stories/` of `style/style.css` wijzigen. Dit gebeurt via [chokidar](https://www.npmjs.com/package/chokidar-cli) die het `build-storybook` script triggert bij elke wijziging.
 
 ### Stories
 
-De stories staan in de `stories/` map. Elk bestand beschrijft één component en toont varianten:
+De stories staan in de `stories/` map. Elk bestand beschrijft één component en toont varianten, bijvoorbeeld:
 
 | Bestand | Beschrijving |
 | ------- | ------------ |
@@ -99,62 +140,85 @@ De stories staan in de `stories/` map. Elk bestand beschrijft één component en
 | `Typografie.stories.js` | Koppen en tekststijlen |
 | `Tabel.stories.js` | Tabelopmaak |
 
-### Publiceren naar Chromatic
+---
 
-[Chromatic](https://www.chromatic.com/) host Storybook online en biedt visuele regressietests. Eenmalige installatie:
+### NPM scripts
 
-``` bash
-npm install --save-dev chromatic
-```
-
-Publiceren:
+Installeer dependencies in de root van het project:
 
 ``` bash
-npx chromatic --project-token=<jouw-token>
+npm install
 ```
 
-Het project token vind je na het aanmaken van een project op [chromatic.com](https://www.chromatic.com/). Chromatic bouwt en uploadt Storybook automatisch — je hoeft zelf niets te builden.
+| Script | Commando | Beschrijving |
+| ------ | -------- | ------------ |
+| `npm run dev` | Eleventy serve + token watcher + Storybook watcher | Alle drie parallel, met live reload en automatische Storybook-build bij wijzigingen |
+| `npm run build` | Tokens + Eleventy | Volledige productie-build |
+| `npm run tokens` | Alleen Style Dictionary | Handmatig tokens bouwen |
+| `npm run storybook` | Storybook dev server | Componentenbibliotheek lokaal bekijken |
+| `npm run build-storybook` | Storybook productie-build | Statische Storybook-site bouwen |
 
-## Design tokens vertalen naar CSS variabelen
-
-Om design tokens handmatig naar CSS variabelen om te zetten:
-
-``` bash
-npm run tokens
-```
-
-Dit resulteert in wijzigingen in de CSS variabelen bestanden. Deze worden automatisch geïmporteerd in de globale `style.css` style sheet.
-
-Bij het gebruik van `npm run dev` worden design tokens automatisch opnieuw gebouwd wanneer `tokens/tokens.json` wijzigt.
+---
 
 ## Structuur
 
 ``` text
+📂 _includes                herhalende consistente elementen die in meerdere pagina’s toegegepast worden
+📂 _site                    statische site gegenereerd door Eleventy.js
 📂 assets
-    📁 favicon          favicons voor diverse platformen
-    📁 fonts            Rijksoverheid lettertype webfonts
-    📁 images           afbeeldingen
-📂 componenten          HTML componenten
+    📁 favicon              favicons voor diverse platformen
+    📁 fonts                Rijkslettertype webfonts
+    📁 icons                iconen
+    📁 images               afbeeldingen
+📂 moza                     prototype voor MijnOverheid Zakelijk, gebaseerd op deze omgeving
+📂 stories                  ‘stories’ om componenten weer te geven in Storybook
 📂 style
-    📄 _reset.css       cross-browser stijl normalisatie, opgenomen in style.css
-    📄 _variables.css   CSS variabelen vertaald van design tokens, opgenomen in style.css
-    📄 style.css        algemene CSS stijl gelinkt vanuit HTML
+    📄 _reset.css           cross-browser stijl normalisatie
+    📄 _rijkshuisstijl.css  opties uit de Rijkshuisstijl
+    📄 _toepassing.css      semantische toepassing van de opties uit de Rijkshuisstijl
+    📄 style.css            algemene CSS styling
 📁 style-dictionary
-    📄 config.json      configuratiebestand voor Style Dictionary om design tokens naar CSS variabelen te vertalen
+    📄 config.json          configuratiebestand voor Style Dictionary
 📁 tokens
-    📄 tokens.json      design tokens die als basis dienen voor CSS variabelen
-📄 index.html           boilerplate pagina
-📄 README.md            dit bestand met nadere uitleg
+    📄 tokens.json          design tokens JSON bestand
+📄 index.html               homepagina van het MijnOverheid Zakelijk prototype
+📄 package.json             build dependencies
+📄 package-lock.json        locked dependency versions
+📄 README.md                dit bestand
 
 ```
 
 ## CSS conventies
 
+### CSS patronen
+
+Deze omgeving maakt gebruik van moderne CSS-features:
+
+- **CSS nesting** voor o.a. component-staten en varianten
+- **CSS custom properties** (variabelen) voor alle ontwerp-waarden
+- **`:focus-visible`** (niet `:focus`) voor toetsenbordfocus-indicatoren
+- **`aria-disabled`** en **`aria-invalid`** [ARIA](https://www.w3.org/TR/wai-aria/) attributen voor staten (niet `:disabled`)
+
+### Variabele naamgeving
+
+Gegenereerde variabelen volgen ‘kebab-case’ met een semantische hiërarchie:
+
+``` text
+--prefix-categorie-optionelesubcategorie-attribuut--optionelestaat
+```
+
+Voorbeelden:
+
+- `--rijkhuisstijl-color-lintblauw-50`
+- `--toepassing-button-primary-background-color`
+
 ### Logical properties
 
-In de stylesheets worden [CSS logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) gebruikt in plaats van fysieke properties. Logical properties passen zich automatisch aan op basis van de schrijfrichting (`direction`) en schrijfmodus (`writing-mode`), wat de CSS toekomstbestendig en beter geschikt maakt voor meertalige ondersteuning.
+In de stylesheets worden [CSS ‘logical’ properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) gebruikt in plaats van ‘physical’ properties. Logical properties passen zich automatisch aan op basis van de schrijfrichting (`direction`) en schrijfmodus (`writing-mode`), wat de CSS toekomstbestendig en beter geschikt maakt voor meertalige ondersteuning.
 
-| Fysiek | Logisch |
+Voorbeelden van physical properties en hun logical equivalenten:
+
+| Physical | Logical |
 | ------ | ------- |
 | `width` | `inline-size` |
 | `height` | `block-size` |
@@ -166,15 +230,9 @@ In de stylesheets worden [CSS logical properties](https://developer.mozilla.org/
 | `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
 | `border-top` / `border-bottom` | `border-block-start` / `border-block-end` |
 
-## Design tokens in Figma
+---
 
-Om met de design tokens in Figma te werken dient gebruik gemaakt te worden van [de Tokens Studio plugin](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma). Wanneer deze geïnstalleerd is kan je [middels deze uitleg de tokens in Figma importeren en synchroniseren](https://docs.tokens.studio/token-storage/remote/sync-git-github) (en vervolgens optioneel omzetten in Figma variabelen en/of stijlen).
-
-In Tokens Studio verwijs je vervolgens naar deze repository en folder/bestand `tokens/tokens.json`.
-
-Hierna is een twee-weg bewerking mogelijk middels Git; tokens zijn zowel in JSON zelf (IDE of tekstverwerker) als in Figma aan te maken, wijzigen en verwijderen.
-
-## Commit berichten
+## Git commit berichten
 
 `Initial commit`
 Initiële commit, een eerste versie die in de bestandsgeschiedenis geplaatst wordt.
@@ -182,30 +240,44 @@ Initiële commit, een eerste versie die in de bestandsgeschiedenis geplaatst wor
 `➕ Added`
 Toevoeging(en) aan een bestand.
 
+Voorbeeld: `➕ Link component`
+
 `✏️ Modified`
 Wijziging(en) aan een bestand.
+
+Voorbeeld: `✏️ Kleur van :hover staat primaire knop`
 
 `❌ Deleted`
 Verwijdering van (iets in) een bestand.
 
+Voorbeeld: `❌ contactpagina.html verwijderd`
+
 `🧼 Hygiene`
 Kleine aanpassing, fix.
+
+Voorbeeld: `🧼 padding-inline-start → padding-inline`
 
 `🐛 Bugfix`
 Herstel van een bug.
 
+Voorbeeld: `🐛 footer include werd niet getoond`
+
 `💾 Backup`
 Back-up van een bestand voordat grote wijzigingen plaatsvinden.
+
+Voorbeeld: `💾 backup 2026-03-18 voorafgaand aan wijzigingen voor gebruikersonderzoeken`
 
 `🔁 Renamed`
 Hernoeming van (iets in) een bestand.
 
+Voorbeeld: `🔁 contact-pagina.html hernoemd naar comntact.html`
+
 `↩️ Revert commit`
 Wijziging(en) in een vorige commit die ongedaan gemaakt worden.
+
+Voorbeeld: `↩️ wijzigingen van vorige commit ongedaan gemaakt omdat deze performance issues veroorzaakte`
 
 `🔀 IDE ↔︎ Figma`
 Twee-wegverkeer tussen IDE en Figma, met name om design tokens in beide omgevingen te kunnen aanpassen en testen (Style Dictionary → CSS variabelen en Figma Tokens Studio)
 
-## MijnOverheid Zakelijk prototype
-
-[![Deploy Eleventy to GitHub Pages](https://github.com/rogier-barendregt/MOx/actions/workflows/eleventy.yml/badge.svg)](https://github.com/rogier-barendregt/MOx/actions/workflows/eleventy.yml)
+Voorbeeld: `🔀 tokens voor knoppen aangepast in Figma`

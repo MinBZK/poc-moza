@@ -1,0 +1,59 @@
+<h1>Logical Properties</h1>
+<p>Use CSS logical properties instead of physical (directional) properties.</p>
+<h2>Mapping</h2>
+<table>
+<thead>
+<tr>
+<th>Physical (don't use)</th>
+<th>Logical (use this)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width</code></td>
+<td><code>inline-size</code></td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>block-size</code></td>
+</tr>
+<tr>
+<td><code>margin-top</code></td>
+<td><code>margin-block-start</code></td>
+</tr>
+<tr>
+<td><code>margin-bottom</code></td>
+<td><code>margin-block-end</code></td>
+</tr>
+<tr>
+<td><code>margin-left</code></td>
+<td><code>margin-inline-start</code></td>
+</tr>
+<tr>
+<td><code>padding-right</code></td>
+<td><code>padding-inline-end</code></td>
+</tr>
+<tr>
+<td><code>top</code></td>
+<td><code>inset-block-start</code></td>
+</tr>
+<tr>
+<td><code>left</code></td>
+<td><code>inset-inline-start</code></td>
+</tr>
+<tr>
+<td><code>text-align: left</code></td>
+<td><code>text-align: start</code></td>
+</tr>
+<tr>
+<td><code>vertical-align: top</code></td>
+<td><code>vertical-align: top</code> (no logical equivalent yet)</td>
+</tr>
+</tbody>
+</table>
+<h2>Shorthand</h2>
+<pre><code class="language-css">margin-block: 1rem;         /* top + bottom */
+padding-inline: 1rem 2rem;  /* left + right */
+</code></pre>
+<h2>Why</h2>
+<p>Modern CSS best practice. Logical properties are direction-agnostic, making layouts inherently ready for RTL or vertical writing modes.</p>
