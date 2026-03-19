@@ -4,6 +4,25 @@
 
 Dit document beschrijft de ontwerpprincipes en technische keuzes die ten grondslag liggen aan het prototype van MijnOverheid Zakelijk. Het prototype wordt ingezet voor gebruikersonderzoek en dient als referentie voor de uiteindelijke realisatie.
 
+- [Prototype](https://proef.moza.rijksapp.dev/moza/)
+- [Storybook](https://proef.moza.rijksapp.dev/storybook/)
+
+### Ontwerp met de eindgebruiker centraal
+
+Goed ontwerp begint bij luisteren. Daarom betrekken wij eindgebruikers vanaf het allereerste moment bij ons ontwerpproces. We starten met het in kaart brengen van hun dagelijkse praktijk: waar lopen zij tegenaan, wat kost onnodig tijd of frustratie, en waar liggen juist kansen? Door zowel pijnpunten als wensen expliciet te inventariseren, creëren we een scherp en gedeeld beeld van wat er echt toe doet.
+
+#### Van idee tot initiatief
+
+Het ministerie van Binnenlandse Zaken en Koninkrijksrelaties heeft in 2024 MKB'ers en ZZP'ers uitgenodigd om samen over oplossingen na te denken. Zij kwamen met het voorstel voor een centrale Mijn-omgeving, iets dat in de basis lijkt op MijnOverheid. Daar hebben ze zelf ontwerpen voor bedacht. met die plannen werken we nu verder.
+
+#### Van inzicht naar eindproduct
+
+In interactieve sessies, interviews en gebruikerstests leggen we onze inzichten en ideeën voor aan de eindgebruikers. Zo toetsen we aannames en krijgen we waardevolle feedback op functionaliteit, gebruiksgemak en flows. Deze inzichten vormen de basis voor onze ontwerprichtingen.
+
+Voor gebruikerstests maken we vaak gebruik van interactive Figma prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
+
+Door deze continue cyclus van onderzoeken, ontwerpen, testen en verfijnen zorgen we ervoor dat wat we bouwen aansluit op de behoeften en verwachtingen van eindgebruikers. Waar directe inzichten nog ontbreken, werken we op basis van expliciete aannames. Deze aannames maken we zo snel mogelijk toetsbaar door ze te vertalen naar concrete ontwerpen die we voorleggen aan gebruikers.
+
 ### Ontwerpen in code
 
 Het ontwerpproces vindt niet plaats in grafische design tooling zoals Figma of Sketch, maar direct in front-end code: HTML, CSS en waar nodig JavaScript. Design tooling voegt een vertaalstap toe tussen ontwerp en eindresultaat — een vertaalstap die tijd kost, informatie verliest en afwijkingen introduceert. Door direct in het daadwerkelijke medium te werken vervalt die vertaling. Wat ontworpen wordt, is direct wat de gebruiker te zien krijgt.
@@ -72,6 +91,81 @@ Het ontwerpproces beweegt zich continu tussen twee perspectieven: wat we nu kunn
 - **Ontwerpen op aannames, valideren met gebruikers** — niet elk ontwerpbesluit kan vooraf onderbouwd worden met onderzoek. Waar directe inzichten ontbreken, formuleren we expliciete aannames die we zo snel mogelijk met gebruikers toetsen. Onderzoek en ontwerp wisselen elkaar voortdurend af.
 - **De stip op de horizon als kompas** — sommige oplossingen zijn nu nog niet realiseerbaar: wetgeving staat het niet toe, systemen zijn er nog niet klaar voor, of de organisatie moet eerst anders ingericht worden. Toch ontwerpen we alvast voor die toekomst, zodat we daar klaar voor zijn wanneer de randvoorwaarden veranderen.
 - **Kleine stappen in de goede richting** — elk increment levert iets op dat getest en gebruikt kan worden, maar brengt het ontwerp ook dichter bij het grotere doel. We kiezen bewust voor oplossingen die zowel op korte termijn waarde leveren als op lange termijn passen in het toekomstbeeld.
+
+### 8. Relevante onderzoeken en projecten
+
+Een overzicht van projecten en gebruikersonderzoeken die als input dienen voor het ontwerp van MijnOverheid Zakelijk.
+
+#### MijnOverheid Zakelijk Gebruikersonderzoeken
+
+<!-- - **Co-creatiesessies BZK (2024)** — sessies met MKB'ers en ZZP'ers waarin het initiatief voor een centrale Mijn-omgeving is ontstaan. -->
+- **[Rapportage Ontwerpend Onderzoek MijnOnderneming — januari 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Rapportage%20-%20BZK%20Ontwerpend%20Onderzoek%20MijnOnderneming%20-%20Januari%202025.pdf)** — rapportage van het ontwerpend onderzoek MijnOnderneming.
+- **[Rapportage WetWijzer Design en Iteratie Sprint — februari 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Feb%202025/Rapportage%20_%20BZK%20WetWijzer%20Design%20en%20Iteratie%20Sprint%20_%20def%20feb%202025.pdf)** — rapportage van de WetWijzer design- en iteratiesprint.
+- **[Onderzoek inzichten MOZa (ZZP'ers en MKB'ers) — juli 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Juli%202025/Onderzoek%20inzichten%20MOZa%20(gesprekken%20met%20ZZP%27ers%20en%20MKB%27ers)_juli%202025_UX%20Research.pdf)** — UX-onderzoek met ZZP'ers en MKB'ers.
+- **[Ontwerpend onderzoek Ondernemers — Inzichtkaarten — juli 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Juli%202025/BZK%20Ontwerpendonderzoek%20Ondernemers%20-%20Analyse%20sessie%2018%20juli%20-%20Inzichtkaarten%20-%20alle%20minisessies.pdf)** — inzichtkaarten uit analysesessies met ondernemers.
+- **[Rapportage usability onderzoek MOZa (MKB'ers) — augustus 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Aug%202025/Rapportage%20usability%20onderzoek%20inzichten%20MOZa%20(gesprekken%20met%20MKB%27ers)_augustus%202025_UX%20Research.pdf)** — rapportage usability-onderzoek met MKB'ers.
+- **[MOZa usability onderzoek — oktober 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/MOZa%20usability%20onderzoek%20oktober%202025%20DEF.pdf)** — definitief rapport van het usability-onderzoek.
+- **[Verslaglegging aanname-sessie MOZa — oktober 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/Verslaglegging%20aanname%20sessie%20MOZa%20(1%20oktober%202025).pdf)** — verslag van de aanname-sessie.
+- **[WetWijzerBedrijven — Eindrapport v2.0 — oktober 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/WetWijzerBedrijven%20-%20Eindrapport%20v2.0.pdf)** — eindrapport WetWijzerBedrijven.
+- **[WetWijzerBedrijven — Publieksvriendelijk eindresultaat — september 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/WetWijzerBedrijven%20IDO200625K%20-%20Publieksvriendelijk%20eindresultaat%20sep_2025.pdf)** — publieksvriendelijk eindresultaat WetWijzerBedrijven.
+- **[MOZa presentatie eerste resultaten — maart 2026](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20mrt%202026/MOZa%20presentatie-eerste%20resultaten.pptx)** — presentatie van de eerste onderzoeksresultaten.
+- **[RVO Service Ecosysteem](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/RVO%20-%20Service%20Ecosysteem/service%20ecosysteem.pptx)** — presentatie over het service-ecosysteem vanuit RVO.
+- **[Master These — MOZa onderzoek — januari 2026](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/02%20-%20Master%20These%20PepeRubbens%20(jan%202026)/MOZa%20onderzoek%20Pepe%20PDF.pdf)** — onderzoeksrapport MOZa door Pepe Rubbens.
+- **[Master These — Designing Entrepreneurial Adoption for MOZa-services](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/02%20-%20Master%20These%20PepeRubbens%20(jan%202026)/PepeRubbens_DesigningEntrepreneurialAdoptionforMOZa-services_Rep.pdf)** — masterthese over adoptie van MOZa-services door ondernemers.
+- **[Klantreizen](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Klantreizen)** — map met klantreis-onderzoeken.
+- **[Verkenning onderzoek gegevensdeling](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Verkenning%20onderzoek%20gegevensdeling)** — map met onderzoeken over gegevensdeling.
+- **[Verkenning authenticatie](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Verkenning%20authenticatie)** — map met onderzoeken over authenticatie.
+
+#### Oveige gebruikersonderzoeken
+
+- **[Gebruikersonderzoeken.nl](https://gebruikersonderzoeken.nl/docs/thema/mijn-omgeving/)** — verzameling van gebruikersonderzoeken binnen de overheid.
+
+#### Projecten
+
+- **[Ondernemersplein](https://ondernemersplein.overheid.nl/)** — informatievoorziening voor ondernemers vanuit de overheid.
+- **[NL Design System](https://nldesignsystem.nl/)** — een gedeeld design system met herbruikbare componenten, design tokens en richtlijnen waarmee overheden consistente en toegankelijke digitale diensten kunnen bouwen.
+- **[MijnServices Community](https://nldesignsystem.nl/community/community-sprints/mijn-services-community/)** — community binnen NL Design System gericht op Mijn-omgevingen van de overheid.
+
+#### Mijn-omgevingen
+
+Een overzicht van bestaande Mijn-omgevingen van de overheid die als referentie dienen voor het ontwerp van MijnOverheid Zakelijk.
+
+- **[MijnOverheid](https://mijn.overheid.nl/)** — portaal voor burgers met berichten, lopende zaken en persoonlijke gegevens.
+- **[Mijn Belastingdienst](https://mijn.belastingdienst.nl/)** — persoonlijke omgeving voor belastingaangiften, toeslagen en beschikkingen.
+- **[Mijn KVK](https://www.kvk.nl/mijn-kvk/)** — beheer van bedrijfsgegevens, handelsregisterinformatie en wijzigingen.
+- **[Mijn UWV](https://www.uwv.nl/mijnuwv/)** — inzicht in uitkeringen, werkloosheidsverzekering en re-integratie.
+- **[NL Portal](https://www.nl-portal.nl/fundamentals/wat-is-nl-portal)** — open-source portaal waarmee gemeenten inwoners en ondernemers een persoonlijke omgeving bieden voor zaken, berichten en taken.
+
+#### Taken en statussen
+
+- **[OpenZaak](https://openzaak.org/)** — open-source implementatie van de Zaakgericht Werken API's voor het registreren en opvolgen van zaken.
+- **[Open Inwoner Platform](https://openinwoner.nl/)** — open-source platform waarmee inwoners en ondernemers hun lopende zaken en taken kunnen inzien.
+
+#### Ontwerpbestanden en Storybook-omgevingen
+
+- **[MOZa gebruikerstest prototype](https://www.figma.com/proto/Px77Bmqi8hjlbiPVtJrSkw/MOZa-gebruikerstest?page-id=80%3A8583&node-id=80-8586&p=f&viewport=48%2C148%2C0.95&t=uJgjNQ4HDQHspXj4-1&scaling=contain&content-scaling=fixed)** — eerdere Figma prototypes van MOZa, gebruikt voor gebruikerstests.
+- **[Gezamenlijk Beeld — Geteste prototypes](https://www.figma.com/design/DLPqjxnE9tMCAst5wmtWlx/Gezamenlijk-Beeld---Geteste-prototypes?node-id=422-1316&t=JMr6S198p6BkqYU8-1)** — overzicht van geteste prototypes vanuit het programma Gezamenlijk Beeld.
+- **[VNG Mijn Services prototype](https://www.figma.com/proto/rSgZgG5hoSoUycMgv3pdy3/VNG-mijn-services?page-id=106%3A5076&node-id=106-87423&viewport=-14628%2C-46%2C0.58&t=qMnOXZFFd1moQGMW-8&scaling=scale-down&content-scaling=fixed&starting-point-node-id=138%3A100252&hide-ui=1)** — Figma prototype van de VNG Mijn Services-omgeving.
+- **[Profielservice schetsen](https://www.figma.com/proto/Q5n4JHUy3RmURfpLzAMMF5/Profielservice-schetsen?node-id=881-24161&p=f&t=EzIQyvIDM1u49Lm3-0&scaling=min-zoom&content-scaling=fixed&page-id=504%3A18166&starting-point-node-id=881%3A24161)** — Figma prototype met schetsen voor de profielservice.
+- **[MijnServices Templates](https://www.figma.com/design/pB5d6RlVSa1B088Xpm1sSo/MijnServices---Templates?t=r7GhyhjkfU5gx61V-0)** — Figma designbestand met templates voor Mijn Services.
+- **[Mijn Services Storybook](https://nl-design-system.github.io/mijn-services/?path=/story/mijn-omgeving-basis--default)** — Storybook met componenten voor Mijn Services vanuit NL Design System.
+- **[Mijn Services documentatie](https://nl-design-system.github.io/mijn-services/?path=/docs/mijnservices-intro--docs)** — documentatie en introductie van Mijn Services in Storybook.
+- **[RHC Bibliotheek](https://www.figma.com/design/Q5Imc7Xi9KnBQhcYI3Hytj/NL-Design-System---RHC-Bibliotheek?node-id=197-664&p=f&t=XOXogZcGaLGKENi9-0)** — Figma componentenbibliotheek van de Rijkshuisstijl Community.
+- **[Rijkshuisstijl Community Templates](https://www.figma.com/design/H4hSqpPbvFMLklDZgswwgd/NL-Design-System---Templates---Rijkshuisstijl-Community?t=4NCdmtG144uwlppy-0)** — Figma templates vanuit de Rijkshuisstijl Community.
+- **[Prototype Mijn-omgeving ondernemers](https://www.figma.com/proto/TzuzryjwKVXz4eNrl5RTiY/Prototype-1?node-id=533-10248&starting-point-node-id=792%3A9034)** — eerder Figma prototype voor een Mijn-omgeving voor ondernemers.
+- **[Melden en corrigeren — MijnOverheid](https://www.figma.com/board/wa7luTrT2pN6GcThiPms1F/Melden-en-corrigeren---MijnOverheid?node-id=0-1&t=OXQle4D25K8Rt56e-1)** — FigJam-board over het melden en corrigeren van gegevens binnen MijnOverheid.
+- **[MijnServices — Acato (design)](https://www.figma.com/design/RCHZdQClPESi6PRA2PWmew/MijnServices---Acato?node-id=3231-2590&t=l3Rryj3MQnxENXmd-1)** — Figma designbestand van MijnServices door Acato.
+- **[MijnZaken — UX-verkenningen](https://www.figma.com/design/7FWSxhH1CFbnTeZoiYPeCZ/MijnZaken---UX-verkenningen?node-id=316-6982&t=3gOg6fwyOZAfChpk-1)** — UX-verkenningen voor MijnZaken.
+- **[KVK-gegevens — Werk — MijnOverheid](https://www.figma.com/design/szyzeXe48axpu5aEfGAGVK/KVK-gegevens---Werk---MijnOverheid---Web---G-B?node-id=287-2325&t=LWZZOIt1Ijn7nJLz-1)** — ontwerp voor KVK-gegevens binnen de MijnOverheid-omgeving.
+- **[MijnServices — Acato (prototype)](https://www.figma.com/proto/RCHZdQClPESi6PRA2PWmew/MijnServices---Acato?page-id=1714%3A34292&node-id=1714-34295&starting-point-node-id=1714%3A34295&t=TCZ1DigUkr9YphyQ-1)** — klikbaar prototype van MijnServices door Acato.
+- **[Klantportaal — Mijn Producten](https://www.figma.com/proto/s27WoAoHeggy7QVtSFF8Ce/Klantportaal---Mijn-Producten?page-id=1330%3A18546&node-id=1816-95780&starting-point-node-id=1816%3A95780&t=V9wISVtTEuaM3lHa-1)** — klikbaar prototype van het klantportaal Mijn Producten.
+- **[Generieke Services — MijnDenHaag](https://www.figma.com/design/6CFtgDTS2oUceGqTWYXhdN/%F0%9F%95%B9%EF%B8%8F-Generieke-Services---MijnDenHaag?node-id=0-1&t=vnOsWcHEkwgAem4x-1)** — ontwerp van generieke services voor MijnDenHaag.
+
+#### Overige
+
+- **[Regeldrukmonitor](https://www.regeldrukmonitor.nl/)** — inzicht in de regeldruk die ondernemers ervaren bij overheidsverplichtingen.
+- **[Prototype 1Overheid](https://azdpc.github.io/prototype-1overheid/home.html)** — prototype van een geïntegreerde overheidsomgeving.
+- **[Miro-board workshop Mijn Mijn Mijn](https://miro.com/app/board/uXjVIekQtL0=/)** — workshop-board over de opbouw en functionaliteit van Mijn-omgevingen van overheidsorganisaties.
 
 ## Technische ontwerpkeuzes
 
