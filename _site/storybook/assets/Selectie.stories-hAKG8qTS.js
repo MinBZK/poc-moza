@@ -1,4 +1,4 @@
-const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{description:{story:"Checkboxes voor meervoudige selectie. Ondersteunt ook geneste opties en inactieve staat."}}},render:()=>`
+const x={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{description:{story:"Checkboxes voor meervoudige selectie. Ondersteunt ook geneste opties en inactieve staat."}}},render:()=>`
 <ul class="selection">
     <li>
         <input type="checkbox" id="sb-checkbox-1" checked />
@@ -23,8 +23,12 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
         </ul>
     </li>
     <li>
-        <input type="checkbox" id="sb-checkbox-3" disabled />
+        <input type="checkbox" id="sb-checkbox-3" aria-disabled />
         <label for="sb-checkbox-3">Checkbox optie 3</label>
+    </li>
+    <li>
+        <input type="checkbox" id="sb-checkbox-4" aria-disabled checked />
+        <label for="sb-checkbox-4">Checkbox optie 4</label>
     </li>
 </ul>
 `},o={parameters:{docs:{description:{story:"Radio buttons voor enkelvoudige selectie. Alle opties delen hetzelfde `name` attribuut."}}},render:()=>`
@@ -38,7 +42,7 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
         <label for="sb-radio-2">Radio button optie 2</label>
     </li>
     <li>
-        <input type="radio" name="sb-radio" id="sb-radio-3" disabled />
+        <input type="radio" name="sb-radio" id="sb-radio-3" aria-disabled />
         <label for="sb-radio-3">Radio button optie 3</label>
     </li>
 </ul>
@@ -48,7 +52,7 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
@@ -60,13 +64,13 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
     <option value="Optie 6">Optie 6</option>
 </select>
-`};var n,l,s;e.parameters={...e.parameters,docs:{...(n=e.parameters)==null?void 0:n.docs,source:{originalSource:`{
+`};var l,n,s;e.parameters={...e.parameters,docs:{...(l=e.parameters)==null?void 0:l.docs,source:{originalSource:`{
   parameters: {
     docs: {
       description: {
@@ -99,12 +103,16 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
         </ul>
     </li>
     <li>
-        <input type="checkbox" id="sb-checkbox-3" disabled />
+        <input type="checkbox" id="sb-checkbox-3" aria-disabled />
         <label for="sb-checkbox-3">Checkbox optie 3</label>
+    </li>
+    <li>
+        <input type="checkbox" id="sb-checkbox-4" aria-disabled checked />
+        <label for="sb-checkbox-4">Checkbox optie 4</label>
     </li>
 </ul>
 \`
-}`,...(s=(l=e.parameters)==null?void 0:l.docs)==null?void 0:s.source}}};var p,a,c;o.parameters={...o.parameters,docs:{...(p=o.parameters)==null?void 0:p.docs,source:{originalSource:`{
+}`,...(s=(n=e.parameters)==null?void 0:n.docs)==null?void 0:s.source}}};var p,a,c;o.parameters={...o.parameters,docs:{...(p=o.parameters)==null?void 0:p.docs,source:{originalSource:`{
   parameters: {
     docs: {
       description: {
@@ -123,7 +131,7 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
         <label for="sb-radio-2">Radio button optie 2</label>
     </li>
     <li>
-        <input type="radio" name="sb-radio" id="sb-radio-3" disabled />
+        <input type="radio" name="sb-radio" id="sb-radio-3" aria-disabled />
         <label for="sb-radio-3">Radio button optie 3</label>
     </li>
 </ul>
@@ -142,7 +150,7 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
@@ -163,11 +171,11 @@ const m={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
     <option value="Optie 6">Optie 6</option>
 </select>
 \`
-}`,...(h=(k=i.parameters)==null?void 0:k.docs)==null?void 0:h.source}}};const x=["Checkboxes","RadioButtons","Keuzelijst","KeuzelijstMeervoudig"];export{e as Checkboxes,t as Keuzelijst,i as KeuzelijstMeervoudig,o as RadioButtons,x as __namedExportsOrder,m as default};
+}`,...(h=(k=i.parameters)==null?void 0:k.docs)==null?void 0:h.source}}};const m=["Checkboxes","RadioButtons","Keuzelijst","KeuzelijstMeervoudig"];export{e as Checkboxes,t as Keuzelijst,i as KeuzelijstMeervoudig,o as RadioButtons,m as __namedExportsOrder,x as default};

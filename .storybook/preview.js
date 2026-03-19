@@ -1,4 +1,5 @@
 import "../style/style.css";
+import "../assets/aria-disabled.js";
 
 /** @type { import('@storybook/html-vite').Preview } */
 const preview = {

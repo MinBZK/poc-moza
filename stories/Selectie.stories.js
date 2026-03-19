@@ -36,8 +36,12 @@ export const Checkboxes = {
 		</ul>
 	</li>
 	<li>
-		<input type="checkbox" id="sb-checkbox-3" disabled />
+		<input type="checkbox" id="sb-checkbox-3" aria-disabled />
 		<label for="sb-checkbox-3">Checkbox optie 3</label>
+	</li>
+	<li>
+		<input type="checkbox" id="sb-checkbox-4" aria-disabled checked />
+		<label for="sb-checkbox-4">Checkbox optie 4</label>
 	</li>
 </ul>
 `,
@@ -62,7 +66,7 @@ export const RadioButtons = {
 		<label for="sb-radio-2">Radio button optie 2</label>
 	</li>
 	<li>
-		<input type="radio" name="sb-radio" id="sb-radio-3" disabled />
+		<input type="radio" name="sb-radio" id="sb-radio-3" aria-disabled />
 		<label for="sb-radio-3">Radio button optie 3</label>
 	</li>
 </ul>
@@ -83,7 +87,7 @@ export const Keuzelijst = {
 	<optgroup label="Groep met opties">
 		<option value="Optie 1">Optie 1</option>
 		<option value="Optie 2">Optie 2</option>
-		<option value="Optie 3" disabled>Optie 3 (inactief)</option>
+		<option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
 	</optgroup>
 	<option value="Optie 4">Optie 4</option>
 	<option value="Optie 5">Optie 5</option>
@@ -106,7 +110,7 @@ export const KeuzelijstMeervoudig = {
 	<optgroup label="Groep met opties">
 		<option value="Optie 1">Optie 1</option>
 		<option value="Optie 2">Optie 2</option>
-		<option value="Optie 3" disabled>Optie 3 (inactief)</option>
+		<option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
 	</optgroup>
 	<option value="Optie 4">Optie 4</option>
 	<option value="Optie 5">Optie 5</option>
