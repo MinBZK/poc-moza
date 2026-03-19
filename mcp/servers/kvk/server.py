@@ -1,7 +1,14 @@
-"""KvK MCP-server — Handelsregister gegevens via MCP.
+"""KvK MCP-server — Bedrijfsgegevens van de ingelogde gebruiker via MCP.
 
-Ontsluit bedrijfsgegevens uit het Handelsregister (KvK) als MCP Resources
-en Tools. Gebruikt de KvK test-API (developers.kvk.nl).
+Simuleert een sessie-gebonden KvK-koppeling voor de poc. Retourneert het
+bedrijfsprofiel van de ingelogde gebruiker (mock: Bloom B.V., Robin Vogel).
+
+In productie zou deze server de gegevens ophalen bij het echte Handelsregister
+op basis van de sessie/authenticatie van de ingelogde gebruiker. Voor de poc
+gebruiken we een vast profiel dat overeenkomt met het moza-portaal.
+
+De response-structuur volgt het KvK API-schema (api.kvk.nl/test/api/v1 en v2)
+zodat een overstap naar de echte API minimale aanpassingen vereist.
 
 Voldoet aan de MCP-standaard voor Generieke Interactieservices:
 - Provenance metadata bij elke resource-response (§4.1, §7)
@@ -13,10 +20,8 @@ Voldoet aan de MCP-standaard voor Generieke Interactieservices:
 import asyncio
 import json
 import logging
-import os
 from datetime import UTC, datetime
 
-import httpx
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import (
@@ -33,28 +38,159 @@ logger = logging.getLogger("kvk")
 
 server = Server(name="kvk")
 
+SOURCE_LABEL = "KvK Handelsregister (mock — sessie-gebonden)"
+SERVER_VERSION = "0.2.0"
+
 # ---------------------------------------------------------------------------
-# KvK API configuratie
+# Mock-profiel: Bloom B.V. (Robin Vogel)
+#
+# Structuur volgt exact het KvK API v1/basisprofielen response-schema
+# (velden, nesting, naamgeving). Data komt overeen met het moza-portaal
+# (bedrijfsgegevens.html). Vervanging door echte API-call vereist enkel
+# het vervangen van MOCK_BASISPROFIEL door het response-object.
 # ---------------------------------------------------------------------------
 
-KVK_BASE_URL = os.getenv("KVK_BASE_URL", "https://api.kvk.nl/test/api")
-KVK_API_KEY = os.getenv("KVK_API_KEY", "l7xx1f2691f2520d487b902f4e0b57a0b197")
+MOCK_BASISPROFIEL = {
+    "kvkNummer": "12345678",
+    "indNonMailing": "Nee",
+    "naam": "Bloom B.V.",
+    "formeleRegistratiedatum": "20180212",
+    "materieleRegistratie": {
+        "datumAanvang": "20180212",
+    },
+    "totaalWerkzamePersonen": 3,
+    "handelsnamen": [
+        {"naam": "Bloom B.V.", "volgorde": 0},
+    ],
+    "sbiActiviteiten": [
+        {
+            "sbiCode": "47761",
+            "sbiOmschrijving": (
+                "Winkels in bloemen, planten, zaden en tuinbenodigdheden"
+            ),
+            "indHoofdactiviteit": "Ja",
+        },
+    ],
+    "links": [
+        {
+            "rel": "self",
+            "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
+        },
+        {
+            "rel": "vestigingen",
+            "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678/vestigingen",
+        },
+    ],
+    "_embedded": {
+        "hoofdvestiging": {
+            "vestigingsnummer": "000012345678",
+            "kvkNummer": "12345678",
+            "formeleRegistratiedatum": "20180212",
+            "materieleRegistratie": {
+                "datumAanvang": "20180212",
+            },
+            "eersteHandelsnaam": "Bloom B.V.",
+            "indHoofdvestiging": "Ja",
+            "indCommercieleVestiging": "Ja",
+            "totaalWerkzamePersonen": 3,
+            "adressen": [
+                {
+                    "type": "bezoekadres",
+                    "indAfgeschermd": "Nee",
+                    "volledigAdres": (
+                        "Voorbeeldstraat 42                                 "
+                        "1234AB Utrecht"
+                    ),
+                    "straatnaam": "Voorbeeldstraat",
+                    "huisnummer": 42,
+                    "postcode": "1234AB",
+                    "plaats": "Utrecht",
+                    "land": "Nederland",
+                },
+            ],
+            "links": [
+                {
+                    "rel": "self",
+                    "href": (
+                        "https://api.kvk.nl/api/v1/basisprofielen/"
+                        "12345678/hoofdvestiging"
+                    ),
+                },
+                {
+                    "rel": "basisprofiel",
+                    "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
+                },
+                {
+                    "rel": "vestigingsprofiel",
+                    "href": (
+                        "https://api.kvk.nl/api/v1/vestigingsprofielen/000012345678"
+                    ),
+                },
+            ],
+        },
+        "eigenaar": {
+            "rechtsvorm": "BeslotenVennootschap",
+            "uitgebreideRechtsvorm": "Besloten Vennootschap",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": (
+                        "https://api.kvk.nl/api/v1/basisprofielen/12345678/eigenaar"
+                    ),
+                },
+                {
+                    "rel": "basisprofiel",
+                    "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
+                },
+            ],
+        },
+    },
+}
 
-SOURCE_LABEL = "KvK Handelsregister"
-SERVER_VERSION = "0.1.0"
+# Zoekresultaat-formaat (KvK API v2/zoeken schema)
+MOCK_ZOEKRESULTAAT = {
+    "links": [
+        {
+            "rel": "self",
+            "href": "https://api.kvk.nl/api/v2/zoeken?kvkNummer=12345678",
+        },
+    ],
+    "pagina": 1,
+    "resultatenPerPagina": 10,
+    "totaal": 1,
+    "resultaten": [
+        {
+            "links": [
+                {
+                    "rel": "basisprofiel",
+                    "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
+                },
+                {
+                    "rel": "vestigingsprofiel",
+                    "href": (
+                        "https://api.kvk.nl/api/v1/vestigingsprofielen/000012345678"
+                    ),
+                },
+            ],
+            "kvkNummer": "12345678",
+            "vestigingsnummer": "000012345678",
+            "naam": "Bloom B.V.",
+            "adres": {
+                "binnenlandsAdres": {
+                    "type": "bezoekadres",
+                    "straatnaam": "Voorbeeldstraat",
+                    "plaats": "Utrecht",
+                },
+            },
+            "type": "hoofdvestiging",
+        },
+    ],
+}
 
 
-async def _kvk_request(path: str, params: dict | None = None) -> dict:
-    """Doe een request naar de KvK API."""
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            f"{KVK_BASE_URL}{path}",
-            headers={"apikey": KVK_API_KEY},
-            params=params,
-            timeout=10.0,
-        )
-        response.raise_for_status()
-        return response.json()
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
 
 def _wrap_provenance(data: dict) -> str:
@@ -66,6 +202,7 @@ def _wrap_provenance(data: dict) -> str:
                 "source": SOURCE_LABEL,
                 "timestamp": datetime.now(UTC).isoformat(),
                 "version": SERVER_VERSION,
+                "mock": True,
             },
         },
         ensure_ascii=False,
@@ -104,9 +241,10 @@ async def list_resource_templates() -> list[ResourceTemplate]:
             uriTemplate="kvk://basisprofiel/{kvk_nummer}",
             name="Basisprofiel",
             description=(
-                "Haal het basisprofiel op uit het Handelsregister op basis van "
-                "een KvK-nummer. Bevat naam, rechtsvorm, SBI-activiteiten, "
-                "hoofdvestiging en adresgegevens."
+                "Haal het basisprofiel op van het bedrijf van de ingelogde "
+                "gebruiker. Bevat naam, rechtsvorm, SBI-activiteiten, "
+                "hoofdvestiging en adresgegevens. Alleen het eigen bedrijf "
+                "is beschikbaar (sessie-gebonden)."
             ),
             mimeType="application/json",
         ),
@@ -115,29 +253,25 @@ async def list_resource_templates() -> list[ResourceTemplate]:
 
 @server.read_resource()
 async def read_resource(uri: str) -> list[TextResourceContents]:
-    """Haal bedrijfsgegevens op bij de bron. Geen caching (standaard §2.1)."""
+    """Retourneer het bedrijfsprofiel van de ingelogde gebruiker.
+
+    Beveiligingsregel: alleen het KvK-nummer van de actieve sessie wordt
+    geaccepteerd. Elk ander nummer wordt geweigerd en gelogd.
+    """
     kvk_nummer = str(uri).rstrip("/").split("/")[-1]
 
-    try:
-        data = await _kvk_request(f"/v1/basisprofielen/{kvk_nummer}")
-    except httpx.HTTPStatusError as e:
+    if kvk_nummer != MOCK_BASISPROFIEL["kvkNummer"]:
+        logger.warning(
+            "SECURITY: toegang geweigerd voor kvk-nummer %s (sessie-gebonden aan %s)",
+            kvk_nummer,
+            MOCK_BASISPROFIEL["kvkNummer"],
+        )
         error_body = {
-            "error": "SOURCE_UNAVAILABLE"
-            if e.response.status_code >= 500
-            else "NIET_GEVONDEN",
-            "message": f"KvK API fout bij ophalen {kvk_nummer}: {e.response.status_code}",
-        }
-        return [
-            TextResourceContents(
-                uri=uri,
-                text=json.dumps(error_body, ensure_ascii=False),
-                mimeType="application/json",
-            )
-        ]
-    except httpx.RequestError as e:
-        error_body = {
-            "error": "SOURCE_UNAVAILABLE",
-            "message": f"KvK API niet bereikbaar: {e}",
+            "error": "NIET_TOEGESTAAN",
+            "message": (
+                "U kunt alleen uw eigen bedrijfsgegevens inzien. "
+                "Gebruik kvk__mijn_bedrijf om uw gegevens op te halen."
+            ),
         }
         return [
             TextResourceContents(
@@ -150,7 +284,7 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
     return [
         TextResourceContents(
             uri=uri,
-            text=_wrap_provenance(data),
+            text=_wrap_provenance(MOCK_BASISPROFIEL),
             mimeType="application/json",
         )
     ]
@@ -163,83 +297,26 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
 
 @server.list_tools()
 async def list_tools() -> list[Tool]:
-    """Publiceer beschikbare tools met beschrijving, schema en annotaties (standaard §7)."""
+    """Publiceer beschikbare tools met beschrijving, schema en annotaties."""
     return [
         Tool(
-            name="zoek_bedrijf",
+            name="mijn_bedrijf",
             description=(
-                "Zoek bedrijven in het KvK Handelsregister. Minimaal één van "
-                "naam, kvkNummer of vestigingsnummer is verplicht. De overige "
-                "velden (plaats, postcode, huisnummer) zijn optionele filters "
-                "die alleen werken in combinatie met een zoekterm. "
-                "Retourneert een lijst met basisgegevens per gevonden bedrijf."
+                "Haal de bedrijfsgegevens op van de ingelogde gebruiker. "
+                "Retourneert het KvK-basisprofiel met naam, KvK-nummer, "
+                "rechtsvorm, SBI-activiteiten, vestigingsadres en aantal "
+                "werkzame personen. Geen parameters nodig — de gegevens "
+                "zijn gekoppeld aan de huidige sessie."
             ),
             inputSchema={
                 "type": "object",
-                "properties": {
-                    "naam": {
-                        "type": "string",
-                        "description": "Zoek op (deel van) de bedrijfsnaam.",
-                    },
-                    "kvkNummer": {
-                        "type": "string",
-                        "description": "Zoek op exact KvK-nummer (8 cijfers).",
-                    },
-                    "vestigingsnummer": {
-                        "type": "string",
-                        "description": "Zoek op vestigingsnummer (12 cijfers).",
-                    },
-                    "plaats": {
-                        "type": "string",
-                        "description": "Filter op plaatsnaam.",
-                    },
-                    "postcode": {
-                        "type": "string",
-                        "description": "Filter op postcode (alleen in combinatie met huisnummer).",
-                    },
-                    "huisnummer": {
-                        "type": "integer",
-                        "description": "Filter op huisnummer (alleen in combinatie met postcode).",
-                    },
-                    "type": {
-                        "type": "string",
-                        "description": "Filter op type: hoofdvestiging, nevenvestiging, of rechtspersoon.",
-                    },
-                    "resultatenPerPagina": {
-                        "type": "integer",
-                        "description": "Aantal resultaten per pagina (standaard 10, max 100).",
-                    },
-                },
+                "properties": {},
                 "additionalProperties": False,
             },
             annotations=ToolAnnotations(
                 readOnlyHint=True,
                 destructiveHint=False,
-                openWorldHint=True,
-            ),
-        ),
-        Tool(
-            name="haal_basisprofiel_op",
-            description=(
-                "Haal het volledige basisprofiel op uit het KvK Handelsregister "
-                "voor een specifiek KvK-nummer. Bevat naam, rechtsvorm, "
-                "SBI-activiteiten, hoofdvestiging, adresgegevens en handelsnamen."
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "kvkNummer": {
-                        "type": "string",
-                        "description": "Het 8-cijferige KvK-nummer van het bedrijf.",
-                    },
-                },
-                "required": ["kvkNummer"],
-                "additionalProperties": False,
-            },
-            annotations=ToolAnnotations(
-                readOnlyHint=True,
-                destructiveHint=False,
-                openWorldHint=True,
+                openWorldHint=False,
             ),
         ),
     ]
@@ -248,75 +325,24 @@ async def list_tools() -> list[Tool]:
 @server.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     """Voer een tool uit en log de aanroep (standaard §2.2)."""
-    if name == "zoek_bedrijf":
-        result = await _zoek_bedrijf(arguments)
-        _audit_log("zoek_bedrijf", arguments, result)
-        return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
-
-    if name == "haal_basisprofiel_op":
-        result = await _haal_basisprofiel_op(arguments["kvkNummer"])
-        _audit_log("haal_basisprofiel_op", arguments, result)
-        return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
+    if name == "mijn_bedrijf":
+        # Negeer eventueel meegegeven arguments — de tool is sessie-gebonden
+        # en accepteert geen parameters. Log wel als er onverwachte input is.
+        if arguments:
+            logger.warning(
+                "SECURITY: mijn_bedrijf aangeroepen met onverwachte arguments: %s "
+                "(genegeerd — tool is sessie-gebonden)",
+                list(arguments.keys()),
+            )
+        _audit_log("mijn_bedrijf", {}, MOCK_BASISPROFIEL)
+        return [
+            TextContent(
+                type="text",
+                text=_wrap_provenance(MOCK_BASISPROFIEL),
+            )
+        ]
 
     raise ValueError(f"Onbekende tool: {name}")
-
-
-async def _zoek_bedrijf(params: dict) -> dict:
-    """Zoek bedrijven via de KvK Zoeken API."""
-    try:
-        data = await _kvk_request("/v2/zoeken", params=params)
-    except httpx.HTTPStatusError as e:
-        return {
-            "error": "SOURCE_UNAVAILABLE",
-            "message": f"KvK Zoeken API fout: {e.response.status_code}",
-        }
-    except httpx.RequestError as e:
-        return {
-            "error": "SOURCE_UNAVAILABLE",
-            "message": f"KvK API niet bereikbaar: {e}",
-        }
-
-    # KvK API retourneert fouten in een "fout" veld
-    if "fout" in data:
-        return {
-            "error": "INPUT_INVALID",
-            "message": data["fout"][0].get("omschrijving", "Onbekende fout"),
-            "hint": "Minimaal naam, kvkNummer of vestigingsnummer is verplicht.",
-        }
-
-    data["provenance"] = {
-        "source": SOURCE_LABEL,
-        "timestamp": datetime.now(UTC).isoformat(),
-        "version": SERVER_VERSION,
-    }
-    return data
-
-
-async def _haal_basisprofiel_op(kvk_nummer: str) -> dict:
-    """Haal het basisprofiel op via de KvK Basisprofiel API."""
-    try:
-        data = await _kvk_request(f"/v1/basisprofielen/{kvk_nummer}")
-    except httpx.HTTPStatusError as e:
-        return {
-            "error": "NIET_GEVONDEN"
-            if e.response.status_code == 404
-            else "SOURCE_UNAVAILABLE",
-            "message": f"KvK API fout bij ophalen {kvk_nummer}: {e.response.status_code}",
-        }
-    except httpx.RequestError as e:
-        return {
-            "error": "SOURCE_UNAVAILABLE",
-            "message": f"KvK API niet bereikbaar: {e}",
-        }
-
-    return {
-        "data": data,
-        "provenance": {
-            "source": SOURCE_LABEL,
-            "timestamp": datetime.now(UTC).isoformat(),
-            "version": SERVER_VERSION,
-        },
-    }
 
 
 # ---------------------------------------------------------------------------

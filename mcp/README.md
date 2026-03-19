@@ -1,4 +1,4 @@
-# MCP — Digitale Assistent met dual LLM-backend
+# Digital Assistent MCP-laag
 
 MCP-laag van poc-moza. Biedt een digitale assistent die ondernemers helpt met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) delen dezelfde MCP-tools.
 
@@ -20,12 +20,14 @@ Zie [Product Decisions Records](mcp/decisions) voor gemaakte keuzes in de opzet.
 
 | Server | MCP-type | Bron |
 |---|---|---|
-| kvk | Resource | Handelsregister KvK (mock) |
-| koop | Resource | KOOP Regelingenbank (productie-API) |
-| regelrecht | Tool (non-muterend) | Beslislogica Informatieplicht |
+| kvk | Resource + Tool | Bedrijfsgegevens ingelogde gebruiker (mock, sessie-gebonden) |
+| koop | Resource + Tool | KOOP Regelingenbank (productie-API) |
+| regelrecht | Tool (non-muterend) | Beslislogica Informatieplicht (API via poc-machine-law) |
 | rvo | Tool (muterend) | RVO indienings-API (mock) |
 
-De host werkt ook zonder MCP-servers — de assistent antwoordt dan op basis van eigen kennis.
+De host werkt ook zonder MCP-servers, de assistent antwoordt dan op basis van eigen kennis.
+
+> **KvK mock-modus:** De KvK-server retourneert het profiel van de ingelogde gebruiker (Bloom B.V.) in het exacte KvK API-schema (`v1/basisprofielen`). In productie wordt de mock vervangen door een echte API-call op basis van de sessie-authenticatie.
 
 ## Routering: welke bron bij welke vraag?
 
@@ -33,16 +35,10 @@ Het LLM kiest op basis van de systeemprompt welke MCP-server wordt aangesproken.
 
 ```mermaid
 flowchart TD
-    Start([Gebruikersvraag]) --> Q1{Bevat een\nKvK-nummer?}
+    Start([Gebruikersvraag]) --> Q1{Vraagt naar eigen\nbedrijfsgegevens?}
 
-    Q1 -- ja --> KVK_RES[/Resource: kvk://basisprofiel/nummer/]
-    Q1 -- nee --> Q2{Bevat een\nbedrijfsnaam?}
-
-    Q2 -- ja --> KVK_TOOL[/Tool: kvk__zoek_bedrijf/]
-    KVK_TOOL --> Q2b{Wil gebruiker\nmeer details?}
-    Q2b -- ja --> KVK_RES
-    Q2b -- nee --> Antwoord
-    Q2 -- nee --> Q3{Bevat een\nBWB-ID?}
+    Q1 -- ja --> KVK_TOOL[/Tool: kvk__mijn_bedrijf/]
+    Q1 -- nee --> Q3{Bevat een\nBWB-ID?}
 
     Q3 -- ja --> KOOP_RES[/Resource: koop://regeling/bwb_id/]
     Q3 -- nee --> Q4{Vraagt naar een\nspecifieke wet of regel?}
@@ -53,9 +49,9 @@ flowchart TD
     Q4b -- nee --> Antwoord
     Q4 -- nee --> Q5{Vraagt of een verplichting\nvan toepassing is?}
 
-    Q5 -- ja --> Q5b{SBI-code of\nbedrijfsgegevens bekend?}
-    Q5b -- nee --> KVK_TOOL
-    Q5b -- ja --> RR_TOOL[/Tool: regelrecht__check/]
+    Q5 -- ja --> KVK_TOOL
+    KVK_TOOL --> Q5b{KvK-nummer\nverkregen}
+    Q5b --> RR_TOOL[/Tool: regelrecht__check/]
     Q5 -- nee --> Q6{Vraagt naar subsidies\nof rapportage?}
 
     Q6 -- ja --> Q6b{Wil indienen\nof alleen informatie?}
@@ -68,14 +64,12 @@ flowchart TD
     Q7 -- ja --> KOOP_TOOL
     Q7 -- nee --> EIGEN[Eigen kennis\n+ disclaimer]
 
-    KVK_RES --> Antwoord([Antwoord aan gebruiker])
-    KOOP_RES --> Antwoord
+    KOOP_RES --> Antwoord([Antwoord aan gebruiker])
     RR_TOOL --> Antwoord
     RVO_ZOEK --> Antwoord
     RVO_IND --> Antwoord
     EIGEN --> Antwoord
 
-    style KVK_RES fill:#48BB78,color:#fff
     style KVK_TOOL fill:#4A90D9,color:#fff
     style KOOP_RES fill:#48BB78,color:#fff
     style KOOP_TOOL fill:#4A90D9,color:#fff
@@ -85,38 +79,32 @@ flowchart TD
     style EIGEN fill:#A0AEC0,color:#fff
 ```
 
-Legenda: **groen** = Resource (read-only ophalen), **blauw** = Tool (read-only zoeken/berekenen), **oranje** = Tool (muterend, vereist bevestiging), **grijs** = eigen kennis.
+Legenda:
+**groen** = Resource (read-only ophalen)
+**blauw** = Tool (read-only zoeken/berekenen)
+**oranje** = Tool (muterend, vereist bevestiging)
+**grijs** = eigen kennis
 
 Bij gecombineerde vragen geldt de volgorde: KvK (wie?) → KOOP (welke regels?) → RegelRecht (van toepassing?) → RVO (actie ondernemen).
 
 ## Voorbeeldscenario's
 
-### Scenario 1: Bedrijf opzoeken (KvK)
+### Scenario 1: Eigen bedrijfsgegevens opvragen (KvK)
 
-> Gebruiker: "Zoek de gegevens van Bol.com"
+> Gebruiker: "Wat zijn mijn bedrijfsgegevens?"
 
 ```mermaid
 sequenceDiagram
     actor Gebruiker
     participant Host as AI-platform (Host)
     participant KvK as MCP Server (KvK)
-    participant API as KvK API
 
-    Gebruiker->>Host: "Zoek de gegevens van Bol.com"
-    Note over Host: Routeringsregel: bedrijfsnaam<br/>→ kvk__zoek_bedrijf
-    Host->>KvK: tools/call [zoek_bedrijf, naam="Bol.com"]
-    KvK->>API: GET api.kvk.nl/test/api/v2/zoeken?naam=Bol.com
-    API-->>KvK: zoekresultaten
-    KvK-->>Host: resultaat + provenance
-    Host->>Gebruiker: "Bol.com B.V. (KvK 61409804, Utrecht)"
-
-    Gebruiker->>Host: "Meer details graag"
-    Note over Host: Routeringsregel: KvK-nummer bekend<br/>→ resource kvk://basisprofiel
-    Host->>KvK: resources/read [kvk://basisprofiel/61409804]
-    KvK->>API: GET api.kvk.nl/test/api/v1/basisprofielen/61409804
-    API-->>KvK: basisprofiel
-    KvK-->>Host: profiel + provenance
-    Host->>Gebruiker: "Rechtsvorm, SBI-codes, adresgegevens..."
+    Gebruiker->>Host: "Wat zijn mijn bedrijfsgegevens?"
+    Note over Host: Routeringsregel: eigen gegevens<br/>→ kvk__mijn_bedrijf
+    Host->>KvK: tools/call [mijn_bedrijf]
+    Note over KvK: Sessie-gebonden:<br/>retourneert profiel van<br/>de ingelogde gebruiker
+    KvK-->>Host: basisprofiel (KvK API-formaat) + provenance
+    Host->>Gebruiker: "Uw bedrijf Bloom B.V. (KvK 12345678)<br/>is een Besloten Vennootschap gevestigd<br/>in Utrecht. SBI-code: 47761."
 ```
 
 ### Scenario 2: Regelgeving zoeken (KOOP)
@@ -151,7 +139,7 @@ sequenceDiagram
 
 ### Scenario 3: Gecombineerde vraag (KvK + RegelRecht)
 
-> Gebruiker: "Moet mijn bakkerij voldoen aan de Informatieplicht Energiebesparing?"
+> Gebruiker: "Moet mijn bedrijf voldoen aan de Informatieplicht Energiebesparing?"
 
 ```mermaid
 sequenceDiagram
@@ -159,41 +147,40 @@ sequenceDiagram
     participant Host as AI-platform (Host)
     participant KvK as MCP Server (KvK)
     participant RR as MCP Server (RegelRecht)
+    participant Engine as RegelRecht Engine
 
-    Gebruiker->>Host: "Moet mijn bakkerij voldoen aan de<br/>Informatieplicht Energiebesparing?"
-    Note over Host: Routeringsregel: verplichting checken<br/>→ eerst bedrijfsgegevens nodig
+    Gebruiker->>Host: "Moet mijn bedrijf voldoen aan de<br/>Informatieplicht Energiebesparing?"
 
-    Host->>Gebruiker: "Wat is uw KvK-nummer of bedrijfsnaam?"
-    Gebruiker->>Host: "Bakkerij Jansen, KvK 12345678"
+    Note over Host: Stap 1: bedrijfsgegevens ophalen<br/>via sessie-gebonden KvK
+    Host->>KvK: tools/call [mijn_bedrijf]
+    KvK-->>Host: Bloom B.V., KvK 12345678,<br/>SBI 47761 + provenance
 
-    Note over Host: Stap 1: bedrijfsgegevens ophalen
-    Host->>KvK: resources/read [kvk://basisprofiel/12345678]
-    KvK-->>Host: SBI-code 1071, vestigingsgegevens + provenance
+    Note over Host: Stap 2: verplichting checken<br/>met verkregen KvK-nummer
+    Host->>RR: tools/call [check, kvk_nummer="12345678"]
+    RR->>Engine: POST /mcp/rpc [execute_law,<br/>service=RVO, law=informatieplicht]
+    Engine-->>RR: beslisboom-resultaat + wettelijke grondslag
+    RR-->>Host: resultaat + provenance
 
-    Note over Host: Stap 2: verplichting checken<br/>met verkregen SBI-code
-    Host->>RR: tools/call [check, sbi_code="1071"]
-    RR-->>Host: beslisboom-resultaat + provenance
-
-    Host->>Gebruiker: "Uw SBI-code (1071, brood en banket) valt onder<br/>de regeling. Of u moet rapporteren hangt af van<br/>uw jaarlijks energieverbruik."
+    Host->>Gebruiker: "Op basis van art. 5.15d Bal: de informatieplicht<br/>is van toepassing als uw energieverbruik boven<br/>50.000 kWh of 25.000 m³ gas per jaar ligt.<br/>Wat is uw jaarlijks energieverbruik?"
 ```
 
 ### Scenario 4: Bron niet beschikbaar
 
-> Gebruiker: "Zoek bedrijfsgegevens van ACME B.V."
+> Gebruiker: "Welke regels gelden voor voedselveiligheid?"
 
 ```mermaid
 sequenceDiagram
     actor Gebruiker
     participant Host as AI-platform (Host)
-    participant KvK as MCP Server (KvK)
-    participant API as KvK API
+    participant KOOP as MCP Server (KOOP)
+    participant SRU as SRU zoekservice
 
-    Gebruiker->>Host: "Zoek bedrijfsgegevens van ACME B.V."
-    Host->>KvK: tools/call [zoek_bedrijf, naam="ACME B.V."]
-    KvK->>API: GET api.kvk.nl/...
-    API--xKvK: timeout / 503
-    KvK-->>Host: error: SOURCE_UNAVAILABLE
-    Host->>Gebruiker: "Het KvK Handelsregister is op dit moment<br/>niet bereikbaar. U kunt het rechtstreeks<br/>proberen via kvk.nl."
+    Gebruiker->>Host: "Welke regels gelden voor voedselveiligheid?"
+    Host->>KOOP: tools/call [zoek_regelgeving, trefwoord="voedselveiligheid"]
+    KOOP->>SRU: GET zoekservice.overheid.nl/sru/Search...
+    SRU--xKOOP: timeout / 503
+    KOOP-->>Host: error: SOURCE_UNAVAILABLE
+    Host->>Gebruiker: "De KOOP Regelingenbank is op dit moment<br/>niet bereikbaar. U kunt het rechtstreeks<br/>proberen via wetten.overheid.nl."
 ```
 
 ## Snel starten
@@ -219,12 +206,12 @@ docker compose up --build
 ```bash
 # Claude (Anthropic)
 ANTHROPIC_API_KEY=sk-ant-...
-CLAUDE_MODEL=claude-sonnet-4-20250514
+CLAUDE_MODEL=claude-sonnet-4-...
 
 # VLAM (UbiOps/Mistral)
 VLAM_API_KEY=...
-VLAM_BASE_URL=https://api.demo.vlam.ai/v2.1/projects/poc/openai-compatible/v1
-VLAM_MODEL_ID=ubiops-deployment/bzk-dig-chat//chat-model
+VLAM_BASE_URL=https://...
+VLAM_MODEL_ID=...
 ```
 
 Zonder VLAM-keys wordt alleen Claude beschikbaar.
@@ -262,7 +249,7 @@ mcp/
     Dockerfile
     .env.example
   servers/
-    kvk/                 MCP Resource + Tool — Handelsregister
+    kvk/                 MCP Resource + Tool — Bedrijfsgegevens (sessie-gebonden mock)
     koop/                MCP Resource + Tool — Regelingenbank
     regelrecht/          MCP Tool — beslislogica
     rvo/                 MCP Tool — indienen rapportage

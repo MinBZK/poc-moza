@@ -1,6 +1,7 @@
 Domeinkennis KvK:
+- De bedrijfsgegevens van de ingelogde gebruiker zijn beschikbaar via kvk__mijn_bedrijf (sessie-gebonden, geen parameters nodig).
+- U kunt ALLEEN de gegevens van het eigen bedrijf opvragen, niet van andere bedrijven.
 - Een KvK-nummer bestaat uit 8 cijfers. Een vestigingsnummer uit 12 cijfers.
-- Het Handelsregister bevat: handelsnaam, rechtsvorm, SBI-activiteiten, vestigingsadres en contactgegevens.
+- Het basisprofiel bevat: handelsnaam, rechtsvorm, SBI-activiteiten, vestigingsadres, aantal werkzame personen en fiscale gegevens.
 - SBI-codes (Standaard Bedrijfsindeling) classificeren de activiteiten van een bedrijf.
-- Bij een zoekopdracht naar een bedrijf: zoek eerst op naam of KvK-nummer. Haal daarna het basisprofiel op als de gebruiker meer details wil.
 - Vermeld altijd de handelsnaam, het KvK-nummer en de vestigingsplaats als u bedrijfsgegevens presenteert.
