@@ -4,6 +4,7 @@ De host fungeert als tussenstap:
   Gebruiker → Host → LLM (VLAM/Mistral óf Claude) + MCP-tools → antwoord
 """
 
+import asyncio
 import json
 import logging
 from collections.abc import AsyncGenerator
@@ -14,10 +15,12 @@ import openai
 from config import (
     ANTHROPIC_API_KEY,
     CLAUDE_MODEL,
+    CLAUDE_TIMEOUT,
     MCP_SERVERS,
     VLAM_API_KEY,
     VLAM_BASE_URL,
     VLAM_MODEL_ID,
+    VLAM_TIMEOUT,
     get_system_prompt,
 )
 from mcp_client import MCPToolRegistry
@@ -178,7 +181,22 @@ class VLAMHost:
             if tools:
                 api_kwargs["tools"] = tools
 
-            response = await self.claude_client.messages.create(**api_kwargs)
+            try:
+                response = await asyncio.wait_for(
+                    self.claude_client.messages.create(**api_kwargs),
+                    timeout=CLAUDE_TIMEOUT,
+                )
+            except (TimeoutError, anthropic.APIStatusError) as e:
+                logger.error("Claude-call mislukt: %s", e)
+                yield {
+                    "type": "answer",
+                    "message": (
+                        "De assistent is op dit moment niet bereikbaar. "
+                        "Probeer het later opnieuw."
+                    ),
+                }
+                return
+
             assistant_content = response.content
             messages.append({"role": "assistant", "content": assistant_content})
 
@@ -209,7 +227,11 @@ class VLAMHost:
     async def _chat_vlam_stream(
         self, messages: list[dict]
     ) -> AsyncGenerator[dict, None]:
-        """VLAM agentic loop die status-events yieldt."""
+        """VLAM agentic loop die status-events yieldt.
+
+        Bij een timeout of serverfout wordt automatisch opnieuw geprobeerd
+        zonder tools, zodat de gebruiker alsnog een antwoord krijgt.
+        """
         tools_openai = self.registry.get_openai_tools()
         system_prompt = get_system_prompt("vlam", self.has_tools)
         openai_messages = self._to_openai_messages(messages, system_prompt)
@@ -224,7 +246,21 @@ class VLAMHost:
             if tools_openai:
                 api_kwargs["tools"] = tools_openai
 
-            response = await self.vlam_client.chat.completions.create(**api_kwargs)
+            try:
+                response = await asyncio.wait_for(
+                    self.vlam_client.chat.completions.create(**api_kwargs),
+                    timeout=VLAM_TIMEOUT,
+                )
+            except (TimeoutError, openai.APIStatusError) as e:
+                logger.warning("VLAM-call mislukt (%s), retry zonder tools", e)
+                yield {
+                    "type": "status",
+                    "message": "Bronnen niet bereikbaar, antwoord op eigen kennis...",
+                }
+                async for event in self._chat_vlam_no_tools(messages, system_prompt):
+                    yield event
+                return
+
             choice = response.choices[0]
             assistant_msg = choice.message
 
@@ -265,6 +301,37 @@ class VLAMHost:
             "message": "Het antwoord kon niet worden voltooid (te veel stappen).",
         }
 
+    async def _chat_vlam_no_tools(
+        self, messages: list[dict], system_prompt: str
+    ) -> AsyncGenerator[dict, None]:
+        """VLAM fallback zonder tools — snelle call op eigen kennis."""
+        openai_messages = self._to_openai_messages(messages, system_prompt)
+        try:
+            response = await asyncio.wait_for(
+                self.vlam_client.chat.completions.create(
+                    model=VLAM_MODEL_ID,
+                    max_tokens=4096,
+                    messages=openai_messages,
+                ),
+                timeout=VLAM_TIMEOUT,
+            )
+            content = response.choices[0].message.content or ""
+            disclaimer = (
+                "\n\n*Let op: dit antwoord is gebaseerd op eigen kennis. "
+                "Er is geen actuele bron geraadpleegd.*"
+            )
+            messages.append({"role": "assistant", "content": content + disclaimer})
+            yield {"type": "answer", "message": content + disclaimer}
+        except (TimeoutError, openai.APIStatusError) as e:
+            logger.error("VLAM ook zonder tools niet bereikbaar: %s", e)
+            yield {
+                "type": "answer",
+                "message": (
+                    "De assistent is op dit moment niet bereikbaar. "
+                    "Probeer het later opnieuw."
+                ),
+            }
+
     # ------------------------------------------------------------------
     # Claude (Anthropic API) — blocking (non-streaming, backwards-compatibel)
     # ------------------------------------------------------------------
@@ -284,7 +351,18 @@ class VLAMHost:
             if tools:
                 api_kwargs["tools"] = tools
 
-            response = await self.claude_client.messages.create(**api_kwargs)
+            try:
+                response = await asyncio.wait_for(
+                    self.claude_client.messages.create(**api_kwargs),
+                    timeout=CLAUDE_TIMEOUT,
+                )
+            except (TimeoutError, anthropic.APIStatusError) as e:
+                logger.error("Claude-call mislukt: %s", e)
+                return (
+                    "De assistent is op dit moment niet bereikbaar. "
+                    "Probeer het later opnieuw."
+                )
+
             assistant_content = response.content
             messages.append({"role": "assistant", "content": assistant_content})
 
@@ -318,14 +396,19 @@ class VLAMHost:
             if tools_openai:
                 api_kwargs["tools"] = tools_openai
 
-            response = await self.vlam_client.chat.completions.create(**api_kwargs)
+            try:
+                response = await asyncio.wait_for(
+                    self.vlam_client.chat.completions.create(**api_kwargs),
+                    timeout=VLAM_TIMEOUT,
+                )
+            except (TimeoutError, openai.APIStatusError) as e:
+                logger.warning("VLAM-call mislukt (%s), retry zonder tools", e)
+                return await self._vlam_no_tools_blocking(messages, system_prompt)
+
             choice = response.choices[0]
             assistant_msg = choice.message
 
-            # Bewaar in OpenAI-formaat voor de volgende call
             openai_messages.append(assistant_msg.model_dump(exclude_none=True))
-
-            # Bewaar ook in ons intern formaat
             messages.append(
                 {
                     "role": "assistant",
@@ -337,7 +420,6 @@ class VLAMHost:
             if not tool_calls:
                 return assistant_msg.content or ""
 
-            # Voer tool-aanroepen uit en voeg resultaten toe
             for tc in tool_calls:
                 arguments = json.loads(tc.function.arguments)
                 tool_key = tc.function.name
@@ -357,6 +439,34 @@ class VLAMHost:
                 )
 
         return "Het antwoord kon niet worden voltooid (te veel stappen)."
+
+    async def _vlam_no_tools_blocking(
+        self, messages: list[dict], system_prompt: str
+    ) -> str:
+        """VLAM fallback zonder tools (blocking variant)."""
+        openai_messages = self._to_openai_messages(messages, system_prompt)
+        try:
+            response = await asyncio.wait_for(
+                self.vlam_client.chat.completions.create(
+                    model=VLAM_MODEL_ID,
+                    max_tokens=4096,
+                    messages=openai_messages,
+                ),
+                timeout=VLAM_TIMEOUT,
+            )
+            content = response.choices[0].message.content or ""
+            disclaimer = (
+                "\n\n*Let op: dit antwoord is gebaseerd op eigen kennis. "
+                "Er is geen actuele bron geraadpleegd.*"
+            )
+            messages.append({"role": "assistant", "content": content + disclaimer})
+            return content + disclaimer
+        except (TimeoutError, openai.APIStatusError) as e:
+            logger.error("VLAM ook zonder tools niet bereikbaar: %s", e)
+            return (
+                "De assistent is op dit moment niet bereikbaar. "
+                "Probeer het later opnieuw."
+            )
 
     # ------------------------------------------------------------------
     # Helpers

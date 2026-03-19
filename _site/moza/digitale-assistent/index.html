@@ -263,6 +263,7 @@
 	var sessions = { vlam: null, claude: null };
 	var chatHistory = { vlam: null, claude: null };
 	var serverStatus = null;
+	var submitting = false;
 
 	var SERVER_LABELS = {
 		kvk: "KvK Handelsregister",
@@ -390,6 +391,14 @@
 	// Bewaar en herstel gesprek bij wisselen van modus
 	modeInputs.forEach(function (radio) {
 		radio.addEventListener("change", function () {
+			// Blokkeer wisselen zolang er een request loopt
+			if (submitting) {
+				// Zet de vorige modus terug
+				var other = this.value === "vlam" ? "claude" : "vlam";
+				document.querySelector('input[name="chat-mode"][value="' + other + '"]').checked = true;
+				return;
+			}
+
 			var prev = this.value === "vlam" ? "claude" : "vlam";
 			// Sla huidige chat op
 			chatHistory[prev] = messages.innerHTML;
@@ -400,10 +409,10 @@
 				messages.innerHTML = chatHistory[mode];
 			} else {
 				messages.innerHTML = "";
-				var welkom = mode === "vlam"
-					? "Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?"
-					: "Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?";
-				addMessage(welkom, "assistant");
+				addMessage(
+					"Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?",
+					"assistant"
+				);
 			}
 			messages.scrollTop = messages.scrollHeight;
 		});
@@ -424,12 +433,18 @@
 	form.addEventListener("submit", async function (e) {
 		e.preventDefault();
 		var message = input.value.trim();
-		if (!message) return;
+		if (!message || submitting) return;
 
+		// Leg mode vast op moment van verzenden, niet bij ontvangst
+		var mode = getMode();
+
+		submitting = true;
 		addMessage(message, "user");
 		input.value = "";
 		input.style.blockSize = "auto";
 		setLoading(true);
+
+		var answered = false;
 
 		try {
 			var response = await fetch(API_BASE + "/chat/stream", {
@@ -437,8 +452,8 @@
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					message: message,
-					session_id: sessions[getMode()],
-					mode: getMode(),
+					session_id: sessions[mode],
+					mode: mode,
 				}),
 			});
 
@@ -475,10 +490,21 @@
 						showThinking(payload.message);
 					} else if (eventType === "tool") {
 						showThinking(payload.message + "...");
-					} else if (eventType === "answer") {
+					} else if (eventType === "answer" && !answered) {
+						answered = true;
 						hideThinking();
-						sessions[getMode()] = payload.session_id;
-						addMessage(payload.message, "assistant");
+						sessions[mode] = payload.session_id;
+						// Toon alleen als gebruiker nog in dezelfde modus zit
+						if (getMode() === mode) {
+							addMessage(payload.message, "assistant");
+						} else {
+							// Sla op in chatHistory zodat het zichtbaar wordt bij terugwisselen
+							var temp = messages.innerHTML;
+							messages.innerHTML = chatHistory[mode] || "";
+							addMessage(payload.message, "assistant");
+							chatHistory[mode] = messages.innerHTML;
+							messages.innerHTML = temp;
+						}
 					} else if (eventType === "done") {
 						hideThinking();
 					}
@@ -488,10 +514,14 @@
 			setLoading(false);
 		} catch (err) {
 			setLoading(false);
-			addMessage(
-				"Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.",
-				"error"
-			);
+			if (!answered) {
+				addMessage(
+					"Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.",
+					"error"
+				);
+			}
+		} finally {
+			submitting = false;
 		}
 	});
 })();

@@ -35,6 +35,10 @@ MCP_SERVERS: dict[str, Path] = {
 VLAM_HOST = os.getenv("VLAM_HOST", "0.0.0.0")
 VLAM_PORT = int(os.getenv("VLAM_PORT", "8000"))
 
+# Timeouts (seconden) — per LLM-call, niet per sessie
+VLAM_TIMEOUT = int(os.getenv("VLAM_TIMEOUT", "30"))
+CLAUDE_TIMEOUT = int(os.getenv("CLAUDE_TIMEOUT", "60"))
+
 # System prompt — assembled from modular blocks
 from prompts.composer import compose_system_prompt as get_system_prompt  # noqa: E402
 
@@ -47,5 +51,7 @@ __all__ = [
     "VLAM_HOST",
     "VLAM_MODEL_ID",
     "VLAM_PORT",
+    "VLAM_TIMEOUT",
+    "CLAUDE_TIMEOUT",
     "get_system_prompt",
 ]
