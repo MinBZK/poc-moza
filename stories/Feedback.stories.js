@@ -18,139 +18,174 @@ const feedbackIconFout = `<svg xmlns="http://www.w3.org/2000/svg" xml:space="pre
 	<path class="feedback-icon-color-foreground" d="M15.12 7.71 12 10.48 8.88 7.71a.858.858 0 0 0-1.15.02c-.3.32-.31.81-.02 1.14L10.48 12l-2.77 3.12c-.29.33-.29.83.02 1.14.32.3.81.31 1.14.02L12 13.52l3.12 2.77c.33.29.83.28 1.14-.02.3-.32.31-.81.02-1.14L13.52 12l2.77-3.12c.29-.33.29-.83-.02-1.14a.848.848 0 0 0-1.15-.03M12 12.01l-.01-.01.01-.01.01-.01.01.01.01.01-.03.01z"/>
 </svg>`;
 
-const icons = {
-	neutraal: "",
-	info: feedbackIconInfo,
-	succes: feedbackIconSucces,
-	waarschuwing: feedbackIconWaarschuwing,
-	fout: feedbackIconFout,
-};
-
-const classMap = {
-	neutraal: "",
-	info: "feedback-info",
-	succes: "feedback-succes",
-	waarschuwing: "feedback-warning",
-	fout: "feedback-error",
-};
-
 export default {
 	title: "Componenten/Feedback",
-	argTypes: {
-		variant: {
-			control: "select",
-			options: ["neutraal", "info", "succes", "waarschuwing", "fout"],
+	tags: ["autodocs"],
+};
+
+
+export const Neutraal = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Neutrale feedback zonder icoon. Geschikt voor algemene meldingen zonder specifieke urgentie.",
+			},
 		},
-		titel: { control: "text" },
-		bericht: { control: "text" },
 	},
+	render: () => `
+<div class="feedback">
+	<div>
+		<p>Neutrale feedback</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam asperiores odio nulla et?</p>
+	</div>
+	<button class="btn-close link-button">
+		<i>Sluit notificatie</i>
+	</button>
+</div>
+`,
 };
 
-export const Speeltuin = {
-	args: {
-		variant: "info",
-		titel: "Informatie",
-		bericht: "Dit is een voorbeeld feedbackbericht.",
+export const Informatie = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Informatieve feedback. Gebruik dit voor het tonen van aanvullende of verduidelijkende informatie.",
+			},
+		},
 	},
-	render: ({ variant, titel, bericht }) => {
-		const cls = classMap[variant] ? ` ${classMap[variant]}` : "";
-		const icon = icons[variant];
-		return `
-			<div class="feedback${cls}">
-				${icon}
-				<div>
-					<p>${titel}</p>
-					<p>${bericht}</p>
-				</div>
-			</div>
-		`;
-	},
+	render: () => `
+<div class="feedback feedback-info">
+	${feedbackIconInfo}
+	<div>
+		<p>Informatie</p>
+		<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt sint mollitia culpa distinctio omnis quasi aperiam dolorem.</p>
+	</div>
+	<button class="btn-close link-button">
+		<i>Sluit notificatie</i>
+	</button>
+</div>
+`,
 };
 
-export const Neutraal = () => `
+export const Succes = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Succesfeedback. Gebruik dit om te bevestigen dat een gebruikersactie of een actie vanuit het systeem geslaagd is.",
+			},
+		},
+	},
+	render: () => `
+<div class="feedback feedback-succes">
+	${feedbackIconSucces}
+	<div>
+		<p>Succes</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nulla doloribus in explicabo minus amet deleniti excepturi.</p>
+	</div>
+	<button class="btn-close link-button">
+		<i>Sluit notificatie</i>
+	</button>
+</div>
+`,
+};
+
+export const Waarschuwing = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Waarschuwingsfeedback. Gebruik dit om de gebruiker te attenderen op een mogelijke aandachtspunt.",
+			},
+		},
+	},
+	render: () => `
+<div class="feedback feedback-warning">
+	${feedbackIconWaarschuwing}
+	<div>
+		<p>Waarschuwing</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, incidunt perspiciatis adipisci iusto veniam magnam.</p>
+	</div>
+	<button class="btn-close link-button">
+		<i>Sluit notificatie</i>
+	</button>
+</div>
+`,
+};
+
+export const Foutmelding = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Foutmelding. Gebruik dit bij validatiefouten of mislukte acties. Heeft geen sluit-knop omdat de fout door de gebruiker opgelost moet worden om verder te kunnen.",
+			},
+		},
+	},
+	render: () => `
+<div class="feedback feedback-error">
+	${feedbackIconFout}
+	<div>
+		<p>Foutmelding</p>
+		<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus iste tempore dignissimos fuga.</p>
+	</div>
+</div>
+`,
+};
+
+export const AlleVarianten = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Overzicht van alle feedbackvarianten naast elkaar ter vergelijking.",
+			},
+		},
+	},
+	render: () => `
+<div style="display: flex; flex-direction: column; gap: 1rem;">
 	<div class="feedback">
 		<div>
 			<p>Neutrale feedback</p>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam asperiores odio nulla et?</p>
+			<p>Bericht tekst.</p>
 		</div>
+		<button class="btn-close link-button">
+			<i>Sluit notificatie</i>
+		</button>
 	</div>
-`;
-
-export const Informatie = () => `
 	<div class="feedback feedback-info">
 		${feedbackIconInfo}
 		<div>
 			<p>Informatie</p>
-			<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt sint mollitia culpa distinctio omnis quasi aperiam dolorem.</p>
+			<p>Bericht tekst.</p>
 		</div>
+		<button class="btn-close link-button">
+			<i>Sluit notificatie</i>
+		</button>
 	</div>
-`;
-
-export const Succes = () => `
 	<div class="feedback feedback-succes">
 		${feedbackIconSucces}
 		<div>
 			<p>Succes</p>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nulla doloribus in explicabo minus amet deleniti excepturi.</p>
+			<p>Bericht tekst.</p>
 		</div>
+		<button class="btn-close link-button">
+			<i>Sluit notificatie</i>
+		</button>
 	</div>
-`;
-
-export const Waarschuwing = () => `
 	<div class="feedback feedback-warning">
 		${feedbackIconWaarschuwing}
 		<div>
 			<p>Waarschuwing</p>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, incidunt perspiciatis adipisci iusto veniam magnam.</p>
+			<p>Bericht tekst.</p>
 		</div>
+		<button class="btn-close link-button">
+			<i>Sluit notificatie</i>
+		</button>
 	</div>
-`;
-
-export const Foutmelding = () => `
 	<div class="feedback feedback-error">
 		${feedbackIconFout}
 		<div>
 			<p>Foutmelding</p>
-			<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus iste tempore dignissimos fuga.</p>
+			<p>Bericht tekst.</p>
 		</div>
 	</div>
-`;
-
-export const AlleVarianten = () => `
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<div class="feedback">
-			<div>
-				<p>Neutrale feedback</p>
-				<p>Bericht tekst.</p>
-			</div>
-		</div>
-		<div class="feedback feedback-info">
-			${feedbackIconInfo}
-			<div>
-				<p>Informatie</p>
-				<p>Bericht tekst.</p>
-			</div>
-		</div>
-		<div class="feedback feedback-succes">
-			${feedbackIconSucces}
-			<div>
-				<p>Succes</p>
-				<p>Bericht tekst.</p>
-			</div>
-		</div>
-		<div class="feedback feedback-warning">
-			${feedbackIconWaarschuwing}
-			<div>
-				<p>Waarschuwing</p>
-				<p>Bericht tekst.</p>
-			</div>
-		</div>
-		<div class="feedback feedback-error">
-			${feedbackIconFout}
-			<div>
-				<p>Foutmelding</p>
-				<p>Bericht tekst.</p>
-			</div>
-		</div>
-	</div>
-`;
+</div>
+`,
+};

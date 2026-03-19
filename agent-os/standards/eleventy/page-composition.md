@@ -20,7 +20,7 @@ All pages follow the same layout structure.
     <section class="card">...</section>
   </div>
 
-  <section class="card card-faq">
+  <section class="card accordion">
     <details name="faq">...</details>
   </section>
 </article>

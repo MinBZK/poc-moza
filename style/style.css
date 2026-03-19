@@ -382,7 +382,6 @@ a.btn-cta {
 	display: inline-block;
 	text-decoration: none;
 }
-
 .link-button,
 .icon-button {
 	background: none;
@@ -392,9 +391,29 @@ a.btn-cta {
 	min-block-size: unset;
 	min-inline-size: unset;
 	padding: 0;
-	&:hover {
+	&:hover,
+	&:focus,
+	&:focus-visible,
+	&:active {
 		background: inherit !important;
 		color: inherit !important;
+	}
+}
+.btn-close {
+	display: flex;
+	margin-inline-start: auto;
+	min-block-size: var(--toepassing-pointer-target-min-size);
+	min-inline-size: var(--toepassing-pointer-target-min-size);
+	i {
+		display: none;
+	}
+	&::after {
+		content: "";
+		inline-size: var(--toepassing-size-icon-sm);
+		block-size: var(--toepassing-size-icon-sm);
+		background-color: currentColor;
+		margin-inline-start: auto;
+		mask: url("../assets/icons/icon-sluiten.svg") no-repeat top right / contain;
 	}
 }
 
@@ -876,14 +895,21 @@ summary {
 	}
 }
 
-.card-faq {
+.accordion {
+	display: flex;
+	flex-direction: column;
 	gap: var(--toepassing-space-padding-2xs);
-	h4 {
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
 		font-size: var(--toepassing-text-size-body-md);
 		margin-block-end: 0;
 	}
-	section {
-		padding: var(--toepassing-space-padding-sm);
+	p {
+		padding-block-start: var(--toepassing-space-padding-sm);
+		padding-inline: var(--toepassing-space-padding-sm);
 	}
 }
 
@@ -938,6 +964,7 @@ h4 {
 	padding: var(--toepassing-space-padding-md);
 	svg {
 		align-self: self-start;
+		flex-shrink: 0;
 		inline-size: var(--toepassing-size-icon-md);
 		margin-inline-end: var(--toepassing-space-margin-2xs);
 	}
@@ -971,17 +998,6 @@ h4 {
 	border-color: var(--toepassing-color-feedback-error-border);
 	svg {
 		fill: var(--toepassing-color-feedback-error-icon);
-	}
-}
-.feedback-close {
-	margin-inline-start: auto;
-	&::after {
-		content: "";
-		display: inline-block;
-		inline-size: var(--toepassing-size-icon-sm);
-		block-size: var(--toepassing-size-icon-sm);
-		background-color: currentColor;
-		mask: url("../assets/icons/icon-sluiten.svg") no-repeat center / contain;
 	}
 }
 .feedback-page-banner {
