@@ -78,7 +78,10 @@ def _audit_log(tool_name: str, input_data: dict, output_data: dict) -> None:
         "timestamp": datetime.now(UTC).isoformat(),
         "tool": tool_name,
         "input": input_data,
-        "output": {"type": type(output_data).__name__, "keys": list(output_data.keys())},
+        "output": {
+            "type": type(output_data).__name__,
+            "keys": list(output_data.keys()),
+        },
     }
     logger.info("AUDIT: %s", json.dumps(entry, ensure_ascii=False, default=str))
 
@@ -119,7 +122,9 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
         data = await _kvk_request(f"/v1/basisprofielen/{kvk_nummer}")
     except httpx.HTTPStatusError as e:
         error_body = {
-            "error": "SOURCE_UNAVAILABLE" if e.response.status_code >= 500 else "NIET_GEVONDEN",
+            "error": "SOURCE_UNAVAILABLE"
+            if e.response.status_code >= 500
+            else "NIET_GEVONDEN",
             "message": f"KvK API fout bij ophalen {kvk_nummer}: {e.response.status_code}",
         }
         return [
@@ -293,7 +298,9 @@ async def _haal_basisprofiel_op(kvk_nummer: str) -> dict:
         data = await _kvk_request(f"/v1/basisprofielen/{kvk_nummer}")
     except httpx.HTTPStatusError as e:
         return {
-            "error": "NIET_GEVONDEN" if e.response.status_code == 404 else "SOURCE_UNAVAILABLE",
+            "error": "NIET_GEVONDEN"
+            if e.response.status_code == 404
+            else "SOURCE_UNAVAILABLE",
             "message": f"KvK API fout bij ophalen {kvk_nummer}: {e.response.status_code}",
         }
     except httpx.RequestError as e:
