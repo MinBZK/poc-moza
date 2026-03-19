@@ -1,6 +1,16 @@
 <h1>Ontwerpprincipes MijnOverheid Zakelijk</h1>
 <h2>Context</h2>
-<p>MijnOverheid Zakelijk (MOZa) is een proof-of-concept prototype voor een digitaal portaal waar ondernemers hun overheidszaken op één plek kunnen inzien en beheren. Denk aan belastingen, bedrijfsgegevens, berichtenbox, lopende zaken, personeel en gegevensdeling. Het prototype dient als basis voor gebruikersonderzoek en als referentie voor de uiteindelijke realisatie.</p>
+<p>Dit document beschrijft de ontwerpprincipes en technische keuzes die ten grondslag liggen aan het prototype van MijnOverheid Zakelijk. Het prototype wordt ingezet voor gebruikersonderzoek en dient als referentie voor de uiteindelijke realisatie.</p>
+<h3>Ontwerpen in code</h3>
+<p>Het ontwerpproces vindt niet plaats in grafische design tooling zoals Figma of Sketch, maar direct in front-end code: HTML, CSS en waar nodig JavaScript. Design tooling voegt een vertaalstap toe tussen ontwerp en eindresultaat — een vertaalstap die tijd kost, informatie verliest en afwijkingen introduceert. Door direct in het daadwerkelijke medium te werken vervalt die vertaling. Wat ontworpen wordt, is direct wat de gebruiker te zien krijgt.</p>
+<p>Dit biedt een aantal concrete voordelen:</p>
+<ul>
+<li><strong>Direct resultaat</strong> — een wijziging in de code is onmiddellijk zichtbaar in de browser. Er is geen export, overdracht of herinterpretatie nodig.</li>
+<li><strong>Echte interactie</strong> — hover-staten, toetsenbordnavigatie, focusgedrag en animaties zijn direct te ervaren en te testen. In statische ontwerpen blijven deze onzichtbaar.</li>
+<li><strong>Toegankelijkheid vanaf het begin</strong> — semantische HTML, ARIA-attributen en toetsenbordbediening zijn onderdeel van het ontwerpproces, niet iets dat er later aan toegevoegd wordt.</li>
+<li><strong>Eén bron van waarheid</strong> — de code is het ontwerp. Er ontstaat geen discrepantie tussen wat in een ontwerptool staat en wat daadwerkelijk gebouwd is.</li>
+<li><strong>Lagere drempel voor wijzigingen</strong> — aanpassingen naar aanleiding van gebruikersonderzoek of feedback worden direct in de code doorgevoerd, zonder tussenliggende stappen of afhankelijkheden van specifieke tooling.</li>
+</ul>
 <h2>Ontwerpprincipes</h2>
 <h3>1. Toegankelijkheid als fundament</h3>
 <p>Toegankelijkheid is geen toevoeging achteraf maar een ontwerpuitgangspunt. Elk component wordt vanaf het begin ontworpen en gebouwd met toegankelijkheid in gedachten.</p>
@@ -30,11 +40,25 @@
 <li><strong>Van component naar pagina</strong> — pagina's zijn samengesteld uit bestaande componenten. Dit zorgt voor consistentie en vermindert duplicatie.</li>
 <li><strong>Documentatie bij de code</strong> — elke story bevat een beschrijving die uitlegt wanneer en hoe het component ingezet wordt. De componentenbibliotheek dient daarmee zowel als visuele referentie als gebruikershandleiding.</li>
 </ul>
-<h3>5. Prototypen als communicatiemiddel</h3>
+<h3>5. De eenvoudigst mogelijke oplossing</h3>
+<p>Elk ontwerpvraagstuk wordt beantwoord met de eenvoudigst mogelijke technische oplossing die het probleem daadwerkelijk oplost. Complexiteit wordt pas toegevoegd wanneer eenvoud aantoonbaar tekortschiet.</p>
+<ul>
+<li><strong>HTML en CSS waar het kan, JavaScript waar het moet</strong> — standaard browsergedrag en semantische HTML lossen verrassend veel interactieproblemen op zonder aanvullende code. JavaScript wordt alleen toegevoegd wanneer de gewenste functionaliteit niet met HTML en CSS te realiseren is.</li>
+<li><strong>Platform boven framework</strong> — het ontwerp leunt op wat de browser al biedt: native formuliervalidatie, <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> voor in- en uitklapbare secties, CSS voor responsiviteit. Frameworks en bibliotheken worden alleen ingezet als het platform aantoonbaar niet volstaat.</li>
+<li><strong>Minder is beter te onderhouden</strong> — elke extra laag technologie is een extra laag die begrepen, onderhouden en getest moet worden. Door de oplossing zo dicht mogelijk bij de basis te houden, blijft het prototype toegankelijk voor een breed team en is het eenvoudiger over te dragen naar de uiteindelijke realisatie.</li>
+</ul>
+<h3>6. Prototypen als communicatiemiddel</h3>
 <p>Het prototype is geen afgewerkt product maar een communicatiemiddel. Het wordt ingezet om ontwerpbeslissingen te toetsen in gebruikersonderzoek en om gesprekken met stakeholders concreet te maken.</p>
 <ul>
 <li><strong>Echte HTML en CSS</strong> — het prototype is gebouwd met dezelfde technologie als het uiteindelijke product. Dit geeft een realistischer beeld dan statische ontwerpen en maakt het mogelijk om interactie, toegankelijkheid en responsiviteit vroegtijdig te toetsen.</li>
 <li><strong>Iteratief proces</strong> — het ontwerp wordt stapsgewijs verbeterd op basis van inzichten uit gebruikersonderzoek. Componenten en pagina's worden aangepast, niet vanaf nul opnieuw gemaakt.</li>
+</ul>
+<h3>7. Iteratief ontwerpen tussen vandaag en morgen</h3>
+<p>Het ontwerpproces beweegt zich continu tussen twee perspectieven: wat we nu kunnen bouwen en valideren, en waar we uiteindelijk naartoe willen. De stip op de horizon geeft richting, ook als die op dit moment technisch, juridisch of organisatorisch nog niet bereikbaar is.</p>
+<ul>
+<li><strong>Ontwerpen op aannames, valideren met gebruikers</strong> — niet elk ontwerpbesluit kan vooraf onderbouwd worden met onderzoek. Waar directe inzichten ontbreken, formuleren we expliciete aannames die we zo snel mogelijk met gebruikers toetsen. Onderzoek en ontwerp wisselen elkaar voortdurend af.</li>
+<li><strong>De stip op de horizon als kompas</strong> — sommige oplossingen zijn nu nog niet realiseerbaar: wetgeving staat het niet toe, systemen zijn er nog niet klaar voor, of de organisatie moet eerst anders ingericht worden. Toch ontwerpen we alvast voor die toekomst, zodat we daar klaar voor zijn wanneer de randvoorwaarden veranderen.</li>
+<li><strong>Kleine stappen in de goede richting</strong> — elk increment levert iets op dat getest en gebruikt kan worden, maar brengt het ontwerp ook dichter bij het grotere doel. We kiezen bewust voor oplossingen die zowel op korte termijn waarde leveren als op lange termijn passen in het toekomstbeeld.</li>
 </ul>
 <h2>Technische ontwerpkeuzes</h2>
 <h3>Logical properties</h3>

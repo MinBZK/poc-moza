@@ -1,5 +1,6 @@
 import "../style/style.css";
-import "../assets/aria-disabled.js";
+import "../assets/javascript/aria-disabled.js";
+import "../assets/javascript/indeterminate.js";
 
 /** @type { import('@storybook/html-vite').Preview } */
 const preview = {

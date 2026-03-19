@@ -483,7 +483,8 @@ ul.selection {
 	place-content: center;
 	transition: var(--toepassing-transition-default);
 	vertical-align: top;
-	&::before {
+	&::before,
+	&[data-indeterminate]::before {
 		block-size: var(--toepassing-size-icon-sm);
 		content: "";
 		inline-size: var(--toepassing-size-icon-sm);
@@ -516,9 +517,19 @@ ul.selection {
 		color: var(--toepassing-color-interactive-disabled-text);
 	}
 }
-[type="checkbox"]::before {
-	background-color: var(--toepassing-color-text-inverse);
-	mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
+[type="checkbox"] {
+	&::before {
+		background-color: var(--toepassing-color-text-inverse);
+		mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
+	}
+	&[data-indeterminate] {
+		background: var(--toepassing-color-interactive-default-background);
+		border-color: var(--toepassing-color-interactive-default-background);
+		&::before {
+			transform: scale(1);
+			mask: url("../assets/icons/icon-minus.svg") no-repeat center / contain;
+		}
+	}
 }
 [type="radio"] {
 	border-radius: var(--toepassing-border-radius-round);
