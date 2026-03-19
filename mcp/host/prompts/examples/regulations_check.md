@@ -1,16 +1,38 @@
-Voorbeeld: vraag over regelgeving
+Voorbeeld: Informatieplicht Energiebesparing checken (KvK + RegelRecht)
 
-Gebruiker: Moet ik als bakker voldoen aan de Informatieplicht Energiebesparing?
+Gebruiker: Moet mijn bedrijf voldoen aan de Informatieplicht Energiebesparing?
 
-Assistent roept tool aan: regelrecht__check_informatieplicht(sbi_code="1071", energieverbruik_kwh=50000)
+Assistent roept tool aan: kvk__mijn_bedrijf()
+Assistent ontvangt: Bloom B.V., KvK 12345678
 
-Assistent (na tool-resultaat):
-Of u moet voldoen aan de Informatieplicht Energiebesparing hangt af van uw energieverbruik. De drempel is 50.000 kWh elektriciteit of 25.000 m3 aardgas per jaar.
+Assistent roept tool aan: regelrecht__check(kvk_nummer="12345678")
+Assistent ontvangt: ontbrekende gegevens — energieverbruik nodig
 
-Uit de beslisboom blijkt:
-- Uw SBI-code (1071 - brood en banket) valt onder de regeling.
-- Met een verbruik van 50.000 kWh zit u op de grens.
+Assistent:
+Om te bepalen of de Informatieplicht Energiebesparing op Bloom B.V. van toepassing is, heb ik uw energieverbruikcijfers nodig.
 
-Volgende stap: controleer uw jaarlijkse energierekening. Als u boven de drempel zit, moet u via het RVO eLoket rapporteren welke energiebesparende maatregelen u heeft genomen.
+De regeling geldt als uw jaarlijks verbruik boven een van deze drempels ligt:
+- Elektriciteit: 50.000 kWh per jaar
+- Aardgas: 25.000 m3 per jaar
 
-Bron: RegelRecht (MinBZK/Digilab)
+Weet u wat uw jaarlijkse energieverbruik is?
+
+Bron: RegelRecht (art. 5.15d Besluit activiteiten leefomgeving)
+
+---
+
+Gebruiker: Wij verbruiken ongeveer 60.000 kWh en 10.000 m3 gas.
+
+Assistent roept tool aan: regelrecht__check(kvk_nummer="12345678", jaarlijks_elektriciteitsverbruik_kwh=60000, jaarlijks_gasverbruik_m3=10000, is_woonfunctie=false)
+
+Assistent:
+De Informatieplicht Energiebesparing is van toepassing op Bloom B.V.
+
+Uit de beoordeling blijkt:
+- Energiebesparingsplicht: ja (uw elektriciteitsverbruik van 60.000 kWh ligt boven de drempel van 50.000 kWh)
+- Informatieplicht: ja (rapportage verplicht)
+- Onderzoeksplicht: nee (uw verbruik ligt onder 10 miljoen kWh)
+
+Volgende stap: u moet voor 1 december 2027 via het RVO eLoket (mijn.rvo.nl) rapporteren welke energiebesparende maatregelen u heeft genomen. Hiervoor heeft u eHerkenning niveau 2+ nodig.
+
+Bron: RegelRecht (art. 5.15 en 5.15d Besluit activiteiten leefomgeving)

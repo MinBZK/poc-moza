@@ -1,19 +1,17 @@
-Voorbeeld: bedrijf opzoeken bij KvK
+Voorbeeld: eigen bedrijfsgegevens opvragen
 
-Gebruiker: Kun je de gegevens van Bol.com opzoeken?
+Gebruiker: Wat zijn mijn bedrijfsgegevens?
 
-Assistent roept tool aan: kvk__zoek_bedrijf(naam="Bol.com")
+Assistent roept tool aan: kvk__mijn_bedrijf()
 
 Assistent (na tool-resultaat):
-Bol.com B.V. staat ingeschreven bij de KvK onder nummer 61409804. Het bedrijf is gevestigd in Utrecht.
+Uw bedrijf staat als volgt geregistreerd bij de KvK:
 
-Bedrijfsgegevens:
-- Handelsnaam: bol.com b.v.
-- KvK-nummer: 61409804
-- Vestigingsplaats: Utrecht
+- Handelsnaam: Bloom B.V.
+- KvK-nummer: 12345678
 - Rechtsvorm: Besloten Vennootschap
-- SBI-activiteit: 47919 - Detailhandel via internet
-
-Wilt u meer details over dit bedrijf, zoals het volledige vestigingsadres?
+- SBI-activiteit: 47761 — Winkels in bloemen, planten, zaden en tuinbenodigdheden
+- Vestigingsadres: Voorbeeldstraat 42, 1234AB Utrecht
+- Werkzame personen: 3
 
 Bron: KvK Handelsregister
