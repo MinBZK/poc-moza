@@ -89,6 +89,113 @@ Legenda: **groen** = Resource (read-only ophalen), **blauw** = Tool (read-only z
 
 Bij gecombineerde vragen geldt de volgorde: KvK (wie?) → KOOP (welke regels?) → RegelRecht (van toepassing?) → RVO (actie ondernemen).
 
+## Voorbeeldscenario's
+
+### Scenario 1: Bedrijf opzoeken (KvK)
+
+> Gebruiker: "Zoek de gegevens van Bol.com"
+
+```mermaid
+sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+    participant API as KvK API
+
+    Gebruiker->>Host: "Zoek de gegevens van Bol.com"
+    Note over Host: Routeringsregel: bedrijfsnaam<br/>→ kvk__zoek_bedrijf
+    Host->>KvK: tools/call [zoek_bedrijf, naam="Bol.com"]
+    KvK->>API: GET api.kvk.nl/test/api/v2/zoeken?naam=Bol.com
+    API-->>KvK: zoekresultaten
+    KvK-->>Host: resultaat + provenance
+    Host->>Gebruiker: "Bol.com B.V. (KvK 61409804, Utrecht)"
+
+    Gebruiker->>Host: "Meer details graag"
+    Note over Host: Routeringsregel: KvK-nummer bekend<br/>→ resource kvk://basisprofiel
+    Host->>KvK: resources/read [kvk://basisprofiel/61409804]
+    KvK->>API: GET api.kvk.nl/test/api/v1/basisprofielen/61409804
+    API-->>KvK: basisprofiel
+    KvK-->>Host: profiel + provenance
+    Host->>Gebruiker: "Rechtsvorm, SBI-codes, adresgegevens..."
+```
+
+### Scenario 2: Regelgeving zoeken (KOOP)
+
+> Gebruiker: "Welke regels gelden er voor energiebesparing?"
+
+```mermaid
+sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KOOP as MCP Server (KOOP)
+    participant SRU as SRU zoekservice
+
+    Gebruiker->>Host: "Welke regels gelden er voor energiebesparing?"
+    Note over Host: Routeringsregel: vraag over regelgeving<br/>→ koop__zoek_regelgeving
+    Host->>KOOP: tools/call [zoek_regelgeving, trefwoord="energiebesparing"]
+    KOOP->>SRU: GET zoekservice.overheid.nl/sru/Search<br/>?x-connection=BWB&query=overheidbwb.titel any "energiebesparing"
+    SRU-->>KOOP: XML met regelingen
+    KOOP-->>Host: resultaten + provenance
+    Host->>Gebruiker: "Er zijn 86 regelingen gevonden, waaronder..."
+
+    Gebruiker->>Host: "Wat staat er in de Subsidieregeling energiebesparing?"
+    Note over Host: Routeringsregel: BWB-ID bekend<br/>→ resource koop://regeling
+    Host->>KOOP: resources/read [koop://regeling/BWBR0038472]
+    KOOP->>SRU: SRU lookup → resolve naar XML-URL
+    SRU-->>KOOP: locatie_toestand URL
+    KOOP->>SRU: GET repository XML
+    SRU-->>KOOP: volledige wettekst
+    KOOP-->>Host: artikelen + provenance
+    Host->>Gebruiker: "De regeling bevat X artikelen. Artikel 1 bepaalt..."
+```
+
+### Scenario 3: Gecombineerde vraag (KvK + RegelRecht)
+
+> Gebruiker: "Moet mijn bakkerij voldoen aan de Informatieplicht Energiebesparing?"
+
+```mermaid
+sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+    participant RR as MCP Server (RegelRecht)
+
+    Gebruiker->>Host: "Moet mijn bakkerij voldoen aan de<br/>Informatieplicht Energiebesparing?"
+    Note over Host: Routeringsregel: verplichting checken<br/>→ eerst bedrijfsgegevens nodig
+
+    Host->>Gebruiker: "Wat is uw KvK-nummer of bedrijfsnaam?"
+    Gebruiker->>Host: "Bakkerij Jansen, KvK 12345678"
+
+    Note over Host: Stap 1: bedrijfsgegevens ophalen
+    Host->>KvK: resources/read [kvk://basisprofiel/12345678]
+    KvK-->>Host: SBI-code 1071, vestigingsgegevens + provenance
+
+    Note over Host: Stap 2: verplichting checken<br/>met verkregen SBI-code
+    Host->>RR: tools/call [check, sbi_code="1071"]
+    RR-->>Host: beslisboom-resultaat + provenance
+
+    Host->>Gebruiker: "Uw SBI-code (1071, brood en banket) valt onder<br/>de regeling. Of u moet rapporteren hangt af van<br/>uw jaarlijks energieverbruik."
+```
+
+### Scenario 4: Bron niet beschikbaar
+
+> Gebruiker: "Zoek bedrijfsgegevens van ACME B.V."
+
+```mermaid
+sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+    participant API as KvK API
+
+    Gebruiker->>Host: "Zoek bedrijfsgegevens van ACME B.V."
+    Host->>KvK: tools/call [zoek_bedrijf, naam="ACME B.V."]
+    KvK->>API: GET api.kvk.nl/...
+    API--xKvK: timeout / 503
+    KvK-->>Host: error: SOURCE_UNAVAILABLE
+    Host->>Gebruiker: "Het KvK Handelsregister is op dit moment<br/>niet bereikbaar. U kunt het rechtstreeks<br/>proberen via kvk.nl."
+```
+
 ## Snel starten
 
 ```bash

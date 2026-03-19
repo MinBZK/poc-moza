@@ -4,7 +4,9 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: '^_site/'
       - id: end-of-file-fixer
+        exclude: '^_site/'
       - id: check-yaml
       - id: check-json
         exclude: '(mox\.json|_site/)'
