@@ -1,62 +1,170 @@
 export default {
 	title: "Componenten/Knop",
+	tags: ["autodocs"],
+};
+
+export const Primair = {
+	parameters: {
+		docs: {
+			description: {
+				story: "De standaard primaire knop. Gebruik dit voor de belangrijkste actie op een pagina.",
+			},
+		},
+	},
 	argTypes: {
 		label: { control: "text" },
-		variant: {
-			control: "select",
-			options: ["primary", "secondary", "negative"],
-		},
-		type: {
-			control: "select",
-			options: ["button", "submit", "reset"],
-		},
-		inactief: { control: "boolean" },
 	},
-};
-
-export const Speeltuin = {
 	args: {
-		label: "Knoptekst",
-		variant: "primary",
-		type: "button",
-		inactief: false,
+		label: "Standaard primaire knop",
 	},
-	render: ({ label, variant, type, inactief }) => {
-		const cls = variant === "primary" ? "" : variant;
-		const attrs = inactief ? " aria-disabled" : "";
-		return `<button type="${type}" class="${cls}"${attrs}>${label}</button>`;
-	},
+	render: ({ label }) => `
+<button type="button">${label}</button>
+`,
 };
 
-export const Primair = () =>
-	`<button type="button">Standaard primaire knop</button>`;
+export const Secundair = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Secundaire knop. Gebruik dit voor minder prominente acties naast een primaire knop.",
+			},
+		},
+	},
+	argTypes: {
+		label: { control: "text" },
+	},
+	args: {
+		label: "Secundaire knop",
+	},
+	render: ({ label }) => `
+<button type="button" class="secondary">${label}</button>
+`,
+};
 
-export const Secundair = () =>
-	`<button type="button" class="secondary">Secundaire knop</button>`;
+export const Reset = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Reset knop. Gebruik `type=\"reset\"` om formuliervelden terug te zetten naar hun beginwaarde.",
+			},
+		},
+	},
+	argTypes: {
+		label: { control: "text" },
+	},
+	args: {
+		label: "Reset knop",
+	},
+	render: ({ label }) => `
+<button type="reset">${label}</button>
+`,
+};
 
-export const Reset = () => `<button type="reset">Reset knop</button>`;
+export const Submit = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Submit knop. Gebruik `type=\"submit\"` om een formulier te verzenden.",
+			},
+		},
+	},
+	argTypes: {
+		label: { control: "text" },
+	},
+	args: {
+		label: "Submit knop",
+	},
+	render: ({ label }) => `
+<button type="submit">${label}</button>
+`,
+};
 
-export const Submit = () => `<button type="submit">Submit knop</button>`;
+export const Inactief = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Inactieve knop. Gebruikt `aria-disabled` in plaats van het `disabled` attribuut voor betere toegankelijkheid.",
+			},
+		},
+	},
+	argTypes: {
+		label: { control: "text" },
+	},
+	args: {
+		label: "Inactieve knop",
+	},
+	render: ({ label }) => `
+<button aria-disabled>${label}</button>
+`,
+};
 
-export const Inactief = () =>
-	`<button aria-disabled>Inactieve knop</button>`;
+export const Destructief = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Destructieve knop. Gebruik dit voor onomkeerbare acties zoals verwijderen.",
+			},
+		},
+	},
+	argTypes: {
+		label: { control: "text" },
+	},
+	args: {
+		label: "Destructieve actie",
+	},
+	render: ({ label }) => `
+<button class="negative">${label}</button>
+`,
+};
 
-export const Destructief = () =>
-	`<button class="negative">Destructieve actie</button>`;
+export const MetTekststijlen = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Knop met tekststijlen. Inline elementen zoals `<b>` en `<i>` zijn toegestaan binnen knoppen.",
+			},
+		},
+	},
+	render: () => `
+<button type="button">Knop met <b>tekst</b> <i>stijlen</i></button>
+`,
+};
 
-export const MetTekststijlen = () =>
-	`<button type="button">Knop met <b>tekst</b> <i>stijlen</i></button>`;
+export const MetIcoon = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Knop met een icoon voor de tekst.",
+			},
+		},
+	},
+	argTypes: {
+		label: { control: "text" },
+	},
+	args: {
+		label: "Knop met icoon voor tekst",
+	},
+	render: ({ label }) => `
+<button type="button"><span>⚑</span> ${label}</button>
+`,
+};
 
-export const MetIcoon = () =>
-	`<button type="button"><span>⚑</span> Knop met icoon voor tekst</button>`;
-
-export const AlleVarianten = () => `
-	<div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start;">
-		<button type="button">Primaire knop</button>
-		<button type="button" class="secondary">Secundaire knop</button>
-		<button type="reset">Reset knop</button>
-		<button type="submit">Submit knop</button>
-		<button class="negative">Destructieve actie</button>
-		<button aria-disabled>Inactieve knop</button>
-	</div>
-`;
+export const AlleVarianten = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Overzicht van alle knopvarianten naast elkaar ter vergelijking.",
+			},
+		},
+	},
+	render: () => `
+<div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start;">
+	<button type="button">Primaire knop</button>
+	<button type="button" class="secondary">Secundaire knop</button>
+	<button type="reset">Reset knop</button>
+	<button type="submit">Submit knop</button>
+	<button class="negative">Destructieve actie</button>
+	<button aria-disabled>Inactieve knop</button>
+</div>
+`,
+};
