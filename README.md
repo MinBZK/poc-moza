@@ -121,6 +121,10 @@ npm run storybook
 
 Storybook is vervolgens te bekijken op [`localhost:6006`](http://localhost:6006).
 
+### Automatisch bouwen
+
+Bij het gebruik van `npm run dev` wordt Storybook automatisch opnieuw gebouwd naar `_site/storybook` wanneer bestanden in `stories/` of `style/style.css` wijzigen. Dit gebeurt via [chokidar](https://www.npmjs.com/package/chokidar-cli) die het `build-storybook` script triggert bij elke wijziging.
+
 ### Stories
 
 De stories staan in de `stories/` map. Elk bestand beschrijft één component en toont varianten, bijvoorbeeld:
@@ -148,7 +152,7 @@ npm install
 
 | Script | Commando | Beschrijving |
 | ------ | -------- | ------------ |
-| `npm run dev` | Eleventy serve + token watcher | Beide parallel, met live reload |
+| `npm run dev` | Eleventy serve + token watcher + Storybook watcher | Alle drie parallel, met live reload en automatische Storybook-build bij wijzigingen |
 | `npm run build` | Tokens + Eleventy | Volledige productie-build |
 | `npm run tokens` | Alleen Style Dictionary | Handmatig tokens bouwen |
 | `npm run storybook` | Storybook dev server | Componentenbibliotheek lokaal bekijken |
