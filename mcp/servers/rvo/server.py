@@ -275,18 +275,32 @@ def _indienen(arguments: dict) -> list[TextContent]:
         ]
 
     # Mock succesvolle indiening
+    referentienummer = f"RVO-{regeling_id}-{kvk_nummer}-001"
+    ingediend_op = datetime.now(UTC).isoformat()
     output = {
         "status": "INGEDIEND",
-        "referentienummer": f"RVO-{regeling_id}-{kvk_nummer}-001",
+        "referentienummer": referentienummer,
         "kvk_nummer": kvk_nummer,
         "regeling_id": regeling_id,
         "maatregelen": maatregelen,
-        "ingediend_op": datetime.now(UTC).isoformat(),
+        "ingediend_op": ingediend_op,
         "bevestiging": (
             f"Uw rapportage voor {regeling_id} is succesvol ingediend. "
             f"U ontvangt een bevestiging op het e-mailadres dat gekoppeld is "
             f"aan uw eHerkenning-account."
         ),
+        "lopende_zaak": {
+            "referentienummer": referentienummer,
+            "zaak_type": "Energiebesparingsrapportage",
+            "regeling": regeling_id,
+            "status": "In behandeling",
+            "ingediend_op": ingediend_op,
+            "melding": (
+                f"Deze indiening is opgenomen als lopende zaak onder "
+                f"referentienummer {referentienummer}. U kunt de voortgang "
+                f"volgen op MijnOverheid Zakelijk onder 'Lopende zaken'."
+            ),
+        },
     }
     _audit_log("indienen", arguments, output)
     logger.info(

@@ -32,11 +32,11 @@ logger = logging.getLogger("vlam.host")
 
 # Gebruiksvriendelijke labels voor tools (getoond in de UI tijdens verwerking)
 TOOL_LABELS = {
-    "kvk__mijn_bedrijf": "Bedrijfsgegevens ophalen",
-    "koop__zoek_regelgeving": "Regelgeving zoeken",
-    "regelrecht__check": "Verplichting controleren",
-    "rvo__zoek_regeling": "Subsidieregeling zoeken",
-    "rvo__indienen": "Rapportage indienen",
+    "kvk__mijn_bedrijf": "KvK Handelsregister raadplegen",
+    "koop__zoek_regelgeving": "KOOP Regelingenbank doorzoeken",
+    "regelrecht__check": "RegelRecht: verplichting toetsen",
+    "rvo__zoek_regeling": "RVO: subsidieregeling zoeken",
+    "rvo__indienen": "RVO: rapportage indienen",
 }
 
 
@@ -142,7 +142,7 @@ class VLAMHost:
         messages = self.conversations[conv_key]
         messages.append({"role": "user", "content": user_message})
 
-        yield {"type": "status", "message": "Nadenken..."}
+        yield {"type": "status", "message": "Vraag analyseren..."}
 
         if mode == "vlam":
             if not self.vlam_client:
@@ -223,7 +223,7 @@ class VLAMHost:
 
             tool_results = await self._execute_tools(tool_uses)
             messages.append({"role": "user", "content": tool_results})
-            yield {"type": "status", "message": "Antwoord formuleren..."}
+            yield {"type": "status", "message": "Antwoord opstellen..."}
 
         yield {
             "type": "answer",
@@ -300,7 +300,7 @@ class VLAMHost:
                     {"role": "tool", "tool_call_id": tc.id, "content": result}
                 )
 
-            yield {"type": "status", "message": "Antwoord formuleren..."}
+            yield {"type": "status", "message": "Antwoord opstellen..."}
 
         yield {
             "type": "answer",
@@ -462,7 +462,7 @@ REGELS:
                 }
             )
 
-            yield {"type": "status", "message": "Antwoord formuleren..."}
+            yield {"type": "status", "message": "Antwoord opstellen..."}
 
         # Max rondes bereikt — probeer een direct antwoord
         try:
