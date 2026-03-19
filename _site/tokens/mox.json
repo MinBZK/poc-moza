@@ -178,7 +178,7 @@
     --mox-border-width-none: 0px;
 
     /* === COMMON (SEMANTIC) TOKENS (lv 2) ===
-    
+
     colors - misschien 'subtle' anders noemen (bv 'muted')
     Voor nu leek me dit lijstje voldoende:
     - primary (+2 subtile-variaties)
@@ -186,7 +186,7 @@
     - neutral (+2 subtile-variaties)
     - accent (+2 subtile-variaties)
     - info
-    - success 
+    - success
     - warning
     - danger;
 
