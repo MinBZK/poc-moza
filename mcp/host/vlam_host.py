@@ -29,10 +29,14 @@ class VLAMHost:
 
     def __init__(self):
         self.claude_client = anthropic.AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
-        self.vlam_client = openai.AsyncOpenAI(
-            api_key=VLAM_API_KEY,
-            base_url=VLAM_BASE_URL,
-        ) if VLAM_API_KEY and VLAM_BASE_URL else None
+        self.vlam_client = (
+            openai.AsyncOpenAI(
+                api_key=VLAM_API_KEY,
+                base_url=VLAM_BASE_URL,
+            )
+            if VLAM_API_KEY and VLAM_BASE_URL
+            else None
+        )
         self.registry = MCPToolRegistry()
         self.conversations: dict[str, list[dict]] = {}
         # Houdt bij welke servers gelukt/mislukt zijn
@@ -157,10 +161,12 @@ class VLAMHost:
             openai_messages.append(assistant_msg.model_dump(exclude_none=True))
 
             # Bewaar ook in ons intern formaat
-            messages.append({
-                "role": "assistant",
-                "content": assistant_msg.content or "",
-            })
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": assistant_msg.content or "",
+                }
+            )
 
             tool_calls = assistant_msg.tool_calls
             if not tool_calls:
@@ -177,11 +183,13 @@ class VLAMHost:
                     result = f"Fout bij tool '{tool_key}': {e}"
                     logger.error(result)
 
-                openai_messages.append({
-                    "role": "tool",
-                    "tool_call_id": tc.id,
-                    "content": result,
-                })
+                openai_messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": tc.id,
+                        "content": result,
+                    }
+                )
 
         return "Het antwoord kon niet worden voltooid (te veel stappen)."
 
@@ -200,11 +208,13 @@ class VLAMHost:
                 result = f"Fout bij tool '{tool_use.name}': {e}"
                 logger.error(result)
 
-            tool_results.append({
-                "type": "tool_result",
-                "tool_use_id": tool_use.id,
-                "content": result,
-            })
+            tool_results.append(
+                {
+                    "type": "tool_result",
+                    "tool_use_id": tool_use.id,
+                    "content": result,
+                }
+            )
         return tool_results
 
     @staticmethod

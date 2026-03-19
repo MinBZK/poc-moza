@@ -82,7 +82,9 @@ async def chat(request: ChatRequest):
     session_id = request.session_id or str(uuid.uuid4())
     mode = request.mode if request.mode in ("vlam", "claude") else "vlam"
     reply = await host.chat(session_id, request.message, mode=mode)
-    return ChatResponse(reply=reply, session_id=session_id, mode=mode, has_tools=host.has_tools)
+    return ChatResponse(
+        reply=reply, session_id=session_id, mode=mode, has_tools=host.has_tools
+    )
 
 
 @app.delete("/chat/{session_id}")

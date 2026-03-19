@@ -1,6 +1,5 @@
 """MCP-clientbeheer: verbindt met MCP-servers en verzamelt beschikbare tools."""
 
-import asyncio
 import logging
 from pathlib import Path
 
@@ -24,9 +23,7 @@ class MCPServerConnection:
     async def connect(self) -> list[dict]:
         """Start de MCP-server als subprocess en retourneer beschikbare tools."""
         if not self.server_path.exists():
-            raise FileNotFoundError(
-                f"Server-script niet gevonden: {self.server_path}"
-            )
+            raise FileNotFoundError(f"Server-script niet gevonden: {self.server_path}")
 
         server_params = StdioServerParameters(
             command="python",

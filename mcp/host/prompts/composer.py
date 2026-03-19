@@ -32,8 +32,7 @@ def _load_domain_blocks() -> list[str]:
     if not domain_dir.exists():
         return []
     return [
-        f.read_text(encoding="utf-8").strip()
-        for f in sorted(domain_dir.glob("*.md"))
+        f.read_text(encoding="utf-8").strip() for f in sorted(domain_dir.glob("*.md"))
     ]
 
 
@@ -42,8 +41,7 @@ def _load_examples() -> list[str]:
     if not EXAMPLES_DIR.exists():
         return []
     return [
-        f.read_text(encoding="utf-8").strip()
-        for f in sorted(EXAMPLES_DIR.glob("*.md"))
+        f.read_text(encoding="utf-8").strip() for f in sorted(EXAMPLES_DIR.glob("*.md"))
     ]
 
 
