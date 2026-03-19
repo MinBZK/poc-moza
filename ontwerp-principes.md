@@ -75,6 +75,8 @@ Het ontwerpproces beweegt zich continu tussen twee perspectieven: wat we nu kunn
 
 ## Technische ontwerpkeuzes
 
+De stylesheets maken gebruik van moderne CSS-functionaliteit die breed ondersteund wordt door de huidige generatie browsers. Dit maakt preprocessors en polyfills overbodig en houdt de technische stack zo dicht mogelijk bij het webplatform.
+
 ### Logical properties
 
 De stylesheets maken gebruik van CSS logical properties (`inline-size`, `margin-block-start`, `padding-inline`) in plaats van physical properties (`width`, `margin-top`, `padding-left`). Dit maakt de CSS toekomstbestendig voor meertalige ondersteuning en verschillende schrijfrichtingen.
@@ -85,4 +87,4 @@ De stylesheets maken gebruik van native CSS nesting voor component-staten en var
 
 ### Statische site-generatie
 
-Eleventy wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.
+[Eleventy](https://www.11ty.dev/) wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.

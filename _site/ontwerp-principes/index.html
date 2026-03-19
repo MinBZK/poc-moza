@@ -61,9 +61,10 @@
 <li><strong>Kleine stappen in de goede richting</strong> — elk increment levert iets op dat getest en gebruikt kan worden, maar brengt het ontwerp ook dichter bij het grotere doel. We kiezen bewust voor oplossingen die zowel op korte termijn waarde leveren als op lange termijn passen in het toekomstbeeld.</li>
 </ul>
 <h2>Technische ontwerpkeuzes</h2>
+<p>De stylesheets maken gebruik van moderne CSS-functionaliteit die breed ondersteund wordt door de huidige generatie browsers. Dit maakt preprocessors en polyfills overbodig en houdt de technische stack zo dicht mogelijk bij het webplatform.</p>
 <h3>Logical properties</h3>
 <p>De stylesheets maken gebruik van CSS logical properties (<code>inline-size</code>, <code>margin-block-start</code>, <code>padding-inline</code>) in plaats van physical properties (<code>width</code>, <code>margin-top</code>, <code>padding-left</code>). Dit maakt de CSS toekomstbestendig voor meertalige ondersteuning en verschillende schrijfrichtingen.</p>
 <h3>CSS nesting en custom properties</h3>
 <p>De stylesheets maken gebruik van native CSS nesting voor component-staten en varianten, en CSS custom properties voor alle ontwerp-waarden. Er worden geen preprocessors zoals Sass gebruikt.</p>
 <h3>Statische site-generatie</h3>
-<p>Eleventy wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.</p>
+<p><a href="https://www.11ty.dev/">Eleventy</a> wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.</p>
