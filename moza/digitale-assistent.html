@@ -158,12 +158,28 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		var btn = form.querySelector("button");
 		if (loading) {
 			btn.setAttribute("aria-disabled", "true");
-			addMessage("Een moment geduld...", "loading");
+			showThinking("Een moment geduld...");
 		} else {
 			btn.removeAttribute("aria-disabled");
-			var loader = messages.querySelector(".chat-message-loading");
-			if (loader) loader.remove();
+			hideThinking();
 		}
+	}
+
+	function showThinking(text) {
+		var el = messages.querySelector(".chat-message-thinking");
+		if (!el) {
+			el = document.createElement("div");
+			el.className = "chat-message chat-message-thinking chat-message-assistant";
+			el.innerHTML = '<p class="thinking-text"></p>';
+			messages.appendChild(el);
+		}
+		el.querySelector(".thinking-text").textContent = text;
+		messages.scrollTop = messages.scrollHeight;
+	}
+
+	function hideThinking() {
+		var el = messages.querySelector(".chat-message-thinking");
+		if (el) el.remove();
 	}
 
 	function renderStatus(data) {
@@ -241,7 +257,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		setLoading(true);
 
 		try {
-			var response = await fetch(API_BASE + "/chat", {
+			var response = await fetch(API_BASE + "/chat/stream", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -253,10 +269,48 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 
 			if (!response.ok) throw new Error("Server niet bereikbaar");
 
-			var data = await response.json();
-			sessions[getMode()] = data.session_id;
+			var reader = response.body.getReader();
+			var decoder = new TextDecoder();
+			var buffer = "";
+
+			while (true) {
+				var chunk = await reader.read();
+				if (chunk.done) break;
+				buffer += decoder.decode(chunk.value, { stream: true });
+
+				var parts = buffer.split("\n\n");
+				buffer = parts.pop();
+
+				for (var i = 0; i < parts.length; i++) {
+					var block = parts[i].trim();
+					if (!block) continue;
+
+					var eventType = "message";
+					var dataLine = "";
+					var lines = block.split("\n");
+					for (var j = 0; j < lines.length; j++) {
+						if (lines[j].indexOf("event: ") === 0) eventType = lines[j].slice(7);
+						if (lines[j].indexOf("data: ") === 0) dataLine = lines[j].slice(6);
+					}
+					if (!dataLine) continue;
+
+					var payload = JSON.parse(dataLine);
+
+					if (eventType === "status") {
+						showThinking(payload.message);
+					} else if (eventType === "tool") {
+						showThinking(payload.message + "...");
+					} else if (eventType === "answer") {
+						hideThinking();
+						sessions[getMode()] = payload.session_id;
+						addMessage(payload.message, "assistant");
+					} else if (eventType === "done") {
+						hideThinking();
+					}
+				}
+			}
+
 			setLoading(false);
-			addMessage(data.reply, "assistant");
 		} catch (err) {
 			setLoading(false);
 			addMessage(

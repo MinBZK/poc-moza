@@ -36,3 +36,16 @@ VLAM_HOST = os.getenv("VLAM_HOST", "0.0.0.0")
 VLAM_PORT = int(os.getenv("VLAM_PORT", "8000"))
 
 # System prompt — assembled from modular blocks
+from prompts.composer import compose_system_prompt as get_system_prompt  # noqa: E402
+
+__all__ = [
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_MODEL",
+    "MCP_SERVERS",
+    "VLAM_API_KEY",
+    "VLAM_BASE_URL",
+    "VLAM_HOST",
+    "VLAM_MODEL_ID",
+    "VLAM_PORT",
+    "get_system_prompt",
+]

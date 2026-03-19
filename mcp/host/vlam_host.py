@@ -6,6 +6,7 @@ De host fungeert als tussenstap:
 
 import json
 import logging
+from collections.abc import AsyncGenerator
 
 import anthropic
 import openai
@@ -22,6 +23,20 @@ from config import (
 from mcp_client import MCPToolRegistry
 
 logger = logging.getLogger("vlam.host")
+
+# Gebruiksvriendelijke labels voor tools (getoond in de UI tijdens verwerking)
+TOOL_LABELS = {
+    "kvk__mijn_bedrijf": "Bedrijfsgegevens ophalen",
+    "koop__zoek_regelgeving": "Regelgeving zoeken",
+    "regelrecht__check": "Verplichting controleren",
+    "rvo__zoek_regeling": "Subsidieregeling zoeken",
+    "rvo__indienen": "Rapportage indienen",
+}
+
+
+def _tool_label(tool_key: str) -> str:
+    """Geef een gebruiksvriendelijk label voor een tool-key."""
+    return TOOL_LABELS.get(tool_key, tool_key)
 
 
 class VLAMHost:
@@ -101,7 +116,157 @@ class VLAMHost:
         return await self._chat_claude(messages)
 
     # ------------------------------------------------------------------
+    # Streaming — yieldt status-events voor de UI
+    # ------------------------------------------------------------------
+
+    async def chat_stream(
+        self, session_id: str, user_message: str, mode: str = "vlam"
+    ) -> AsyncGenerator[dict, None]:
+        """Verwerk een bericht en yield status-events als dicts.
+
+        Event-types:
+          {"type": "status", "message": "Nadenken..."}
+          {"type": "tool",   "message": "Bedrijfsgegevens ophalen", "tool": "kvk__mijn_bedrijf"}
+          {"type": "answer", "message": "Het antwoord...", "session_id": "..."}
+          {"type": "done"}
+        """
+        conv_key = f"{session_id}:{mode}"
+        if conv_key not in self.conversations:
+            self.conversations[conv_key] = []
+        messages = self.conversations[conv_key]
+        messages.append({"role": "user", "content": user_message})
+
+        yield {"type": "status", "message": "Nadenken..."}
+
+        if mode == "vlam":
+            if not self.vlam_client:
+                yield {
+                    "type": "answer",
+                    "message": "VLAM-backend is niet geconfigureerd.",
+                    "session_id": session_id,
+                }
+                yield {"type": "done"}
+                return
+            gen = self._chat_vlam_stream(messages)
+        else:
+            gen = self._chat_claude_stream(messages)
+
+        async for event in gen:
+            yield event
+
+        yield {"type": "done"}
+
+    # ------------------------------------------------------------------
     # Claude (Anthropic API) — agentic loop met MCP-tools
+    # ------------------------------------------------------------------
+
+    async def _chat_claude_stream(
+        self, messages: list[dict]
+    ) -> AsyncGenerator[dict, None]:
+        """Claude agentic loop die status-events yieldt."""
+        tools = self.registry.get_anthropic_tools()
+        system_prompt = get_system_prompt("claude", self.has_tools)
+
+        max_iterations = 10
+        for _ in range(max_iterations):
+            api_kwargs = {
+                "model": CLAUDE_MODEL,
+                "max_tokens": 4096,
+                "system": system_prompt,
+                "messages": messages,
+            }
+            if tools:
+                api_kwargs["tools"] = tools
+
+            response = await self.claude_client.messages.create(**api_kwargs)
+            assistant_content = response.content
+            messages.append({"role": "assistant", "content": assistant_content})
+
+            tool_uses = [b for b in assistant_content if b.type == "tool_use"]
+            if not tool_uses:
+                text = "\n".join(
+                    b.text for b in assistant_content if hasattr(b, "text")
+                )
+                yield {"type": "answer", "message": text}
+                return
+
+            for tu in tool_uses:
+                yield {
+                    "type": "tool",
+                    "message": _tool_label(tu.name),
+                    "tool": tu.name,
+                }
+
+            tool_results = await self._execute_tools(tool_uses)
+            messages.append({"role": "user", "content": tool_results})
+            yield {"type": "status", "message": "Antwoord formuleren..."}
+
+        yield {
+            "type": "answer",
+            "message": "Het antwoord kon niet worden voltooid (te veel stappen).",
+        }
+
+    async def _chat_vlam_stream(
+        self, messages: list[dict]
+    ) -> AsyncGenerator[dict, None]:
+        """VLAM agentic loop die status-events yieldt."""
+        tools_openai = self.registry.get_openai_tools()
+        system_prompt = get_system_prompt("vlam", self.has_tools)
+        openai_messages = self._to_openai_messages(messages, system_prompt)
+
+        max_iterations = 10
+        for _ in range(max_iterations):
+            api_kwargs = {
+                "model": VLAM_MODEL_ID,
+                "max_tokens": 4096,
+                "messages": openai_messages,
+            }
+            if tools_openai:
+                api_kwargs["tools"] = tools_openai
+
+            response = await self.vlam_client.chat.completions.create(**api_kwargs)
+            choice = response.choices[0]
+            assistant_msg = choice.message
+
+            openai_messages.append(assistant_msg.model_dump(exclude_none=True))
+            messages.append(
+                {"role": "assistant", "content": assistant_msg.content or ""}
+            )
+
+            tool_calls = assistant_msg.tool_calls
+            if not tool_calls:
+                yield {"type": "answer", "message": assistant_msg.content or ""}
+                return
+
+            for tc in tool_calls:
+                tool_key = tc.function.name
+                yield {
+                    "type": "tool",
+                    "message": _tool_label(tool_key),
+                    "tool": tool_key,
+                }
+
+                arguments = json.loads(tc.function.arguments)
+                logger.info("Tool-aanroep [vlam]: %s(%s)", tool_key, arguments)
+                try:
+                    result = await self.registry.call_tool(tool_key, arguments)
+                except Exception as e:
+                    result = f"Fout bij tool '{tool_key}': {e}"
+                    logger.error(result)
+
+                openai_messages.append(
+                    {"role": "tool", "tool_call_id": tc.id, "content": result}
+                )
+
+            yield {"type": "status", "message": "Antwoord formuleren..."}
+
+        yield {
+            "type": "answer",
+            "message": "Het antwoord kon niet worden voltooid (te veel stappen).",
+        }
+
+    # ------------------------------------------------------------------
+    # Claude (Anthropic API) — blocking (non-streaming, backwards-compatibel)
     # ------------------------------------------------------------------
 
     async def _chat_claude(self, messages: list[dict]) -> str:

@@ -9,11 +9,11 @@
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico" type="image/x-icon">
     <link rel="icon" sizes="192x192" href="/assets/favicon/touch-icon.png">
     <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
-
+    
 </head>
 <body class="moza">
 
-
+    
         <header>
 
 	<figure class="logo">
@@ -48,15 +48,15 @@
 
 </header>
 
-
+    
 
     <main>
-
+        
 <aside>
 	<nav class="side-nav">
 		<button class="side-nav-toggle" aria-expanded="false" aria-controls="side-nav-menu">Menu</button>
 		<ul id="side-nav-menu">
-
+			
 			<li>
 				<a href="/moza/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -65,10 +65,10 @@
 </svg>
 
 					Home
-
+					
 				</a>
 			</li>
-
+			
 			<li class="side-nav-group--start">
 				<a href="/moza/bedrijfsgegevens/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
@@ -76,10 +76,10 @@
 </svg>
 
 					Bedrijfsgegevens
-
+					
 				</a>
 			</li>
-
+			
 			<li>
 				<a href="/moza/berichtenbox/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -89,10 +89,10 @@
 </svg>
 
 					Berichtenbox
-
+					
 				</a>
 			</li>
-
+			
 			<li>
 				<a href="/moza/lopende-zaken/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -101,10 +101,10 @@
 </svg>
 
 					Lopende zaken
-
+					
 				</a>
 			</li>
-
+			
 			<li>
 				<a href="/moza/actueel/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
 					<span class="badge">3</span>
 				</a>
 			</li>
-
+			
 			<li>
 				<a href="/moza/digitale-assistent/" aria-current="page">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -126,10 +126,10 @@
 </svg>
 
 					Digitale Assistent
-
+					
 				</a>
 			</li>
-
+			
 			<li class="side-nav-group--start">
 				<a href="/moza/belastingen/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -137,10 +137,10 @@
 </svg>
 
 					Belastingen
-
+					
 				</a>
 			</li>
-
+			
 			<li>
 				<a href="/moza/zakelijk-vervoer/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -148,10 +148,10 @@
 </svg>
 
 					Zakelijk vervoer
-
+					
 				</a>
 			</li>
-
+			
 			<li>
 				<a href="/moza/ziekte-verlof/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -159,10 +159,10 @@
 </svg>
 
 					Ziekte en verlof
-
+					
 				</a>
 			</li>
-
+			
 			<li class="side-nav-group--start">
 				<a href="/moza/contactvoorkeuren/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -170,10 +170,10 @@
 </svg>
 
 					Contactvoorkeuren
-
+					
 				</a>
 			</li>
-
+			
 		</ul>
 	</nav>
 </aside>
@@ -333,12 +333,28 @@
 		var btn = form.querySelector("button");
 		if (loading) {
 			btn.setAttribute("aria-disabled", "true");
-			addMessage("Een moment geduld...", "loading");
+			showThinking("Een moment geduld...");
 		} else {
 			btn.removeAttribute("aria-disabled");
-			var loader = messages.querySelector(".chat-message-loading");
-			if (loader) loader.remove();
+			hideThinking();
 		}
+	}
+
+	function showThinking(text) {
+		var el = messages.querySelector(".chat-message-thinking");
+		if (!el) {
+			el = document.createElement("div");
+			el.className = "chat-message chat-message-thinking chat-message-assistant";
+			el.innerHTML = '<p class="thinking-text"></p>';
+			messages.appendChild(el);
+		}
+		el.querySelector(".thinking-text").textContent = text;
+		messages.scrollTop = messages.scrollHeight;
+	}
+
+	function hideThinking() {
+		var el = messages.querySelector(".chat-message-thinking");
+		if (el) el.remove();
 	}
 
 	function renderStatus(data) {
@@ -416,7 +432,7 @@
 		setLoading(true);
 
 		try {
-			var response = await fetch(API_BASE + "/chat", {
+			var response = await fetch(API_BASE + "/chat/stream", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -428,10 +444,48 @@
 
 			if (!response.ok) throw new Error("Server niet bereikbaar");
 
-			var data = await response.json();
-			sessions[getMode()] = data.session_id;
+			var reader = response.body.getReader();
+			var decoder = new TextDecoder();
+			var buffer = "";
+
+			while (true) {
+				var chunk = await reader.read();
+				if (chunk.done) break;
+				buffer += decoder.decode(chunk.value, { stream: true });
+
+				var parts = buffer.split("\n\n");
+				buffer = parts.pop();
+
+				for (var i = 0; i < parts.length; i++) {
+					var block = parts[i].trim();
+					if (!block) continue;
+
+					var eventType = "message";
+					var dataLine = "";
+					var lines = block.split("\n");
+					for (var j = 0; j < lines.length; j++) {
+						if (lines[j].indexOf("event: ") === 0) eventType = lines[j].slice(7);
+						if (lines[j].indexOf("data: ") === 0) dataLine = lines[j].slice(6);
+					}
+					if (!dataLine) continue;
+
+					var payload = JSON.parse(dataLine);
+
+					if (eventType === "status") {
+						showThinking(payload.message);
+					} else if (eventType === "tool") {
+						showThinking(payload.message + "...");
+					} else if (eventType === "answer") {
+						hideThinking();
+						sessions[getMode()] = payload.session_id;
+						addMessage(payload.message, "assistant");
+					} else if (eventType === "done") {
+						hideThinking();
+					}
+				}
+			}
+
 			setLoading(false);
-			addMessage(data.reply, "assistant");
 		} catch (err) {
 			setLoading(false);
 			addMessage(
@@ -445,7 +499,7 @@
 
     </main>
 
-
+    
         <footer>
 	<div class="footer-links">
 		<nav>
@@ -494,7 +548,7 @@
 	</div>
 </footer>
 
-
+    
 
 </body>
 </html>

@@ -38,21 +38,24 @@ flowchart TD
     Start([Gebruikersvraag]) --> Q1{Vraagt naar eigen\nbedrijfsgegevens?}
 
     Q1 -- ja --> KVK_TOOL[/Tool: kvk__mijn_bedrijf/]
-    Q1 -- nee --> Q3{Bevat een\nBWB-ID?}
+    Q1 -- nee --> Q5{Vraagt of een verplichting\nvan toepassing is?}
 
-    Q3 -- ja --> KOOP_RES[/Resource: koop://regeling/bwb_id/]
-    Q3 -- nee --> Q4{Vraagt naar een\nspecifieke wet of regel?}
+    Q5 -- ja --> KVK_TOOL
+    KVK_TOOL --> Q5b{KvK-nummer\nverkregen}
+    Q5b --> RR_TOOL[/Tool: regelrecht__check/]
+    RR_TOOL --> Q5c{Wil gebruiker\nde wettekst lezen?}
+    Q5c -- ja --> KOOP_RES[/Resource: koop://regeling/bwb_id/]
+    Q5c -- nee --> Antwoord
+    Q5 -- nee --> Q4{Vraagt naar een\nspecifieke wet of regel?}
 
     Q4 -- ja --> KOOP_TOOL[/Tool: koop__zoek_regelgeving/]
     KOOP_TOOL --> Q4b{Wil gebruiker\nde inhoud lezen?}
     Q4b -- ja --> KOOP_RES
     Q4b -- nee --> Antwoord
-    Q4 -- nee --> Q5{Vraagt of een verplichting\nvan toepassing is?}
+    Q4 -- nee --> Q3{Bevat een\nBWB-ID?}
 
-    Q5 -- ja --> KVK_TOOL
-    KVK_TOOL --> Q5b{KvK-nummer\nverkregen}
-    Q5b --> RR_TOOL[/Tool: regelrecht__check/]
-    Q5 -- nee --> Q6{Vraagt naar subsidies\nof rapportage?}
+    Q3 -- ja --> KOOP_RES
+    Q3 -- nee --> Q6{Vraagt naar subsidies\nof rapportage?}
 
     Q6 -- ja --> Q6b{Wil indienen\nof alleen informatie?}
     Q6b -- informatie --> RVO_ZOEK[/Tool: rvo__zoek_regeling/]
@@ -65,7 +68,6 @@ flowchart TD
     Q7 -- nee --> EIGEN[Eigen kennis\n+ disclaimer]
 
     KOOP_RES --> Antwoord([Antwoord aan gebruiker])
-    RR_TOOL --> Antwoord
     RVO_ZOEK --> Antwoord
     RVO_IND --> Antwoord
     EIGEN --> Antwoord
@@ -85,7 +87,7 @@ Legenda:
 **oranje** = Tool (muterend, vereist bevestiging)
 **grijs** = eigen kennis
 
-Bij gecombineerde vragen geldt de volgorde: KvK (wie?) → KOOP (welke regels?) → RegelRecht (van toepassing?) → RVO (actie ondernemen).
+Bij gecombineerde vragen geldt de volgorde: KvK (wie?) → RegelRecht (wat geldt er?) → KOOP (verdieping wettekst) → RVO (actie ondernemen).
 
 ## Voorbeeldscenario's
 

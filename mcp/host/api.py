@@ -1,14 +1,17 @@
 """FastAPI-server voor de VLAM MCP-host.
 
 Biedt een REST API waarmee het moza-portaal met VLAM kan communiceren.
+Ondersteunt zowel blocking (/chat) als streaming (/chat/stream) responses.
 """
 
+import json
 import logging
 import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from config import VLAM_HOST, VLAM_PORT
@@ -84,6 +87,40 @@ async def chat(request: ChatRequest):
     reply = await host.chat(session_id, request.message, mode=mode)
     return ChatResponse(
         reply=reply, session_id=session_id, mode=mode, has_tools=host.has_tools
+    )
+
+
+@app.post("/chat/stream")
+async def chat_stream(request: ChatRequest):
+    """Stuur een bericht en ontvang status-updates via Server-Sent Events.
+
+    Events:
+      event: status  — de assistent is bezig (nadenken, tool aanroepen)
+      event: tool    — een specifieke tool wordt aangeroepen
+      event: answer  — het definitieve antwoord
+      event: done    — stream is afgelopen
+    """
+    session_id = request.session_id or str(uuid.uuid4())
+    mode = request.mode if request.mode in ("vlam", "claude") else "vlam"
+
+    async def event_generator():
+        async for event in host.chat_stream(session_id, request.message, mode=mode):
+            event_type = event.get("type", "status")
+            # Voeg session_id en mode toe aan answer-events
+            if event_type == "answer":
+                event["session_id"] = session_id
+                event["mode"] = mode
+                event["has_tools"] = host.has_tools
+            payload = json.dumps(event, ensure_ascii=False)
+            yield f"event: {event_type}\ndata: {payload}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
     )
 
 
