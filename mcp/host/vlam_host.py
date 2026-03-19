@@ -12,6 +12,8 @@ from collections.abc import AsyncGenerator
 import anthropic
 import openai
 
+import re
+
 from config import (
     ANTHROPIC_API_KEY,
     CLAUDE_MODEL,
@@ -20,6 +22,7 @@ from config import (
     VLAM_API_KEY,
     VLAM_BASE_URL,
     VLAM_MODEL_ID,
+    VLAM_ORCHESTRATED,
     VLAM_TIMEOUT,
     get_system_prompt,
 )
@@ -150,7 +153,10 @@ class VLAMHost:
                 }
                 yield {"type": "done"}
                 return
-            gen = self._chat_vlam_stream(messages)
+            if VLAM_ORCHESTRATED and self.has_tools:
+                gen = self._chat_vlam_orchestrated_stream(messages)
+            else:
+                gen = self._chat_vlam_stream(messages)
         else:
             gen = self._chat_claude_stream(messages)
 
@@ -300,6 +306,180 @@ class VLAMHost:
             "type": "answer",
             "message": "Het antwoord kon niet worden voltooid (te veel stappen).",
         }
+
+    # ------------------------------------------------------------------
+    # VLAM orchestratie-modus — host stuurt tools aan, geen tool-calling
+    # ------------------------------------------------------------------
+
+    def _build_tool_catalog(self) -> str:
+        """Genereer een compacte tool-catalogus voor de VLAM-systeemprompt."""
+        lines = []
+        for tool_key, (_, tool) in self.registry.tool_map.items():
+            params = tool.inputSchema.get("properties", {})
+            required = tool.inputSchema.get("required", [])
+            param_parts = []
+            for pname, pschema in params.items():
+                req = " (verplicht)" if pname in required else ""
+                param_parts.append(f"    - {pname}: {pschema.get('type', '?')}{req}")
+            param_str = (
+                "\n".join(param_parts) if param_parts else "    (geen parameters)"
+            )
+            lines.append(f"- {tool_key}: {tool.description or ''}\n{param_str}")
+        return "\n".join(lines)
+
+    _ORCHESTRATION_PROMPT = """Je bent een Rijksbrede digitale assistent. Je kunt GEEN tools zelf aanroepen.
+Als je een bron nodig hebt, antwoord dan ALLEEN met een JSON-blok in dit formaat:
+
+```json
+{{"tool": "<tool_naam>", "arguments": {{...}}}}
+```
+
+Beschikbare tools:
+{tool_catalog}
+
+REGELS:
+- Vraag per keer MAXIMAAL één tool aan.
+- Als je GEEN tool nodig hebt, antwoord dan direct aan de gebruiker (zonder JSON-blok).
+- Als je nog informatie mist om een tool aan te roepen, stel dan een verduidelijkende vraag.
+- Als je eerder al een tool-resultaat hebt ontvangen, gebruik dat om te antwoorden."""
+
+    async def _vlam_call(self, openai_messages: list[dict]) -> str:
+        """Eén VLAM-call zonder tools, met timeout."""
+        response = await asyncio.wait_for(
+            self.vlam_client.chat.completions.create(
+                model=VLAM_MODEL_ID,
+                max_tokens=4096,
+                messages=openai_messages,
+            ),
+            timeout=VLAM_TIMEOUT,
+        )
+        return response.choices[0].message.content or ""
+
+    @staticmethod
+    def _extract_tool_request(text: str) -> dict | None:
+        """Probeer een JSON tool-request te extraheren uit VLAM's antwoord."""
+        # Zoek naar ```json ... ``` blokken
+        match = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
+        if match:
+            try:
+                parsed = json.loads(match.group(1))
+                if "tool" in parsed:
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+        # Fallback: zoek naar een los JSON-object met "tool" key
+        match = re.search(r'\{"tool"\s*:.*?\}', text, re.DOTALL)
+        if match:
+            try:
+                parsed = json.loads(match.group(0))
+                if "tool" in parsed:
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+        return None
+
+    async def _chat_vlam_orchestrated_stream(
+        self, messages: list[dict]
+    ) -> AsyncGenerator[dict, None]:
+        """VLAM multi-step orchestratie: VLAM plant, host voert uit.
+
+        Stap 1: VLAM leest de vraag en zegt welke tool nodig is (of antwoordt direct)
+        Stap 2: Host voert de tool uit
+        Stap 3: VLAM formuleert het antwoord met het tool-resultaat
+        Herhaal stappen 1-3 bij afhankelijke tools (max 5 rondes).
+        """
+        tool_catalog = self._build_tool_catalog()
+        system_prompt = get_system_prompt("vlam", self.has_tools)
+        orchestration_addendum = self._ORCHESTRATION_PROMPT.format(
+            tool_catalog=tool_catalog
+        )
+        full_system = system_prompt + "\n\n---\n\n" + orchestration_addendum
+
+        openai_messages = self._to_openai_messages(messages, full_system)
+
+        max_rounds = 5
+        for round_num in range(max_rounds):
+            try:
+                vlam_response = await self._vlam_call(openai_messages)
+            except (TimeoutError, openai.APIStatusError) as e:
+                logger.error("VLAM orchestratie-call mislukt: %s", e)
+                yield {
+                    "type": "answer",
+                    "message": (
+                        "De assistent is op dit moment niet bereikbaar. "
+                        "Probeer het later opnieuw."
+                    ),
+                }
+                return
+
+            logger.info(
+                "VLAM orchestratie ronde %d: %s", round_num + 1, vlam_response[:200]
+            )
+
+            # Kijk of VLAM een tool wil aanroepen
+            tool_request = self._extract_tool_request(vlam_response)
+
+            if not tool_request:
+                # VLAM antwoordt direct — geen tool nodig
+                messages.append({"role": "assistant", "content": vlam_response})
+                yield {"type": "answer", "message": vlam_response}
+                return
+
+            # VLAM wil een tool aanroepen
+            tool_key = tool_request.get("tool", "")
+            arguments = tool_request.get("arguments", {})
+
+            if tool_key not in self.registry.tool_map:
+                # Onbekende tool — laat VLAM opnieuw proberen
+                openai_messages.append({"role": "assistant", "content": vlam_response})
+                openai_messages.append(
+                    {
+                        "role": "user",
+                        "content": f"Onbekende tool: '{tool_key}'. Beschikbare tools: {', '.join(self.registry.tool_map.keys())}. Probeer opnieuw of antwoord direct.",
+                    }
+                )
+                continue
+
+            yield {
+                "type": "tool",
+                "message": _tool_label(tool_key),
+                "tool": tool_key,
+            }
+
+            logger.info("Tool-aanroep [vlam-orchestratie]: %s(%s)", tool_key, arguments)
+            try:
+                result = await self.registry.call_tool(tool_key, arguments)
+            except Exception as e:
+                result = f"Fout bij tool '{tool_key}': {e}"
+                logger.error(result)
+
+            # Voeg VLAM's plan en het tool-resultaat toe aan de conversatie
+            openai_messages.append({"role": "assistant", "content": vlam_response})
+            openai_messages.append(
+                {
+                    "role": "user",
+                    "content": f"Resultaat van {tool_key}:\n\n{result}\n\nGebruik dit resultaat om de vraag van de gebruiker te beantwoorden. Als je nog een andere tool nodig hebt, vraag die aan met een JSON-blok.",
+                }
+            )
+
+            yield {"type": "status", "message": "Antwoord formuleren..."}
+
+        # Max rondes bereikt — probeer een direct antwoord
+        try:
+            openai_messages.append(
+                {
+                    "role": "user",
+                    "content": "Formuleer nu een antwoord op basis van de beschikbare informatie, zonder extra tools.",
+                }
+            )
+            final = await self._vlam_call(openai_messages)
+            messages.append({"role": "assistant", "content": final})
+            yield {"type": "answer", "message": final}
+        except (TimeoutError, openai.APIStatusError):
+            yield {
+                "type": "answer",
+                "message": "Het antwoord kon niet worden voltooid.",
+            }
 
     async def _chat_vlam_no_tools(
         self, messages: list[dict], system_prompt: str

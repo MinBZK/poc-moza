@@ -39,6 +39,14 @@ VLAM_PORT = int(os.getenv("VLAM_PORT", "8000"))
 VLAM_TIMEOUT = int(os.getenv("VLAM_TIMEOUT", "30"))
 CLAUDE_TIMEOUT = int(os.getenv("CLAUDE_TIMEOUT", "60"))
 
+# VLAM orchestratie-modus: True = host stuurt tools aan (geen tool-calling),
+# False = klassieke tool-calling via OpenAI API (instabiel op UbiOps).
+VLAM_ORCHESTRATED = os.getenv("VLAM_ORCHESTRATED", "true").lower() in (
+    "true",
+    "1",
+    "yes",
+)
+
 # System prompt — assembled from modular blocks
 from prompts.composer import compose_system_prompt as get_system_prompt  # noqa: E402
 
@@ -53,5 +61,6 @@ __all__ = [
     "VLAM_PORT",
     "VLAM_TIMEOUT",
     "CLAUDE_TIMEOUT",
+    "VLAM_ORCHESTRATED",
     "get_system_prompt",
 ]
