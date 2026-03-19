@@ -52,7 +52,7 @@ const x={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
@@ -64,7 +64,7 @@ const x={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
@@ -150,7 +150,7 @@ const x={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
@@ -171,7 +171,7 @@ const x={title:"Componenten/Selectie",tags:["autodocs"]},e={parameters:{docs:{de
     <optgroup label="Groep met opties">
         <option value="Optie 1">Optie 1</option>
         <option value="Optie 2">Optie 2</option>
-        <option value="Optie 3" aria-disabled>Optie 3 (inactief)</option>
+        <option value="Optie 3" disabled>Optie 3 (inactief)</option>
     </optgroup>
     <option value="Optie 4">Optie 4</option>
     <option value="Optie 5">Optie 5</option>
