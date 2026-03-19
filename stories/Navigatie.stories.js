@@ -35,11 +35,11 @@ export const SidebarNavigatie = {
 	render: () => `
 <nav class="side-nav">
 	<ul>
-		<li><a href="#" aria-current="page">Sectie 1</a></li>
-		<li><a href="#">Sectie 2</a></li>
-		<li><a href="#">Sectie 3</a></li>
-		<li><a href="#">Sectie 4</a></li>
-		<li><a href="#">Sectie 5</a></li>
+		<li><a href="#" aria-current="page">Home</a></li>
+		<li><a href="#">Pagina 1</a></li>
+		<li><a href="#">Pagina 2</a></li>
+		<li><a href="#">Pagina 3</a></li>
+		<li><a href="#">Pagina 4</a></li>
 	</ul>
 </nav>
 `,
@@ -57,8 +57,8 @@ export const Breadcrumb = {
 <nav class="breadcrumb">
 	<ol>
 		<li><a href="#">Home</a></li>
-		<li><a href="#">Componenten</a></li>
-		<li aria-current="page">Breadcrumb</li>
+		<li><a href="#">Pagina 1</a></li>
+		<li aria-current="page">Huidige sub-pagina</li>
 	</ol>
 </nav>
 `,
