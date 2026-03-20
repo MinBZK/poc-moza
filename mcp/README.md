@@ -166,7 +166,43 @@ sequenceDiagram
     Host->>Gebruiker: "Op basis van art. 5.15d Bal: de informatieplicht<br/>is van toepassing als uw energieverbruik boven<br/>50.000 kWh of 25.000 m³ gas per jaar ligt.<br/>Wat is uw jaarlijks energieverbruik?"
 ```
 
-### Scenario 4: Bron niet beschikbaar
+### Scenario 4: Subsidie zoeken en rapportage indienen (RVO)
+
+> Gebruiker: "Welke subsidies zijn er voor energiebesparing?"
+
+```mermaid
+sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+    participant RVO as MCP Server (RVO)
+
+    Gebruiker->>Host: "Welke subsidies zijn er voor energiebesparing?"
+    Note over Host: Routeringsregel: vraag over subsidies<br/>→ rvo__zoek_regeling
+    Host->>RVO: tools/call [zoek_regeling, trefwoord="energiebesparing"]
+    Note over RVO: Zoekt in mock-regelingen<br/>op naam en beschrijving
+    RVO-->>Host: 3 resultaten (EBR-2026, EIA-2026, ISDE-2026) + provenance
+    Host->>Gebruiker: "Er zijn 3 regelingen gevonden:<br/>1. Informatieplicht Energiebesparing (open, deadline 2027-12-01)<br/>2. Energie-investeringsaftrek EIA (open)<br/>3. Investeringssubsidie Duurzame Energie ISDE (open)"
+
+    Gebruiker->>Host: "Ik wil mijn energiebesparingsrapportage indienen"
+    Note over Host: Muterende actie →<br/>eerst bedrijfsgegevens ophalen,<br/>dan bevestiging vragen
+    Host->>KvK: tools/call [mijn_bedrijf]
+    KvK-->>Host: Bloom B.V., KvK 12345678 + provenance
+    Host->>Gebruiker: "Ik kan de rapportage voor Bloom B.V. (KvK 12345678)<br/>indienen bij regeling EBR-2026.<br/>Welke maatregelen heeft u genomen?"
+
+    Gebruiker->>Host: "LED-verlichting en HR++ beglazing"
+    Host->>Gebruiker: "Ter bevestiging: ik dien de volgende rapportage in:<br/>• Bedrijf: Bloom B.V. (12345678)<br/>• Regeling: Informatieplicht Energiebesparing (EBR-2026)<br/>• Maatregelen: LED-verlichting, HR++ beglazing<br/>Wilt u doorgaan?"
+
+    Gebruiker->>Host: "Ja"
+    Host->>RVO: tools/call [indienen, kvk_nummer="12345678",<br/>regeling_id="EBR-2026",<br/>maatregelen=["LED-verlichting","HR++ beglazing"]]
+    Note over RVO: Mock: simuleert succesvolle<br/>indiening en genereert<br/>referentienummer
+    RVO-->>Host: status=INGEDIEND,<br/>ref=RVO-EBR-2026-12345678-001 + provenance
+    Host->>Gebruiker: "Uw rapportage is succesvol ingediend.<br/>Referentienummer: RVO-EBR-2026-12345678-001.<br/>U ontvangt een bevestiging per e-mail.<br/>De voortgang is te volgen onder 'Lopende zaken'."
+```
+
+> **Let op:** De `indienen`-tool is muterend. Het AI-platform vraagt daarom *altijd* om expliciete bevestiging van de gebruiker voordat de tool wordt aangeroepen. Dit is afgedwongen via de `ToolAnnotations` (`readOnlyHint=False`) én de systeemprompt.
+
+### Scenario 5: Bron niet beschikbaar
 
 > Gebruiker: "Welke regels gelden voor voedselveiligheid?"
 
