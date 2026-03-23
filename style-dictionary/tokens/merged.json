@@ -2000,6 +2000,12 @@
     "outline": {
       "$type": "other",
       "$value": "{border-width.lg} dotted {color.interactive.focus.outline}"
+    },
+    "outline-offset": {
+      "2": {
+        "$type": "spacing",
+        "$value": "{space.2}"
+      }
     }
   },
   "transition": {

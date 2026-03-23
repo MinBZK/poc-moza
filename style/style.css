@@ -1,10 +1,13 @@
 /* Importeer Rijkhuisstijl design tokens als variabelen */
+
 @import "_rijkshuisstijl.css";
 
 /* Importeer toepassing design tokens als variabelen */
+
 @import "_toepassing.css";
 
 /* Importeer reset stijlen */
+
 @import "_reset.css";
 
 /* Voeg Rijksoverheid Sans lettertype toe */
@@ -206,8 +209,9 @@ pre {
 &:checked {
 	transition: var(--toepassing-transition-default);
 }
-[aria-disabled] {
-	opacity: var(--toepassing-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
+[aria-disabled],
+[disabled] {
+	opacity: var(--toepassing-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut (met uitzondering van een <select> menu) maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
 }
 
 /* Focus voor keyboard, spraak en switch gebruikers */
@@ -482,7 +486,8 @@ ul.selection {
 	place-content: center;
 	transition: var(--toepassing-transition-default);
 	vertical-align: top;
-	&::before {
+	&::before,
+	&[data-indeterminate]::before {
 		block-size: var(--toepassing-size-icon-sm);
 		content: "";
 		inline-size: var(--toepassing-size-icon-sm);
@@ -515,9 +520,19 @@ ul.selection {
 		color: var(--toepassing-color-interactive-disabled-text);
 	}
 }
-[type="checkbox"]::before {
-	background-color: var(--toepassing-color-text-inverse);
-	mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
+[type="checkbox"] {
+	&::before {
+		background-color: var(--toepassing-color-text-inverse);
+		mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
+	}
+	&[data-indeterminate] {
+		background: var(--toepassing-color-interactive-default-background);
+		border-color: var(--toepassing-color-interactive-default-background);
+		&::before {
+			transform: scale(1);
+			mask: url("../assets/icons/icon-minus.svg") no-repeat center / contain;
+		}
+	}
 }
 [type="radio"] {
 	border-radius: var(--toepassing-border-radius-round);
@@ -805,13 +820,13 @@ summary {
 	border-radius: var(--toepassing-border-radius-md);
 	box-shadow: var(--toepassing-border-card-default);
 	container-type: inline-size;
-	display: flex;
-	flex-direction: column;
+	/* display: flex;
+	flex-direction: column; */
 	padding: var(--toepassing-space-component-card-padding);
 	section:not(:last-of-type) {
 		border-block-end: var(--toepassing-border-default);
-		margin-block-end: var(--toepassing-space-margin-md);
-		padding-block-end: var(--toepassing-space-padding-xl);
+		margin-block-end: var(--toepassing-space-margin-xs);
+		padding-block-end: var(--toepassing-space-padding-lg);
 	}
 	h2,
 	h3,
@@ -842,7 +857,9 @@ summary {
 		list-style: none;
 		padding: 0;
 		li {
-			margin-block-end: 0;
+			margin-block-end: var(--toepassing-space-margin-xs);
+			padding-block-end: var(--toepassing-space-padding-xs);
+			position: relative;
 			&:not(:last-child) {
 				border-block-end: var(--toepassing-border-default);
 				.content-link {
@@ -864,8 +881,6 @@ summary {
 		}
 	}
 	.content-link {
-		display: block;
-		padding-block: var(--toepassing-space-padding-lg);
 		&[rel="external"] h3::after {
 			content: "";
 			display: inline-block;
@@ -876,6 +891,12 @@ summary {
 			mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
 		}
 	}
+}
+.card-link {
+	block-size: 100%;
+	inline-size: 100%;
+	inset-block-start: 0;
+	position: absolute;
 }
 
 .tiles {
