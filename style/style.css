@@ -1,10 +1,13 @@
 /* Importeer Rijkhuisstijl design tokens als variabelen */
+
 @import "_rijkshuisstijl.css";
 
 /* Importeer toepassing design tokens als variabelen */
+
 @import "_toepassing.css";
 
 /* Importeer reset stijlen */
+
 @import "_reset.css";
 
 /* Voeg Rijksoverheid Sans lettertype toe */
