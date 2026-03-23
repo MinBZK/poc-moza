@@ -565,6 +565,14 @@ option {
 [type="file"] {
 }
 
+/* Media */
+
+video {
+	aspect-ratio: 16 / 9;
+	background: var(--mox-color-background-subtle);
+	inline-size: 100%;
+}
+
 /* Navigatie */
 
 nav {
@@ -647,7 +655,7 @@ button.side-nav-toggle {
 		display: none;
 		margin-block-end: var(--toepassing-space-margin-lg);
 		padding: var(--toepassing-space-padding-md);
-		width: 100%;
+		inline-size: 100%;
 	}
 	li {
 		inline-size: 100%;
