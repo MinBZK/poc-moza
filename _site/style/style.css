@@ -134,6 +134,21 @@ footer {
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
+/* Stacks */
+
+[class^="stack"] > * {
+	margin-block: 0;
+}
+.stack-sm > * + * {
+	margin-block-start: var(--toepassing-space-margin-sm);
+}
+.stack-md > * + * {
+	margin-block-start: var(--toepassing-space-margin-md);
+}
+.stack-lg > * + * {
+	margin-block-start: var(--toepassing-space-margin-lg);
+}
+
 /* Typografie */
 
 hgroup {
