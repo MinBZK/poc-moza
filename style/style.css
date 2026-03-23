@@ -900,6 +900,7 @@ summary {
 	block-size: 100%;
 	inline-size: 100%;
 	inset-block-start: 0;
+	outline-offset: var(--toepassing-focus-outline-offset-2);
 	position: absolute;
 }
 
