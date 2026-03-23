@@ -856,6 +856,7 @@ summary {
 	.list-content-links {
 		list-style: none;
 		padding: 0;
+		position: relative;
 		li {
 			margin-block-end: 0;
 			&:not(:last-child) {
@@ -879,8 +880,6 @@ summary {
 		}
 	}
 	.content-link {
-		display: block;
-		padding-block: var(--toepassing-space-padding-lg);
 		&[rel="external"] h3::after {
 			content: "";
 			display: inline-block;
@@ -891,6 +890,12 @@ summary {
 			mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
 		}
 	}
+}
+.card-link {
+	block-size: 100%;
+	inline-size: 100%;
+	inset-block-start: 0;
+	position: absolute;
 }
 
 .tiles {
