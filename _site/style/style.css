@@ -136,6 +136,9 @@ footer {
 
 /* Typografie */
 
+hgroup {
+	margin-block-end: var(--toepassing-space-margin-sm);
+}
 h1 {
 	font: var(--toepassing-text-heading-h1);
 }
@@ -181,9 +184,12 @@ a {
 	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 	text-underline-offset: 3px; /* Vaste waarde voor onderstreping offset, niet in design tokens gedefinieerd omdat deze slechts eenmaal voorkomt */
 	text-decoration-skip-ink: auto;
-	&:hover {
+	transition: var(--toepassing-transition-default);
+	&:hover,
+	&:focus-visible {
 		color: var(--toepassing-color-interactive-hover-text);
 		text-decoration: none;
+		transition: var(--toepassing-transition-default);
 	}
 	&:active {
 		color: var(--toepassing-color-interactive-active-text);
@@ -204,11 +210,6 @@ pre {
 
 /* Generieke interactie stijlen */
 
-&:hover,
-:active,
-&:checked {
-	transition: var(--toepassing-transition-default);
-}
 [aria-disabled],
 [disabled] {
 	opacity: var(--toepassing-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut (met uitzondering van een <select> menu) maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
@@ -852,6 +853,9 @@ summary {
 				text-decoration: underline;
 			}
 		}
+		&:focus-visible .card-link {
+			outline: var(--toepassing-focus-outline);
+		}
 	}
 	.list-content-links {
 		list-style: none;
@@ -1051,7 +1055,7 @@ body.moza {
 	max-inline-size: var(--toepassing-page-max-inline-size);
 	padding-block: var(--toepassing-space-padding-xs);
 	padding-inline: var(--toepassing-space-padding-md);
-	@media (max-width: 799px) ) {
+	@media (max-width: 799px) {
 		/* display: none; */
 	}
 }
@@ -1068,18 +1072,18 @@ body.moza {
 .temp-moza-poc-banner {
 	background: var(--toepassing-color-feedback-success-default);
 	color: var(--toepassing-color-text-inverse);
-	font-size: var(--toepassing-text-font-weight-bold);
+	font-weight: var(--toepassing-text-font-weight-bold);
+	inline-size: 280px;
+	inset-block-start: 2rem;
+	inset-inline-end: -4rem;
 	margin-inline-start: -3rem;
 	padding-block: var(--toepassing-space-padding-sm);
 	padding-inline: var(--toepassing-space-padding-lg);
 	position: fixed;
-	inset-inline-end: -4rem;
 	text-align: center;
 	text-decoration: none;
-	inset-block-start: 2rem;
-	transform: rotate(45deg);
 	transform-origin: center;
-	inline-size: 280px;
+	transform: rotate(45deg);
 	&:hover {
 		background: var(--toepassing-color-feedback-success-emphasis);
 		color: var(--toepassing-color-text-inverse);
