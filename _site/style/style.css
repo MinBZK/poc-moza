@@ -820,13 +820,13 @@ summary {
 	border-radius: var(--toepassing-border-radius-md);
 	box-shadow: var(--toepassing-border-card-default);
 	container-type: inline-size;
-	display: flex;
-	flex-direction: column;
+	/* display: flex;
+	flex-direction: column; */
 	padding: var(--toepassing-space-component-card-padding);
 	section:not(:last-of-type) {
 		border-block-end: var(--toepassing-border-default);
-		margin-block-end: var(--toepassing-space-margin-md);
-		padding-block-end: var(--toepassing-space-padding-xl);
+		margin-block-end: var(--toepassing-space-margin-xs);
+		padding-block-end: var(--toepassing-space-padding-lg);
 	}
 	h2,
 	h3,
@@ -856,9 +856,10 @@ summary {
 	.list-content-links {
 		list-style: none;
 		padding: 0;
-		position: relative;
 		li {
-			margin-block-end: 0;
+			margin-block-end: var(--toepassing-space-margin-xs);
+			padding-block-end: var(--toepassing-space-padding-xs);
+			position: relative;
 			&:not(:last-child) {
 				border-block-end: var(--toepassing-border-default);
 				.content-link {
