@@ -221,7 +221,7 @@ pre {
 }
 :focus-visible {
 	outline: var(--toepassing-focus-outline);
-	outline-offset: var(--toepassing-size-5xs);
+	outline-offset: var(--toepassing-focus-outline-offset);
 	&[aria-disabled] {
 		outline-color: var(--toepassing-color-interactive-disabled-border);
 	}
