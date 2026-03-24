@@ -45,6 +45,9 @@ body {
 		sans-serif;
 	min-block-size: 100vh;
 	min-block-size: 100dvh;
+	> * + * {
+		margin-block-start: var(--toepassing-space-stack-md);
+	}
 }
 
 header {
@@ -63,6 +66,9 @@ header {
 	.user-menu {
 		display: flex;
 		gap: var(--toepassing-space-padding-md);
+	}
+	> * + * {
+		margin-block-start: var(--toepassing-space-stack-md);
 	}
 }
 .page-head {
@@ -114,6 +120,7 @@ aside {
 footer {
 	background: var(--toepassing-color-component-footer-background);
 	color: var(--toepassing-color-text-inverse);
+	margin-block-start: 0; /* Compensatie voor stack op <body> */
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
@@ -135,28 +142,12 @@ body.moza {
 	row-gap: var(--toepassing-space-margin-sm);
 }
 
-/* Stacks */
-
-[class^="stack"] > * {
-	margin-block: 0;
-}
-.stack-xs > * + * {
-	margin-block-start: var(--toepassing-space-margin-xs);
-}
-.stack-sm > * + * {
-	margin-block-start: var(--toepassing-space-margin-sm);
-}
-.stack-md > * + * {
-	margin-block-start: var(--toepassing-space-margin-md);
-}
-.stack-lg > * + * {
-	margin-block-start: var(--toepassing-space-margin-lg);
-}
-
 /* Typografie */
 
 hgroup {
-	margin-block-end: var(--toepassing-space-margin-sm);
+	> * + * {
+		margin-block-start: var(--toepassing-space-stack-xs);
+	}
 }
 h1 {
 	font: var(--toepassing-text-heading-h1);
@@ -182,7 +173,6 @@ p {
 	&.intro {
 		font: var(--toepassing-text-paragraph-intro);
 	}
-	margin-block-end: var(--toepassing-space-margin-2xs);
 }
 
 small {
@@ -851,16 +841,17 @@ summary {
 	/* display: flex;
 	flex-direction: column; */
 	padding: var(--toepassing-space-component-card-padding);
+	> * + * {
+		margin-block-start: var(--toepassing-space-stack-xs);
+	}
 	section:not(:last-of-type) {
 		border-block-end: var(--toepassing-border-default);
-		margin-block-end: var(--toepassing-space-margin-xs);
 		padding-block-end: var(--toepassing-space-padding-lg);
 	}
 	h2,
 	h3,
 	h4 {
 		font-size: var(--toepassing-text-size-title-xl);
-		margin-block-end: var(--toepassing-space-margin-2xs);
 		a {
 			color: var(--toepassing-color-interactive-default-text);
 		}
