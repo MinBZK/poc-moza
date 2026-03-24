@@ -30,7 +30,7 @@ Het Besluit activiteiten leefomgeving (Bal, BWBR0041330) bevat de volgende relev
 
 - Artikel 5.15: energiebesparingsplicht — verplichting tot het treffen van maatregelen met een terugverdientijd van 5 jaar of minder
 - Artikel 5.15a: onderzoeksplicht voor grote verbruikers (>=10 miljoen kWh of >=170.000 m3)
-- Artikel 5.15d: informatieplicht — vierjaarlijkse rapportage via RVO eLoket
+- Artikel 5.15d: informatieplicht — vierjaarlijkse rapportage
 
 De volledige tekst is beschikbaar op wetten.overheid.nl/BWBR0041330.
 

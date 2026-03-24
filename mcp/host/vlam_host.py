@@ -340,8 +340,9 @@ Beschikbare tools:
 REGELS:
 - Vraag per keer MAXIMAAL één tool aan.
 - Als je GEEN tool nodig hebt, antwoord dan direct aan de gebruiker (zonder JSON-blok).
-- Als je nog informatie mist om een tool aan te roepen, stel dan een verduidelijkende vraag.
-- Als je eerder al een tool-resultaat hebt ontvangen, gebruik dat om te antwoorden."""
+- Als je nog informatie mist om een tool aan te roepen, vraag dan ALLE ontbrekende gegevens in EEN keer op. Stel NIET meerdere losse vragen achter elkaar.
+- Als je eerder al een tool-resultaat hebt ontvangen, gebruik dat om te antwoorden.
+- Bij rvo__indienen: roep de tool NIET direct aan. Toon EERST een volledig voorbeeldrapport aan de gebruiker (bedrijfsnaam, KvK-nummer, regeling, maatregelen) en vraag expliciet om akkoord. Pas NA akkoord van de gebruiker vraag je de tool aan."""
 
     async def _vlam_call(self, openai_messages: list[dict]) -> str:
         """Eén VLAM-call zonder tools, met timeout."""

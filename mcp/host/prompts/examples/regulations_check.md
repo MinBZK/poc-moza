@@ -9,13 +9,13 @@ Assistent roept tool aan: regelrecht__check(kvk_nummer="68750110")
 Assistent ontvangt: ontbrekende gegevens — energieverbruik nodig
 
 Assistent:
-Om te bepalen of de Informatieplicht Energiebesparing op Test BV Donald van toepassing is, heb ik uw energieverbruikcijfers nodig.
+Om te bepalen of de Informatieplicht Energiebesparing op Test BV Donald van toepassing is, heb ik de volgende gegevens nodig:
 
-De regeling geldt als uw jaarlijks verbruik boven een van deze drempels ligt:
-- Elektriciteit: 50.000 kWh per jaar
-- Aardgas: 25.000 m3 per jaar
+1. Uw jaarlijks elektriciteitsverbruik (in kWh)
+2. Uw jaarlijks gasverbruik (in m3)
+3. Of uw pand uitsluitend een woonfunctie heeft
 
-Weet u wat uw jaarlijkse energieverbruik is?
+Kunt u deze gegevens aanleveren?
 
 Bron: RegelRecht (art. 5.15d Besluit activiteiten leefomgeving)
 
@@ -33,6 +33,8 @@ Uit de beoordeling blijkt:
 - Informatieplicht: ja (rapportage verplicht)
 - Onderzoeksplicht: nee (uw verbruik ligt onder 10 miljoen kWh)
 
-Volgende stap: u moet voor 1 december 2027 via het RVO eLoket (mijn.rvo.nl) rapporteren welke energiebesparende maatregelen u heeft genomen. Hiervoor heeft u eHerkenning niveau 2+ nodig.
+Wilt u de rapportage nu direct indienen? Ik kan dat voor u regelen. U hoeft alleen aan te geven welke energiebesparende maatregelen u heeft genomen.
+
+Let op: ik kan momenteel alleen de energiebesparingsplicht toetsen. Er kunnen andere verplichtingen gelden die ik nog niet kan controleren.
 
 Bron: RegelRecht (art. 5.15 en 5.15d Besluit activiteiten leefomgeving)

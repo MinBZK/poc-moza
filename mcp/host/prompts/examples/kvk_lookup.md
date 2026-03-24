@@ -15,3 +15,5 @@ Uw bedrijf staat als volgt geregistreerd bij de KvK:
 - Werkzame personen: 1
 
 Bron: KvK Handelsregister
+
+Kan ik u nog ergens anders mee helpen?

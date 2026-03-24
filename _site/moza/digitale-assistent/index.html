@@ -216,12 +216,12 @@
 			<fieldset class="mode-switch" role="radiogroup" aria-label="Kies assistent">
 				<legend class="visually-hidden">Assistent-modus</legend>
 				<label class="mode-option">
-					<input type="radio" name="chat-mode" value="vlam" checked>
-					<span>VLAM</span>
+					<input type="radio" name="chat-mode" value="claude" checked>
+					<span>Claude</span>
 				</label>
 				<label class="mode-option">
-					<input type="radio" name="chat-mode" value="claude">
-					<span>Claude</span>
+					<input type="radio" name="chat-mode" value="vlam">
+					<span>VLAM</span>
 				</label>
 			</fieldset>
 		</div>
@@ -238,6 +238,7 @@
 			<label for="chat-input" class="visually-hidden">Uw vraag</label>
 			<textarea id="chat-input" name="message" rows="1" placeholder="Stel uw vraag..." required></textarea>
 			<button type="submit">Verstuur</button>
+			<button type="button" class="secondary" id="chat-reset">Nieuw gesprek</button>
 		</form>
 	</section>
 
@@ -275,16 +276,27 @@
 
 <script>
 (function () {
-	var API_BASE = "http://localhost:8000";
+	var API_BASE = "http://localhost:8001";
 	var form = document.getElementById("chat-form");
 	var input = document.getElementById("chat-input");
 	var messages = document.getElementById("chat-messages");
 	var statusEl = document.getElementById("chat-status");
 	var modeInputs = document.querySelectorAll('input[name="chat-mode"]');
-	var sessions = { vlam: null, claude: null };
-	var chatHistory = { vlam: null, claude: null };
+	var sessions = JSON.parse(sessionStorage.getItem("chat-sessions") || '{"vlam":null,"claude":null}');
+	var chatHistory = JSON.parse(sessionStorage.getItem("chat-history") || '{"vlam":null,"claude":null}');
 	var serverStatus = null;
 	var submitting = false;
+
+	// Herstel chat bij laden van de pagina
+	var mode = document.querySelector('input[name="chat-mode"]:checked').value;
+	if (chatHistory[mode]) {
+		messages.innerHTML = chatHistory[mode];
+	}
+
+	function saveState() {
+		sessionStorage.setItem("chat-sessions", JSON.stringify(sessions));
+		sessionStorage.setItem("chat-history", JSON.stringify(chatHistory));
+	}
 
 	var SERVER_LABELS = {
 		kvk: "KvK Handelsregister",
@@ -349,6 +361,8 @@
 		div.appendChild(p);
 		messages.appendChild(div);
 		messages.scrollTop = messages.scrollHeight;
+		chatHistory[getMode()] = messages.innerHTML;
+		saveState();
 	}
 
 	function setLoading(loading) {
@@ -439,6 +453,16 @@
 		});
 	});
 
+	document.getElementById("chat-reset").addEventListener("click", function () {
+		if (submitting) return;
+		var mode = getMode();
+		sessions[mode] = null;
+		chatHistory[mode] = null;
+		messages.innerHTML = "";
+		addMessage("Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?", "assistant");
+		saveState();
+	});
+
 	input.addEventListener("input", function () {
 		this.style.blockSize = "auto";
 		this.style.blockSize = this.scrollHeight + "px";
@@ -515,6 +539,7 @@
 						answered = true;
 						hideThinking();
 						sessions[mode] = payload.session_id;
+						saveState();
 						// Toon alleen als gebruiker nog in dezelfde modus zit
 						if (getMode() === mode) {
 							addMessage(payload.message, "assistant");
@@ -525,6 +550,7 @@
 							addMessage(payload.message, "assistant");
 							chatHistory[mode] = messages.innerHTML;
 							messages.innerHTML = temp;
+							saveState();
 						}
 					} else if (eventType === "done") {
 						hideThinking();
