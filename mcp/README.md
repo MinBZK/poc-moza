@@ -1,6 +1,6 @@
 # Digital Assistent MCP-laag
 
-MCP-laag van poc-moza. Biedt een digitale assistent die ondernemers helpt met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) delen dezelfde MCP-tools.
+De Digitale Assistent met MCP-laag biedt ondernemers hulp met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) delen dezelfde MCP-tools.
 
 Zie [Product Decisions Records](mcp/decisions) voor gemaakte keuzes in de opzet.
 -  [PDR-001](decisions/PDR-001-dual-llm-backend.md) de achtergrond bij de dual-backend keuze.
@@ -20,14 +20,14 @@ Zie [Product Decisions Records](mcp/decisions) voor gemaakte keuzes in de opzet.
 
 | Server | MCP-type | Bron |
 |---|---|---|
-| kvk | Resource + Tool | Bedrijfsgegevens ingelogde gebruiker (mock, sessie-gebonden) |
+| kvk | Resource + Tool | Bedrijfsgegevens ingelogde gebruiker (KvK Test API, sessie-gebonden) |
 | koop | Resource + Tool | KOOP Regelingenbank (productie-API) |
 | regelrecht | Tool (non-muterend) | Beslislogica Informatieplicht (API via poc-machine-law) |
 | rvo | Tool (muterend) | RVO indienings-API (mock) |
 
 De host werkt ook zonder MCP-servers, de assistent antwoordt dan op basis van eigen kennis.
 
-> **KvK mock-modus:** De KvK-server retourneert het profiel van de ingelogde gebruiker (Bloom B.V.) in het exacte KvK API-schema (`v1/basisprofielen`). In productie wordt de mock vervangen door een echte API-call op basis van de sessie-authenticatie.
+> **KvK testomgeving:** De KvK-server haalt bedrijfsgegevens op via de KvK Test API (`api.kvk.nl/test/api/v1/basisprofielen`). Toegang is beperkt tot het bedrijf van de ingelogde gebruiker (demo: Test BV Donald, KvK 68750110). In productie wordt het KvK-nummer bepaald door de sessie-authenticatie.
 
 ## Routering: welke bron bij welke vraag?
 
@@ -106,7 +106,7 @@ sequenceDiagram
     Host->>KvK: tools/call [mijn_bedrijf]
     Note over KvK: Sessie-gebonden:<br/>retourneert profiel van<br/>de ingelogde gebruiker
     KvK-->>Host: basisprofiel (KvK API-formaat) + provenance
-    Host->>Gebruiker: "Uw bedrijf Bloom B.V. (KvK 12345678)<br/>is een Besloten Vennootschap gevestigd<br/>in Utrecht. SBI-code: 47761."
+    Host->>Gebruiker: "Uw bedrijf Test BV Donald (KvK 68750110)<br/>is een Besloten Vennootschap gevestigd<br/>in Lollum. SBI-code: 01241."
 ```
 
 ### Scenario 2: Regelgeving zoeken (KOOP)
@@ -155,10 +155,10 @@ sequenceDiagram
 
     Note over Host: Stap 1: bedrijfsgegevens ophalen<br/>via sessie-gebonden KvK
     Host->>KvK: tools/call [mijn_bedrijf]
-    KvK-->>Host: Bloom B.V., KvK 12345678,<br/>SBI 47761 + provenance
+    KvK-->>Host: Test BV Donald, KvK 68750110,<br/>SBI 01241 + provenance
 
     Note over Host: Stap 2: verplichting checken<br/>met verkregen KvK-nummer
-    Host->>RR: tools/call [check, kvk_nummer="12345678"]
+    Host->>RR: tools/call [check, kvk_nummer="68750110"]
     RR->>Engine: POST /mcp/rpc [execute_law,<br/>service=RVO, law=informatieplicht]
     Engine-->>RR: beslisboom-resultaat + wettelijke grondslag
     RR-->>Host: resultaat + provenance
@@ -187,17 +187,17 @@ sequenceDiagram
     Gebruiker->>Host: "Ik wil mijn energiebesparingsrapportage indienen"
     Note over Host: Muterende actie →<br/>eerst bedrijfsgegevens ophalen,<br/>dan bevestiging vragen
     Host->>KvK: tools/call [mijn_bedrijf]
-    KvK-->>Host: Bloom B.V., KvK 12345678 + provenance
-    Host->>Gebruiker: "Ik kan de rapportage voor Bloom B.V. (KvK 12345678)<br/>indienen bij regeling EBR-2026.<br/>Welke maatregelen heeft u genomen?"
+    KvK-->>Host: Test BV Donald, KvK 68750110 + provenance
+    Host->>Gebruiker: "Ik kan de rapportage voor Test BV Donald (KvK 68750110)<br/>indienen bij regeling EBR-2026.<br/>Welke maatregelen heeft u genomen?"
 
     Gebruiker->>Host: "LED-verlichting en HR++ beglazing"
-    Host->>Gebruiker: "Ter bevestiging: ik dien de volgende rapportage in:<br/>• Bedrijf: Bloom B.V. (12345678)<br/>• Regeling: Informatieplicht Energiebesparing (EBR-2026)<br/>• Maatregelen: LED-verlichting, HR++ beglazing<br/>Wilt u doorgaan?"
+    Host->>Gebruiker: "Ter bevestiging: ik dien de volgende rapportage in:<br/>• Bedrijf: Test BV Donald (68750110)<br/>• Regeling: Informatieplicht Energiebesparing (EBR-2026)<br/>• Maatregelen: LED-verlichting, HR++ beglazing<br/>Wilt u doorgaan?"
 
     Gebruiker->>Host: "Ja"
-    Host->>RVO: tools/call [indienen, kvk_nummer="12345678",<br/>regeling_id="EBR-2026",<br/>maatregelen=["LED-verlichting","HR++ beglazing"]]
+    Host->>RVO: tools/call [indienen, kvk_nummer="68750110",<br/>regeling_id="EBR-2026",<br/>maatregelen=["LED-verlichting","HR++ beglazing"]]
     Note over RVO: Mock: simuleert succesvolle<br/>indiening en genereert<br/>referentienummer
-    RVO-->>Host: status=INGEDIEND,<br/>ref=RVO-EBR-2026-12345678-001 + provenance
-    Host->>Gebruiker: "Uw rapportage is succesvol ingediend.<br/>Referentienummer: RVO-EBR-2026-12345678-001.<br/>U ontvangt een bevestiging per e-mail.<br/>De voortgang is te volgen onder 'Lopende zaken'."
+    RVO-->>Host: status=INGEDIEND,<br/>ref=RVO-EBR-2026-68750110-001 + provenance
+    Host->>Gebruiker: "Uw rapportage is succesvol ingediend.<br/>Referentienummer: RVO-EBR-2026-68750110-001.<br/>U ontvangt een bevestiging per e-mail.<br/>De voortgang is te volgen onder 'Lopende zaken'."
 ```
 
 > **Let op:** De `indienen`-tool is muterend. Het AI-platform vraagt daarom *altijd* om expliciete bevestiging van de gebruiker voordat de tool wordt aangeroepen. Dit is afgedwongen via de `ToolAnnotations` (`readOnlyHint=False`) én de systeemprompt.
@@ -287,7 +287,7 @@ mcp/
     Dockerfile
     .env.example
   servers/
-    kvk/                 MCP Resource + Tool — Bedrijfsgegevens (sessie-gebonden mock)
+    kvk/                 MCP Resource + Tool — Bedrijfsgegevens (KvK Test API, sessie-gebonden)
     koop/                MCP Resource + Tool — Regelingenbank
     regelrecht/          MCP Tool — beslislogica
     rvo/                 MCP Tool — indienen rapportage

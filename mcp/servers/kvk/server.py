@@ -1,14 +1,11 @@
 """KvK MCP-server — Bedrijfsgegevens van de ingelogde gebruiker via MCP.
 
-Simuleert een sessie-gebonden KvK-koppeling voor de poc. Retourneert het
-bedrijfsprofiel van de ingelogde gebruiker (mock: Bloom B.V., Robin Vogel).
+Haalt bedrijfsgegevens op via de KvK Test API (api.kvk.nl/test/api) en
+beperkt toegang tot het bedrijf van de ingelogde gebruiker (demo: Robin
+Vogel, KvK-nummer 68750110 — Test BV Donald).
 
-In productie zou deze server de gegevens ophalen bij het echte Handelsregister
-op basis van de sessie/authenticatie van de ingelogde gebruiker. Voor de poc
-gebruiken we een vast profiel dat overeenkomt met het moza-portaal.
-
-De response-structuur volgt het KvK API-schema (api.kvk.nl/test/api/v1 en v2)
-zodat een overstap naar de echte API minimale aanpassingen vereist.
+In productie wordt het KvK-nummer bepaald door de sessie/authenticatie
+van de ingelogde gebruiker. Voor de poc is dit hardcoded.
 
 Voldoet aan de MCP-standaard voor Generieke Interactieservices:
 - Provenance metadata bij elke resource-response (§4.1, §7)
@@ -21,6 +18,8 @@ import asyncio
 import json
 import logging
 from datetime import UTC, datetime
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
@@ -38,154 +37,42 @@ logger = logging.getLogger("kvk")
 
 server = Server(name="kvk")
 
-SOURCE_LABEL = "KvK Handelsregister (mock — sessie-gebonden)"
-SERVER_VERSION = "0.2.0"
+SOURCE_LABEL = "KvK Handelsregister (testomgeving — sessie-gebonden)"
+SERVER_VERSION = "0.3.0"
 
 # ---------------------------------------------------------------------------
-# Mock-profiel: Bloom B.V. (Robin Vogel)
-#
-# Structuur volgt exact het KvK API v1/basisprofielen response-schema
-# (velden, nesting, naamgeving). Data komt overeen met het moza-portaal
-# (bedrijfsgegevens.html). Vervanging door echte API-call vereist enkel
-# het vervangen van MOCK_BASISPROFIEL door het response-object.
+# Configuratie KvK Test API
 # ---------------------------------------------------------------------------
 
-MOCK_BASISPROFIEL = {
-    "kvkNummer": "12345678",
-    "indNonMailing": "Nee",
-    "naam": "Bloom B.V.",
-    "formeleRegistratiedatum": "20180212",
-    "materieleRegistratie": {
-        "datumAanvang": "20180212",
-    },
-    "totaalWerkzamePersonen": 3,
-    "handelsnamen": [
-        {"naam": "Bloom B.V.", "volgorde": 0},
-    ],
-    "sbiActiviteiten": [
-        {
-            "sbiCode": "47761",
-            "sbiOmschrijving": (
-                "Winkels in bloemen, planten, zaden en tuinbenodigdheden"
-            ),
-            "indHoofdactiviteit": "Ja",
-        },
-    ],
-    "links": [
-        {
-            "rel": "self",
-            "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
-        },
-        {
-            "rel": "vestigingen",
-            "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678/vestigingen",
-        },
-    ],
-    "_embedded": {
-        "hoofdvestiging": {
-            "vestigingsnummer": "000012345678",
-            "kvkNummer": "12345678",
-            "formeleRegistratiedatum": "20180212",
-            "materieleRegistratie": {
-                "datumAanvang": "20180212",
-            },
-            "eersteHandelsnaam": "Bloom B.V.",
-            "indHoofdvestiging": "Ja",
-            "indCommercieleVestiging": "Ja",
-            "totaalWerkzamePersonen": 3,
-            "adressen": [
-                {
-                    "type": "bezoekadres",
-                    "indAfgeschermd": "Nee",
-                    "volledigAdres": (
-                        "Voorbeeldstraat 42                                 "
-                        "1234AB Utrecht"
-                    ),
-                    "straatnaam": "Voorbeeldstraat",
-                    "huisnummer": 42,
-                    "postcode": "1234AB",
-                    "plaats": "Utrecht",
-                    "land": "Nederland",
-                },
-            ],
-            "links": [
-                {
-                    "rel": "self",
-                    "href": (
-                        "https://api.kvk.nl/api/v1/basisprofielen/"
-                        "12345678/hoofdvestiging"
-                    ),
-                },
-                {
-                    "rel": "basisprofiel",
-                    "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
-                },
-                {
-                    "rel": "vestigingsprofiel",
-                    "href": (
-                        "https://api.kvk.nl/api/v1/vestigingsprofielen/000012345678"
-                    ),
-                },
-            ],
-        },
-        "eigenaar": {
-            "rechtsvorm": "BeslotenVennootschap",
-            "uitgebreideRechtsvorm": "Besloten Vennootschap",
-            "links": [
-                {
-                    "rel": "self",
-                    "href": (
-                        "https://api.kvk.nl/api/v1/basisprofielen/12345678/eigenaar"
-                    ),
-                },
-                {
-                    "rel": "basisprofiel",
-                    "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
-                },
-            ],
-        },
-    },
-}
+KVK_TEST_BASE = "https://api.kvk.nl/test/api"
+KVK_TEST_API_KEY = "l7xx1f2691f2520d487b902f4e0b57a0b197"
 
-# Zoekresultaat-formaat (KvK API v2/zoeken schema)
-MOCK_ZOEKRESULTAAT = {
-    "links": [
-        {
-            "rel": "self",
-            "href": "https://api.kvk.nl/api/v2/zoeken?kvkNummer=12345678",
-        },
-    ],
-    "pagina": 1,
-    "resultatenPerPagina": 10,
-    "totaal": 1,
-    "resultaten": [
-        {
-            "links": [
-                {
-                    "rel": "basisprofiel",
-                    "href": "https://api.kvk.nl/api/v1/basisprofielen/12345678",
-                },
-                {
-                    "rel": "vestigingsprofiel",
-                    "href": (
-                        "https://api.kvk.nl/api/v1/vestigingsprofielen/000012345678"
-                    ),
-                },
-            ],
-            "kvkNummer": "12345678",
-            "vestigingsnummer": "000012345678",
-            "naam": "Bloom B.V.",
-            "adres": {
-                "binnenlandsAdres": {
-                    "type": "bezoekadres",
-                    "straatnaam": "Voorbeeldstraat",
-                    "plaats": "Utrecht",
-                },
-            },
-            "type": "hoofdvestiging",
-        },
-    ],
-}
+# Demo-gebruiker Robin Vogel — alleen dit KvK-nummer is toegestaan
+SESSIE_KVK_NUMMER = "68750110"
+
+# Cache voor het basisprofiel (wordt één keer opgehaald per server-lifetime)
+_profiel_cache: dict | None = None
+
+
+def _kvk_fetch(path: str) -> dict:
+    """Haal data op van de KvK Test API."""
+    url = f"{KVK_TEST_BASE}{path}"
+    req = Request(url, headers={"apikey": KVK_TEST_API_KEY})
+    logger.info("KVK API call: %s", url)
+    with urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read())
+
+
+async def _get_basisprofiel() -> dict:
+    """Haal het basisprofiel op (met cache)."""
+    global _profiel_cache
+    if _profiel_cache is not None:
+        return _profiel_cache
+    loop = asyncio.get_event_loop()
+    _profiel_cache = await loop.run_in_executor(
+        None, _kvk_fetch, f"/v1/basisprofielen/{SESSIE_KVK_NUMMER}"
+    )
+    return _profiel_cache
 
 
 # ---------------------------------------------------------------------------
@@ -202,7 +89,6 @@ def _wrap_provenance(data: dict) -> str:
                 "source": SOURCE_LABEL,
                 "timestamp": datetime.now(UTC).isoformat(),
                 "version": SERVER_VERSION,
-                "mock": True,
             },
         },
         ensure_ascii=False,
@@ -260,11 +146,11 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
     """
     kvk_nummer = str(uri).rstrip("/").split("/")[-1]
 
-    if kvk_nummer != MOCK_BASISPROFIEL["kvkNummer"]:
+    if kvk_nummer != SESSIE_KVK_NUMMER:
         logger.warning(
             "SECURITY: toegang geweigerd voor kvk-nummer %s (sessie-gebonden aan %s)",
             kvk_nummer,
-            MOCK_BASISPROFIEL["kvkNummer"],
+            SESSIE_KVK_NUMMER,
         )
         error_body = {
             "error": "NIET_TOEGESTAAN",
@@ -281,10 +167,24 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
             )
         ]
 
+    try:
+        profiel = await _get_basisprofiel()
+    except (HTTPError, URLError) as exc:
+        logger.error("KVK API fout: %s", exc)
+        return [
+            TextResourceContents(
+                uri=uri,
+                text=json.dumps(
+                    {"error": "API_FOUT", "message": str(exc)}, ensure_ascii=False
+                ),
+                mimeType="application/json",
+            )
+        ]
+
     return [
         TextResourceContents(
             uri=uri,
-            text=_wrap_provenance(MOCK_BASISPROFIEL),
+            text=_wrap_provenance(profiel),
             mimeType="application/json",
         )
     ]
@@ -326,19 +226,29 @@ async def list_tools() -> list[Tool]:
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     """Voer een tool uit en log de aanroep (standaard §2.2)."""
     if name == "mijn_bedrijf":
-        # Negeer eventueel meegegeven arguments — de tool is sessie-gebonden
-        # en accepteert geen parameters. Log wel als er onverwachte input is.
         if arguments:
             logger.warning(
                 "SECURITY: mijn_bedrijf aangeroepen met onverwachte arguments: %s "
                 "(genegeerd — tool is sessie-gebonden)",
                 list(arguments.keys()),
             )
-        _audit_log("mijn_bedrijf", {}, MOCK_BASISPROFIEL)
+        try:
+            profiel = await _get_basisprofiel()
+        except (HTTPError, URLError) as exc:
+            logger.error("KVK API fout: %s", exc)
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {"error": "API_FOUT", "message": str(exc)}, ensure_ascii=False
+                    ),
+                )
+            ]
+        _audit_log("mijn_bedrijf", {}, profiel)
         return [
             TextContent(
                 type="text",
-                text=_wrap_provenance(MOCK_BASISPROFIEL),
+                text=_wrap_provenance(profiel),
             )
         ]
 

@@ -3,15 +3,15 @@ Voorbeeld: regelgeving toepassen en verdiepen (RegelRecht + KOOP)
 Gebruiker: Wat is de energiebesparingsplicht en geldt die voor mijn bedrijf?
 
 Assistent roept tool aan: kvk__mijn_bedrijf()
-Assistent ontvangt: Bloom B.V., KvK 12345678
+Assistent ontvangt: Test BV Donald, KvK 68750110
 
-Assistent roept tool aan: regelrecht__check(kvk_nummer="12345678")
+Assistent roept tool aan: regelrecht__check(kvk_nummer="68750110")
 Assistent ontvangt: ontbrekende gegevens — energieverbruik en woonfunctie nodig
 
 Assistent:
 Op grond van artikel 5.15 van het Besluit activiteiten leefomgeving (Bal) geldt de energiebesparingsplicht voor bedrijven die meer dan 50.000 kWh elektriciteit of 25.000 m3 aardgas per jaar verbruiken. Gebouwen met uitsluitend een woonfunctie zijn uitgezonderd.
 
-Om te bepalen of dit voor Bloom B.V. geldt, heb ik nog twee gegevens nodig:
+Om te bepalen of dit voor Test BV Donald geldt, heb ik nog twee gegevens nodig:
 1. Uw jaarlijks energieverbruik (elektriciteit in kWh en/of gas in m3)
 2. Of uw pand uitsluitend een woonfunctie heeft
 
