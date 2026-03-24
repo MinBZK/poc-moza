@@ -150,5 +150,16 @@
 <p>De stylesheets maken gebruik van CSS logical properties (<code>inline-size</code>, <code>margin-block-start</code>, <code>padding-inline</code>) in plaats van physical properties (<code>width</code>, <code>margin-top</code>, <code>padding-left</code>). Dit maakt de CSS toekomstbestendig voor meertalige ondersteuning en verschillende schrijfrichtingen.</p>
 <h3>CSS nesting en custom properties</h3>
 <p>De stylesheets maken gebruik van native CSS nesting voor component-staten en varianten, en CSS custom properties voor alle ontwerp-waarden. Er worden geen preprocessors zoals Sass gebruikt.</p>
+<h3>Layout en spacing</h3>
+<p>Spacing tussen elementen wordt aangestuurd door één schaal van layout tokens (<code>--toepassing-space-layout-*</code>), ongeacht richting. Het juiste CSS-mechanisme wordt gekozen op basis van de context:</p>
+<ul>
+<li>
+<p><strong><code>&gt; * + *</code> met margin</strong> — voor content flow waar de parent geen specifiek layout-model nodig heeft. Voorbeelden: <code>body</code>, <code>header</code>, <code>.card</code>, <code>.accordion</code>, <code>footer nav</code>, <code>ul</code>/<code>ol</code>. Het voordeel is dat het eerste kind geen onnodige marge krijgt en dat spacing alleen ontstaat <em>tussen</em> elementen.</p>
+</li>
+<li>
+<p><strong><code>gap</code> met flexbox of grid</strong> — voor layouts waarbij alignment, richting-wisseling of een 2D-raster nodig is. Voorbeelden: <code>.action-group</code> (wisselt van kolom naar rij), <code>.tiles</code> (grid), <code>.footer-links</code> (wisselt van kolom naar rij), <code>.icon-link</code> (horizontaal, icoon naast tekst), <code>summary</code> (icoon naast tekst).</p>
+</li>
+</ul>
+<p>Per container wordt altijd één van deze twee mechanismes gebruikt, nooit beide tegelijk. De keuze voor <code>gap</code> of <code>&gt; * + *</code> is een implementatiedetail — de spacing-waarde komt altijd uit dezelfde <code>layout-*</code> tokens.</p>
 <h3>Statische site-generatie</h3>
 <p><a href="https://www.11ty.dev/">Eleventy</a> wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.</p>
