@@ -1875,6 +1875,10 @@
       }
     },
     "margin": {
+      "3xs": {
+        "$type": "spacing",
+        "$value": "{space.2xs}"
+      },
       "2xs": {
         "$type": "spacing",
         "$value": "{space.xs}"
@@ -1904,25 +1908,15 @@
         }
       }
     },
-    "stack": {
-      "xs": {
+    "layout": {
+      "3xs": {
         "$type": "spacing",
-        "$value": "{space.margin.xs}"
+        "$value": "{space.margin.3xs}"
       },
-      "sm": {
+      "2xs": {
         "$type": "spacing",
-        "$value": "{space.margin.sm}"
+        "$value": "{space.margin.2xs}"
       },
-      "md": {
-        "$type": "spacing",
-        "$value": "{space.margin.md}"
-      },
-      "lg": {
-        "$type": "spacing",
-        "$value": "{space.margin.lg}"
-      }
-    },
-    "cluster": {
       "xs": {
         "$type": "spacing",
         "$value": "{space.margin.xs}"

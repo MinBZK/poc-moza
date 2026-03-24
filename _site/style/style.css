@@ -45,6 +45,9 @@ body {
 		sans-serif;
 	min-block-size: 100vh;
 	min-block-size: 100dvh;
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-md);
+	}
 }
 
 header {
@@ -62,7 +65,10 @@ header {
 	}
 	.user-menu {
 		display: flex;
-		gap: var(--toepassing-space-padding-md);
+		gap: var(--toepassing-space-layout-md);
+	}
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-md);
 	}
 }
 .page-head {
@@ -114,6 +120,7 @@ aside {
 footer {
 	background: var(--toepassing-color-component-footer-background);
 	color: var(--toepassing-color-text-inverse);
+	margin-block-start: 0; /* Compensatie voor stack op <body> */
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
@@ -130,33 +137,17 @@ body.moza {
 }
 
 .moza article {
-	display: flex;
-	flex-direction: column;
-	row-gap: var(--toepassing-space-margin-sm);
-}
-
-/* Stacks */
-
-[class^="stack"] > * {
-	margin-block: 0;
-}
-.stack-xs > * + * {
-	margin-block-start: var(--toepassing-space-margin-xs);
-}
-.stack-sm > * + * {
-	margin-block-start: var(--toepassing-space-margin-sm);
-}
-.stack-md > * + * {
-	margin-block-start: var(--toepassing-space-margin-md);
-}
-.stack-lg > * + * {
-	margin-block-start: var(--toepassing-space-margin-lg);
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-sm);
+	}
 }
 
 /* Typografie */
 
 hgroup {
-	margin-block-end: var(--toepassing-space-margin-sm);
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-2xs);
+	}
 }
 h1 {
 	font: var(--toepassing-text-heading-h1);
@@ -182,7 +173,6 @@ p {
 	&.intro {
 		font: var(--toepassing-text-paragraph-intro);
 	}
-	margin-block-end: var(--toepassing-space-margin-2xs);
 }
 
 small {
@@ -341,7 +331,7 @@ label {
 .action-group {
 	display: flex;
 	flex-direction: column;
-	gap: var(--toepassing-space-padding-md);
+	gap: var(--toepassing-space-layout-xs);
 	margin-block-start: var(--toepassing-space-margin-sm);
 	button,
 	a.btn-cta {
@@ -485,11 +475,10 @@ textarea {
 ul.selection {
 	list-style: none;
 	padding: 0;
-	li:not(:has(.selection)) {
-		padding-block-end: var(--toepassing-space-padding-md);
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-sm);
 	}
 	.selection {
-		padding-block-start: var(--toepassing-space-padding-md);
 		padding-inline-start: var(--toepassing-space-padding-md);
 	}
 }
@@ -639,6 +628,7 @@ button.side-nav-toggle {
 	color: var(--toepassing-color-interactive-default-text);
 	cursor: pointer;
 	display: none;
+	gap: var(--toepassing-space-layout-xs);
 	position: absolute;
 	inset-block-start: var(--toepassing-space-padding-sm);
 	&::before {
@@ -646,7 +636,6 @@ button.side-nav-toggle {
 		background-color: currentColor;
 		block-size: var(--toepassing-size-icon-xs);
 		mask: url("../assets/icons/icon-menu.svg") no-repeat center / contain;
-		margin-inline-end: var(--toepassing-space-margin-2xs);
 		transition: var(--toepassing-transition-transform);
 		inline-size: var(--toepassing-size-icon-sm);
 	}
@@ -688,17 +677,18 @@ button.side-nav-toggle {
 }
 .side-nav {
 	padding-inline: var(--toepassing-space-padding-md);
+	> li + li {
+		margin-block-start: var(--toepassing-space-layout-xs);
+	}
 	li {
 		a {
 			align-items: center;
 			background: var(--toepassing-color-interactive-alternate-default-background);
 			border-radius: var(--toepassing-border-radius-md);
 			color: var(--toepassing-color-interactive-alternate-default-text);
-			column-gap: var(--toepassing-space-padding-2xs);
 			display: flex;
 			font: var(--toepassing-text-nav-side-nav);
-			gap: var(--toepassing-space-padding-sm);
-			margin-block-end: var(--toepassing-space-padding-xs);
+			gap: var(--toepassing-space-layout-sm);
 			padding-block: var(--toepassing-space-padding-2xs);
 			padding-inline: var(--toepassing-space-padding-md);
 			text-decoration: none;
@@ -745,8 +735,10 @@ button.side-nav-toggle {
 /* Navigatie: Footerlinks */
 
 footer {
-	h4 {
-		margin-block-end: var(--toepassing-space-margin-2xs);
+	nav {
+		> * + * {
+			margin-block-start: var(--toepassing-space-layout-xs);
+		}
 	}
 	a {
 		color: inherit;
@@ -762,6 +754,7 @@ footer {
 .footer-links {
 	display: flex;
 	flex-direction: column;
+	gap: var(--toepassing-space-layout-md);
 	justify-content: space-between;
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
@@ -779,15 +772,17 @@ footer {
 		border: 0 !important;
 	}
 }
-li {
-	margin-block-end: var(--toepassing-space-margin-2xs);
+ul,
+ol {
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-2xs);
+	}
 }
 
 /* Tabellen */
 
 table {
 	inline-size: 100%;
-	margin-block: var(--toepassing-space-margin-xs);
 }
 tr {
 	vertical-align: top;
@@ -827,6 +822,7 @@ summary {
 	background: var(--toepassing-color-background-subtle);
 	cursor: pointer;
 	display: flex;
+	gap: var(--toepassing-space-layout-xs);
 	padding: var(--toepassing-space-padding-sm);
 	&:hover,
 	&:focus {
@@ -835,7 +831,6 @@ summary {
 	&::before {
 		content: url("../assets/icons/icon-chevron.svg");
 		flex-shrink: 0;
-		margin-inline-end: var(--toepassing-space-margin-2xs);
 		transition: var(--toepassing-transition-transform);
 		inline-size: var(--toepassing-size-icon-xs);
 	}
@@ -848,19 +843,23 @@ summary {
 	border-radius: var(--toepassing-border-radius-md);
 	box-shadow: var(--toepassing-border-card-default);
 	container-type: inline-size;
-	/* display: flex;
-	flex-direction: column; */
+	display: flex;
+	flex-direction: column;
+	gap: var(--toepassing-space-layout-sm);
 	padding: var(--toepassing-space-component-card-padding);
-	section:not(:last-of-type) {
-		border-block-end: var(--toepassing-border-default);
-		margin-block-end: var(--toepassing-space-margin-xs);
-		padding-block-end: var(--toepassing-space-padding-lg);
+	section {
+		> * + * {
+			margin-block-start: var(--toepassing-space-layout-xs);
+		}
+		&:not(:last-of-type) {
+			border-block-end: var(--toepassing-border-default);
+			padding-block-end: var(--toepassing-space-padding-lg);
+		}
 	}
 	h2,
 	h3,
 	h4 {
 		font-size: var(--toepassing-text-size-title-xl);
-		margin-block-end: var(--toepassing-space-margin-2xs);
 		a {
 			color: var(--toepassing-color-interactive-default-text);
 		}
@@ -888,15 +887,16 @@ summary {
 		list-style: none;
 		padding: 0;
 		li {
-			margin-block-end: var(--toepassing-space-margin-xs);
-			padding-block-end: var(--toepassing-space-padding-xs);
+			padding-block-end: var(--toepassing-space-padding-md);
 			position: relative;
 			&:not(:last-child) {
 				border-block-end: var(--toepassing-border-default);
 				.content-link {
-					margin-block-end: var(--toepassing-space-margin-md);
 					padding-block-end: 0;
 				}
+			}
+			> * + * {
+				margin-block-start: var(--toepassing-space-layout-2xs);
 			}
 		}
 		.status-unread {
@@ -909,6 +909,9 @@ summary {
 					margin-inline-end: 0.25rem;
 				}
 			}
+		}
+		> * + * {
+			margin-block-start: var(--toepassing-space-layout-xs);
 		}
 	}
 	.content-link {
@@ -934,14 +937,11 @@ summary {
 .tiles {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap: var(--toepassing-space-margin-sm);
+	gap: var(--toepassing-space-layout-sm);
 	@container (max-inline-size: 624px) {
 		grid-template-columns: 1fr;
 	}
 	.card {
-		display: flex;
-		flex-direction: column;
-		gap: var(--toepassing-space-margin-sm);
 		.btn-cta {
 			margin-block-start: auto;
 		}
@@ -949,20 +949,19 @@ summary {
 }
 
 .accordion {
-	display: flex;
-	flex-direction: column;
-	gap: var(--toepassing-space-padding-2xs);
-	h2,
+	list-style: none;
+	padding: 0;
 	h3,
 	h4,
 	h5,
 	h6 {
 		font-size: var(--toepassing-text-size-body-md);
-		margin-block-end: 0;
 	}
 	p {
-		padding-block-start: var(--toepassing-space-padding-sm);
-		padding-inline: var(--toepassing-space-padding-sm);
+		padding: var(--toepassing-space-padding-sm);
+	}
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-3xs);
 	}
 }
 
@@ -971,7 +970,7 @@ summary {
 .icon-label {
 	align-items: center;
 	display: inline-flex;
-	gap: var(--toepassing-space-padding-xs);
+	gap: var(--toepassing-space-layout-xs);
 	text-decoration: none;
 	svg {
 		block-size: var(--toepassing-size-icon-sm);
@@ -1014,12 +1013,12 @@ h4 {
 	border-color: var(--toepassing-color-feedback-neutral-border);
 	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
+	gap: var(--toepassing-space-layout-xs);
 	padding: var(--toepassing-space-padding-md);
 	svg {
 		align-self: self-start;
 		flex-shrink: 0;
 		inline-size: var(--toepassing-size-icon-md);
-		margin-inline-end: var(--toepassing-space-margin-2xs);
 	}
 }
 .feedback-icon-color-foreground {
