@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="{{ '/assets/favicon/apple-touch-icon.png' | url }}">
     {% block extraStyles %}{% endblock %}
 </head>
-<body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
+<body{% if bodyClass %} class="{{ bodyClass }} stack-md"{% endif %}>
 
     {% if headerType == "overheid" %}
         {% include "header-overheid.njk" %}
