@@ -6,6 +6,7 @@ RUN npm ci
 COPY . .
 RUN cd style-dictionary && npm ci && npm run build
 RUN npx @11ty/eleventy
+RUN npx storybook build -o _site/storybook
 
 FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 
