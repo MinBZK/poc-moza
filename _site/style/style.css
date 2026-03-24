@@ -672,9 +672,6 @@ button.side-nav-toggle {
 .side-nav-toggle[aria-expanded="true"] + ul {
 	display: block;
 }
-.temp-moza-subnav-preview.hidden {
-	display: none;
-}
 .side-nav {
 	padding-inline: var(--toepassing-space-padding-md);
 	> li + li {
