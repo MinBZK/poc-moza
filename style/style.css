@@ -49,9 +49,7 @@ body {
 
 header {
 	position: relative;
-	margin-block-end: var(--toepassing-space-margin-md);
 	.logo {
-		margin-block-end: var(--toepassing-space-margin-xs);
 		text-align: center;
 		img {
 			inline-size: var(--toepassing-size-logo-width);
@@ -66,33 +64,18 @@ header {
 		display: flex;
 		gap: var(--toepassing-space-padding-md);
 	}
-	.side-nav-secret-toggle {
-		/* Tijdelijk voor gebruikersonderzoeken */
-		block-size: 3rem;
-		inset-block-start: 0;
-		inset-inline-end: 0;
-		inline-size: 3rem;
-		position: absolute;
-		text-decoration: none;
-		&::after {
-			block-size: 3rem;
-			content: "🟢";
-			font-size: 2.5rem;
-			inline-size: 3rem;
-			opacity: 0;
-			transition: opacity 0.5s ease;
-		}
-		&:hover::after {
-			opacity: 1;
-			transition: opacity 0.5s ease;
-		}
-	}
 }
 .page-head {
+	display: flex;
+	justify-content: space-between;
 	margin-inline: auto;
-	max-inline-size: 1140px;
-	.title {
-		font: var(--toepassing-text-heading-h1);
+	max-inline-size: var(--toepassing-page-max-inline-size);
+	padding-inline: var(--toepassing-space-padding-md);
+	@media (max-width: 799px) {
+		/* display: none; */
+	}
+	.page-title {
+		font: var(--toepassing-text-heading-h2);
 	}
 }
 
@@ -134,8 +117,47 @@ footer {
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
+/* MijnOverheid Zakelijk */
+
+body.moza {
+	background: var(--toepassing-color-background-subtle);
+}
+
+.moza header {
+	background: var(--toepassing-color-background-default);
+	border-block-end: var(--toepassing-border-component-pageheader-border);
+	box-shadow: var(--toepassing-box-shadow-default);
+}
+
+.moza article {
+	display: flex;
+	flex-direction: column;
+	row-gap: var(--toepassing-space-margin-sm);
+}
+
+/* Stacks */
+
+[class^="stack"] > * {
+	margin-block: 0;
+}
+.stack-xs > * + * {
+	margin-block-start: var(--toepassing-space-margin-xs);
+}
+.stack-sm > * + * {
+	margin-block-start: var(--toepassing-space-margin-sm);
+}
+.stack-md > * + * {
+	margin-block-start: var(--toepassing-space-margin-md);
+}
+.stack-lg > * + * {
+	margin-block-start: var(--toepassing-space-margin-lg);
+}
+
 /* Typografie */
 
+hgroup {
+	margin-block-end: var(--toepassing-space-margin-sm);
+}
 h1 {
 	font: var(--toepassing-text-heading-h1);
 }
@@ -181,9 +203,12 @@ a {
 	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 	text-underline-offset: 3px; /* Vaste waarde voor onderstreping offset, niet in design tokens gedefinieerd omdat deze slechts eenmaal voorkomt */
 	text-decoration-skip-ink: auto;
-	&:hover {
+	transition: var(--toepassing-transition-default);
+	&:hover,
+	&:focus-visible {
 		color: var(--toepassing-color-interactive-hover-text);
 		text-decoration: none;
+		transition: var(--toepassing-transition-default);
 	}
 	&:active {
 		color: var(--toepassing-color-interactive-active-text);
@@ -204,11 +229,6 @@ pre {
 
 /* Generieke interactie stijlen */
 
-&:hover,
-:active,
-&:checked {
-	transition: var(--toepassing-transition-default);
-}
 [aria-disabled],
 [disabled] {
 	opacity: var(--toepassing-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut (met uitzondering van een <select> menu) maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
@@ -220,7 +240,7 @@ pre {
 }
 :focus-visible {
 	outline: var(--toepassing-focus-outline);
-	outline-offset: var(--toepassing-size-5xs);
+	outline-offset: var(--toepassing-focus-outline-offset);
 	&[aria-disabled] {
 		outline-color: var(--toepassing-color-interactive-disabled-border);
 	}
@@ -564,6 +584,14 @@ option {
 [type="file"] {
 }
 
+/* Media */
+
+video {
+	aspect-ratio: 16 / 9;
+	background: var(--mox-color-background-subtle);
+	inline-size: 100%;
+}
+
 /* Navigatie */
 
 nav {
@@ -646,7 +674,7 @@ button.side-nav-toggle {
 		display: none;
 		margin-block-end: var(--toepassing-space-margin-lg);
 		padding: var(--toepassing-space-padding-md);
-		width: 100%;
+		inline-size: 100%;
 	}
 	li {
 		inline-size: 100%;
@@ -852,6 +880,9 @@ summary {
 				text-decoration: underline;
 			}
 		}
+		&:focus-visible .card-link {
+			outline: var(--toepassing-focus-outline);
+		}
 	}
 	.list-content-links {
 		list-style: none;
@@ -896,6 +927,7 @@ summary {
 	block-size: 100%;
 	inline-size: 100%;
 	inset-block-start: 0;
+	outline-offset: var(--toepassing-focus-outline-offset-2);
 	position: absolute;
 }
 
@@ -1029,57 +1061,23 @@ h4 {
 	padding: var(--toepassing-space-padding-md);
 }
 
-/* MijnOverheid Zakelijk */
-
-body.moza {
-	background: var(--toepassing-color-background-subtle);
-}
-
-.moza header {
-	background: var(--toepassing-color-background-default);
-	border-block-end: var(--toepassing-border-component-pageheader-border);
-	box-shadow: var(--toepassing-box-shadow-default);
-}
-.page-title {
-	font: var(--toepassing-text-heading-h2);
-}
-.page-head {
-	align-items: baseline;
-	display: flex;
-	justify-content: space-between;
-	margin-inline: auto;
-	max-inline-size: var(--toepassing-page-max-inline-size);
-	padding-block: var(--toepassing-space-padding-xs);
-	padding-inline: var(--toepassing-space-padding-md);
-	@media (max-width: 799px) ) {
-		/* display: none; */
-	}
-}
-
-.moza article {
-	display: flex;
-	flex-direction: column;
-	row-gap: var(--toepassing-space-margin-sm);
-}
-
 /* Tijdelijk, voornamelijk voor gebruikersonderzoeken */
 
 /* Proof of concept banner */
 .temp-moza-poc-banner {
 	background: var(--toepassing-color-feedback-success-default);
 	color: var(--toepassing-color-text-inverse);
-	font-size: var(--toepassing-text-font-weight-bold);
-	margin-inline-start: -3rem;
+	font-weight: var(--toepassing-text-font-weight-bold);
+	inline-size: 280px;
+	inset-block-start: 0;
+	inset-inline-end: -4rem;
 	padding-block: var(--toepassing-space-padding-sm);
 	padding-inline: var(--toepassing-space-padding-lg);
 	position: fixed;
-	inset-inline-end: -4rem;
 	text-align: center;
 	text-decoration: none;
-	inset-block-start: 2rem;
-	transform: rotate(45deg);
 	transform-origin: center;
-	inline-size: 280px;
+	transform: rotate(45deg);
 	&:hover {
 		background: var(--toepassing-color-feedback-success-emphasis);
 		color: var(--toepassing-color-text-inverse);
