@@ -19,6 +19,7 @@ jobs:
           node-version: "20"
       - run: npm ci
       - run: npx @11ty/eleventy
+      - run: npx storybook build -o _site/storybook
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
