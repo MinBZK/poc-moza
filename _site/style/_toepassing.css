@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json.
- * Gegenereerd op 24-3-2026, 17:30:29
+ * Gegenereerd op 24-3-2026, 18:15:31
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _toepassing.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _toepassing.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -134,6 +134,10 @@
   --toepassing-space-4xl: var(--rijkshuisstijl-space-56);
   --toepassing-space-4xs: var(--rijkshuisstijl-space-1);
   --toepassing-space-5xl: var(--rijkshuisstijl-space-64);
+  --toepassing-space-cluster-lg: var(--toepassing-space-margin-lg);
+  --toepassing-space-cluster-md: var(--toepassing-space-margin-md);
+  --toepassing-space-cluster-sm: var(--toepassing-space-margin-sm);
+  --toepassing-space-cluster-xs: var(--toepassing-space-margin-xs);
   --toepassing-space-component-card-padding: var(--toepassing-space-padding-xl);
   --toepassing-space-layout-2xs: var(--toepassing-space-margin-2xs);
   --toepassing-space-layout-3xs: var(--toepassing-space-margin-3xs);
@@ -157,6 +161,10 @@
   --toepassing-space-padding-xl: var(--toepassing-space-xl);
   --toepassing-space-padding-xs: var(--toepassing-space-xs);
   --toepassing-space-sm: var(--rijkshuisstijl-space-12);
+  --toepassing-space-stack-lg: var(--toepassing-space-margin-lg);
+  --toepassing-space-stack-md: var(--toepassing-space-margin-md);
+  --toepassing-space-stack-sm: var(--toepassing-space-margin-sm);
+  --toepassing-space-stack-xs: var(--toepassing-space-margin-xs);
   --toepassing-space-xl: var(--rijkshuisstijl-space-32);
   --toepassing-space-xs: var(--rijkshuisstijl-space-8);
   --toepassing-text-code: var(--toepassing-text-font-weight-semi-bold) var(--toepassing-text-size-body-sm) monospace;
