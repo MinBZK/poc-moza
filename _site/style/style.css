@@ -1,16 +1,22 @@
-/* Importeer Rijkhuisstijl design tokens als variabelen */
+/*
+ * Stylesheet MijnOverheid Zakelijk (MOZa)
+ *
+ * Gebruikt design tokens uit twee lagen:
+ * - _rijkshuisstijl.css: visuele opties vanuit de Rijkshuisstijl
+ * - _toepassing.css: toepassing van die opties op componenten
+ *
+ * Layout spacing gebruikt --toepassing-space-layout-* tokens via twee mechanismes:
+ * - > * + * met margin: voor content flow (geen flex/grid nodig)
+ * - gap met flex/grid: voor component-layouts met alignment of richting-wisseling
+ *
+ * Alle properties gebruiken CSS logical properties (inline/block i.p.v. left/right/top/bottom).
+ */
 
 @import "_rijkshuisstijl.css";
-
-/* Importeer toepassing design tokens als variabelen */
-
 @import "_toepassing.css";
-
-/* Importeer reset stijlen */
-
 @import "_reset.css";
 
-/* Voeg Rijksoverheid Sans lettertype toe */
+/* Lettertype */
 
 @font-face {
 	font-family: "RijksSansVF";
@@ -26,7 +32,7 @@
 	src: url("../assets/fonts/RijksSansVF-Italic.ttf") format("truetype");
 }
 
-/* Basis en layout */
+/* Pagina-layout */
 
 body {
 	color: var(--toepassing-color-text-default);
@@ -44,7 +50,7 @@ body {
 		"Liberation Sans",
 		sans-serif;
 	min-block-size: 100vh;
-	min-block-size: 100dvh;
+	min-block-size: 100dvh; /* Fallback: vh voor browsers zonder dvh-ondersteuning */
 	> * + * {
 		margin-block-start: var(--toepassing-space-layout-md);
 	}
@@ -77,9 +83,6 @@ header {
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
 	padding-inline: var(--toepassing-space-padding-md);
-	@media (max-width: 799px) {
-		/* display: none; */
-	}
 	.page-title {
 		font: var(--toepassing-text-heading-h2);
 	}
@@ -100,6 +103,7 @@ main {
 		padding-inline: var(--toepassing-space-padding-md);
 		inline-size: 100%;
 	}
+	/* Decoratief (logo) blok onder de content */
 	&::after {
 		background: var(--toepassing-color-logo-background);
 		content: "";
@@ -120,11 +124,11 @@ aside {
 footer {
 	background: var(--toepassing-color-component-footer-background);
 	color: var(--toepassing-color-text-inverse);
-	margin-block-start: 0; /* Compensatie voor stack op <body> */
+	margin-block-start: 0; /* Compensatie voor layout-spacing op body */
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
-/* MijnOverheid Zakelijk */
+/* MijnOverheid Zakelijk specifiek */
 
 body.moza {
 	background: var(--toepassing-color-background-subtle);
@@ -191,7 +195,7 @@ i {
 a {
 	color: var(--toepassing-color-interactive-default-text);
 	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
-	text-underline-offset: 3px; /* Vaste waarde voor onderstreping offset, niet in design tokens gedefinieerd omdat deze slechts eenmaal voorkomt */
+	text-underline-offset: 3px;
 	text-decoration-skip-ink: auto;
 	transition: var(--toepassing-transition-default);
 	&:hover,
@@ -217,16 +221,17 @@ pre {
 	padding: var(--toepassing-space-padding-sm);
 }
 
-/* Generieke interactie stijlen */
+/* Interactie */
 
+/* Opacity i.p.v. specifieke kleuren: past automatisch aan bij donker/licht/hoog-contrast modus */
 [aria-disabled],
 [disabled] {
-	opacity: var(--toepassing-opacity-interactive-disabled); /* Opacity gebruiken i.p.v. specifieke kleuren heeft diverse voordelen waaronder het automatisch aanpassen aan modus (donker/licht/hoog-contrast) en vergt minder onderhoud, nadeel: ook focus-ring (aria-disabled i.p.v. reguliere disabled attribuut (met uitzondering van een <select> menu) maakt het juist mogelijk om focus te leggen op inactieve elementen zodat gebruikers die afhankelijk van :focus zijn alsnog inhoud en context begrijpen) wordt hierdoor semi-transparant */
+	opacity: var(--toepassing-opacity-interactive-disabled);
 }
 
-/* Focus voor keyboard, spraak en switch gebruikers */
+/* Focus: zichtbaar voor toetsenbord/spraak/switch, verborgen voor muis */
 :focus:not(:focus-visible) {
-	outline: none; /* Verberg focus outline voor muis-gebruikers, behoud focus outline voor alle andere gebruikers (toetsenbord, spraak, switch) */
+	outline: none;
 }
 :focus-visible {
 	outline: var(--toepassing-focus-outline);
@@ -239,7 +244,7 @@ pre {
 	}
 }
 
-/* Opties die door gebruiker al goedgekeurd zijn en niet meer gewijzigd kunnen worden */
+/* Bevestigde opties (niet meer wijzigbaar, gemarkeerd met vinkje) */
 li.option--confirmed {
 	&::before {
 		background-color: var(--toepassing-color-feedback-success-icon);
@@ -255,13 +260,7 @@ li.option--confirmed {
 	}
 }
 
-/* Formulier elementen */
-
-form {
-}
-
-fieldset {
-}
+/* Formulieren: gedeelde stijlen voor alle invoerelementen */
 
 button,
 [type="date"],
@@ -279,7 +278,7 @@ button,
 select,
 textarea,
 .btn-cta {
-	align-self: flex-start; /* Voorkomt dat elementen de volledige breedte aannemen in een flexbox container */
+	align-self: flex-start; /* Voorkomt full-width in flex containers */
 	background: var(--toepassing-color-interactive-default-surface);
 	border: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-default-border);
 	border-radius: var(--toepassing-border-radius-sm);
@@ -310,15 +309,12 @@ textarea,
 	vertical-align: middle;
 }
 
-/* Formulieren: Labeling */
+/* Formulieren: labels */
 
 legend,
 label {
 	display: block;
 	font: var(--toepassing-text-label);
-	/* &:has(+ [aria-disabled]) {
-		opacity: var(--toepassing-opacity-interactive-disabled);
-	} */
 }
 
 .form-field-helper-text {
@@ -326,7 +322,7 @@ label {
 	font: var(--toepassing-text-smalltext-default);
 }
 
-/* Actiegroep; groeperen van gerelateerde acties */
+/* Actiegroep: kolom op mobiel, rij op desktop */
 
 .action-group {
 	display: flex;
@@ -353,6 +349,7 @@ a.btn-cta {
 	background: var(--toepassing-color-interactive-default-background);
 	color: var(--toepassing-color-text-inverse);
 	cursor: pointer;
+	/* Full-width in smalle containers */
 	@container (max-inline-size: 280px) {
 		inline-size: 100%;
 		text-align: center;
@@ -396,6 +393,8 @@ a.btn-cta {
 	display: inline-block;
 	text-decoration: none;
 }
+
+/* Knoppen zonder visuele knop-stijl (links en iconen die als button functioneren) */
 .link-button,
 .icon-button {
 	background: none;
@@ -431,31 +430,7 @@ a.btn-cta {
 	}
 }
 
-/* Formulier: Tekstinvoer */
-
-[type="date"],
-[type="datetime-local"],
-[type="email"],
-[type="month"],
-[type="number"],
-[type="password"],
-[type="search"],
-[type="tel"],
-[type="text"],
-[type="time"],
-[type="url"],
-[type="week"] {
-	&:hover {
-	}
-	&:focus {
-	}
-	&:focus-visible {
-	}
-	&:active {
-	}
-	&[aria-invalid] {
-	}
-}
+/* Formulieren: zoekveld met knop */
 
 [type="search"]:has(+ button) {
 	border-end-start-radius: 0;
@@ -467,10 +442,10 @@ a.btn-cta {
 }
 
 textarea {
-	resize: block; /* Alleen verticaal grootte aan kunnen passen zodat de layout over de breedte ongewijzigd blijft */
+	resize: block; /* Alleen verticaal resizen zodat de breedte-layout intact blijft */
 }
 
-/* Formulier: Selectie */
+/* Formulieren: checkboxes en radio's (custom appearance) */
 
 ul.selection {
 	list-style: none;
@@ -495,6 +470,7 @@ ul.selection {
 	place-content: center;
 	transition: var(--toepassing-transition-default);
 	vertical-align: top;
+	/* Vinkje/bolletje: standaard verborgen via scale(0) */
 	&::before,
 	&[data-indeterminate]::before {
 		block-size: var(--toepassing-size-icon-sm);
@@ -534,6 +510,7 @@ ul.selection {
 		background-color: var(--toepassing-color-text-inverse);
 		mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
 	}
+	/* Tri-state: indeterminate (min-icoon) */
 	&[data-indeterminate] {
 		background: var(--toepassing-color-interactive-default-background);
 		border-color: var(--toepassing-color-interactive-default-background);
@@ -551,26 +528,13 @@ ul.selection {
 	&:checked {
 		background: var(--toepassing-color-interactive-default-background);
 		outline: 2px solid var(--toepassing-color-interactive-default-surface);
-		outline-offset: -4px;
+		outline-offset: -4px; /* Inset ring voor radio-bolletje effect */
 		transition: var(--toepassing-transition-default);
 		&:hover {
 			background: var(--toepassing-color-interactive-hover-background);
 			transition: var(--toepassing-transition-default);
 		}
 	}
-}
-select {
-}
-select[multiple] {
-}
-optgroup {
-}
-option {
-}
-
-/* Formulier: Bestand selecteren */
-
-[type="file"] {
 }
 
 /* Media */
@@ -581,7 +545,7 @@ video {
 	inline-size: 100%;
 }
 
-/* Navigatie */
+/* Navigatie: generiek */
 
 nav {
 	ol,
@@ -591,7 +555,7 @@ nav {
 	}
 }
 
-/* Navigatie: Hoofdnavigatie */
+/* Navigatie: hoofdnavigatie (horizontale balk) */
 
 .main-nav {
 	background-color: var(--toepassing-color-interactive-active-background);
@@ -619,9 +583,8 @@ nav {
 	}
 }
 
-/* Navigatie: Sub-navigatie */
+/* Navigatie: sub-navigatie (sidebar, responsive hamburger op mobiel) */
 
-/* Responsive menu */
 button.side-nav-toggle {
 	align-items: center;
 	background: var(--toepassing-color-background-default);
@@ -714,7 +677,7 @@ button.side-nav-toggle {
 	margin-block-start: var(--toepassing-space-margin-sm);
 }
 
-/* Navigatie: Kruimelpad */
+/* Navigatie: kruimelpad */
 
 .breadcrumb {
 	li {
@@ -729,7 +692,7 @@ button.side-nav-toggle {
 	}
 }
 
-/* Navigatie: Footerlinks */
+/* Navigatie: footer */
 
 footer {
 	nav {
@@ -748,6 +711,7 @@ footer {
 		}
 	}
 }
+/* Kolom op mobiel, rij op desktop */
 .footer-links {
 	display: flex;
 	flex-direction: column;
@@ -794,8 +758,8 @@ td {
 	}
 }
 caption {
-	caption-side: block-end; /* Logical property wordt nog niet goed ondersteund voor caption-side */
 	caption-side: bottom;
+	caption-side: block-end; /* Logical property; caption-side: bottom als fallback */
 	padding-block-start: var(--toepassing-space-padding-sm);
 	text-align: end;
 }
@@ -806,7 +770,7 @@ caption {
 	}
 }
 
-/* Uitklapblok */
+/* Uitklapblok (details/summary) */
 
 details {
 	border: var(--toepassing-border-default);
@@ -876,6 +840,7 @@ summary {
 				text-decoration: underline;
 			}
 		}
+		/* Onzichtbare link die de hele card klikbaar maakt */
 		&:focus-visible .card-link {
 			outline: var(--toepassing-focus-outline);
 		}
@@ -911,6 +876,7 @@ summary {
 			margin-block-start: var(--toepassing-space-layout-xs);
 		}
 	}
+	/* Extern-link icoon achter headings */
 	.content-link {
 		&[rel="external"] h3::after {
 			content: "";
@@ -923,6 +889,7 @@ summary {
 		}
 	}
 }
+/* Onzichtbare overlay-link voor klikbare cards */
 .card-link {
 	block-size: 100%;
 	inline-size: 100%;
@@ -931,6 +898,7 @@ summary {
 	position: absolute;
 }
 
+/* Tiles: 2-koloms grid, 1 kolom op smal scherm */
 .tiles {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
@@ -940,11 +908,12 @@ summary {
 	}
 	.card {
 		.btn-cta {
-			margin-block-start: auto;
+			margin-block-start: auto; /* Duw CTA naar onderkant van card */
 		}
 	}
 }
 
+/* Accordion (o.a. FAQ-lijst met uitklapbare vragen) */
 .accordion {
 	list-style: none;
 	padding: 0;
@@ -962,7 +931,7 @@ summary {
 	}
 }
 
-/* Links en labels voorzien van SVG iconen */
+/* Icoon-links en icoon-labels (horizontaal, icoon naast tekst) */
 .icon-link,
 .icon-label {
 	align-items: center;
@@ -980,7 +949,7 @@ summary {
 	}
 }
 
-/* Badge component */
+/* Badge (teller/label naast headings of in navigatie) */
 .badge {
 	background: var(--toepassing-color-component-badge-background);
 	min-block-size: var(--toepassing-size-icon-sm);
@@ -1002,7 +971,7 @@ h4 {
 	}
 }
 
-/* Notificaties */
+/* Notificaties (feedback banners) */
 
 .feedback {
 	background: var(--toepassing-color-feedback-neutral-subtle);
@@ -1057,9 +1026,7 @@ h4 {
 	padding: var(--toepassing-space-padding-md);
 }
 
-/* Tijdelijk, voornamelijk voor gebruikersonderzoeken */
-
-/* Proof of concept banner */
+/* Tijdelijk: proof-of-concept banner (roterend lint rechtsboven) */
 .temp-moza-poc-banner {
 	background: var(--toepassing-color-feedback-success-default);
 	color: var(--toepassing-color-text-inverse);
