@@ -221,6 +221,16 @@ pre {
 	padding: var(--toepassing-space-padding-sm);
 }
 
+/* Visueel verborgen maar toegankelijk voor screenreaders */
+.visually-hidden {
+	block-size: 1px;
+	clip: rect(0, 0, 0, 0);
+	inline-size: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+}
+
 /* Interactie */
 
 /* Opacity i.p.v. specifieke kleuren: past automatisch aan bij donker/licht/hoog-contrast modus */
@@ -960,8 +970,11 @@ summary {
 	}
 }
 
-/* Favoriet toggle (checkbox gestyled als hartje) */
-.save-favorite {
+/* Favoriet toggle (checkbox gestyled als hartje) en optie om topic te verbergen/verwijderen */
+.save-favorite,
+.hide-topic,
+.delete-topic,
+.show-topic {
 	display: inline-flex;
 	align-items: center;
 	cursor: pointer;
@@ -982,14 +995,49 @@ summary {
 		padding: 0;
 		transition: var(--toepassing-transition-default);
 		vertical-align: middle;
+		&:hover {
+			color: var(--toepassing-color-feedback-favorite-hover);
+			background-color: var(--toepassing-color-feedback-favorite-hover);
+		}
 		&:checked {
 			mask-image: url("../assets/icons/icon-favoriet.svg");
-			color: var(--toepassing-color-feedback-success-default);
-			background-color: var(--toepassing-color-feedback-success-default);
+			color: var(--toepassing-color-feedback-favorite-icon);
+			background-color: var(--toepassing-color-feedback-favorite-icon);
+			&:hover {
+				background-color: var(--toepassing-color-feedback-favorite-hover);
+			}
 		}
 	}
 	&:hover {
-		color: var(--toepassing-color-interactive-hover-icon);
+		color: var(--toepassing-color-interactive-hover-text);
+	}
+}
+.hide-topic,
+.delete-topic,
+.show-topic {
+	&::before {
+		background-color: currentColor;
+		block-size: var(--toepassing-size-icon-sm);
+		content: "";
+		display: inline-block;
+		inline-size: var(--toepassing-size-icon-sm);
+		margin-inline-end: var(--toepassing-space-margin-2xs);
+		mask: url("../assets/icons/icon-verbergen.svg") no-repeat center / contain;
+		vertical-align: middle;
+	}
+}
+.delete-topic {
+	&::before {
+		background-color: var(--toepassing-color-feedback-error-icon);
+		mask: url("../assets/icons/icon-verwijderen.svg") no-repeat center / contain;
+	}
+	&:hover::before {
+		background-color: var(--toepassing-color-feedback-error-emphasis);
+	}
+}
+.show-topic {
+	&::before {
+		mask: url("../assets/icons/icon-tonen.svg") no-repeat center / contain;
 	}
 }
 
@@ -1025,6 +1073,9 @@ h4 {
 	display: flex;
 	gap: var(--toepassing-space-layout-xs);
 	padding: var(--toepassing-space-padding-md);
+	&[hidden] {
+		display: none;
+	}
 	svg {
 		align-self: self-start;
 		flex-shrink: 0;
