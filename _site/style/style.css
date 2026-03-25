@@ -951,7 +951,7 @@ summary {
 .icon-label {
 	align-items: center;
 	display: inline-flex;
-	gap: var(--toepassing-space-layout-xs);
+	gap: var(--toepassing-space-layout-3xs);
 	text-decoration: none;
 	svg {
 		block-size: var(--toepassing-size-icon-sm);
