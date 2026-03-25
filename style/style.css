@@ -256,6 +256,7 @@ li.option--confirmed {
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: contain;
+		margin-inline-end: var(--toepassing-space-margin-2xs);
 		vertical-align: middle;
 	}
 }
@@ -733,6 +734,7 @@ footer {
 .list-plain {
 	list-style: none;
 	padding: 0;
+	margin-block-end: var(--toepassing-space-margin-xs);
 	li {
 		border: 0 !important;
 	}
