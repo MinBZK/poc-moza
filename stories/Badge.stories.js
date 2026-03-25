@@ -7,7 +7,7 @@ export const Standaard = {
 	parameters: {
 		docs: {
 			description: {
-				story: "Een badge toont een korte waarde zoals een teller of status-label. Wordt gebruikt in navigatie-items en naast headings.",
+				story: "Een badge toont een korte waarde zoals een teller of status-label. Wordt bijvoorbeeld gebruikt in navigatie-items en naast headings.",
 			},
 		},
 	},

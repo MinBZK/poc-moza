@@ -1,4 +1,4 @@
-const m={title:"Componenten/Badge",tags:["autodocs"]},e={parameters:{docs:{description:{story:"Een badge toont een korte waarde zoals een teller of status-label. Wordt gebruikt in navigatie-items en naast headings."}}},argTypes:{waarde:{control:"text"}},args:{waarde:"3"},render:({waarde:r})=>`<span class="badge">${r}</span>`},n={parameters:{docs:{description:{story:"Een badge naast een heading, bijvoorbeeld om een datum of teller te tonen."}}},argTypes:{titel:{control:"text"},badge:{control:"text"}},args:{titel:"Binnenkort beschikbaar",badge:"najaar 2026"},render:({titel:r,badge:b})=>`<h2>${r} <span class="badge">${b}</span></h2>`},a={parameters:{docs:{description:{story:"Een badge in een navigatie-item, bijvoorbeeld om het aantal ongelezen berichten te tonen."}}},render:()=>`
+const m={title:"Componenten/Badge",tags:["autodocs"]},e={parameters:{docs:{description:{story:"Een badge toont een korte waarde zoals een teller of status-label. Wordt bijvoorbeeld gebruikt in navigatie-items en naast headings."}}},argTypes:{waarde:{control:"text"}},args:{waarde:"3"},render:({waarde:r})=>`<span class="badge">${r}</span>`},n={parameters:{docs:{description:{story:"Een badge naast een heading, bijvoorbeeld om een datum of teller te tonen."}}},argTypes:{titel:{control:"text"},badge:{control:"text"}},args:{titel:"Binnenkort beschikbaar",badge:"najaar 2026"},render:({titel:r,badge:b})=>`<h2>${r} <span class="badge">${b}</span></h2>`},a={parameters:{docs:{description:{story:"Een badge in een navigatie-item, bijvoorbeeld om het aantal ongelezen berichten te tonen."}}},render:()=>`
 <nav class="side-nav">
     <ul>
         <li>
@@ -18,7 +18,7 @@ const m={title:"Componenten/Badge",tags:["autodocs"]},e={parameters:{docs:{descr
   parameters: {
     docs: {
       description: {
-        story: "Een badge toont een korte waarde zoals een teller of status-label. Wordt gebruikt in navigatie-items en naast headings."
+        story: "Een badge toont een korte waarde zoals een teller of status-label. Wordt bijvoorbeeld gebruikt in navigatie-items en naast headings."
       }
     }
   },
