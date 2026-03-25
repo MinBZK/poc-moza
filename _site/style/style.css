@@ -302,10 +302,13 @@ textarea,
 	}
 }
 .btn-cta::after {
-	content: url("../assets/icons/icon-link-intern.svg");
+	background-color: currentColor;
+	block-size: var(--toepassing-size-icon-xs);
+	content: "";
 	display: inline-block;
 	inline-size: var(--toepassing-size-icon-xs);
 	margin-inline-start: var(--toepassing-space-margin-2xs);
+	mask: url("../assets/icons/icon-link-intern.svg") no-repeat center / contain;
 	vertical-align: middle;
 }
 
@@ -349,7 +352,7 @@ a.btn-cta {
 	background: var(--toepassing-color-interactive-default-background);
 	color: var(--toepassing-color-text-inverse);
 	cursor: pointer;
-	/* Full-width in smalle containers */
+	transition: var(--toepassing-transition-default);
 	@container (max-inline-size: 280px) {
 		inline-size: 100%;
 		text-align: center;
@@ -695,11 +698,6 @@ button.side-nav-toggle {
 /* Navigatie: footer */
 
 footer {
-	nav {
-		> * + * {
-			margin-block-start: var(--toepassing-space-layout-xs);
-		}
-	}
 	a {
 		color: inherit;
 		display: inline-block;
@@ -716,11 +714,17 @@ footer {
 	display: flex;
 	flex-direction: column;
 	gap: var(--toepassing-space-layout-md);
-	justify-content: space-between;
+	justify-content: flex-end;
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
 	@media (min-width: 799px) {
 		flex-direction: row;
+	}
+	nav {
+		max-inline-size: 12rem;
+		> * + * {
+			margin-block-start: var(--toepassing-space-layout-xs);
+		}
 	}
 }
 
@@ -738,6 +742,9 @@ ol {
 	> * + * {
 		margin-block-start: var(--toepassing-space-layout-2xs);
 	}
+}
+li li {
+	margin-block-start: var(--toepassing-space-layout-xs);
 }
 
 /* Tabellen */
@@ -931,7 +938,13 @@ summary {
 	}
 }
 
-/* Icoon-links en icoon-labels (horizontaal, icoon naast tekst) */
+/* Iconen */
+
+.icon-color-inverse {
+	fill: var(--toepassing-color-text-inverse);
+}
+
+/* Links en labels voorzien van SVG iconen */
 .icon-link,
 .icon-label {
 	align-items: center;
@@ -986,9 +999,6 @@ h4 {
 		flex-shrink: 0;
 		inline-size: var(--toepassing-size-icon-md);
 	}
-}
-.feedback-icon-color-foreground {
-	fill: var(--toepassing-color-text-inverse);
 }
 .feedback-info {
 	background: var(--toepassing-color-feedback-info-subtle);

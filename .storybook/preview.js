@@ -26,6 +26,36 @@ const preview = {
 				format: true,
 			},
 		},
+		options: {
+			storySort: {
+				order: [
+					"Typografie",
+					["Koppen", "Paragraaf", "Block-level tekst", "Inline tekst"],
+					"Design tokens",
+					["Kleurenpalet", "Ruimtelijk systeem", "Transities"],
+					"Componenten",
+					[
+						"Navigatie",
+						"Footer",
+						"Feedback",
+						"Tekstinvoer",
+						"Selectie",
+						"Knop",
+						"Actiegroep",
+						"Link",
+						"Iconen",
+						"Link met icoon",
+						"Label met icoon",
+						"Lijsten",
+						"Tabel",
+						"Card",
+						"Tiles",
+						"Accordeon",
+						"Badge",
+					]
+				],
+			},
+		},
 	},
 };
 
