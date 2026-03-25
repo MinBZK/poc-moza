@@ -1039,6 +1039,16 @@
           "$type": "color",
           "$value": "{color.feedback.neutral.text}"
         }
+      },
+      "favorite": {
+        "icon": {
+          "$type": "color",
+          "$value": "{color.robijnrood.400}"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{color.robijnrood.500}"
+        }
       }
     },
     "background": {
