@@ -960,6 +960,39 @@ summary {
 	}
 }
 
+/* Favoriet toggle (checkbox gestyled als hartje) */
+.save-favorite {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	font: var(--toepassing-text-smalltext);
+	color: var(--toepassing-color-interactive-default-icon);
+	position: relative; /* Boven de card-link overlay */
+	input {
+		appearance: none;
+		background-color: currentColor;
+		block-size: var(--toepassing-size-icon-sm);
+		border: none;
+		cursor: pointer;
+		display: inline-block;
+		inline-size: var(--toepassing-size-icon-sm);
+		margin: 0;
+		margin-inline-end: var(--toepassing-space-margin-3xs);
+		mask: url("../assets/icons/icon-favoriet-outline.svg") no-repeat center / contain;
+		padding: 0;
+		transition: var(--toepassing-transition-default);
+		vertical-align: middle;
+		&:checked {
+			mask-image: url("../assets/icons/icon-favoriet.svg");
+			color: var(--toepassing-color-feedback-success-default);
+			background-color: var(--toepassing-color-feedback-success-default);
+		}
+	}
+	&:hover {
+		color: var(--toepassing-color-interactive-hover-icon);
+	}
+}
+
 /* Badge (teller/label naast headings of in navigatie) */
 .badge {
 	background: var(--toepassing-color-component-badge-background);
