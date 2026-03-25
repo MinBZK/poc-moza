@@ -11,13 +11,28 @@ export const OngeordendeLijst = {
 			},
 		},
 	},
-	render: () => `
-<ul>
-	<li>Eerste item in een ongeordende lijst</li>
-	<li>Tweede item in een ongeordende lijst</li>
-	<li>Derde item in een ongeordende lijst</li>
-</ul>
-`,
+	argTypes: {
+		aantalItems: { name: "Aantal items", control: { type: "range", min: 1, max: 6, step: 1 } },
+		item1: { name: "Item 1", control: "text" },
+		item2: { name: "Item 2", control: "text" },
+		item3: { name: "Item 3", control: "text" },
+		item4: { name: "Item 4", control: "text" },
+		item5: { name: "Item 5", control: "text" },
+		item6: { name: "Item 6", control: "text" },
+	},
+	args: {
+		aantalItems: 3,
+		item1: "Eerste item in een ongeordende lijst",
+		item2: "Tweede item in een ongeordende lijst",
+		item3: "Derde item in een ongeordende lijst",
+		item4: "Vierde item",
+		item5: "Vijfde item",
+		item6: "Zesde item",
+	},
+	render: (args) => {
+		const items = Array.from({ length: args.aantalItems }, (_, i) => `\t<li>${args[`item${i + 1}`]}</li>`).join("\n");
+		return `<ul>\n${items}\n</ul>`;
+	},
 };
 
 export const GenestOngeordend = {
@@ -80,13 +95,28 @@ export const GeordendeLijst = {
 			},
 		},
 	},
-	render: () => `
-<ol>
-	<li>Eerste item in een geordende lijst</li>
-	<li>Tweede item in een geordende lijst</li>
-	<li>Derde item in een geordende lijst</li>
-</ol>
-`,
+	argTypes: {
+		aantalItems: { name: "Aantal items", control: { type: "range", min: 1, max: 6, step: 1 } },
+		item1: { name: "Item 1", control: "text" },
+		item2: { name: "Item 2", control: "text" },
+		item3: { name: "Item 3", control: "text" },
+		item4: { name: "Item 4", control: "text" },
+		item5: { name: "Item 5", control: "text" },
+		item6: { name: "Item 6", control: "text" },
+	},
+	args: {
+		aantalItems: 3,
+		item1: "Eerste item in een geordende lijst",
+		item2: "Tweede item in een geordende lijst",
+		item3: "Derde item in een geordende lijst",
+		item4: "Vierde item",
+		item5: "Vijfde item",
+		item6: "Zesde item",
+	},
+	render: (args) => {
+		const items = Array.from({ length: args.aantalItems }, (_, i) => `\t<li>${args[`item${i + 1}`]}</li>`).join("\n");
+		return `<ol>\n${items}\n</ol>`;
+	},
 };
 
 export const GenestGeordend = {

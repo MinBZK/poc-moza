@@ -1640,7 +1640,8 @@
         "$value": {
           "fontFamily": "{text.font-family.default}",
           "fontWeight": "{text.font-weight.regular}",
-          "fontSize": "{text.size.body.sm}"
+          "fontSize": "{text.size.body.sm}",
+          "lineHeight": "{text.line-height.md}"
         }
       }
     },
@@ -2039,7 +2040,7 @@
   "transition": {
     "default": {
       "$type": "other",
-      "$value": "background .2s ease, border .2s ease, color .2s ease, accent-color .2 ease",
+      "$value": "background .2s ease, border .2s ease, color .2s ease",
       "$description": "Standaard transitie die toegepast wordt op alle CSS properties."
     },
     "transform": {
