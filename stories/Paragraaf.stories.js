@@ -11,13 +11,17 @@ export const Standaard = {
 			},
 		},
 	},
-	render: () => `
+	argTypes: {
+		tekst: { control: "text" },
+	},
+	args: {
+		tekst: "Dit is een standaard alinea met lopende tekst.",
+	},
+	render: ({ tekst }) => `
 <p>
-	Dit is een standaard alinea met lopende tekst en
-	<strong>tekst met sterke nadruk</strong>, <em>tekst met klemtoon</em> en
+	${tekst}
+	<strong>Tekst met sterke nadruk</strong>, <em>tekst met klemtoon</em> en
 	<strong><em>tekst met sterke nadruk én klemtoon</em></strong>.
-	Deze gebruiken hiervoor de semantische HTML elementen
-	<code>&lt;strong&gt;</code> en <code>&lt;em&gt;</code>.
 </p>
 `,
 };
@@ -30,12 +34,13 @@ export const Introductie = {
 			},
 		},
 	},
-	render: () => `
-<p class="intro">
-	Dit is een introductie alinea. Deze maakt het mogelijk om de introductie
-	van de rest van de tekst te onderscheiden.
-</p>
-`,
+	argTypes: {
+		tekst: { control: "text" },
+	},
+	args: {
+		tekst: "Dit is een introductie alinea. Deze maakt het mogelijk om de introductie van de rest van de tekst te onderscheiden.",
+	},
+	render: ({ tekst }) => `<p class="intro">${tekst}</p>`,
 };
 
 export const KleineTekst = {
@@ -46,5 +51,11 @@ export const KleineTekst = {
 			},
 		},
 	},
-	render: () => `<p><small>Dit is kleine tekst.</small></p>`,
+	argTypes: {
+		tekst: { control: "text" },
+	},
+	args: {
+		tekst: "Dit is kleine tekst.",
+	},
+	render: ({ tekst }) => `<p><small>${tekst}</small></p>`,
 };
