@@ -202,6 +202,15 @@ Claude wordt onder andere ingezet voor:
 
 De inzet van AI-assistentie past bij het principe van *de eenvoudigst mogelijke oplossing*: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.
 
+### Feature flags
+
+Het prototype bevat een feature-flag systeem waarmee secties en functionaliteit per pagina in- of uitgeschakeld kunnen worden. Dit maakt het mogelijk om verschillende configuraties van het prototype te tonen zonder aparte versies te hoeven bouwen — bijvoorbeeld tijdens gebruikerstests of stakeholdergesprekken.
+
+- **Togglebaar via het paneel** — rechtsonder in het prototype bevindt zich een "Flags"-knop die een paneel opent met alle beschikbare feature flags, gegroepeerd in *Pagina's* (navigatie-items en secties) en *Functionaliteit* (interactiemogelijkheden zoals delen en relevantie aangeven).
+- **Persistent in localStorage** — feature flags worden opgeslagen in de browser. Standaard staan alle features aan; pas als een feature expliciet wordt uitgezet, wordt deze verborgen. Dit geldt zowel voor het navigatie-item als voor bijbehorende content op de pagina.
+- **Declaratief in de markup** — een element markeren als feature-flagged is een kwestie van `data-feature="Naam"` en `data-feature-type="pagina|functionaliteit"` toevoegen. Het JavaScript en de CSS doen de rest.
+- **localStorage wissen** — het paneel bevat een knop om alle opgeslagen staten (feature flags, favorieten, verborgen topics, gesloten notificaties) in één keer te resetten.
+
 ### Statische site-generatie
 
 [Eleventy](https://www.11ty.dev/) wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.

@@ -171,5 +171,13 @@
 <li><strong>Refactoring en abstractie</strong> — herhalende patronen in de code worden met hulp van Claude geïdentificeerd en omgezet naar herbruikbare includes of geautomatiseerde logica, waardoor de codebase onderhoudbaar blijft naarmate het prototype groeit.</li>
 </ul>
 <p>De inzet van AI-assistentie past bij het principe van <em>de eenvoudigst mogelijke oplossing</em>: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.</p>
+<h3>Feature flags</h3>
+<p>Het prototype bevat een feature-flag systeem waarmee secties en functionaliteit per pagina in- of uitgeschakeld kunnen worden. Dit maakt het mogelijk om verschillende configuraties van het prototype te tonen zonder aparte versies te hoeven bouwen — bijvoorbeeld tijdens gebruikerstests of stakeholdergesprekken.</p>
+<ul>
+<li><strong>Togglebaar via het paneel</strong> — rechtsonder in het prototype bevindt zich een &quot;Flags&quot;-knop die een paneel opent met alle beschikbare feature flags, gegroepeerd in <em>Pagina's</em> (navigatie-items en secties) en <em>Functionaliteit</em> (interactiemogelijkheden zoals delen en relevantie aangeven).</li>
+<li><strong>Persistent in localStorage</strong> — feature flags worden opgeslagen in de browser. Standaard staan alle features aan; pas als een feature expliciet wordt uitgezet, wordt deze verborgen. Dit geldt zowel voor het navigatie-item als voor bijbehorende content op de pagina.</li>
+<li><strong>Declaratief in de markup</strong> — een element markeren als feature-flagged is een kwestie van <code>data-feature=&quot;Naam&quot;</code> en <code>data-feature-type=&quot;pagina|functionaliteit&quot;</code> toevoegen. Het JavaScript en de CSS doen de rest.</li>
+<li><strong>localStorage wissen</strong> — het paneel bevat een knop om alle opgeslagen staten (feature flags, favorieten, verborgen topics, gesloten notificaties) in één keer te resetten.</li>
+</ul>
 <h3>Statische site-generatie</h3>
 <p><a href="https://www.11ty.dev/">Eleventy</a> wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.</p>

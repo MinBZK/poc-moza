@@ -1,4 +1,4 @@
-import{u as i,j as e,M as s}from"./blocks-DMi4hFOE.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-CDSlQzb5.js";function r(t){const n={a:"a",code:"code",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...t.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Introductie/Over dit prototype"}),`
+import{u as i,j as e,M as a}from"./blocks-Cw1Up5EZ.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-CYv8R4G7.js";function r(t){const n={a:"a",code:"code",em:"em",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...t.components};return e.jsxs(e.Fragment,{children:[e.jsx(a,{title:"Introductie/Over dit prototype"}),`
 `,e.jsx(n.h1,{id:"over-dit-prototype",children:"Over dit prototype"}),`
 `,e.jsxs(n.p,{children:["Dit prototype van MijnOverheid Zakelijk (MOZA) is gebouwd als statische site met ",e.jsx(n.a,{href:"https://www.11ty.dev/",rel:"nofollow",children:"Eleventy"})," en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend."]}),`
 `,e.jsx(n.h2,{id:"hoe-staten-worden-onthouden",children:"Hoe staten worden onthouden"}),`
@@ -26,8 +26,38 @@ import{u as i,j as e,M as s}from"./blocks-DMi4hFOE.js";import"./preload-helper-D
 `,e.jsx(n.p,{children:"Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toestanden zijn: neutraal, relevant, en niet relevant."}),`
 `,e.jsx(n.h3,{id:"de-pagina-bewaard",children:"De pagina Bewaard"}),`
 `,e.jsxs(n.p,{children:["De pagina ",e.jsx(n.strong,{children:"Bewaard"})," leest alle ",e.jsx(n.code,{children:"favorite:"})," en ",e.jsx(n.code,{children:"hidden:"})," sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel."]}),`
+`,e.jsx(n.h2,{id:"feature-flags",children:"Feature flags"}),`
+`,e.jsx(n.p,{children:"Het prototype bevat een ingebouwd feature-flag systeem waarmee pagina's en functionaliteit in- of uitgeschakeld kunnen worden — zonder aparte versies te hoeven bouwen."}),`
+`,e.jsx(n.h3,{id:"hoe-te-gebruiken",children:"Hoe te gebruiken"}),`
+`,e.jsxs(n.p,{children:["Klik op de ",e.jsx(n.strong,{children:"Flags"}),"-knop rechtsonder in het prototype. Er opent een paneel met twee groepen:"]}),`
+`,e.jsxs(n.ul,{children:[`
+`,e.jsxs(n.li,{children:[e.jsx(n.strong,{children:"Pagina's"})," — navigatie-items zoals Berichtenbox, Belastingen en Zakelijk vervoer. Uitschakelen verbergt zowel het navigatie-item als de bijbehorende content op de homepage."]}),`
+`,e.jsxs(n.li,{children:[e.jsx(n.strong,{children:"Functionaliteit"})," — interactiemogelijkheden zoals ",e.jsx(n.em,{children:"Delen"})," en ",e.jsx(n.em,{children:"Relevantie"}),". Uitschakelen verbergt de betreffende knoppen in alle actiegroepen."]}),`
+`]}),`
+`,e.jsx(n.p,{children:"Feature flags worden opgeslagen in localStorage en blijven staan na herladen. Standaard staan alle features aan."}),`
+`,e.jsx(n.h3,{id:"hoe-toe-te-voegen",children:"Hoe toe te voegen"}),`
+`,e.jsxs(n.p,{children:["Voeg ",e.jsx(n.code,{children:"data-feature"})," en ",e.jsx(n.code,{children:"data-feature-type"})," attributen toe aan een HTML-element:"]}),`
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-html",children:`{/* Pagina-sectie verbergen */}
+<div data-feature="Belastingen" data-feature-type="pagina">...</div>
+
+{/* Functionaliteit verbergen */}
+<button data-feature="Delen" data-feature-type="functionaliteit">Deel</button>
+`})}),`
+`,e.jsx(n.p,{children:"Het element verschijnt automatisch in het Flags-paneel en kan door de gebruiker aan- en uitgezet worden."}),`
+`,e.jsxs(n.p,{children:["Voor navigatie-items in de sidebar wordt de feature flag ingesteld via het ",e.jsx(n.code,{children:"feature"})," veld in de data-bestanden (",e.jsx(n.code,{children:"moza.json"})," en de subdirectory JSON-bestanden):"]}),`
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-json",children:`{
+  "label": "Belastingen",
+  "url": "/moza/belastingen/",
+  "feature": "Belastingen"
+}
+`})}),`
+`,e.jsxs(n.p,{children:["De template voegt automatisch ",e.jsx(n.code,{children:"data-feature"})," en ",e.jsx(n.code,{children:'data-feature-type="pagina"'})," toe aan het ",e.jsx(n.code,{children:"<li>"})," element."]}),`
+`,e.jsx(n.h3,{id:"opgeslagen-sleutels",children:"Opgeslagen sleutels"}),`
+`,e.jsxs("table",{children:[e.jsx("thead",{children:e.jsxs("tr",{children:[e.jsx("th",{children:"Sleutel"}),e.jsx("th",{children:"Waarde als uitgeschakeld"})]})}),e.jsx("tbody",{children:e.jsxs("tr",{children:[e.jsx("td",{children:e.jsx("code",{children:"feature:Naam"})}),e.jsx("td",{children:e.jsx("code",{children:'"false"'})})]})})]}),`
+`,e.jsx(n.p,{children:"Wanneer een feature is ingeschakeld (standaard), bestaat er geen sleutel in localStorage."}),`
 `,e.jsx(n.h2,{id:"localstorage-legen",children:"localStorage legen"}),`
-`,e.jsx(n.p,{children:"Tijdens het testen kan het handig zijn om alle opgeslagen staten te resetten. Open de browserconsole (F12 of Cmd+Option+I) en voer uit:"}),`
+`,e.jsxs(n.p,{children:["Het Flags-paneel bevat een ",e.jsx(n.strong,{children:"localStorage wissen"}),"-knop die alle opgeslagen state in één keer reset en de pagina herlaadt."]}),`
+`,e.jsx(n.p,{children:"Handmatig kan het ook via de browserconsole (F12 of Cmd+Option+I):"}),`
 `,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-js",children:`localStorage.clear()
 `})}),`
 `,e.jsx(n.p,{children:"Herlaad daarna de pagina. Alle bewaarde items, verborgen topics, relevantie-keuzes en gesloten notificaties worden gereset."}),`

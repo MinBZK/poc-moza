@@ -362,6 +362,16 @@ label {
 			inline-size: initial;
 		}
 	}
+	.share-topic {
+		align-items: center;
+		display: inline-flex;
+		gap: var(--toepassing-space-layout-3xs);
+		svg {
+			block-size: var(--toepassing-size-icon-sm);
+			fill: currentColor;
+			inline-size: var(--toepassing-size-icon-sm);
+		}
+	}
 }
 
 /* Knoppen */
@@ -1312,7 +1322,14 @@ h4 {
 	z-index: 1000;
 	.feature-flags-heading {
 		font: var(--toepassing-text-heading-h3);
-		margin-block-end: var(--toepassing-space-padding-xs);
+		margin-block-end: var(--toepassing-space-padding-sm);
+	}
+	.feature-flags-group-heading {
+		border-block-start: var(--toepassing-border-default);
+		color: var(--toepassing-color-text-subtle-1);
+		font: var(--toepassing-text-heading-h4);
+		margin-block: var(--toepassing-space-padding-sm);
+		padding-block-start: var(--toepassing-space-padding-sm);
 	}
 	ul {
 		list-style: none;
