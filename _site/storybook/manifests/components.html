@@ -1,631 +1,624 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Components Manifest</title>
-  <style>
-      :root {
-          --bg: #0b0c10;
-          --panel: #121318;
-          --muted: #9aa0a6;
-          --fg: #e8eaed;
-          --ok: #22c55e;
-          --info: #1e88e5;
-          --err: #c62828;
-          --ok-bg: #0c1a13;
-          --info-bg: #0c1624;
-          --err-bg: #1a0e0e;
-          --chip: #1f2330;
-          --border: #2b2f3a;
-          --link: #8ab4f8;
-          --active-ring: 1px; /* 1px active ring for pills and toggles */
-      }
-
-      * {
-          box-sizing: border-box;
-      }
-
-      html,
-      body {
-          margin: 0;
-          background: var(--bg);
-          color: var(--fg);
-          font: 14px/1.5 system-ui,
-          -apple-system,
-          Segoe UI,
-          Roboto,
-          Ubuntu,
-          Cantarell,
-          'Helvetica Neue',
-          Arial,
-          'Noto Sans';
-      }
-
-      .wrap {
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 16px 20px;
-      }
-
-      header {
-          position: sticky;
-          top: 0;
-          backdrop-filter: blur(6px);
-          background: color-mix(in srgb, var(--bg) 84%, transparent);
-          border-bottom: 1px solid var(--border);
-          z-index: 10;
-      }
-
-      h1 {
-          font-size: 20px;
-          margin: 0 0 6px;
-      }
-
-      .summary {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          align-items: center;
-      }
-
-      /* Top filter pills */
-      .filter-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 12px;
-          border: 1px solid var(--border);
-          border-radius: 999px;
-          background: var(--panel);
-          text-decoration: none;
-          cursor: pointer;
-          user-select: none;
-          color: var(--fg);
-      }
-
-      .filter-pill.ok {
-          color: #b9f6ca;
-          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
-          background: color-mix(in srgb, var(--ok) 18%, #000);
-      }
-
-      .filter-pill.info {
-          color: #b3d9ff;
-          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
-          background: var(--info-bg);
-      }
-
-      .filter-pill.err {
-          color: #ff9aa0;
-          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-          background: var(--err-bg);
-      }
-
-      .filter-pill.all {
-          color: #d7dbe0;
-          border-color: var(--border);
-          background: var(--panel);
-      }
-
-      .filter-pill[aria-disabled='true'] {
-          cursor: default;
-          text-decoration: none;
-      }
-
-      .filter-pill:focus,
-      .filter-pill:active {
-          outline: none;
-          box-shadow: none;
-      }
-
-      /* Selected top pill ring via :target */
-      #filter-all:target ~ header .filter-pill[data-k='all'],
-      #filter-errors:target ~ header .filter-pill[data-k='errors'],
-      #filter-infos:target ~ header .filter-pill[data-k='infos'],
-      #filter-story-errors:target ~ header .filter-pill[data-k='story-errors'],
-      #filter-doc-errors:target ~ header .filter-pill[data-k='docs'],
-      #filter-docs:target ~ header .filter-pill[data-k='docs'] {
-          box-shadow: 0 0 0 var(--active-ring) currentColor;
-          border-color: currentColor;
-      }
-
-      /* Hidden targets for filtering */
-      #filter-all,
-      #filter-errors,
-      #filter-infos,
-      #filter-story-errors,
-      #filter-doc-errors,
-      #filter-docs {
-          display: none;
-      }
-
-      main {
-          padding: 36px 0 40px;
-      }
-
-      .grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 18px;
-      }
-
-      /* one card per row */
-
-      .card {
-          border: 1px solid var(--border);
-          background: var(--panel);
-          border-radius: 14px;
-          padding: 14px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-      }
-
-      .head {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-      }
-
-      .title {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-      }
-
-      .title h2 {
-          font-size: 16px;
-          margin: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-      }
-
-      .meta {
-          font-size: 12px;
-          color: var(--muted);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-      }
-
-      .kv {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-      }
-
-      .chip {
-          font-size: 12px;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: var(--chip);
-          border: 1px solid var(--border);
-      }
-
-      .hint {
-          color: var(--muted);
-          font-size: 12px;
-      }
-
-      .badges {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-      }
-
-      /* Per-card badges: labels become toggles when clickable */
-      .badge {
-          font-size: 12px;
-          padding: 3px 8px;
-          border-radius: 999px;
-          border: 1px solid var(--border);
-          background: var(--chip);
-          color: #d7dbe0;
-      }
-
-      .badge.ok {
-          color: #b9f6ca;
-          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
-      }
-
-      .badge.info {
-          color: #b3d9ff;
-          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
-      }
-
-      .badge.err {
-          color: #ff9aa0;
-          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-      }
-
-      .as-toggle {
-          cursor: pointer;
-      }
-
-      /* 1px ring on active toggle */
-      .tg-err:checked + label.as-toggle,
-      .tg-info:checked + label.as-toggle,
-      .tg-stories:checked + label.as-toggle,
-      .tg-docs:checked + label.as-toggle,
-      .tg-content:checked + label.as-toggle,
-      .tg-props:checked + label.as-toggle {
-          box-shadow: 0 0 0 var(--active-ring) currentColor;
-          border-color: currentColor;
-      }
-
-      /* Panels: hidden by default, shown when respective toggle checked */
-      .panels {
-          display: grid;
-          gap: 10px;
-      }
-
-      .panel {
-          display: none;
-      }
-
-      .tg-err:checked ~ .panels .panel-err {
-          display: grid;
-      }
-
-      .tg-info:checked ~ .panels .panel-info {
-          display: grid;
-          gap: 8px;
-      }
-
-      .tg-stories:checked ~ .panels .panel-stories {
-          display: grid;
-          gap: 8px;
-      }
-
-      .tg-docs:checked ~ .panels .panel-docs {
-          display: grid;
-          gap: 8px;
-      }
-
-      .tg-content:checked ~ .panels .panel-content {
-          display: grid;
-          gap: 8px;
-      }
-
-      .tg-props:checked ~ .panels .panel-props {
-          display: grid;
-      }
-
-      /* Colored notes for prop type error + info */
-      .note {
-          padding: 12px;
-          border: 1px solid var(--border);
-          border-radius: 10px;
-      }
-
-      .note.err {
-          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-          background: var(--err-bg);
-          color: #ffd1d4;
-      }
-
-      .note.info {
-          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
-          background: var(--info-bg);
-          color: #d6e8ff;
-      }
-
-      .note.ok {
-          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
-          background: var(--ok-bg);
-          color: var(--fg);
-      }
-
-      .note-title {
-          font-weight: 600;
-          margin-bottom: 6px;
-      }
-
-      .note-body {
-          white-space: normal;
-      }
-
-      /* Story error cards */
-      .ex {
-          padding: 10px;
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          background: #0f131b;
-      }
-
-      .ex.err {
-          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-      }
-
-      .row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          flex-wrap: wrap;
-      }
-
-      .status-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          display: inline-block;
-      }
-
-      .dot-ok {
-          background: var(--ok);
-      }
-
-      .dot-err {
-          background: var(--err);
-      }
-
-      .ex-name {
-          font-weight: 600;
-      }
-
-      /* Error groups (visible in errors filter) */
-      .error-groups {
-          display: none;
-          margin-bottom: 16px;
-      }
-
-      .group {
-          border: 1px solid var(--border);
-          background: var(--panel);
-          border-radius: 14px;
-          overflow: hidden;
-      }
-
-      .group + .group {
-          margin-top: 12px;
-      }
-
-      .group-header {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 12px 14px;
-          cursor: pointer;
-          border-bottom: 1px solid var(--border);
-      }
-
-      .group-header:hover {
-          background: #141722;
-      }
-
-      .group-title {
-          font-weight: 600;
-          flex: 1;
-      }
-
-      .group-count {
-          font-size: 12px;
-          color: var(--muted);
-      }
-
-      .group-cards {
-          display: none;
-          padding: 12px;
-      }
-
-      .group .card {
-          margin: 12px 0;
-      }
-
-      .group .card:first-child {
-          margin-top: 0;
-      }
-
-      .group .card:last-child {
-          margin-bottom: 0;
-      }
-
-      /* caret rotation */
-      .group-tg:checked + label .caret {
-          transform: rotate(90deg);
-      }
-
-      .caret {
-          transition: transform 0.15s ease;
-      }
-
-      /* toggle body */
-      .group-tg:checked ~ .group-cards {
-          display: block;
-      }
-
-      /* CSS-only filtering of cards via top pills */
-      #filter-errors:target ~ main .card:not(.has-error):not(.has-story-error) {
-          display: none;
-      }
-
-      #filter-infos:target ~ main .card:not(.has-info) {
-          display: none;
-      }
-
-      #filter-story-errors:target ~ main .card:not(.has-story-error) {
-          display: none;
-      }
-
-      #filter-doc-errors:target ~ main .card:not(.has-doc-error) {
-          display: none;
-      }
-
-      #filter-docs:target ~ main .card:has(> .tg-docs),
-      #filter-docs:target ~ main .card.is-doc {
-          display: block;
-      }
-
-      #filter-docs:target ~ main .card:not(:has(> .tg-docs)):not(.is-doc) {
-          display: none;
-      }
-
-      #filter-all:target ~ main .card {
-          display: block;
-      }
-
-      /* In errors view, hide standalone component-error cards in the regular grid (they will appear in groups) */
-      #filter-errors:target ~ main .grid .card.has-error {
-          display: none;
-      }
-
-      /* Show grouped section only in errors view */
-      #filter-errors:target ~ main .error-groups {
-          display: block;
-      }
-
-      /* Section titles */
-      .section-title {
-          font-size: 16px;
-          font-weight: 600;
-          color: var(--muted);
-          margin: 24px 0 12px;
-          padding-bottom: 8px;
-          border-bottom: 1px solid var(--border);
-      }
-      .section-title:first-child {
-          margin-top: 0;
-      }
-
-      /* When a toggle is checked, show the corresponding panel */
-      .card > .tg-err:checked ~ .panels .panel-err {
-          display: grid;
-      }
-      
-      .card > .tg-info:checked ~ .panels .panel-info {
-          display: grid;
-      }
-      
-      .card > .tg-stories:checked ~ .panels .panel-stories {
-          display: grid;
-      }
-
-      .card > .tg-docs:checked ~ .panels .panel-docs {
-          display: grid;
-      }
-
-      .card > .tg-content:checked ~ .panels .panel-content {
-          display: grid;
-      }
-
-      /* Add vertical spacing around panels only when any panel is visible */
-      .card > .tg-err:checked ~ .panels,
-      .card > .tg-info:checked ~ .panels,
-      .card > .tg-stories:checked ~ .panels,
-      .card > .tg-docs:checked ~ .panels,
-      .card > .tg-content:checked ~ .panels,
-      .card > .tg-props:checked ~ .panels {
-          margin: 10px 0;
-      }
-
-      /* Optional: a subtle 1px ring on the active badge, using :has() if available */
-      @supports selector(.card:has(.tg-err:checked)) {
-          .card:has(.tg-err:checked) label[for$='-err'],
-          .card:has(.tg-info:checked) label[for$='-info'],
-          .card:has(.tg-stories:checked) label[for$='-stories'],
-          .card:has(.tg-docs:checked) label[for$='-docs'],
-          .card:has(.tg-content:checked) label[for$='-content'],
-          .card:has(.tg-props:checked) label[for$='-props'] {
-              box-shadow: 0 0 0 1px currentColor;
-              border-color: currentColor;
-          }
-      }
-
-      /* Wrap long lines in code blocks at ~120 characters */
-      pre, code {
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      }
-      pre {
-          white-space: pre-wrap;
-          overflow-wrap: anywhere;
-          word-break: break-word;
-          overflow-x: auto; /* fallback for extremely long tokens */
-          margin: 8px 0 0;
-      }
-      pre > code {
-          display: block;
-          white-space: inherit;
-          overflow-wrap: inherit;
-          word-break: inherit;
-          inline-size: min(100%, 120ch);
-      }
-
-      /* MDX content container for docs */
-      .mdx-content {
-          background: #0f131b;
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          padding: 12px;
-          max-height: 400px;
-          overflow-y: auto;
-          margin-top: 8px;
-      }
-  </style>
-</head>
-<body>
-<!-- Hidden targets for the top-level filters -->
-<span id="filter-all"></span>
-<span id="filter-errors"></span>
-<span id="filter-infos"></span>
-<span id="filter-story-errors"></span>
-<span id="filter-doc-errors"></span>
-<span id="filter-docs"></span>
-<header>
-  <div class="wrap">
-    <h1>Manifest Debugger</h1>
-    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">3 docs ok</a></div>
-  </div>
-</header>
-<main>
-  <div class="wrap">
-    <div class="note info" style="margin-bottom: 16px;">
-            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>0.0s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
-            <pre><code>typescript: {
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Components Manifest</title>
+		<style>
+			:root {
+				--bg: #0b0c10;
+				--panel: #121318;
+				--muted: #9aa0a6;
+				--fg: #e8eaed;
+				--ok: #22c55e;
+				--info: #1e88e5;
+				--err: #c62828;
+				--ok-bg: #0c1a13;
+				--info-bg: #0c1624;
+				--err-bg: #1a0e0e;
+				--chip: #1f2330;
+				--border: #2b2f3a;
+				--link: #8ab4f8;
+				--active-ring: 1px; /* 1px active ring for pills and toggles */
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--fg);
+				font:
+					14px/1.5 system-ui,
+					-apple-system,
+					Segoe UI,
+					Roboto,
+					Ubuntu,
+					Cantarell,
+					"Helvetica Neue",
+					Arial,
+					"Noto Sans";
+			}
+
+			.wrap {
+				max-width: 1100px;
+				margin: 0 auto;
+				padding: 16px 20px;
+			}
+
+			header {
+				position: sticky;
+				top: 0;
+				backdrop-filter: blur(6px);
+				background: color-mix(in srgb, var(--bg) 84%, transparent);
+				border-bottom: 1px solid var(--border);
+				z-index: 10;
+			}
+
+			h1 {
+				font-size: 20px;
+				margin: 0 0 6px;
+			}
+
+			.summary {
+				display: flex;
+				gap: 12px;
+				flex-wrap: wrap;
+				align-items: center;
+			}
+
+			/* Top filter pills */
+			.filter-pill {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				padding: 6px 12px;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				background: var(--panel);
+				text-decoration: none;
+				cursor: pointer;
+				user-select: none;
+				color: var(--fg);
+			}
+
+			.filter-pill.ok {
+				color: #b9f6ca;
+				border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+				background: color-mix(in srgb, var(--ok) 18%, #000);
+			}
+
+			.filter-pill.info {
+				color: #b3d9ff;
+				border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+				background: var(--info-bg);
+			}
+
+			.filter-pill.err {
+				color: #ff9aa0;
+				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+				background: var(--err-bg);
+			}
+
+			.filter-pill.all {
+				color: #d7dbe0;
+				border-color: var(--border);
+				background: var(--panel);
+			}
+
+			.filter-pill[aria-disabled="true"] {
+				cursor: default;
+				text-decoration: none;
+			}
+
+			.filter-pill:focus,
+			.filter-pill:active {
+				outline: none;
+				box-shadow: none;
+			}
+
+			/* Selected top pill ring via :target */
+			#filter-all:target ~ header .filter-pill[data-k="all"],
+			#filter-errors:target ~ header .filter-pill[data-k="errors"],
+			#filter-infos:target ~ header .filter-pill[data-k="infos"],
+			#filter-story-errors:target ~ header .filter-pill[data-k="story-errors"],
+			#filter-doc-errors:target ~ header .filter-pill[data-k="docs"],
+			#filter-docs:target ~ header .filter-pill[data-k="docs"] {
+				box-shadow: 0 0 0 var(--active-ring) currentColor;
+				border-color: currentColor;
+			}
+
+			/* Hidden targets for filtering */
+			#filter-all,
+			#filter-errors,
+			#filter-infos,
+			#filter-story-errors,
+			#filter-doc-errors,
+			#filter-docs {
+				display: none;
+			}
+
+			main {
+				padding: 36px 0 40px;
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 18px;
+			}
+
+			/* one card per row */
+
+			.card {
+				border: 1px solid var(--border);
+				background: var(--panel);
+				border-radius: 14px;
+				padding: 14px;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+
+			.head {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
+			.title {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
+			}
+
+			.title h2 {
+				font-size: 16px;
+				margin: 0;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.meta {
+				font-size: 12px;
+				color: var(--muted);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.kv {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+
+			.chip {
+				font-size: 12px;
+				padding: 4px 8px;
+				border-radius: 999px;
+				background: var(--chip);
+				border: 1px solid var(--border);
+			}
+
+			.hint {
+				color: var(--muted);
+				font-size: 12px;
+			}
+
+			.badges {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			/* Per-card badges: labels become toggles when clickable */
+			.badge {
+				font-size: 12px;
+				padding: 3px 8px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: var(--chip);
+				color: #d7dbe0;
+			}
+
+			.badge.ok {
+				color: #b9f6ca;
+				border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+			}
+
+			.badge.info {
+				color: #b3d9ff;
+				border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+			}
+
+			.badge.err {
+				color: #ff9aa0;
+				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+			}
+
+			.as-toggle {
+				cursor: pointer;
+			}
+
+			/* 1px ring on active toggle */
+			.tg-err:checked + label.as-toggle,
+			.tg-info:checked + label.as-toggle,
+			.tg-stories:checked + label.as-toggle,
+			.tg-docs:checked + label.as-toggle,
+			.tg-content:checked + label.as-toggle,
+			.tg-props:checked + label.as-toggle {
+				box-shadow: 0 0 0 var(--active-ring) currentColor;
+				border-color: currentColor;
+			}
+
+			/* Panels: hidden by default, shown when respective toggle checked */
+			.panels {
+				display: grid;
+				gap: 10px;
+			}
+
+			.panel {
+				display: none;
+			}
+
+			.tg-err:checked ~ .panels .panel-err {
+				display: grid;
+			}
+
+			.tg-info:checked ~ .panels .panel-info {
+				display: grid;
+				gap: 8px;
+			}
+
+			.tg-stories:checked ~ .panels .panel-stories {
+				display: grid;
+				gap: 8px;
+			}
+
+			.tg-docs:checked ~ .panels .panel-docs {
+				display: grid;
+				gap: 8px;
+			}
+
+			.tg-content:checked ~ .panels .panel-content {
+				display: grid;
+				gap: 8px;
+			}
+
+			.tg-props:checked ~ .panels .panel-props {
+				display: grid;
+			}
+
+			/* Colored notes for prop type error + info */
+			.note {
+				padding: 12px;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+
+			.note.err {
+				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+				background: var(--err-bg);
+				color: #ffd1d4;
+			}
+
+			.note.info {
+				border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+				background: var(--info-bg);
+				color: #d6e8ff;
+			}
+
+			.note.ok {
+				border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+				background: var(--ok-bg);
+				color: var(--fg);
+			}
+
+			.note-title {
+				font-weight: 600;
+				margin-bottom: 6px;
+			}
+
+			.note-body {
+				white-space: normal;
+			}
+
+			/* Story error cards */
+			.ex {
+				padding: 10px;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: #0f131b;
+			}
+
+			.ex.err {
+				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+			}
+
+			.row {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			.status-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				display: inline-block;
+			}
+
+			.dot-ok {
+				background: var(--ok);
+			}
+
+			.dot-err {
+				background: var(--err);
+			}
+
+			.ex-name {
+				font-weight: 600;
+			}
+
+			/* Error groups (visible in errors filter) */
+			.error-groups {
+				display: none;
+				margin-bottom: 16px;
+			}
+
+			.group {
+				border: 1px solid var(--border);
+				background: var(--panel);
+				border-radius: 14px;
+				overflow: hidden;
+			}
+
+			.group + .group {
+				margin-top: 12px;
+			}
+
+			.group-header {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 12px 14px;
+				cursor: pointer;
+				border-bottom: 1px solid var(--border);
+			}
+
+			.group-header:hover {
+				background: #141722;
+			}
+
+			.group-title {
+				font-weight: 600;
+				flex: 1;
+			}
+
+			.group-count {
+				font-size: 12px;
+				color: var(--muted);
+			}
+
+			.group-cards {
+				display: none;
+				padding: 12px;
+			}
+
+			.group .card {
+				margin: 12px 0;
+			}
+
+			.group .card:first-child {
+				margin-top: 0;
+			}
+
+			.group .card:last-child {
+				margin-bottom: 0;
+			}
+
+			/* caret rotation */
+			.group-tg:checked + label .caret {
+				transform: rotate(90deg);
+			}
+
+			.caret {
+				transition: transform 0.15s ease;
+			}
+
+			/* toggle body */
+			.group-tg:checked ~ .group-cards {
+				display: block;
+			}
+
+			/* CSS-only filtering of cards via top pills */
+			#filter-errors:target ~ main .card:not(.has-error):not(.has-story-error) {
+				display: none;
+			}
+
+			#filter-infos:target ~ main .card:not(.has-info) {
+				display: none;
+			}
+
+			#filter-story-errors:target ~ main .card:not(.has-story-error) {
+				display: none;
+			}
+
+			#filter-doc-errors:target ~ main .card:not(.has-doc-error) {
+				display: none;
+			}
+
+			#filter-docs:target ~ main .card:has(> .tg-docs),
+			#filter-docs:target ~ main .card.is-doc {
+				display: block;
+			}
+
+			#filter-docs:target ~ main .card:not(:has(> .tg-docs)):not(.is-doc) {
+				display: none;
+			}
+
+			#filter-all:target ~ main .card {
+				display: block;
+			}
+
+			/* In errors view, hide standalone component-error cards in the regular grid (they will appear in groups) */
+			#filter-errors:target ~ main .grid .card.has-error {
+				display: none;
+			}
+
+			/* Show grouped section only in errors view */
+			#filter-errors:target ~ main .error-groups {
+				display: block;
+			}
+
+			/* Section titles */
+			.section-title {
+				font-size: 16px;
+				font-weight: 600;
+				color: var(--muted);
+				margin: 24px 0 12px;
+				padding-bottom: 8px;
+				border-bottom: 1px solid var(--border);
+			}
+			.section-title:first-child {
+				margin-top: 0;
+			}
+
+			/* When a toggle is checked, show the corresponding panel */
+			.card > .tg-err:checked ~ .panels .panel-err {
+				display: grid;
+			}
+
+			.card > .tg-info:checked ~ .panels .panel-info {
+				display: grid;
+			}
+
+			.card > .tg-stories:checked ~ .panels .panel-stories {
+				display: grid;
+			}
+
+			.card > .tg-docs:checked ~ .panels .panel-docs {
+				display: grid;
+			}
+
+			.card > .tg-content:checked ~ .panels .panel-content {
+				display: grid;
+			}
+
+			/* Add vertical spacing around panels only when any panel is visible */
+			.card > .tg-err:checked ~ .panels,
+			.card > .tg-info:checked ~ .panels,
+			.card > .tg-stories:checked ~ .panels,
+			.card > .tg-docs:checked ~ .panels,
+			.card > .tg-content:checked ~ .panels,
+			.card > .tg-props:checked ~ .panels {
+				margin: 10px 0;
+			}
+
+			/* Optional: a subtle 1px ring on the active badge, using :has() if available */
+			@supports selector(.card:has(.tg-err:checked)) {
+				.card:has(.tg-err:checked) label[for$="-err"],
+				.card:has(.tg-info:checked) label[for$="-info"],
+				.card:has(.tg-stories:checked) label[for$="-stories"],
+				.card:has(.tg-docs:checked) label[for$="-docs"],
+				.card:has(.tg-content:checked) label[for$="-content"],
+				.card:has(.tg-props:checked) label[for$="-props"] {
+					box-shadow: 0 0 0 1px currentColor;
+					border-color: currentColor;
+				}
+			}
+
+			/* Wrap long lines in code blocks at ~120 characters */
+			pre,
+			code {
+				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+			}
+			pre {
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+				word-break: break-word;
+				overflow-x: auto; /* fallback for extremely long tokens */
+				margin: 8px 0 0;
+			}
+			pre > code {
+				display: block;
+				white-space: inherit;
+				overflow-wrap: inherit;
+				word-break: inherit;
+				inline-size: min(100%, 120ch);
+			}
+
+			/* MDX content container for docs */
+			.mdx-content {
+				background: #0f131b;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 12px;
+				max-height: 400px;
+				overflow-y: auto;
+				margin-top: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Hidden targets for the top-level filters -->
+		<span id="filter-all"></span>
+		<span id="filter-errors"></span>
+		<span id="filter-infos"></span>
+		<span id="filter-story-errors"></span>
+		<span id="filter-doc-errors"></span>
+		<span id="filter-docs"></span>
+		<header>
+			<div class="wrap">
+				<h1>Manifest Debugger</h1>
+				<div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">3 docs ok</a></div>
+			</div>
+		</header>
+		<main>
+			<div class="wrap">
+				<div class="note info" style="margin-bottom: 16px">
+					<strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>0.0s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
+					<pre><code>typescript: {
   reactDocgen: 'react-docgen-typescript',
 }</code></pre>
-            Note: <code>react-docgen-typescript</code> can be slower. If performance is acceptable for your project, it generally produces better results.
-            <a href="https://storybook.js.org/docs/api/main-config/main-config-typescript#reactdocgen" target="_blank">Learn more</a>
-          </div>
-    
-    
-    <h2 class="section-title">Unattached Docs</h2>
-    <div class="grid" role="list">
-      
-<article
-  class="card is-doc no-doc-error"
-  role="listitem"
-  aria-label="Docs">
-  <div class="head">
-    <div class="title">
-      <h2><span class="status-dot dot-ok"></span> Introductie/Over dit prototype</h2>
-      <div class="badges">
-        
-        <label for="doc-0-introductie-over-dit-prototype-docs-content" class="badge ok as-toggle">view content</label>
-      </div>
-    </div>
-    <div class="meta" title="./stories/OverDitPrototype.mdx">introductie-over-dit-prototype--docs · ./stories/OverDitPrototype.mdx</div>
-    
-  </div>
+					Note: <code>react-docgen-typescript</code> can be slower. If performance is acceptable for your project, it generally produces better results.
+					<a href="https://storybook.js.org/docs/api/main-config/main-config-typescript#reactdocgen" target="_blank">Learn more</a>
+				</div>
 
-  <!-- Hidden toggles must be siblings BEFORE .panels -->
-  
-  <input id="doc-0-introductie-over-dit-prototype-docs-content" class="tg tg-content" type="checkbox" hidden />
+				<h2 class="section-title">Unattached Docs</h2>
+				<div class="grid" role="list">
+					<article class="card is-doc no-doc-error" role="listitem" aria-label="Docs">
+						<div class="head">
+							<div class="title">
+								<h2><span class="status-dot dot-ok"></span> Introductie/Over dit prototype</h2>
+								<div class="badges">
+									<label for="doc-0-introductie-over-dit-prototype-docs-content" class="badge ok as-toggle">view content</label>
+								</div>
+							</div>
+							<div class="meta" title="./stories/OverDitPrototype.mdx">introductie-over-dit-prototype--docs · ./stories/OverDitPrototype.mdx</div>
+						</div>
 
-  <div class="panels">
-    
-    
-        <div class="panel panel-content">
-          <div class="mdx-content">
-            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+						<!-- Hidden toggles must be siblings BEFORE .panels -->
+
+						<input id="doc-0-introductie-over-dit-prototype-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+						<div class="panels">
+							<div class="panel panel-content">
+								<div class="mdx-content">
+									<pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
 &lt;Meta title=&quot;Introductie/Over dit prototype&quot; /&gt;
 
 # Over dit prototype
 
-Dit prototype van MijnOverheid Zakelijk (MOZA) is gebouwd als statische site met [Eleventy](https://www.11ty.dev/) en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend.
+Dit prototype van MijnOverheid Zakelijk (MOZa) is gebouwd als statische site met [Eleventy](https://www.11ty.dev/) en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend.
 
 ## Hoe staten worden onthouden
 
@@ -779,36 +772,29 @@ Object.keys(localStorage).filter(k =&gt; k.startsWith(&quot;relevant:&quot;)).fo
 Object.keys(localStorage).filter(k =&gt; k.startsWith(&quot;dismissed:&quot;)).forEach(k =&gt; localStorage.removeItem(k))
 ```
 </code></pre>
-          </div>
-        </div>
-  </div>
-</article>
-<article
-  class="card is-doc no-doc-error"
-  role="listitem"
-  aria-label="Docs">
-  <div class="head">
-    <div class="title">
-      <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Interactie op inhoud</h2>
-      <div class="badges">
-        
-        <label for="doc-1-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
-      </div>
-    </div>
-    <div class="meta" title="./stories/InteracterenOpInhoud.mdx">ontwerppatronen-interactie-op-inhoud--docs · ./stories/InteracterenOpInhoud.mdx</div>
-    
-  </div>
+								</div>
+							</div>
+						</div>
+					</article>
+					<article class="card is-doc no-doc-error" role="listitem" aria-label="Docs">
+						<div class="head">
+							<div class="title">
+								<h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Interactie op inhoud</h2>
+								<div class="badges">
+									<label for="doc-1-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
+								</div>
+							</div>
+							<div class="meta" title="./stories/InteracterenOpInhoud.mdx">ontwerppatronen-interactie-op-inhoud--docs · ./stories/InteracterenOpInhoud.mdx</div>
+						</div>
 
-  <!-- Hidden toggles must be siblings BEFORE .panels -->
-  
-  <input id="doc-1-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
+						<!-- Hidden toggles must be siblings BEFORE .panels -->
 
-  <div class="panels">
-    
-    
-        <div class="panel panel-content">
-          <div class="mdx-content">
-            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+						<input id="doc-1-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+						<div class="panels">
+							<div class="panel panel-content">
+								<div class="mdx-content">
+									<pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
 &lt;Meta title=&quot;Ontwerppatronen/Interactie op inhoud&quot; /&gt;
 
@@ -885,100 +871,93 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
 
 **[UX Guidelines for Recommended Content](https://www.nngroup.com/articles/recommendation-guidelines/)** — Nielsen Norman Group
 
-- Toon gepersonaliseerde actualiteiten prominent, boven generieke content — in MOZA betekent dit dat Actualiteiten op de homepage voorrang krijgen naarmate het profiel rijker wordt
+- Toon gepersonaliseerde actualiteiten prominent, boven generieke content — in MOZa betekent dit dat Actualiteiten op de homepage voorrang krijgen naarmate het profiel rijker wordt
 - Leg uit _waarom_ iets wordt getoond: &quot;Op basis van uw branche&quot; of &quot;Relevant voor uw vestigingsadres&quot; — vergelijkbaar met hoe Actualiteiten nu al zijn opgedeeld in berichten, subsidies en regelgeving
-- Bied directe feedbackmechanismen aan bij elk item (bewaar, relevant, niet relevant) — precies het patroon dat MOZA implementeert
+- Bied directe feedbackmechanismen aan bij elk item (bewaar, relevant, niet relevant) — precies het patroon dat MOZa implementeert
 - Werk aanbevelingen snel bij na interactie — als een gebruiker &quot;Niet relevant&quot; kiest, moet dat direct zichtbaar effect hebben
 
 **[Customization vs. Personalization](https://www.nngroup.com/articles/customization-personalization/)** — Nielsen Norman Group
 
-- MOZA combineert beide: **personalisatie** (systeem filtert op basis van KvK-gegevens, SBI-code, vestigingsadres) en **customisatie** (gebruiker stuurt bij via Bewaar/Relevant/Niet relevant)
+- MOZa combineert beide: **personalisatie** (systeem filtert op basis van KvK-gegevens, SBI-code, vestigingsadres) en **customisatie** (gebruiker stuurt bij via Bewaar/Relevant/Niet relevant)
 - Begin met een bruikbaar basisontwerp — personalisatie mag geen slecht gestructureerde informatie maskeren. De categorisering in berichten, subsidies en regelgeving is die basis
 - Personalisatie werkt het best wanneer gebruikers niet precies weten wat ze nodig hebben — dat geldt voor ondernemers die niet alle subsidies of regelgeving kennen die op hen van toepassing zijn
 
 **[Users&#39; Expectations for Recommendations](https://www.nngroup.com/articles/recommendation-expectations/)** — Nielsen Norman Group
 
-- Gebruikers accepteren dat hun gedrag wordt bijgehouden als de aanbevelingen duidelijke waarde bieden — bij MOZA is die waarde concreet: relevante subsidies, regelgeving en berichten voor hun bedrijf
-- Bij diensten met hogere consequenties (subsidies, regelgeving) investeren gebruikers meer in het geven van feedback — MOZA-gebruikers hebben een sterke motivatie om hun profiel te verfijnen
+- Gebruikers accepteren dat hun gedrag wordt bijgehouden als de aanbevelingen duidelijke waarde bieden — bij MOZa is die waarde concreet: relevante subsidies, regelgeving en berichten voor hun bedrijf
+- Bij diensten met hogere consequenties (subsidies, regelgeving) investeren gebruikers meer in het geven van feedback — MOZa-gebruikers hebben een sterke motivatie om hun profiel te verfijnen
 - Nieuwe gebruikers vergeven onnauwkeurige aanbevelingen vanwege beperkte data — het profiel hoeft niet direct perfect te zijn
 - Slechte suggesties worden makkelijk genegeerd als de interactiekosten laag zijn — de &quot;Niet relevant&quot; knop moet dus laagdrempelig blijven
 
 **[Can Users Control a UI Driven by ML?](https://www.nngroup.com/articles/machine-learning-ux/)** — Nielsen Norman Group
 
-- Gebruikers begrijpen slecht welke acties het systeem beïnvloeden — MOZA moet expliciet maken dat Bewaar, Relevant en Niet relevant het profiel vormen (de pagina Bewaard doet dit al deels)
+- Gebruikers begrijpen slecht welke acties het systeem beïnvloeden — MOZa moet expliciet maken dat Bewaar, Relevant en Niet relevant het profiel vormen (de pagina Bewaard doet dit al deels)
 - Onduidelijkheid leidt tot wantrouwen: gebruikers gaan dan veronderstellen dat er meer data wordt verzameld dan daadwerkelijk het geval is — voor een overheidsportaal is dit extra risicovol
-- Maak feedbackknoppen prominent — de zichtbaarheid moet in verhouding staan tot de hoeveelheid content. Bij MOZA staan de acties direct onder elk item, wat goed is
+- Maak feedbackknoppen prominent — de zichtbaarheid moet in verhouding staan tot de hoeveelheid content. Bij MOZa staan de acties direct onder elk item, wat goed is
 - Vermijd dubbele content in verschillende categorieën — als een subsidie zowel bij &quot;Subsidies&quot; als bij &quot;Berichten over uw buurt&quot; past, kies dan één plek
 
 ### Design patterns
 
 **[Favorites — ui-patterns.com](https://ui-patterns.com/patterns/favorites)**
 
-- Favorites zijn voor **persoonlijke organisatie**, niet voor sociale promotie — in MOZA is &quot;Bewaar&quot; puur privé, wat past bij de overheidscontext
-- Gebruik een simpele aan/uit-toggle (hartje, ster) bij elk item — MOZA gebruikt een checkbox met hartje, wat correct is
+- Favorites zijn voor **persoonlijke organisatie**, niet voor sociale promotie — in MOZa is &quot;Bewaar&quot; puur privé, wat past bij de overheidscontext
+- Gebruik een simpele aan/uit-toggle (hartje, ster) bij elk item — MOZa gebruikt een checkbox met hartje, wat correct is
 - Bied een aparte lijst van bewaarde items aan — de pagina Bewaard vervult deze rol
 - Gebruik favorites niet voor categorisering — als gebruikers items willen groeperen, zijn tags of mappen een beter patroon
 
 **[Bookmarks vs. Favorites vs. Social Validation](https://dorve.com/blog/like-vs-bookmarks-vs-favorites/)**
 
-- **Bewaar** in MOZA is een _bookmark_: privé opslaan voor later, &quot;voor het geval dat&quot;
+- **Bewaar** in MOZa is een _bookmark_: privé opslaan voor later, &quot;voor het geval dat&quot;
 - **Relevant/Niet relevant** is _validatie_: een signaal over bruikbaarheid, niet over opslaan
 - **Delen** (toekomstig) zou een _sociaal_ patroon zijn: doorsturen naar een collega
 - Elk patroon draagt anders bij aan het profiel: bookmarks tonen privé-interesses, validatie stuurt aanbevelingen bij, delen toont wat iemand belangrijk genoeg vindt voor anderen
-- Combineer deze patronen niet in één knop — MOZA scheidt ze terecht in aparte acties
+- Combineer deze patronen niet in één knop — MOZa scheidt ze terecht in aparte acties
 
 ### Impliciet vs. expliciet feedback
 
 **[Beyond Explicit and Implicit (CHI 2025)](https://arxiv.org/abs/2502.09869)**
 
 - Naast expliciete feedback (Bewaar, Relevant, Niet relevant) en impliciete feedback (klikgedrag, leestijd) bestaat er een derde categorie: **intentional implicit feedback** — bewuste acties die geen expliciete feedbackknop gebruiken, zoals doelbewust scrollen voorbij een item
-- Expliciete feedback wordt vooral gebruikt om de feed aan te passen — dit is precies wat de Relevant/Niet relevant toggles in MOZA doen
+- Expliciete feedback wordt vooral gebruikt om de feed aan te passen — dit is precies wat de Relevant/Niet relevant toggles in MOZa doen
 - Intentional implicit feedback wordt gebruikt om **diversiteit** te vergroten — gebruikers zoeken bewust buiten hun profiel om nieuwe content te ontdekken
-- Ontwerp aanbeveling: behandel niet alle impliciete signalen als passieve consumptie. Als een MOZA-gebruiker bewust een subsidie-categorie opent die niet bij het profiel past, kan dat een signaal zijn om het profiel te verbreden
+- Ontwerp aanbeveling: behandel niet alle impliciete signalen als passieve consumptie. Als een MOZa-gebruiker bewust een subsidie-categorie opent die niet bij het profiel past, kan dat een signaal zijn om het profiel te verbreden
 
 ### Overheidsspecifiek
 
 **[GOV.UK Design System — Patterns](https://design-system.service.gov.uk/patterns/)**
 
 - Patronen zijn _&quot;best practice design solutions for specific user-focused tasks&quot;_ — een niveau boven componenten
-- GOV.UK structureert patronen rond gebruikerstaken: &quot;Help users to...&quot; en &quot;Ask users for...&quot; — MOZA&#39;s interactiepatroon zou passen in een categorie als &quot;Help users to discover relevant content&quot;
-- Noch GOV.UK noch NL Design System heeft patronen voor content-personalisatie — MOZA&#39;s &quot;Interactie op inhoud&quot; is pionierswerk in de overheidscontext
+- GOV.UK structureert patronen rond gebruikerstaken: &quot;Help users to...&quot; en &quot;Ask users for...&quot; — MOZa&#39;s interactiepatroon zou passen in een categorie als &quot;Help users to discover relevant content&quot;
+- Noch GOV.UK noch NL Design System heeft patronen voor content-personalisatie — MOZa&#39;s &quot;Interactie op inhoud&quot; is pionierswerk in de overheidscontext
 
 **[NL Design System](https://nldesignsystem.nl/)**
 
-- Componenten die in 2+ organisaties bewezen zijn, kunnen het centrale systeem instromen — als MOZA&#39;s interactiepatroon succesvol is, kan het een kandidaat zijn voor bredere adoptie
-- De focus ligt op toegankelijke, consistente componenten — de `aria-pressed` toggles en `hidden`-attributen in MOZA sluiten hier op aan
+- Componenten die in 2+ organisaties bewezen zijn, kunnen het centrale systeem instromen — als MOZa&#39;s interactiepatroon succesvol is, kan het een kandidaat zijn voor bredere adoptie
+- De focus ligt op toegankelijke, consistente componenten — de `aria-pressed` toggles en `hidden`-attributen in MOZa sluiten hier op aan
 </code></pre>
-          </div>
-        </div>
-  </div>
-</article>
-<article
-  class="card is-doc no-doc-error"
-  role="listitem"
-  aria-label="Docs">
-  <div class="head">
-    <div class="title">
-      <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Context wisselen</h2>
-      <div class="badges">
-        
-        <label for="doc-2-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
-      </div>
-    </div>
-    <div class="meta" title="./stories/ContextWisselen.mdx">ontwerppatronen-context-wisselen--docs · ./stories/ContextWisselen.mdx</div>
-    
-  </div>
+								</div>
+							</div>
+						</div>
+					</article>
+					<article class="card is-doc no-doc-error" role="listitem" aria-label="Docs">
+						<div class="head">
+							<div class="title">
+								<h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Context wisselen</h2>
+								<div class="badges">
+									<label for="doc-2-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
+								</div>
+							</div>
+							<div class="meta" title="./stories/ContextWisselen.mdx">ontwerppatronen-context-wisselen--docs · ./stories/ContextWisselen.mdx</div>
+						</div>
 
-  <!-- Hidden toggles must be siblings BEFORE .panels -->
-  
-  <input id="doc-2-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
+						<!-- Hidden toggles must be siblings BEFORE .panels -->
 
-  <div class="panels">
-    
-    
-        <div class="panel panel-content">
-          <div class="mdx-content">
-            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+						<input id="doc-2-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+						<div class="panels">
+							<div class="panel panel-content">
+								<div class="mdx-content">
+									<pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
 &lt;Meta title=&quot;Ontwerppatronen/Context wisselen&quot; /&gt;
 
@@ -1259,7 +1238,7 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 **[Material Design — Account switching](https://m3.material.io/)**
 
-- Google&#39;s richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd. MOZA volgt dit patroon maar groepeert op relatietype.
+- Google&#39;s richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd. MOZa volgt dit patroon maar groepeert op relatietype.
 
 **[Microsoft Fluent UI — Persona](https://fluent2.microsoft.design/)**
 
@@ -1297,13 +1276,12 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 - Architectuurprincipe dat gegevens bij de bron blijven. Relevant voor hoe de accountwisselaar contexten ophaalt: niet alles kopiëren naar één plek, maar per context de juiste bronnen raadplegen.
 </code></pre>
-          </div>
-        </div>
-  </div>
-</article>
-    </div>
-    
-  </div>
-</main>
-</body>
-</html>  
+								</div>
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

@@ -116,7 +116,7 @@ import{u as t,j as e,M as s}from"./blocks-CxtOXix5.js";import"./preload-helper-D
 `]}),`
 `,e.jsx(n.p,{children:e.jsx(n.strong,{children:e.jsx(n.a,{href:"https://m3.material.io/",rel:"nofollow",children:"Material Design — Account switching"})})}),`
 `,e.jsxs(n.ul,{children:[`
-`,e.jsx(n.li,{children:"Google's richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd. MOZA volgt dit patroon maar groepeert op relatietype."}),`
+`,e.jsx(n.li,{children:"Google's richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd. MOZa volgt dit patroon maar groepeert op relatietype."}),`
 `]}),`
 `,e.jsx(n.p,{children:e.jsx(n.strong,{children:e.jsx(n.a,{href:"https://fluent2.microsoft.design/",rel:"nofollow",children:"Microsoft Fluent UI — Persona"})})}),`
 `,e.jsxs(n.ul,{children:[`

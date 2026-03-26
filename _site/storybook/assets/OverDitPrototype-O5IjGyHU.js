@@ -4,7 +4,7 @@ import{u as i,j as e,M as s}from"./blocks-CxtOXix5.js";import"./preload-helper-D
 import{u as i,j as e,M as a}from"./blocks-Cw1Up5EZ.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-CYv8R4G7.js";function r(t){const n={a:"a",code:"code",em:"em",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...t.components};return e.jsxs(e.Fragment,{children:[e.jsx(a,{title:"Introductie/Over dit prototype"}),`
 >>>>>>>> origin/wisselen-prive-zakelijk:_site/storybook/assets/OverDitPrototype-DD4V5JJ3.js
 `,e.jsx(n.h1,{id:"over-dit-prototype",children:"Over dit prototype"}),`
-`,e.jsxs(n.p,{children:["Dit prototype van MijnOverheid Zakelijk (MOZA) is gebouwd als statische site met ",e.jsx(n.a,{href:"https://www.11ty.dev/",rel:"nofollow",children:"Eleventy"})," en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend."]}),`
+`,e.jsxs(n.p,{children:["Dit prototype van MijnOverheid Zakelijk (MOZa) is gebouwd als statische site met ",e.jsx(n.a,{href:"https://www.11ty.dev/",rel:"nofollow",children:"Eleventy"})," en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend."]}),`
 `,e.jsx(n.h2,{id:"hoe-staten-worden-onthouden",children:"Hoe staten worden onthouden"}),`
 `,e.jsxs(n.p,{children:["Omdat er geen server of database is, worden gebruikersacties opgeslagen in de ",e.jsx(n.strong,{children:"localStorage"})," van de browser. Dit betekent dat interacties alleen lokaal bestaan en per browser/apparaat verschillen."]}),`
 `,e.jsx(n.h3,{id:"opgeslagen-staten",children:"Opgeslagen staten"}),`
