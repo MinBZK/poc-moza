@@ -1,5 +1,7 @@
 # MOZa proof of concept prototype
 
+Zie [Ontwerpprincipes](ontwerp-principes.md) voor de ontwerpprincipes, technische keuzes en relevante onderzoeken die ten grondslag liggen aan dit prototype.
+
 ## Omgeving installeren
 
 Clone deze repository lokaal.
