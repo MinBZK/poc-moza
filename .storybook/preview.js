@@ -33,6 +33,8 @@ const preview = {
 					["Koppen", "Paragraaf", "Block-level tekst", "Inline tekst"],
 					"Design tokens",
 					["Kleurenpalet", "Ruimtelijk systeem", "Transities"],
+					"Ontwerppatronen",
+					["Interactie op inhoud"],
 					"Componenten",
 					[
 						"Navigatie",
