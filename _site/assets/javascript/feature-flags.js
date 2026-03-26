@@ -19,8 +19,18 @@ function getFeatureNames() {
 	return [...names].sort();
 }
 
+// Verzamel features die standaard uit staan (data-feature-default="off")
+const defaultOffFeatures = new Set();
+document.querySelectorAll('[data-feature-default="off"]').forEach((el) => {
+	defaultOffFeatures.add(el.dataset.feature);
+});
+
 function isFeatureEnabled(name) {
-	return localStorage.getItem(FEATURE_PREFIX + name) !== "false";
+	const stored = localStorage.getItem(FEATURE_PREFIX + name);
+	if (defaultOffFeatures.has(name)) {
+		return stored === "true";
+	}
+	return stored !== "false";
 }
 
 function applyFeatureFlags() {
@@ -51,9 +61,17 @@ function buildTogglePanel() {
 		checkbox.checked = isFeatureEnabled(name);
 		checkbox.addEventListener("change", () => {
 			if (checkbox.checked) {
-				localStorage.removeItem(FEATURE_PREFIX + name);
+				if (defaultOffFeatures.has(name)) {
+					localStorage.setItem(FEATURE_PREFIX + name, "true");
+				} else {
+					localStorage.removeItem(FEATURE_PREFIX + name);
+				}
 			} else {
-				localStorage.setItem(FEATURE_PREFIX + name, "false");
+				if (defaultOffFeatures.has(name)) {
+					localStorage.removeItem(FEATURE_PREFIX + name);
+				} else {
+					localStorage.setItem(FEATURE_PREFIX + name, "false");
+				}
 			}
 			applyFeatureFlags();
 		});
