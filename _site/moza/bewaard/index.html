@@ -386,7 +386,7 @@
 		const groups = groupByCategory(items);
 		Object.keys(groups).forEach((cat) => {
 			const section = document.createElement("section");
-			const heading = document.createElement("h3");
+			const heading = document.createElement("h2");
 			heading.textContent = cat;
 			section.appendChild(heading);
 			const ul = document.createElement("ul");

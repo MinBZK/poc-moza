@@ -1173,6 +1173,11 @@ summary {
 	}
 }
 
+#saved-groups section {
+	margin-block-end: var(--toepassing-space-layout-sm);
+	padding-block-end: 0;
+}
+
 /* Badge (teller/label naast headings of in navigatie) */
 .badge {
 	background: var(--toepassing-color-component-badge-background);
