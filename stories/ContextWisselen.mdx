@@ -4,9 +4,9 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # Context wisselen (_account switching_)
 
-Een gebruiker van MijnOverheid opereert niet in één vaste rol. Dezelfde persoon kan als burger, als ondernemer van meerdere bedrijven, als gemachtigde van een familielid én als professioneel dienstverlener voor weer andere organisaties ingelogd zijn. Het ontwerp moet dit ondersteunen idealiter zonder dat de gebruiker steeds opnieuw moet inloggen.
+Een gebruiker van MijnOverheid opereert niet in één vaste rol. Dezelfde persoon kan als burger, ondernemer van meerdere bedrijven, gemachtigde van een familielid én professioneel dienstverlener voor weer andere organisaties ingelogd zijn. Het ontwerp moet dit ondersteunen, idealiter zonder dat de gebruiker steeds opnieuw moet inloggen.
 
-**Let wel: De geschetse ontwerp-oplossingen zijn niet gestaaft met huidige technische, juridische en/of organisatorische mogelijkheden, beperkingen en uitdagingen! Het schets een ideaalbeeld om naartoe te werken.**
+**Let wel: De geschetse ontwerp-oplossingen zijn niet gestaaft met huidige technische, juridische en/of organisatorische mogelijkheden, beperkingen en uitdagingen. Het schets een ideaalbeeld om naartoe te werken.**
 
 ## Contexten
 
@@ -52,7 +52,7 @@ Binnen de privé-context kan een burger **gemachtigd** zijn om bijvoorbeeld onde
 
 ### Zakelijk (ondernemer)
 
-De zakelijke omgeving toont gegevens, verplichtingen en actualiteiten die specifiek zijn voor een onderneming. Een persoon kan eigenaar zijn van meerdere ondernemingen, zoals bijvoorbeeld:
+De zakelijke omgeving toont gegevens, verplichtingen en actualiteiten die specifiek zijn voor een zakelijke gebruiker. Een persoon kan eigenaar zijn van meerdere ondernemingen, zoals bijvoorbeeld:
 
 <table>
 	<thead>
@@ -111,7 +111,7 @@ Naast eigen ondernemingen kan een persoon een zakelijke relatie hebben met onder
 		</tr>
 		<tr>
 			<td>Gemachtigde medewerker</td>
-			<td>Machtiging via eHerkenning</td>
+			<td>Machtiging</td>
 			<td>Specifieke taken uitvoeren namens de onderneming, afhankelijk van het machtigingsniveau</td>
 		</tr>
 	</tbody>
@@ -141,7 +141,6 @@ R.J. Vogel — Bloom B.V. ▾
 - **Rol zichtbaar per context** — naast de organisatienaam staat de rol (Eigenaar, Bestuurslid, Aandeelhouder, Boekhouder). Dit verduidelijkt de rechten en voorkomt verwarring bij organisaties waar de gebruiker meerdere rollen kan hebben.
 - **Actieve context visueel gemarkeerd** — de huidige context heeft een visuele indicator (`aria-current`), zodat de gebruiker altijd ziet namens wie er gehandeld wordt.
 - **Paginatitel past mee** — bij het wisselen van context past de titel in de header mee ("MijnOverheid Zakelijk" vs. "MijnOverheid").
-- **Fallback zonder wisselaar** — als de feature flag uit staat, toont de header alleen de naam van de ingelogde persoon zonder dropdown. Dit maakt het mogelijk om de wisselaar geleidelijk te introduceren.
 
 ### Toegankelijkheid
 
@@ -159,7 +158,7 @@ R.J. Vogel ▾
 │   └── R.J. Vogel
 ├── Ik handel namens
 │   ├── A.M. Vogel-de Groot          Mantelzorg
-│   └── S.R. Vogel                    Ouderlijk gezag
+│   └── S.R. Vogel                   Ouderlijk gezag
 ```
 
 Dit is hetzelfde interactiepatroon als de zakelijke wisselaar maar met andere groepslabels en rollen. De implementatie kan hetzelfde component hergebruiken.
@@ -171,8 +170,8 @@ Bij het wisselen tussen contexten moet de gebruiker onmiddellijk herkennen _waar
 ### Uitgangspunten
 
 - **Consistentie boven variatie** — de interface blijft in alle contexten herkenbaar als MijnOverheid. Layout, typografie, componenten en interactiepatronen zijn identiek. Het onderscheid zit in signalen, niet in een heel ander ontwerp.
-- **Niet alleen kleur** — kleur kan een ondersteunend signaal zijn, maar mag nooit het enige onderscheidende kenmerk zijn (WCAG 1.4.1: _Use of Color_). Elk visueel onderscheid moet ook zonder kleurwaarneming werken.
-- **Beperkt aantal contexttypes** — het onderscheid hoeft niet per organisatie maar per _type_ context: privé, zakelijk (eigen) en gemachtigd/belang. Dat zijn maximaal vier visuele varianten.
+- **Niet alleen kleur** — kleur kan een ondersteunend signaal zijn, maar mag nooit het enige onderscheidende kenmerk zijn ([WCAG 1.4.1: _Use of Color_](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)). Elk visueel onderscheid moet ook zonder kleurwaarneming werken.
+- **Beperkt aantal contexttypes** — het onderscheid hoeft niet per organisatie maar per _type_ context: privé (eigen en gemachtigd), zakelijk (eigen en gemachtigd/belang). Dat zijn maximaal vier visuele varianten.
 
 ### Mogelijke signalen
 
@@ -225,7 +224,7 @@ Het visueel onderscheiden van contexten kan via een combinatie van onderstaande 
 
 Wanneer iemand handelt namens een ander persoon of een andere organisatie, is extra duidelijkheid nodig om fouten te voorkomen. Een verkeerde belastingaangifte indienen namens de verkeerde organisatie heeft reële consequenties.
 
-- **Permanente indicator** — de contextbanner ("U handelt namens...") moet zichtbaar blijven zolang de gemachtigde context actief is, ook bij scrollen. Dit voorkomt dat de gebruiker vergeet namens wie er gehandeld wordt.
+- **Permanente indicator** — de contextbanner (“U handelt namens…”) moet zichtbaar blijven zolang de gemachtigde context actief is, ook bij scrollen. Dit voorkomt dat de gebruiker vergeet namens wie er gehandeld wordt.
 - **Bevestiging bij gevoelige acties** — bij het indienen van formulieren, wijzigen van gegevens of doen van aangiften kan een extra bevestigingsstap tonen namens wie de actie wordt uitgevoerd.
 - **Visueel onderscheid t.o.v. eigen context** — de gemachtigde context moet duidelijk _anders_ aanvoelen dan de eigen context. Als het ontwerp te gelijk is, vergroot dat de kans op vergissingen.
 
@@ -235,9 +234,9 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 - **Herkenning** — Herkennen gebruikers in welke context ze zich bevinden? Hoe snel? Welke signalen vallen op en welke worden gemist?
 - **Verwarring** — Ontstaat er verwarring bij het wisselen, met name bij snel achter elkaar schakelen tussen eigen en gemachtigde contexten?
-- **Voldoende onderscheid** — Is het onderscheid tussen "eigen zakelijk" en "gemachtigd zakelijk" sterk genoeg? Of worden die twee als hetzelfde ervaren?
+- **Voldoende onderscheid** — Is het onderscheid tussen “eigen zakelijk” en “gemachtigd zakelijk” sterk genoeg? Of worden die twee als hetzelfde ervaren?
 - **Kleur als ondersteuning** — Voegt een accentkleur (bijv. een gekleurde headerlijn) iets toe bovenop tekst en iconen, of is het overbodig?
-- **Contextbanner** — Wordt de banner "U handelt namens..." opgemerkt? Raakt deze na verloop van tijd onzichtbaar door bannerblindheid?
+- **Contextbanner** — Wordt de banner “U handelt namens…” opgemerkt? Raakt deze na verloop van tijd onzichtbaar door bannerblindheid?
 - **Doelgroepverschillen** — Ervaren professionele gemachtigden (boekhouders die dagelijks wisselen) het anders dan incidentele gemachtigden (mantelzorger die af en toe iets regelt voor een ouder)?
 
 ### Referenties
@@ -267,7 +266,7 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 - **Hoe worden machtigingen technisch opgehaald?** — DigiD Machtigen, eHerkenning en het Handelsregister zijn drie verschillende bronnen. De accountwisselaar moet deze samenvoegen tot één overzicht.
 - **Wat gebeurt er bij veel contexten?** — een boekhouder met tientallen klanten heeft een ander overzicht nodig dan een ondernemer met twee B.V.'s. Mogelijk is een zoekfunctie of categorisering nodig bij meer dan ~8 contexten.
 - **Welke gegevens wisselen mee?** — bij het wisselen van context veranderen bedrijfsgegevens, actualiteiten, berichten en lopende zaken. Persoonlijke voorkeuren (taal, notificatie-instellingen) blijven waarschijnlijk hetzelfde.
-- **Hoe wordt misbruik voorkomen?** — als iemand gemachtigd is voor een ander, moeten acties gelogd worden. De gebruiker moet altijd zien namens wie er gehandeld wordt (prominente indicator).
+- **Hoe wordt misbruik voorkomen?** — als iemand gemachtigd is voor een ander, moeten deze acties gelogd worden. De gebruiker moet altijd zien namens wie er gehandeld wordt (prominente indicator).
 
 ## Bronnen
 
@@ -279,11 +278,11 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 **[Material Design — Account switching](https://m3.material.io/)**
 
-- Google's richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd. MOZa volgt dit patroon maar groepeert op relatietype.
+- Google’s richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd.
 
 **[Microsoft Fluent UI — Persona](https://fluent2.microsoft.design/)**
 
-- Microsoft's patroon voor identiteitsweergave en rolwisseling. Relevant voor hoe naam, rol en organisatie visueel samengebracht worden in een compact formaat.
+- Microsoft’s patroon voor identiteitsweergave en rolwisseling. Relevant voor hoe naam, rol en organisatie visueel samengebracht worden in een compact formaat.
 
 ### Machtigingen en vertegenwoordiging
 
@@ -293,17 +292,17 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 **[eHerkenning — Machtigingsregister](https://www.eherkenning.nl/)**
 
-- Het zakelijke equivalent van DigiD Machtigen. Via eHerkenning-ketenmachtiging kan een boekhouder namens meerdere ondernemingen handelen. Dit is de bron voor de "Belangen"-groep in de wisselaar.
+- Het zakelijke equivalent van DigiD Machtigen. Via eHerkenning-ketenmachtiging kan een boekhouder namens meerdere ondernemingen handelen. Dit is de bron voor de “Belangen”-groep in de wisselaar.
 
 **[Handelsregister (KvK)](https://www.kvk.nl/)**
 
-- De bron voor wie welke rol heeft bij welke onderneming: eigenaar, bestuurder, vennoot, gevolmachtigde. De accountwisselaar haalt hier de "Mijn ondernemingen" en "Belangen" uit.
+- De bron voor wie welke rol heeft bij welke onderneming: eigenaar, bestuurder, vennoot, gevolmachtigde. De accountwisselaar haalt hier de “Mijn ondernemingen” en “Belangen” uit.
 
 ### Overheidsspecifiek
 
 **[MijnOverheid](https://mijn.overheid.nl/)**
 
-- Huidige situatie: burger en ondernemer zijn gescheiden ingangen, zonder inline wisselmechanisme. Het accountwisselaar-patroon zou dit vervangen door een geïntegreerde ervaring.
+- Huidige situatie: burger en ondernemer zijn gescheiden ingangen, zonder inline wisselmechanisme. Het accountwisselaar-patroon kan dit eventueel vervangen door een geïntegreerde ervaring.
 
 **[GOV.UK Design System — Header](https://design-system.service.gov.uk/components/header/)**
 
