@@ -3,7 +3,7 @@
 		<button class="side-nav-toggle" aria-expanded="false" aria-controls="side-nav-menu">Menu</button>
 		<ul id="side-nav-menu">
 			{% for item in subNav %}
-			<li{% if item.class %} class="{{ item.class }}"{% endif %}{% if item.feature %} data-feature="{{ item.feature }}"{% endif %}>
+			<li{% if item.class %} class="{{ item.class }}"{% endif %}{% if item.feature %} data-feature="{{ item.feature }}" data-feature-type="pagina"{% endif %}>
 				<a href="{{ item.url | url }}"{% if page.url == item.url or subNavActive == item.url %} aria-current="page"{% endif %}>
 					{% if item.icon %}{% icon item.icon %}{% endif %}
 					{{ item.label }}
