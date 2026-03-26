@@ -67,6 +67,67 @@ document.addEventListener("click", (e) => {
 	li.hidden = true;
 });
 
+// Relevant / Niet relevant toggle buttons
+document.addEventListener("click", (e) => {
+	const btn = e.target.closest(".mark-relevant, .mark-irrelevant");
+	if (!btn) return;
+	const li = btn.closest("li");
+	if (!li) return;
+	const data = getItemData(li);
+	if (!data.title) return;
+
+	const isPressed = btn.getAttribute("aria-pressed") === "true";
+	const sibling = btn.matches(".mark-relevant")
+		? li.querySelector(".mark-irrelevant")
+		: li.querySelector(".mark-relevant");
+
+	if (isPressed) {
+		// Uitschakelen
+		btn.setAttribute("aria-pressed", "false");
+		localStorage.removeItem("relevant:" + data.title);
+	} else {
+		// Inschakelen en andere uitschakelen
+		btn.setAttribute("aria-pressed", "true");
+		if (sibling) sibling.setAttribute("aria-pressed", "false");
+		const value = btn.matches(".mark-relevant") ? "relevant" : "irrelevant";
+		localStorage.setItem("relevant:" + data.title, JSON.stringify({ ...data, value }));
+	}
+});
+
+// Herstel relevant/irrelevant staat bij laden
+document.querySelectorAll(".mark-relevant, .mark-irrelevant").forEach((btn) => {
+	const li = btn.closest("li");
+	if (!li) return;
+	const data = getItemData(li);
+	if (!data.title) return;
+	const raw = localStorage.getItem("relevant:" + data.title);
+	if (!raw) return;
+	try {
+		const stored = JSON.parse(raw);
+		if (stored.value === "relevant" && btn.matches(".mark-relevant")) {
+			btn.setAttribute("aria-pressed", "true");
+		} else if (stored.value === "irrelevant" && btn.matches(".mark-irrelevant")) {
+			btn.setAttribute("aria-pressed", "true");
+		}
+	} catch {}
+});
+
+// Sluit feedback-notificaties met .btn-close en onthoud dit
+document.addEventListener("click", (e) => {
+	const btn = e.target.closest(".btn-close");
+	if (!btn) return;
+	const feedback = btn.closest(".feedback[id]");
+	if (!feedback) return;
+	feedback.hidden = true;
+	localStorage.setItem("dismissed:" + feedback.id, "true");
+});
+
+document.querySelectorAll(".feedback[id]").forEach((feedback) => {
+	if (localStorage.getItem("dismissed:" + feedback.id) === "true") {
+		feedback.hidden = true;
+	}
+});
+
 // Verberg eerder verborgen topics bij laden (niet op de bewaard-pagina's eigen lijsten)
 document.querySelectorAll(".list-content-links:not(#saved-items):not(#hidden-items) li").forEach((li) => {
 	const data = getItemData(li);

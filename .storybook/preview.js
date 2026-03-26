@@ -29,6 +29,8 @@ const preview = {
 		options: {
 			storySort: {
 				order: [
+					"Introductie",
+					["Over dit prototype"],
 					"Typografie",
 					["Koppen", "Paragraaf", "Block-level tekst", "Inline tekst"],
 					"Design tokens",

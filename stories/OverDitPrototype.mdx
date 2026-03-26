@@ -1,0 +1,99 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introductie/Over dit prototype" />
+
+# Over dit prototype
+
+Dit prototype van MijnOverheid Zakelijk (MOZA) is gebouwd als statische site met [Eleventy](https://www.11ty.dev/) en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend.
+
+## Hoe staten worden onthouden
+
+Omdat er geen server of database is, worden gebruikersacties opgeslagen in de **localStorage** van de browser. Dit betekent dat interacties alleen lokaal bestaan en per browser/apparaat verschillen.
+
+### Opgeslagen staten
+
+<table>
+	<thead>
+		<tr>
+			<th>Actie</th>
+			<th>localStorage-sleutel</th>
+			<th>Waarde</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><strong>Bewaar</strong> (checkbox)</td>
+			<td><code>favorite:Titel van item</code></td>
+			<td>JSON met titel, URL en beschrijving</td>
+		</tr>
+		<tr>
+			<td><strong>Niet relevant voor mij</strong> (verbergen)</td>
+			<td><code>hidden:Titel van item</code></td>
+			<td>JSON met titel, URL en beschrijving</td>
+		</tr>
+		<tr>
+			<td><strong>Relevant / Niet relevant</strong> (toggle)</td>
+			<td><code>relevant:Titel van item</code></td>
+			<td>JSON met titel, URL, beschrijving en waarde (<code>"relevant"</code> of <code>"irrelevant"</code>)</td>
+		</tr>
+		<tr>
+			<td><strong>Notificatie sluiten</strong></td>
+			<td><code>dismissed:element-id</code></td>
+			<td><code>"true"</code></td>
+		</tr>
+	</tbody>
+</table>
+
+### Hoe het werkt
+
+Alle interactielogica staat in **content-interactions.js**, dat op elke pagina wordt geladen via de base-template. Het script:
+
+- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, `aria-pressed`, verborgen items, gesloten notificaties)
+- Slaat wijzigingen direct op bij interactie
+- Gebruikt event delegation (`document.addEventListener`) zodat het ook werkt met dynamisch gegenereerde elementen
+
+### Semantiek van de toggle-buttons
+
+De **Relevant** en **Niet relevant** knoppen zijn geïmplementeerd als `<button>` elementen met `aria-pressed`:
+
+```html
+<button class="link-button mark-relevant" aria-pressed="false">Relevant</button>
+<button class="link-button mark-irrelevant" aria-pressed="false">Niet relevant</button>
+```
+
+- `aria-pressed="false"` — niet ingedrukt (standaard, neutraal)
+- `aria-pressed="true"` — ingedrukt (actief)
+- De twee knoppen zijn wederzijds exclusief: het indrukken van de ene zet de andere uit
+- Screenreaders communiceren de staat als "ingedrukt" of "niet ingedrukt"
+
+Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toestanden zijn: neutraal, relevant, en niet relevant.
+
+### De pagina Bewaard
+
+De pagina **Bewaard** leest alle `favorite:` en `hidden:` sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel.
+
+## localStorage legen
+
+Tijdens het testen kan het handig zijn om alle opgeslagen staten te resetten. Open de browserconsole (F12 of Cmd+Option+I) en voer uit:
+
+```js
+localStorage.clear()
+```
+
+Herlaad daarna de pagina. Alle bewaarde items, verborgen topics, relevantie-keuzes en gesloten notificaties worden gereset.
+
+Om alleen een specifieke categorie te wissen:
+
+```js
+// Alleen bewaarde items wissen
+Object.keys(localStorage).filter(k => k.startsWith("favorite:")).forEach(k => localStorage.removeItem(k))
+
+// Alleen verborgen items wissen
+Object.keys(localStorage).filter(k => k.startsWith("hidden:")).forEach(k => localStorage.removeItem(k))
+
+// Alleen relevantie-keuzes wissen
+Object.keys(localStorage).filter(k => k.startsWith("relevant:")).forEach(k => localStorage.removeItem(k))
+
+// Alleen gesloten notificaties wissen
+Object.keys(localStorage).filter(k => k.startsWith("dismissed:")).forEach(k => localStorage.removeItem(k))
+```

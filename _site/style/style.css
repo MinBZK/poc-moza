@@ -706,6 +706,46 @@ button.side-nav-toggle {
 	}
 }
 
+/* Navigatie: paginering */
+
+.pagination {
+	ol {
+		display: flex;
+		gap: var(--toepassing-space-padding-xs);
+		list-style: none;
+		> * + * {
+			margin-block-start: 0;
+		}
+	}
+	a,
+	[aria-current="page"] {
+		align-items: center;
+		border: var(--toepassing-border-width-xs) solid var(--toepassing-color-border-subtle);
+		border-radius: var(--toepassing-border-radius-sm);
+		display: inline-flex;
+		justify-content: center;
+		min-block-size: var(--toepassing-pointer-target-min-size);
+		min-inline-size: var(--toepassing-pointer-target-min-size);
+		padding-inline: var(--toepassing-space-padding-sm);
+		text-decoration: none;
+	}
+	a {
+		&:hover {
+			background: var(--toepassing-color-interactive-alternate-hover-background);
+		}
+		&:focus-visible {
+			outline: var(--toepassing-focus-outline);
+			outline-offset: var(--toepassing-focus-outline-offset);
+		}
+	}
+	[aria-current="page"] {
+		background: var(--toepassing-color-interactive-selected-background);
+		border-color: var(--toepassing-color-interactive-selected-border);
+		color: var(--toepassing-color-text-inverse);
+		font-weight: var(--toepassing-text-font-weight-semi-bold);
+	}
+}
+
 /* Navigatie: footer */
 
 footer {
@@ -974,7 +1014,9 @@ summary {
 .save-favorite,
 .hide-topic,
 .delete-topic,
-.show-topic {
+.show-topic,
+.mark-relevant,
+.mark-irrelevant {
 	display: inline-flex;
 	align-items: center;
 	cursor: pointer;
@@ -1006,6 +1048,13 @@ summary {
 			&:hover {
 				background-color: var(--toepassing-color-feedback-favorite-hover);
 			}
+			& ~ .favorite-label {
+				font-size: 0;
+				&::after {
+					content: "Bewaard";
+					font: var(--toepassing-text-smalltext);
+				}
+			}
 		}
 	}
 	&:hover {
@@ -1014,7 +1063,9 @@ summary {
 }
 .hide-topic,
 .delete-topic,
-.show-topic {
+.show-topic,
+.mark-relevant,
+.mark-irrelevant {
 	&::before {
 		background-color: currentColor;
 		block-size: var(--toepassing-size-icon-sm);
@@ -1038,6 +1089,28 @@ summary {
 .show-topic {
 	&::before {
 		mask: url("../assets/icons/icon-tonen.svg") no-repeat center / contain;
+	}
+}
+.mark-relevant {
+	&::before {
+		mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
+	}
+	&[aria-pressed="true"] {
+		color: var(--toepassing-color-feedback-success-icon);
+		&::before {
+			background-color: var(--toepassing-color-feedback-success-icon);
+		}
+	}
+}
+.mark-irrelevant {
+	&::before {
+		mask: url("../assets/icons/icon-sluiten.svg") no-repeat center / contain;
+	}
+	&[aria-pressed="true"] {
+		color: var(--toepassing-color-feedback-error-icon);
+		&::before {
+			background-color: var(--toepassing-color-feedback-error-icon);
+		}
 	}
 }
 
@@ -1116,6 +1189,57 @@ h4 {
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
 	padding: var(--toepassing-space-padding-md);
+}
+
+/* Feature flags toggle-paneel */
+
+.feature-flags-toggle {
+	background: var(--toepassing-color-feedback-neutral-emphasis);
+	border: none;
+	border-radius: var(--toepassing-border-radius-md) var(--toepassing-border-radius-md) 0 0;
+	color: var(--toepassing-color-text-inverse);
+	cursor: pointer;
+	font: var(--toepassing-text-smalltext-default);
+	font-weight: var(--toepassing-text-font-weight-semi-bold);
+	inset-block-end: 0;
+	inset-inline-end: var(--toepassing-space-padding-lg);
+	padding-block: var(--toepassing-space-padding-2xs);
+	padding-inline: var(--toepassing-space-padding-sm);
+	position: fixed;
+	z-index: 1000;
+	&:hover {
+		background: var(--toepassing-color-interactive-hover-background);
+	}
+}
+
+.feature-flags-panel {
+	background: var(--toepassing-color-background-default);
+	border: var(--toepassing-border-default);
+	border-radius: var(--toepassing-border-radius-md);
+	box-shadow: var(--toepassing-box-shadow-default);
+	font: var(--toepassing-text-smalltext-default);
+	inset-block-end: 2rem;
+	inset-inline-end: var(--toepassing-space-padding-lg);
+	max-block-size: 70vh;
+	overflow-y: auto;
+	padding: var(--toepassing-space-padding-md);
+	position: fixed;
+	z-index: 1000;
+	.feature-flags-heading {
+		font-weight: var(--toepassing-text-font-weight-bold);
+		margin-block-end: var(--toepassing-space-padding-xs);
+	}
+	ul {
+		list-style: none;
+		padding: 0;
+	}
+	label {
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: var(--toepassing-space-padding-2xs);
+		padding-block: var(--toepassing-space-padding-2xs);
+	}
 }
 
 /* Tijdelijk: proof-of-concept banner (roterend lint rechtsboven) */
