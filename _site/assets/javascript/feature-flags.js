@@ -64,6 +64,15 @@ function buildTogglePanel() {
 	});
 	panel.appendChild(list);
 
+	const clearBtn = document.createElement("button");
+	clearBtn.className = "feature-flags-clear";
+	clearBtn.textContent = "localStorage wissen";
+	clearBtn.addEventListener("click", () => {
+		localStorage.clear();
+		location.reload();
+	});
+	panel.appendChild(clearBtn);
+
 	const toggle = document.createElement("button");
 	toggle.className = "feature-flags-toggle";
 	toggle.setAttribute("aria-expanded", "false");

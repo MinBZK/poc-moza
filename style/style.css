@@ -1226,7 +1226,7 @@ h4 {
 	position: fixed;
 	z-index: 1000;
 	.feature-flags-heading {
-		font-weight: var(--toepassing-text-font-weight-bold);
+		font: var(--toepassing-text-heading-h3);
 		margin-block-end: var(--toepassing-space-padding-xs);
 	}
 	ul {
@@ -1237,8 +1237,23 @@ h4 {
 		cursor: pointer;
 		display: flex;
 		align-items: center;
-		gap: var(--toepassing-space-padding-2xs);
+		gap: var(--toepassing-space-padding-xs);
 		padding-block: var(--toepassing-space-padding-2xs);
+	}
+	.feature-flags-clear {
+		background: var(--toepassing-color-feedback-error-default);
+		border: none;
+		border-radius: var(--toepassing-border-radius-sm);
+		color: var(--toepassing-color-text-inverse);
+		cursor: pointer;
+		font: inherit;
+		inline-size: 100%;
+		margin-block: var(--toepassing-space-padding-md);
+		padding-block: var(--toepassing-space-padding-2xs);
+		padding-inline: var(--toepassing-space-padding-sm);
+		&:hover {
+			background: var(--toepassing-color-feedback-error-emphasis);
+		}
 	}
 }
 

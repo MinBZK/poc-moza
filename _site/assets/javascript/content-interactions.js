@@ -8,6 +8,13 @@
  * - Notificaties sluiten (dismissed:)
  */
 
+// Vul lege visually-hidden labels in op basis van de heading in dezelfde <li>
+document.querySelectorAll(".action-group .visually-hidden").forEach((span) => {
+	if (span.textContent.trim()) return;
+	const heading = span.closest("li")?.querySelector("h2, h3, h4");
+	if (heading) span.textContent = heading.textContent.trim();
+});
+
 function getFavoriteKey(checkbox) {
 	const label = checkbox.closest(".save-favorite");
 	const hidden = label?.querySelector(".visually-hidden");
