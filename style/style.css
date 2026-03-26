@@ -70,8 +70,16 @@ header {
 		}
 	}
 	.user-menu {
+		align-items: center;
 		display: flex;
 		gap: var(--toepassing-space-layout-md);
+	}
+	/* Toon fallback-naam als accountwisselaar verborgen is, verberg anders */
+	.account-switcher-fallback {
+		display: none;
+	}
+	.account-switcher[hidden] ~ .account-switcher-fallback {
+		display: inline-flex;
 	}
 	> * + * {
 		margin-block-start: var(--toepassing-space-layout-md);
@@ -1189,6 +1197,83 @@ h4 {
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
 	padding: var(--toepassing-space-padding-md);
+}
+
+/* Accountwisselaar */
+
+.account-switcher {
+	position: relative;
+}
+.account-switcher-toggle {
+	appearance: none;
+	background: none;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	padding: 0;
+	&::after {
+		border-block-start: 0.35em solid currentColor;
+		border-inline: 0.3em solid transparent;
+		content: "";
+		margin-inline-start: var(--toepassing-space-padding-2xs);
+	}
+	&:hover,
+	&:focus {
+		background: none !important;
+		color: inherit !important;
+	}
+}
+.account-switcher-label strong {
+	font-weight: var(--toepassing-text-font-weight-semi-bold);
+}
+.account-switcher-menu {
+	background: var(--toepassing-color-background-default);
+	border: var(--toepassing-border-default);
+	border-radius: var(--toepassing-border-radius-md);
+	box-shadow: var(--toepassing-box-shadow-default);
+	inset-block-start: 100%;
+	inset-inline-end: 0;
+	list-style: none;
+	min-inline-size: 20rem;
+	padding: var(--toepassing-space-padding-xs);
+	position: absolute;
+	z-index: 100;
+	a {
+		align-items: baseline;
+		border-radius: var(--toepassing-border-radius-sm);
+		color: inherit;
+		display: flex;
+		justify-content: space-between;
+		gap: var(--toepassing-space-padding-sm);
+		padding: var(--toepassing-space-padding-xs) var(--toepassing-space-padding-sm);
+		text-decoration: none;
+		&:hover {
+			background: var(--toepassing-color-interactive-alternate-hover-background);
+		}
+		&[aria-current="true"] {
+			background: var(--toepassing-color-interactive-alternate-selected-background);
+		}
+	}
+	span {
+		color: var(--toepassing-color-text-subtle-2);
+		font: var(--toepassing-text-smalltext-default);
+	}
+	> * + * {
+		margin-block-start: 0;
+	}
+	.account-switcher-group-label {
+		color: var(--toepassing-color-text-subtle-1);
+		font: var(--toepassing-text-smalltext-default);
+		font: var(--toepassing-text-heading-h5);
+		padding-block: var(--toepassing-space-padding-2xs);
+		padding-inline: var(--toepassing-space-padding-sm);
+		&:not(:first-child) {
+			border-block-start: var(--toepassing-border-default);
+			margin-block-start: var(--toepassing-space-padding-xs);
+			padding-block-start: var(--toepassing-space-padding-sm);
+		}
+	}
 }
 
 /* Feature flags toggle-paneel */
