@@ -161,5 +161,15 @@
 </li>
 </ul>
 <p>Per container wordt altijd één van deze twee mechanismes gebruikt, nooit beide tegelijk. De keuze voor <code>gap</code> of <code>&gt; * + *</code> is een implementatiedetail — de spacing-waarde komt altijd uit dezelfde <code>layout-*</code> tokens.</p>
+<h3>AI-assistentie in het ontwerpproces</h3>
+<p>In het ontwerpproces wordt <a href="https://claude.ai/">Claude</a> ingezet als assistent bij het maken en itereren van het prototype. Dit is geen vervanging van het ontwerpproces, maar een versnelling ervan. De ontwerper blijft verantwoordelijk voor de richting, de keuzes en de kwaliteit.</p>
+<p>Claude wordt onder andere ingezet voor:</p>
+<ul>
+<li><strong>Semi-realistische content</strong> — het prototype wordt gevuld met inhoud die dicht bij de werkelijkheid ligt: bestaande subsidienamen, echte wetten, herkenbare bekendmakingen. Dit maakt het prototype geloofwaardiger in gebruikerstests dan lorem ipsum of duidelijk verzonnen tekst. Claude genereert deze content op basis van publiek beschikbare overheidsinformatie.</li>
+<li><strong>Variatie en volume</strong> — waar een ontwerp meerdere pagina's of varianten nodig heeft (bijvoorbeeld gepagineerde lijsten met berichten, subsidies of regelgeving), helpt Claude bij het aanmaken van consistente, gevarieerde content zonder dat elke regel handmatig geschreven hoeft te worden.</li>
+<li><strong>Component- en patronenontwikkeling</strong> — Claude assisteert bij het schrijven van HTML, CSS en JavaScript voor nieuwe componenten en interactiepatronen, altijd binnen de bestaande ontwerpprincipes (semantische HTML, design tokens, toegankelijkheid).</li>
+<li><strong>Refactoring en abstractie</strong> — herhalende patronen in de code worden met hulp van Claude geïdentificeerd en omgezet naar herbruikbare includes of geautomatiseerde logica, waardoor de codebase onderhoudbaar blijft naarmate het prototype groeit.</li>
+</ul>
+<p>De inzet van AI-assistentie past bij het principe van <em>de eenvoudigst mogelijke oplossing</em>: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.</p>
 <h3>Statische site-generatie</h3>
 <p><a href="https://www.11ty.dev/">Eleventy</a> wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.</p>

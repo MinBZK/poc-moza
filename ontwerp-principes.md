@@ -189,6 +189,19 @@ Spacing tussen elementen wordt aangestuurd door één schaal van layout tokens (
 
 Per container wordt altijd één van deze twee mechanismes gebruikt, nooit beide tegelijk. De keuze voor `gap` of `> * + *` is een implementatiedetail — de spacing-waarde komt altijd uit dezelfde `layout-*` tokens.
 
+### AI-assistentie in het ontwerpproces
+
+In het ontwerpproces wordt [Claude](https://claude.ai/) ingezet als assistent bij het maken en itereren van het prototype. Dit is geen vervanging van het ontwerpproces, maar een versnelling ervan. De ontwerper blijft verantwoordelijk voor de richting, de keuzes en de kwaliteit.
+
+Claude wordt onder andere ingezet voor:
+
+- **Semi-realistische content** — het prototype wordt gevuld met inhoud die dicht bij de werkelijkheid ligt: bestaande subsidienamen, echte wetten, herkenbare bekendmakingen. Dit maakt het prototype geloofwaardiger in gebruikerstests dan lorem ipsum of duidelijk verzonnen tekst. Claude genereert deze content op basis van publiek beschikbare overheidsinformatie.
+- **Variatie en volume** — waar een ontwerp meerdere pagina's of varianten nodig heeft (bijvoorbeeld gepagineerde lijsten met berichten, subsidies of regelgeving), helpt Claude bij het aanmaken van consistente, gevarieerde content zonder dat elke regel handmatig geschreven hoeft te worden.
+- **Component- en patronenontwikkeling** — Claude assisteert bij het schrijven van HTML, CSS en JavaScript voor nieuwe componenten en interactiepatronen, altijd binnen de bestaande ontwerpprincipes (semantische HTML, design tokens, toegankelijkheid).
+- **Refactoring en abstractie** — herhalende patronen in de code worden met hulp van Claude geïdentificeerd en omgezet naar herbruikbare includes of geautomatiseerde logica, waardoor de codebase onderhoudbaar blijft naarmate het prototype groeit.
+
+De inzet van AI-assistentie past bij het principe van *de eenvoudigst mogelijke oplossing*: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.
+
 ### Statische site-generatie
 
 [Eleventy](https://www.11ty.dev/) wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina's te genereren. Dit houdt de HTML van individuele pagina's schoon en onderhoudbaar.
