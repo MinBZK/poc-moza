@@ -15,6 +15,8 @@
 
     {% if headerType == "overheid" %}
         {% include "header-overheid.njk" %}
+    {% elif headerType == "overheid-uitgelogd" %}
+        {% include "header-overheid-uitgelogd.njk" %}
     {% else %}
         {% include "header-rijksoverheid.njk" %}
     {% endif %}

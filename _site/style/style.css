@@ -154,6 +154,47 @@ body.moza {
 	}
 }
 
+/* Landing (uitgelogde staat) */
+
+.landing {
+	max-inline-size: 40rem;
+	margin-inline: auto;
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-md);
+	}
+}
+
+.landing-hero {
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-xs);
+	}
+}
+
+.landing-features {
+	> * + * {
+		margin-block-start: var(--toepassing-space-layout-xs);
+	}
+}
+
+.landing-feature-list {
+	display: grid;
+	gap: var(--toepassing-space-layout-sm);
+	list-style: none;
+	padding: 0;
+	@media (min-width: 30em) {
+		grid-template-columns: 1fr 1fr;
+	}
+	li {
+		background: var(--toepassing-color-background-default);
+		border-radius: var(--toepassing-border-radius-md);
+		box-shadow: var(--toepassing-border-card-default);
+		padding: var(--toepassing-space-component-card-padding);
+		> * + * {
+			margin-block-start: var(--toepassing-space-layout-2xs);
+		}
+	}
+}
+
 /* Typografie */
 
 hgroup {

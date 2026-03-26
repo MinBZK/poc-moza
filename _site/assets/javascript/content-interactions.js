@@ -15,6 +15,12 @@ document.querySelectorAll(".action-group .visually-hidden").forEach((span) => {
 	if (heading) span.textContent = heading.textContent.trim();
 });
 
+function getCategory(li) {
+	const section = li.closest("section");
+	const heading = section?.querySelector("h2, h3");
+	return heading?.textContent.trim() || "";
+}
+
 function getFavoriteKey(checkbox) {
 	const label = checkbox.closest(".save-favorite");
 	const hidden = label?.querySelector(".visually-hidden");
@@ -28,7 +34,8 @@ function getFavoriteData(checkbox) {
 	const title = link?.querySelector("h3")?.textContent.trim() || "";
 	const url = link?.getAttribute("href") || "";
 	const desc = li.querySelector(":scope > p")?.textContent.trim() || "";
-	return { title, url, desc };
+	const category = getCategory(li);
+	return { title, url, desc, category };
 }
 
 // Herstel opgeslagen staat bij laden
@@ -62,7 +69,8 @@ function getItemData(li) {
 	const title = link?.querySelector("h3, h4")?.textContent.trim() || "";
 	const url = link?.getAttribute("href") || "";
 	const desc = li.querySelector(":scope > p")?.textContent.trim() || "";
-	return { title, url, desc };
+	const category = getCategory(li);
+	return { title, url, desc, category };
 }
 
 function showNextReserve(list) {
@@ -176,7 +184,9 @@ document.querySelectorAll(".list-content-links li.reserve-topic").forEach((li) =
 });
 
 // Verberg eerder verborgen topics bij laden en schuif reserve-topics door
-document.querySelectorAll(".list-content-links:not(#saved-items):not(#hidden-items) li:not(.reserve-topic)").forEach((li) => {
+document.querySelectorAll(".list-content-links li:not(.reserve-topic)").forEach((li) => {
+	// Sla items op de Bewaard-pagina over
+	if (li.closest("#saved-groups") || li.closest("#hidden-groups")) return;
 	const data = getItemData(li);
 	if (data.title && localStorage.getItem("hidden:" + data.title)) {
 		li.hidden = true;
