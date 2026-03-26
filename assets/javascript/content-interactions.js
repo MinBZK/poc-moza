@@ -72,6 +72,25 @@ function showNextReserve(list) {
 	reserve.classList.remove("reserve-topic");
 }
 
+// Deel topic via Web Share API (fallback: kopieer link naar klembord)
+document.addEventListener("click", async (e) => {
+	const btn = e.target.closest(".share-topic");
+	if (!btn) return;
+	const li = btn.closest("li");
+	if (!li) return;
+	const data = getItemData(li);
+	const shareData = { title: data.title, text: data.desc, url: data.url };
+	try {
+		if (navigator.share) {
+			await navigator.share(shareData);
+		} else {
+			await navigator.clipboard.writeText(data.url);
+			btn.textContent = "Link gekopieerd";
+			setTimeout(() => { btn.textContent = "Deel"; }, 2000);
+		}
+	} catch {}
+});
+
 document.addEventListener("click", (e) => {
 	const btn = e.target.closest(".hide-topic");
 	if (!btn) return;

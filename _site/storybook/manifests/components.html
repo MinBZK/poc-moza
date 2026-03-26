@@ -693,9 +693,69 @@ Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toest
 
 De pagina **Bewaard** leest alle `favorite:` en `hidden:` sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel.
 
+## Feature flags
+
+Het prototype bevat een ingebouwd feature-flag systeem waarmee pagina&#39;s en functionaliteit in- of uitgeschakeld kunnen worden — zonder aparte versies te hoeven bouwen.
+
+### Hoe te gebruiken
+
+Klik op de **Flags**-knop rechtsonder in het prototype. Er opent een paneel met twee groepen:
+
+- **Pagina&#39;s** — navigatie-items zoals Berichtenbox, Belastingen en Zakelijk vervoer. Uitschakelen verbergt zowel het navigatie-item als de bijbehorende content op de homepage.
+- **Functionaliteit** — interactiemogelijkheden zoals *Delen* en *Relevantie*. Uitschakelen verbergt de betreffende knoppen in alle actiegroepen.
+
+Feature flags worden opgeslagen in localStorage en blijven staan na herladen. Standaard staan alle features aan.
+
+### Hoe toe te voegen
+
+Voeg `data-feature` en `data-feature-type` attributen toe aan een HTML-element:
+
+```html
+{/* Pagina-sectie verbergen */}
+&lt;div data-feature=&quot;Belastingen&quot; data-feature-type=&quot;pagina&quot;&gt;...&lt;/div&gt;
+
+{/* Functionaliteit verbergen */}
+&lt;button data-feature=&quot;Delen&quot; data-feature-type=&quot;functionaliteit&quot;&gt;Deel&lt;/button&gt;
+```
+
+Het element verschijnt automatisch in het Flags-paneel en kan door de gebruiker aan- en uitgezet worden.
+
+Voor navigatie-items in de sidebar wordt de feature flag ingesteld via het `feature` veld in de data-bestanden (`moza.json` en de subdirectory JSON-bestanden):
+
+```json
+{
+  &quot;label&quot;: &quot;Belastingen&quot;,
+  &quot;url&quot;: &quot;/moza/belastingen/&quot;,
+  &quot;feature&quot;: &quot;Belastingen&quot;
+}
+```
+
+De template voegt automatisch `data-feature` en `data-feature-type=&quot;pagina&quot;` toe aan het `&lt;li&gt;` element.
+
+### Opgeslagen sleutels
+
+&lt;table&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Sleutel&lt;/th&gt;
+			&lt;th&gt;Waarde als uitgeschakeld&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;td&gt;&lt;code&gt;feature:Naam&lt;/code&gt;&lt;/td&gt;
+			&lt;td&gt;&lt;code&gt;&quot;false&quot;&lt;/code&gt;&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+
+Wanneer een feature is ingeschakeld (standaard), bestaat er geen sleutel in localStorage.
+
 ## localStorage legen
 
-Tijdens het testen kan het handig zijn om alle opgeslagen staten te resetten. Open de browserconsole (F12 of Cmd+Option+I) en voer uit:
+Het Flags-paneel bevat een **localStorage wissen**-knop die alle opgeslagen state in één keer reset en de pagina herlaadt.
+
+Handmatig kan het ook via de browserconsole (F12 of Cmd+Option+I):
 
 ```js
 localStorage.clear()
