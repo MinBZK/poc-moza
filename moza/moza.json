@@ -32,6 +32,11 @@
 			"badge": "3"
 		},
 		{
+			"label": "Bewaard",
+			"url": "/moza/bewaard/",
+			"icon": "/assets/icons/icon-favoriet.svg"
+		},
+		{
 			"label": "Belastingen",
 			"url": "/moza/belastingen/",
 			"icon": "/assets/icons/icon-financieen.svg",

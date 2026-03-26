@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MijnOverheid Zakelijk: Contactvoorkeuren</title>
+    <title>MijnOverheid Zakelijk: Bewaard</title>
     <link rel="stylesheet" href="/style/style.css">
     <meta name="description" content="MijnOverheid Zakelijk">
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico" type="image/x-icon">
@@ -111,7 +111,7 @@
 			</li>
 			
 			<li>
-				<a href="/moza/bewaard/">
+				<a href="/moza/bewaard/" aria-current="page">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 	<path fill="currentColor" d="M18.61 3.91C14.17 1.94 12 6.18 12 6.18S9.83 1.94 5.39 3.91s-4.09 11.6 6.18 17a.94.94 0 0 0 .87 0c10.26-5.4 10.56-15.06 6.17-17Z" />
 </svg>
@@ -173,7 +173,7 @@
 			</li>
 			
 			<li>
-				<a href="/moza/contactvoorkeuren/" aria-current="page">
+				<a href="/moza/contactvoorkeuren/">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 	<path fill="currentColor" fill-rule="evenodd" d="M10 7.438A2.568 2.568 0 0 0 7.434 10 2.57 2.57 0 0 0 10 12.564 2.567 2.567 0 0 0 12.565 10 2.565 2.565 0 0 0 10 7.438zm8 2.978a.71.71 0 0 1-.382.596l-1.427.66a1.13 1.13 0 0 0-.548.545l-.08.195c-.089.216-.081.565.017.776l.564 1.431a.688.688 0 0 1-.137.69l-.648.648a.706.706 0 0 1-.688.148l-1.471-.543a1.142 1.142 0 0 0-.77-.007l-.207.086a1.093 1.093 0 0 0-.53.558l-.615 1.411a.685.685 0 0 1-.58.39h-.923a.704.704 0 0 1-.589-.386l-.656-1.412a1.142 1.142 0 0 0-.541-.554l-.208-.086a1.094 1.094 0 0 0-.764.017l-1.441.569a.685.685 0 0 1-.684-.139l-.65-.649a.712.712 0 0 1-.146-.693l.538-1.463c.093-.214.096-.565.007-.78l-.08-.193a1.09 1.09 0 0 0-.554-.535l-1.422-.619A.687.687 0 0 1 2 10.49v-.907a.71.71 0 0 1 .38-.596l1.425-.657c.215-.083.461-.329.55-.544l.08-.196c.09-.216.081-.565-.016-.776l-.563-1.431a.688.688 0 0 1 .136-.689l.648-.648a.705.705 0 0 1 .689-.149l1.475.541c.21.092.557.095.77.006l.203-.084c.21-.088.45-.339.53-.558l.615-1.411A.686.686 0 0 1 9.502 2h.923c.228 0 .494.174.589.386l.655 1.414c.085.217.329.466.541.554l.208.085c.211.088.555.08.763-.017l1.443-.568a.685.685 0 0 1 .684.139l.648.647a.71.71 0 0 1 .146.693l-.536 1.463a1.15 1.15 0 0 0-.007.781l.08.197c.09.215.337.455.554.533l1.421.618a.687.687 0 0 1 .386.586v.905z" />
 </svg>
@@ -191,60 +191,180 @@
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="/moza/">Home</a></li>
-			<li>
-				<a href="/moza/contactvoorkeuren/">Contactvoorkeuren</a>
-			</li>
-			<li aria-current="page">Communicatiekanalen wijzigen</li>
+			<li aria-current="page">Bewaard</li>
 		</ol>
 	</nav>
 
-	<h1>Contactvoorkeuren</h1>
+	<h1>Bewaard</h1>
 
 	<section class="card">
-		<h2>Communicatiekanalen</h2>
-
-		<div class="feedback feedback-info">
+		<p>Hier vindt u berichten, subsidies en regelgeving die u hebt bewaard.</p>
+		<ul class="list-content-links" id="saved-items" hidden></ul>
+		<div class="feedback feedback-info" id="saved-empty" hidden>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-	<path class="feedback-icon-color-background" d="M22.04 3.78c-.16-.95-.88-1.67-1.83-1.83-2.73-.45-7.3-.45-8.21-.45-.91 0-5.48 0-8.22.46-.94.15-1.67.88-1.82 1.82C1.5 6.52 1.5 11.09 1.5 12s0 5.48.46 8.22c.16.95.88 1.67 1.83 1.83 2.74.46 7.3.46 8.22.46.91 0 5.48 0 8.22-.46.95-.16 1.67-.88 1.83-1.83.46-2.74.46-7.3.46-8.22-.02-2.74-.02-5.48-.48-8.22z" />
-	<path class="icon-color-inverse" d="M10.71 6.93c0-.34.11-.63.33-.88.22-.25.54-.38.95-.38.41 0 .72.12.94.36.22.24.33.54.33.9 0 .32-.11.61-.33.86s-.54.37-.94.37c-.41 0-.72-.12-.95-.35-.22-.24-.33-.53-.33-.88zm2.4 2.39v8.96H10.9V9.41l2.21-.09z" />
-</svg>
+				<path class="feedback-icon-color-background" d="M22.04 3.78c-.16-.95-.88-1.67-1.83-1.83-2.73-.45-7.3-.45-8.21-.45-.91 0-5.48 0-8.22.46-.94.15-1.67.88-1.82 1.82C1.5 6.52 1.5 11.09 1.5 12s0 5.48.46 8.22c.16.95.88 1.67 1.83 1.83 2.74.46 7.3.46 8.22.46.91 0 5.48 0 8.22-.46.95-.16 1.67-.88 1.83-1.83.46-2.74.46-7.3.46-8.22-.02-2.74-.02-5.48-.48-8.22z" />
+				<path class="icon-color-inverse" d="M10.71 6.93c0-.34.11-.63.33-.88.22-.25.54-.38.95-.38.41 0 .72.12.94.36.22.24.33.54.33.9 0 .32-.11.61-.33.86s-.54.37-.94.37c-.41 0-.72-.12-.95-.35-.22-.24-.33-.53-.33-.88zm2.4 2.39v8.96H10.9V9.41l2.21-.09z" />
+			</svg>
 			<div>
-				<p>Contactgegevens die u hier aanpast, worden automatisch bijgewerkt bij alle organisaties waarmee u uw gegevens centraal deelt.</p>
+				<p>U hebt nog geen items bewaard. Gebruik de “Bewaar”-optie bij actualiteiten om items hier te verzamelen.</p>
 			</div>
-			<button class="btn-close link-button">
-				<i>Sluit notificatie</i>
-			</button>
 		</div>
+	</section>
 
-		<form action="/moza/contactvoorkeuren/">
-			<table class="data-overview">
-				<tr>
-					<th scope="row">Voorkeurskanaal</th>
-					<td>
-						<ul class="list-plain">
-							<li><input type="radio" id="contact-channel-email" name="contact-channel" checked /><label for="contact-channel-email">E-mail</label></li>
-							<li><input type="radio" id="contact-channel-post" name="contact-channel" /><label for="contact-channel-post">Post</label></li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">Bellen</th>
-					<td>
-						<ul class="list-plain">
-							<li><input type="radio" id="contact-allow-phone-yes" name="contact-allow-phone" /><label for="contact-allow-phone-yes">Ik mag gebeld worden</label></li>
-							<li><input type="radio" id="contact-allow-phone-no" name="contact-allow-phone" checked /><label for="contact-allow-phone-no">Ik wil niet gebeld worden</label></li>
-						</ul>
-					</td>
-				</tr>
-			</table>
-
-			<div class="action-group">
-				<button type="submit">Opslaan</button>
-				<button class="secondary">Annuleren</button>
+	<section class="card" id="hidden-section">
+		<h2>Niet relevant gemarkeerd</h2>
+		<p>Deze items hebt u als niet relevant gemarkeerd en worden niet gebruikt om uw profiel te verfijnen. U kunt ze hier weer zichtbaar maken, dan worden ze ook meegenomen in het verfijnen van uw profiel.</p>
+		<ul class="list-content-links" id="hidden-items" hidden></ul>
+		<div class="feedback feedback-info" id="hidden-empty" hidden>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+				<path class="feedback-icon-color-background" d="M22.04 3.78c-.16-.95-.88-1.67-1.83-1.83-2.73-.45-7.3-.45-8.21-.45-.91 0-5.48 0-8.22.46-.94.15-1.67.88-1.82 1.82C1.5 6.52 1.5 11.09 1.5 12s0 5.48.46 8.22c.16.95.88 1.67 1.83 1.83 2.74.46 7.3.46 8.22.46.91 0 5.48 0 8.22-.46.95-.16 1.67-.88 1.83-1.83.46-2.74.46-7.3.46-8.22-.02-2.74-.02-5.48-.48-8.22z" />
+				<path class="icon-color-inverse" d="M10.71 6.93c0-.34.11-.63.33-.88.22-.25.54-.38.95-.38.41 0 .72.12.94.36.22.24.33.54.33.9 0 .32-.11.61-.33.86s-.54.37-.94.37c-.41 0-.72-.12-.95-.35-.22-.24-.33-.53-.33-.88zm2.4 2.39v8.96H10.9V9.41l2.21-.09z" />
+			</svg>
+			<div>
+				<p>U hebt geen items als niet relevant gemarkeerd. Gebruik de "Niet relevant voor mij"-optie bij actualiteiten om items te verbergen.</p>
 			</div>
-		</form>
+		</div>
+	</section>
+
+	<section class="card">
+		<h2>Veelgestelde vragen</h2>
+		<ul class="accordion">
+			<li>
+				<details name="faq">
+					<summary>
+						<h3>Hoe bewaar ik een item?</h3>
+					</summary>
+					<p>Op de pagina Actualiteiten vindt u bij elk bericht, elke subsidie en elke regeling een "Bewaar"-optie. Klik hierop om het item aan uw bewaarde items toe te voegen.</p>
+				</details>
+			</li>
+			<li>
+				<details name="faq">
+					<summary>
+						<h3>Hoe verwijder ik een bewaard item?</h3>
+					</summary>
+					<p>U kunt een bewaard item verwijderen via de knop "Verwijderen" op deze pagina. Het item verdwijnt dan uit uw overzicht. U kunt het daarna opnieuw bewaren via de pagina Actualiteiten.</p>
+				</details>
+			</li>
+			<li>
+				<details name="faq">
+					<summary>
+						<h3>Worden mijn bewaarde items gedeeld met overheidsorganisaties?</h3>
+					</summary>
+					<p>Nee, overheidsorganisaties hebben hier geen toegang toe. Bewaarde en niet-relevante items worden gebruikt om uw profiel op te bouwen zodat we u nog relevantere content kunnen aanbieden.</p>
+				</details>
+			</li>
+		</ul>
 	</section>
 </article>
+
+<script>
+	const list = document.getElementById("saved-items");
+	const empty = document.getElementById("saved-empty");
+	const hiddenList = document.getElementById("hidden-items");
+	const hiddenEmpty = document.getElementById("hidden-empty");
+	const favorites = [];
+	const hiddenTopics = [];
+
+	for (let i = 0; i < localStorage.length; i++) {
+		const key = localStorage.key(i);
+		if (key.startsWith("favorite:")) {
+			const raw = localStorage.getItem(key);
+			if (!raw || raw === "false") continue;
+			const title = key.replace("favorite:", "");
+			let data;
+			try {
+				data = JSON.parse(raw);
+			} catch {
+				data = { title, url: "", desc: "" };
+			}
+			if (!data.title) data.title = title;
+			favorites.push({ key, ...data });
+		} else if (key.startsWith("hidden:")) {
+			const raw = localStorage.getItem(key);
+			if (!raw) continue;
+			const title = key.replace("hidden:", "");
+			let data;
+			try {
+				data = JSON.parse(raw);
+			} catch {
+				data = { title, url: "", desc: "" };
+			}
+			if (!data.title) data.title = title;
+			hiddenTopics.push({ key, ...data });
+		}
+	}
+
+	function showEmpty() {
+		if (list.children.length === 0) {
+			list.hidden = true;
+			empty.hidden = false;
+		}
+	}
+
+	function showHiddenEmpty() {
+		if (hiddenList.children.length === 0) {
+			hiddenList.hidden = true;
+			hiddenEmpty.hidden = false;
+		}
+	}
+
+	// Render card helper
+	function renderCard(parent, item, btnClass, btnText, onClickFn) {
+		const li = document.createElement("li");
+
+		if (item.url) {
+			const a = document.createElement("a");
+			a.href = item.url;
+			a.rel = "external";
+			a.className = "content-link";
+			a.innerHTML = `<h3>${item.title}</h3><span class="card-link"></span>`;
+			li.appendChild(a);
+		} else {
+			li.innerHTML = `<h3>${item.title}</h3>`;
+		}
+
+		if (item.desc) {
+			const p = document.createElement("p");
+			p.textContent = item.desc;
+			li.appendChild(p);
+		}
+
+		const btn = document.createElement("button");
+		btn.className = "link-button " + btnClass;
+		btn.textContent = btnText;
+		btn.addEventListener("click", () => onClickFn(li, item));
+		li.appendChild(btn);
+		parent.appendChild(li);
+	}
+
+	// Bewaarde items
+	if (favorites.length === 0) {
+		empty.hidden = false;
+	} else {
+		list.hidden = false;
+		favorites.forEach((fav) => {
+			renderCard(list, fav, "delete-topic", "Verwijderen", (li, item) => {
+				localStorage.removeItem(item.key);
+				li.remove();
+				showEmpty();
+			});
+		});
+	}
+
+	// Verborgen items
+	if (hiddenTopics.length === 0) {
+		hiddenEmpty.hidden = false;
+	} else {
+		hiddenList.hidden = false;
+		hiddenTopics.forEach((item) => {
+			renderCard(hiddenList, item, "show-topic", "Toch relevant", (li, item) => {
+				localStorage.removeItem(item.key);
+				li.remove();
+				showHiddenEmpty();
+			});
+		});
+	}
+</script>
 
     </main>
 
