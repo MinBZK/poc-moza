@@ -19,7 +19,7 @@ Het ministerie van Binnenlandse Zaken en Koninkrijksrelaties heeft in 2024 MKB'e
 
 In interactieve sessies, interviews en gebruikerstests leggen we onze inzichten en ideeën voor aan de eindgebruikers. Zo toetsen we aannames en krijgen we waardevolle feedback op functionaliteit, gebruiksgemak en flows. Deze inzichten vormen de basis voor onze ontwerprichtingen.
 
-Voor gebruikerstests maken we vaak gebruik van interactive Figma prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
+Voor gebruikerstests maken we vaak gebruik van interactive prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
 
 Door deze continue cyclus van onderzoeken, ontwerpen, testen en verfijnen zorgen we ervoor dat wat we bouwen aansluit op de behoeften en verwachtingen van eindgebruikers. Waar directe inzichten nog ontbreken, werken we op basis van expliciete aannames. Deze aannames maken we zo snel mogelijk toetsbaar door ze te vertalen naar concrete ontwerpen die we voorleggen aan gebruikers.
 
