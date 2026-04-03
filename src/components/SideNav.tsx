@@ -68,7 +68,7 @@ export const SideNav = () => {
 									</svg>
 								</MoxSvg>
 							),
-							badge: <MoxBadge backgroundColor="primary">3</MoxBadge>,
+							badge: <MoxBadge backgroundColor="danger">3</MoxBadge>,
 						},
 					],
 					[

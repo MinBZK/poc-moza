@@ -4,9 +4,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-RUN cd style-dictionary && npm ci && npm run build
-RUN npx @11ty/eleventy
-RUN npx storybook build -o _site/storybook
+# RUN cd style-dictionary && npm ci && npm run build
+# RUN npx @11ty/eleventy
+# RUN npx storybook build -o _site/storybook
+RUN ls -la /app
+RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 

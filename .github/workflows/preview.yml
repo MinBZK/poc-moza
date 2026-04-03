@@ -1,6 +1,9 @@
 name: Preview deployment
 
 on:
+  push:
+    branches:
+      - "*" # Trigger on all branches
   pull_request:
     types:
       - opened
@@ -63,23 +66,26 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy-preview:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' || github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       deployments: write
       pull-requests: write
     needs: build
     environment:
-      name: pr${{ github.event.pull_request.number }}
+      name: pr${{ github.event.pull_request.number || github.ref }}
       url: ${{ steps.deploy.outputs.url }}
     steps:
+      - name: Sanitize deployment name
+        run: echo "DEPLOYMENT_NAME=$(echo pr${{ github.event.pull_request.number || github.ref }} | tr '/' '-')" >> "$GITHUB_ENV"
+
       - name: Deploy to ZAD
         id: deploy
         uses: RijksICTGilde/zad-actions/deploy@v3
         with:
           api-key: ${{ secrets.ZAD_API_KEY }}
           project-id: pm-5sj
-          deployment-name: pr${{ github.event.pull_request.number }}
+          deployment-name: ${{ env.DEPLOYMENT_NAME }}
           component: proef
           image: ${{ needs.build.outputs.image }}
           comment-on-pr: true

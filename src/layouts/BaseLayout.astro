@@ -36,7 +36,17 @@ import SideNav from '@/components/SideNav.astro';
     {loggedIn === true ? <Header /> : <HeaderLoggedOut />}
     <MoxBox as="main" backgroundColor={'neutral-subtle-2'} paddingBlock="xl">
         <MoxPageGrid>
-            {loggedIn === true ? <MoxContainerGrid itemSize="sixth" columnGap="2xl"><MoxGridItem style={{gridColumn:'span 2'}}><SideNav /></MoxGridItem><MoxGridItem style={{gridColumn:'span 4'}}><slot /></MoxGridItem></MoxContainerGrid> : <slot />}
+            {loggedIn === true ? 
+            <MoxContainerGrid itemSize="sixth" columnGap="2xl">
+                <MoxGridItem style={{gridColumn:'span 2'}}>
+                    <SideNav />
+                    </MoxGridItem>
+                    <MoxGridItem style={{gridColumn:'span 4'}}>
+                        <div class="legacy">
+                            <slot />
+                        </div>
+                    </MoxGridItem>
+                </MoxContainerGrid> : <div class="legacy"><slot /></div>}
         </MoxPageGrid>
     </MoxBox>
     <Footer />
