@@ -1,12 +1,12 @@
 {
 	"layout": "base.njk",
 	"bodyClass": "moza",
-	"headerType": "mijnoverheid",
+	"headerType": "mobu",
 	"footerType": "overheid",
 	"subNav": [
 		{
 			"label": "Home",
-			"url": "/mijnoverheid/",
+			"url": "/mobu/",
 			"icon": "/assets/icons/icon-home-burger.svg"
 		},
 		{
