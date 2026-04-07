@@ -1354,6 +1354,11 @@ h4 {
 	}
 }
 
+/* Feature flags: verborgen elementen moeten altijd hidden respecteren, ook bij expliciete display */
+[data-feature][hidden] {
+	display: none;
+}
+
 .feature-flags-panel {
 	background: var(--toepassing-color-background-default);
 	border: var(--toepassing-border-default);
