@@ -124,6 +124,7 @@ main {
 }
 
 aside {
+	max-inline-size: min-content;
 	@media (min-width: 800px) {
 		min-inline-size: var(--toepassing-size-component-subnav-width);
 	}

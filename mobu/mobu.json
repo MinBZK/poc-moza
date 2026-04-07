@@ -1,0 +1,66 @@
+{
+	"layout": "base.njk",
+	"bodyClass": "moza",
+	"headerType": "mobu",
+	"footerType": "overheid",
+	"subNav": [
+		{
+			"label": "Home",
+			"url": "/mobu/",
+			"icon": "/assets/icons/icon-home-burger.svg"
+		},
+		{
+			"label": "Berichtenbox",
+			"url": "#",
+			"icon": "/assets/icons/icon-berichtenbox.svg",
+			"class": "side-nav-group--start"
+		},
+		{
+			"label": "Lopende zaken",
+			"url": "#",
+			"icon": "/assets/icons/icon-lopende-zaken.svg"
+		},
+		{
+			"label": "Identiteit",
+			"url": "#",
+			"icon": "/assets/icons/icon-identiteit.svg"
+		},
+		{
+			"label": "Financiën",
+			"url": "#",
+			"icon": "/assets/icons/icon-financieen.svg",
+			"class": "side-nav-group--start"
+		},
+		{
+			"label": "Werk",
+			"url": "#",
+			"icon": "/assets/icons/icon-werk.svg"
+		},
+		{
+			"label": "Gezondheid",
+			"url": "#",
+			"icon": "/assets/icons/icon-gezondheid.svg"
+		},
+		{
+			"label": "Wonen",
+			"url": "#",
+			"icon": "/assets/icons/icon-home.svg"
+		},
+		{
+			"label": "Vervoer",
+			"url": "#",
+			"icon": "/assets/icons/icon-vervoer.svg"
+		},
+		{
+			"label": "Onderwijs",
+			"url": "#",
+			"icon": "/assets/icons/icon-onderwijs.svg"
+		},
+		{
+			"label": "Instellingen",
+			"url": "#",
+			"icon": "/assets/icons/icon-instellingen.svg",
+			"class": "side-nav-group--start"
+		}
+	]
+}
