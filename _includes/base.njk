@@ -17,6 +17,10 @@
         {% include "header-overheid.njk" %}
     {% elif headerType == "overheid-uitgelogd" %}
         {% include "header-overheid-uitgelogd.njk" %}
+    {% elif headerType == "mijnoverheid" %}
+        {% include "header-mijnoverheid.njk" %}
+    {% elif headerType == "mijnoverheid-uitgelogd" %}
+        {% include "header-mijnoverheid-uitgelogd.njk" %}
     {% else %}
         {% include "header-rijksoverheid.njk" %}
     {% endif %}
@@ -27,6 +31,8 @@
 
     {% if footerType == "overheid" %}
         {% include "footer-overheid.njk" %}
+    {% elif footerType == "mijnoverheid" %}
+        {% include "footer-mijnoverheid.njk" %}
     {% else %}
     <footer></footer>
     {% endif %}
