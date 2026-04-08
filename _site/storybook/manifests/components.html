@@ -576,7 +576,7 @@
 <header>
   <div class="wrap">
     <h1>Manifest Debugger</h1>
-    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">4 docs ok</a></div>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">6 docs ok</a></div>
   </div>
 </header>
 <main>
@@ -832,10 +832,222 @@ Object.keys(localStorage)
   aria-label="Docs">
   <div class="head">
     <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Introductie/Ontwerpprincipes: Wat — Visie en principes</h2>
+      <div class="badges">
+        
+        <label for="doc-1-introductie-ontwerpprincipes-wat-visie-en-principes-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/OntwerpprincipesWat.mdx">introductie-ontwerpprincipes-wat-visie-en-principes--docs · ./stories/OntwerpprincipesWat.mdx</div>
+    
+  </div>
+
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-1-introductie-ontwerpprincipes-wat-visie-en-principes-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+
+&lt;Meta title=&quot;Introductie/Ontwerpprincipes: Wat — Visie en principes&quot; /&gt;
+
+# Wat — Visie, principes en uitgangspunten
+
+### Ontwerp met de eindgebruiker centraal
+
+Goed ontwerp begint bij luisteren. Daarom betrekken wij eindgebruikers vanaf het allereerste moment bij ons ontwerpproces. We starten met het in kaart brengen van hun dagelijkse praktijk: waar lopen zij tegenaan, wat kost onnodig tijd of frustratie, en waar liggen juist kansen? Door zowel pijnpunten als wensen expliciet te inventariseren, creëren we een scherp en gedeeld beeld van wat er echt toe doet.
+
+#### Van idee tot initiatief
+
+Het ministerie van Binnenlandse Zaken en Koninkrijksrelaties heeft in 2024 MKB&#39;ers en ZZP&#39;ers uitgenodigd om samen over oplossingen na te denken. Zij kwamen met het voorstel voor een centrale Mijn-omgeving, iets dat in de basis lijkt op MijnOverheid. Daar hebben ze zelf ontwerpen voor bedacht. Met die plannen werken we nu verder.
+
+#### Van inzicht naar eindproduct
+
+In interactieve sessies, interviews en gebruikerstests leggen we onze inzichten en ideeën voor aan de eindgebruikers. Zo toetsen we aannames en krijgen we waardevolle feedback op functionaliteit, gebruiksgemak en flows. Deze inzichten vormen de basis voor onze ontwerprichtingen.
+
+Voor gebruikerstests maken we vaak gebruik van interactieve prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
+
+Door deze continue cyclus van onderzoeken, ontwerpen, testen en verfijnen zorgen we ervoor dat wat we bouwen aansluit op de behoeften en verwachtingen van eindgebruikers. Waar directe inzichten nog ontbreken, werken we op basis van expliciete aannames. Deze aannames maken we zo snel mogelijk toetsbaar door ze te vertalen naar concrete ontwerpen die we voorleggen aan gebruikers.
+
+### Ontwerpen in code
+
+Het ontwerpproces vindt niet plaats in grafische design tooling zoals Figma of Sketch, maar direct in front-end code: HTML, CSS en waar nodig JavaScript. Design tooling voegt een vertaalstap toe tussen ontwerp en eindresultaat — een vertaalstap die tijd kost, informatie verliest en afwijkingen introduceert. Door direct in het daadwerkelijke medium te werken vervalt die vertaling. Wat ontworpen wordt, is direct wat de gebruiker te zien krijgt.
+
+Dit biedt een aantal concrete voordelen:
+
+- **Direct resultaat** — een wijziging in de code is onmiddellijk zichtbaar in de browser. Er is geen export, overdracht of herinterpretatie nodig.
+- **Echte interactie** — hover-staten, toetsenbordnavigatie, focusgedrag en animaties zijn direct te ervaren en te testen. In statische ontwerpen blijven deze onzichtbaar.
+- **Toegankelijkheid vanaf het begin** — semantische HTML, ARIA-attributen en toetsenbordbediening zijn onderdeel van het ontwerpproces, niet iets dat er later aan toegevoegd wordt.
+- **Eén bron van waarheid** — de code is het ontwerp. Er ontstaat geen discrepantie tussen wat in een ontwerptool staat en wat daadwerkelijk gebouwd is.
+- **Lagere drempel voor wijzigingen** — aanpassingen naar aanleiding van gebruikersonderzoek of feedback worden direct in de code doorgevoerd, zonder tussenliggende stappen of afhankelijkheden van specifieke tooling.
+
+## Ontwerpprincipes
+
+### 1. Toegankelijkheid als fundament
+
+Toegankelijkheid is geen toevoeging achteraf maar een ontwerpuitgangspunt. Elk component wordt vanaf het begin ontworpen en gebouwd met toegankelijkheid in gedachten.
+
+- **Semantische HTML eerst** — het ontwerp maakt gebruik van de juiste HTML-elementen voor de juiste functie. Een knop is een `&lt;button&gt;`, navigatie een `&lt;li&gt;` binnen een `&lt;nav&gt;`, een kop een `&lt;h1&gt;`–`&lt;h6&gt;`.
+- **ARIA waar nodig, niet als vervanging** — ARIA-attributen zoals `aria-current=&quot;page&quot;`, `aria-disabled` en `aria-invalid` geven staten en relaties aan die niet met HTML alleen uitgedrukt kunnen worden. `aria-disabled` heeft bijvoorbeeld de voorkeur boven het `disabled`-attribuut, omdat het element hiermee bereikbaar blijft voor hulptechnologie.
+- **Toetsenbordbediening** — alle interactieve elementen zijn bereikbaar en bedienbaar met het toetsenbord. Focusindicatoren worden getoond via `:focus-visible`, zodat ze zichtbaar zijn bij toetsenbordnavigatie maar niet bij muisinteractie.
+
+### 2. Rijkshuisstijl als visuele basis
+
+Het ontwerp volgt de Rijkshuisstijl: de visuele identiteit van de Rijksoverheid. Dit zorgt voor herkenbaarheid en vertrouwen.
+
+- **Rijkslettertype** — alle tekst wordt weergegeven in het lettertype RijksSansVF.
+- **Kleurenpalet** — alle kleuren komen uit het Rijkshuisstijl-palet en worden niet ad hoc gekozen. Het kleurcontrast voldoet aan de WCAG-richtlijnen.
+- **Herkenbare patronen** — de componenten sluiten aan bij wat gebruikers verwachten van een overheidswebsite: duidelijke navigatie, voorspelbare interactie en een professionele uitstraling.
+
+### 3. Design tokens als gedeelde taal
+
+Design tokens vormen de brug tussen ontwerp en ontwikkeling. Ontwerp-waarden zoals kleuren, typografie en maatvoering zijn opgeslagen in een centraal JSON-bestand (`tokens.json`) dat zowel vanuit Figma (via Tokens Studio) als vanuit de code bewerkt kan worden.
+
+- **Twee lagen** — de tokens zijn opgedeeld in _opties_ (de beschikbare waarden uit de Rijkshuisstijl) en _toepassingen_ (semantische verwijzingen die bepalen hoe de opties worden ingezet). In de code worden altijd toepassingsvariabelen gebruikt, nooit opties rechtstreeks.
+- **Eén bron van waarheid** — alle ontwerp-waarden leven in `tokens.json`. Style Dictionary vertaalt deze naar CSS custom properties. De gegenereerde CSS-bestanden worden niet handmatig aangepast.
+- **Tweerichtingsverkeer** — ontwerpers en ontwikkelaars werken op hetzelfde tokenbestand. Wijzigingen in Figma worden teruggeschreven naar Git en andersom.
+
+### 4. Component-gedreven ontwerp
+
+Het ontwerp is opgebouwd uit herbruikbare componenten die afzonderlijk ontwikkeld, getest en gedocumenteerd worden.
+
+- **Storybook als componentenbibliotheek** — elk component heeft een story met varianten, beschrijvingen en configureerbare controls. Dit maakt het mogelijk om componenten te bekijken, te testen en te documenteren los van de pagina&#39;s waarin ze uiteindelijk worden gebruikt.
+- **Van component naar pagina** — pagina&#39;s zijn samengesteld uit bestaande componenten. Dit zorgt voor consistentie en vermindert duplicatie.
+- **Documentatie bij de code** — elke story bevat een beschrijving die uitlegt wanneer en hoe het component ingezet wordt. De componentenbibliotheek dient daarmee zowel als visuele referentie als gebruikershandleiding.
+
+### 5. De eenvoudigst mogelijke oplossing
+
+Elk ontwerpvraagstuk wordt beantwoord met de eenvoudigst mogelijke technische oplossing die het probleem daadwerkelijk oplost. Complexiteit wordt pas toegevoegd wanneer eenvoud aantoonbaar tekortschiet.
+
+- **HTML en CSS waar het kan, JavaScript waar het moet** — standaard browsergedrag en semantische HTML lossen verrassend veel interactieproblemen op zonder aanvullende code. JavaScript wordt alleen toegevoegd wanneer de gewenste functionaliteit niet met HTML en CSS te realiseren is.
+- **Platform boven framework** — het ontwerp leunt op wat de browser al biedt: native formuliervalidatie, `&lt;details&gt;`/`&lt;summary&gt;` voor in- en uitklapbare secties, CSS voor responsiviteit. Frameworks en bibliotheken worden alleen ingezet als het platform aantoonbaar niet volstaat.
+- **Minder is beter te onderhouden** — elke extra laag technologie is een extra laag die begrepen, onderhouden en getest moet worden. Door de oplossing zo dicht mogelijk bij de basis te houden, blijft het prototype toegankelijk voor een breed team en is het eenvoudiger over te dragen naar de uiteindelijke realisatie.
+
+### 6. Prototypen als communicatiemiddel
+
+Het prototype is geen afgewerkt product maar een communicatiemiddel. Het wordt ingezet om ontwerpbeslissingen te toetsen in gebruikersonderzoek en om gesprekken met stakeholders concreet te maken.
+
+- **Echte HTML en CSS** — het prototype is gebouwd met dezelfde technologie als het uiteindelijke product. Dit geeft een realistischer beeld dan statische ontwerpen en maakt het mogelijk om interactie, toegankelijkheid en responsiviteit vroegtijdig te toetsen.
+- **Iteratief proces** — het ontwerp wordt stapsgewijs verbeterd op basis van inzichten uit gebruikersonderzoek. Componenten en pagina&#39;s worden aangepast, niet vanaf nul opnieuw gemaakt.
+
+### 7. Iteratief ontwerpen tussen vandaag en morgen
+
+Het ontwerpproces beweegt zich continu tussen twee perspectieven: wat we nu kunnen bouwen en valideren, en waar we uiteindelijk naartoe willen. De stip op de horizon geeft richting, ook als die op dit moment technisch, juridisch of organisatorisch nog niet bereikbaar is.
+
+- **Ontwerpen op aannames, valideren met gebruikers** — niet elk ontwerpbesluit kan vooraf onderbouwd worden met onderzoek. Waar directe inzichten ontbreken, formuleren we expliciete aannames die we zo snel mogelijk met gebruikers toetsen. Onderzoek en ontwerp wisselen elkaar voortdurend af.
+- **De stip op de horizon als kompas** — sommige oplossingen zijn nu nog niet realiseerbaar: wetgeving staat het niet toe, systemen zijn er nog niet klaar voor, of de organisatie moet eerst anders ingericht worden. Toch ontwerpen we alvast voor die toekomst, zodat we daar klaar voor zijn wanneer de randvoorwaarden veranderen.
+- **Kleine stappen in de goede richting** — elk increment levert iets op dat getest en gebruikt kan worden, maar brengt het ontwerp ook dichter bij het grotere doel. We kiezen bewust voor oplossingen die zowel op korte termijn waarde leveren als op lange termijn passen in het toekomstbeeld.
+</code></pre>
+          </div>
+        </div>
+  </div>
+</article>
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Introductie/Ontwerpprincipes: Hoe — Technische keuzes</h2>
+      <div class="badges">
+        
+        <label for="doc-2-introductie-ontwerpprincipes-hoe-technische-keuzes-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/OntwerpprincipesHoe.mdx">introductie-ontwerpprincipes-hoe-technische-keuzes--docs · ./stories/OntwerpprincipesHoe.mdx</div>
+    
+  </div>
+
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-2-introductie-ontwerpprincipes-hoe-technische-keuzes-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+
+&lt;Meta title=&quot;Introductie/Ontwerpprincipes: Hoe — Technische keuzes&quot; /&gt;
+
+# Hoe — Technische keuzes en werkwijze
+
+De stylesheets maken gebruik van moderne CSS-functionaliteit die breed ondersteund wordt door de huidige generatie browsers. Dit maakt preprocessors en polyfills overbodig en houdt de technische stack zo dicht mogelijk bij het webplatform.
+
+### Logical properties
+
+De stylesheets maken gebruik van CSS logical properties (`inline-size`, `margin-block-start`, `padding-inline`) in plaats van physical properties (`width`, `margin-top`, `padding-left`). Dit maakt de CSS toekomstbestendig voor meertalige ondersteuning en verschillende schrijfrichtingen.
+
+### CSS nesting en custom properties
+
+De stylesheets maken gebruik van native CSS nesting voor component-staten en varianten, en CSS custom properties voor alle ontwerp-waarden. Er worden geen preprocessors zoals Sass gebruikt.
+
+### Layout en spacing
+
+Spacing tussen elementen wordt aangestuurd door één schaal van layout tokens (`--toepassing-space-layout-*`), ongeacht richting. Het juiste CSS-mechanisme wordt gekozen op basis van de context:
+
+- **`&gt; * + *` met margin** — voor content flow waar de parent geen specifiek layout-model nodig heeft. Voorbeelden: `body`, `header`, `.card`, `.accordion`, `footer nav`, `ul`/`ol`. Het voordeel is dat het eerste kind geen onnodige marge krijgt en dat spacing alleen ontstaat _tussen_ elementen.
+
+- **`gap` met flexbox of grid** — voor layouts waarbij alignment, richting-wisseling of een 2D-raster nodig is. Voorbeelden: `.action-group` (wisselt van kolom naar rij), `.tiles` (grid), `.footer-links` (wisselt van kolom naar rij), `.icon-link` (horizontaal, icoon naast tekst), `summary` (icoon naast tekst).
+
+Per container wordt altijd één van deze twee mechanismes gebruikt, nooit beide tegelijk. De keuze voor `gap` of `&gt; * + *` is een implementatiedetail — de spacing-waarde komt altijd uit dezelfde `layout-*` tokens.
+
+### AI-assistentie in het ontwerpproces
+
+In het ontwerpproces wordt [Claude](https://claude.ai/) ingezet als assistent bij het maken en itereren van het prototype. Dit is geen vervanging van het ontwerpproces, maar een versnelling ervan. De ontwerper blijft verantwoordelijk voor de richting, de keuzes en de kwaliteit.
+
+Claude wordt onder andere ingezet voor:
+
+- **Semi-realistische content** — het prototype wordt gevuld met inhoud die dicht bij de werkelijkheid ligt: bestaande subsidienamen, echte wetten, herkenbare bekendmakingen. Dit maakt het prototype geloofwaardiger in gebruikerstests dan lorem ipsum of duidelijk verzonnen tekst. Claude genereert deze content op basis van publiek beschikbare overheidsinformatie.
+- **Variatie en volume** — waar een ontwerp meerdere pagina&#39;s of varianten nodig heeft (bijvoorbeeld gepagineerde lijsten met berichten, subsidies of regelgeving), helpt Claude bij het aanmaken van consistente, gevarieerde content zonder dat elke regel handmatig geschreven hoeft te worden.
+- **Component- en patronenontwikkeling** — Claude assisteert bij het schrijven van HTML, CSS en JavaScript voor nieuwe componenten en interactiepatronen, altijd binnen de bestaande ontwerpprincipes (semantische HTML, design tokens, toegankelijkheid).
+- **Refactoring en abstractie** — herhalende patronen in de code worden met hulp van Claude geïdentificeerd en omgezet naar herbruikbare includes of geautomatiseerde logica, waardoor de codebase onderhoudbaar blijft naarmate het prototype groeit.
+
+De inzet van AI-assistentie past bij het principe van _de eenvoudigst mogelijke oplossing_: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.
+
+### Schrijfwijzer
+
+Het prototype hanteert een schrijfwijzer die consistentie waarborgt in taalgebruik, aanspreekvormen, terminologie, datumnotatie en microcopy. De schrijfwijzer is gedocumenteerd in Storybook en gedestilleerd uit de bestaande content. Kernafspraken zijn onder andere: formele aanspreekvorm (&quot;u&quot;), genderneutraal taalgebruik, vaste termen per concept (bijv. &quot;Bewaar&quot; in plaats van &quot;Opslaan&quot;), en typografische aanhalingstekens in lopende tekst.
+
+### Ontwerppatronen
+
+Het prototype documenteert terugkerende ontwerppatronen in Storybook, met onderbouwing vanuit gebruikersonderzoek en externe bronnen:
+
+- **Interactie op inhoud** — het patroon waarmee gebruikers door middel van acties als Bewaar, Relevant, Niet relevant en Deel een profiel opbouwen dat de basis vormt voor gepersonaliseerde content (aanbevelingssysteem).
+- **Context wisselen** — het patroon waarmee een gebruiker kan wisselen tussen privé- en zakelijke contexten, eigen ondernemingen en machtigingen, zonder opnieuw in te loggen. Geïmplementeerd als accountwisselaar in de header.
+
+### Feature flags
+
+Het prototype bevat een feature-flag systeem waarmee secties en functionaliteit per pagina in- of uitgeschakeld kunnen worden. Dit maakt het mogelijk om verschillende configuraties van het prototype te tonen zonder aparte versies te hoeven bouwen — bijvoorbeeld tijdens gebruikerstests of stakeholdergesprekken.
+
+- **Togglebaar via het paneel** — rechtsonder in het prototype bevindt zich een &quot;Flags&quot;-knop die een paneel opent met alle beschikbare feature flags, gegroepeerd in _Pagina&#39;s_ (navigatie-items en secties) en _Functionaliteit_ (interactiemogelijkheden zoals delen en relevantie aangeven).
+- **Persistent in localStorage** — feature flags worden opgeslagen in de browser. Standaard staan alle features aan; pas als een feature expliciet wordt uitgezet, wordt deze verborgen. Dit geldt zowel voor het navigatie-item als voor bijbehorende content op de pagina.
+- **Declaratief in de markup** — een element markeren als feature-flagged is een kwestie van `data-feature=&quot;Naam&quot;` en `data-feature-type=&quot;pagina|functionaliteit&quot;` toevoegen. Het JavaScript en de CSS doen de rest.
+- **localStorage wissen** — het paneel bevat een knop om alle opgeslagen staten (feature flags, favorieten, verborgen topics, gesloten notificaties) in één keer te resetten.
+
+### Statische site-generatie
+
+[Eleventy](https://www.11ty.dev/) wordt ingezet om herhalende elementen (header, footer, navigatie) als includes te beheren en pagina&#39;s te genereren. Dit houdt de HTML van individuele pagina&#39;s schoon en onderhoudbaar.
+</code></pre>
+          </div>
+        </div>
+  </div>
+</article>
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
       <h2><span class="status-dot dot-ok"></span> Introductie/Schrijfwijzer</h2>
       <div class="badges">
         
-        <label for="doc-1-introductie-schrijfwijzer-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-3-introductie-schrijfwijzer-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/Schrijfwijzer.mdx">introductie-schrijfwijzer--docs · ./stories/Schrijfwijzer.mdx</div>
@@ -844,7 +1056,7 @@ Object.keys(localStorage)
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-1-introductie-schrijfwijzer-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-3-introductie-schrijfwijzer-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -1039,7 +1251,7 @@ Kopteksten bevatten geen punt aan het einde.
       <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Interactie op inhoud</h2>
       <div class="badges">
         
-        <label for="doc-2-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-4-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/InteracterenOpInhoud.mdx">ontwerppatronen-interactie-op-inhoud--docs · ./stories/InteracterenOpInhoud.mdx</div>
@@ -1048,7 +1260,7 @@ Kopteksten bevatten geen punt aan het einde.
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-2-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-4-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -1200,7 +1412,7 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
       <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Context wisselen</h2>
       <div class="badges">
         
-        <label for="doc-3-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-5-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/ContextWisselen.mdx">ontwerppatronen-context-wisselen--docs · ./stories/ContextWisselen.mdx</div>
@@ -1209,7 +1421,7 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-3-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-5-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     

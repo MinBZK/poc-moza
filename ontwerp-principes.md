@@ -1,11 +1,13 @@
 # Ontwerpprincipes MijnOverheid Zakelijk
 
-## Context
-
 Dit document beschrijft de ontwerpprincipes en technische keuzes die ten grondslag liggen aan het prototype van MijnOverheid Zakelijk. Het prototype wordt ingezet voor gebruikersonderzoek en dient als referentie voor de uiteindelijke realisatie.
 
 - [Prototype](https://proef.moza.rijksapp.dev/moza/)
 - [Storybook](https://proef.moza.rijksapp.dev/storybook/)
+
+---
+
+## Wat — Visie, principes en uitgangspunten
 
 ### Ontwerp met de eindgebruiker centraal
 
@@ -13,13 +15,13 @@ Goed ontwerp begint bij luisteren. Daarom betrekken wij eindgebruikers vanaf het
 
 #### Van idee tot initiatief
 
-Het ministerie van Binnenlandse Zaken en Koninkrijksrelaties heeft in 2024 MKB'ers en ZZP'ers uitgenodigd om samen over oplossingen na te denken. Zij kwamen met het voorstel voor een centrale Mijn-omgeving, iets dat in de basis lijkt op MijnOverheid. Daar hebben ze zelf ontwerpen voor bedacht. met die plannen werken we nu verder.
+Het ministerie van Binnenlandse Zaken en Koninkrijksrelaties heeft in 2024 MKB’ers en ZZP’ers uitgenodigd om samen over oplossingen na te denken. Zij kwamen met het voorstel voor een centrale Mijn-omgeving, iets dat in de basis lijkt op MijnOverheid. Daar hebben ze zelf ontwerpen voor bedacht. Met die plannen werken we nu verder.
 
 #### Van inzicht naar eindproduct
 
 In interactieve sessies, interviews en gebruikerstests leggen we onze inzichten en ideeën voor aan de eindgebruikers. Zo toetsen we aannames en krijgen we waardevolle feedback op functionaliteit, gebruiksgemak en flows. Deze inzichten vormen de basis voor onze ontwerprichtingen.
 
-Voor gebruikerstests maken we vaak gebruik van interactive prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
+Voor gebruikerstests maken we vaak gebruik van interactieve prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
 
 Door deze continue cyclus van onderzoeken, ontwerpen, testen en verfijnen zorgen we ervoor dat wat we bouwen aansluit op de behoeften en verwachtingen van eindgebruikers. Waar directe inzichten nog ontbreken, werken we op basis van expliciete aannames. Deze aannames maken we zo snel mogelijk toetsbaar door ze te vertalen naar concrete ontwerpen die we voorleggen aan gebruikers.
 
@@ -98,12 +100,12 @@ Een overzicht van projecten en gebruikersonderzoeken die als input dienen voor h
 
 #### MijnOverheid Zakelijk Gebruikersonderzoeken
 
-<!-- - **Co-creatiesessies BZK (2024)** — sessies met MKB'ers en ZZP'ers waarin het initiatief voor een centrale Mijn-omgeving is ontstaan. -->
+<!-- - **Co-creatiesessies BZK (2024)** — sessies met MKB’ers en ZZP’ers waarin het initiatief voor een centrale Mijn-omgeving is ontstaan. -->
 - **[Rapportage Ontwerpend Onderzoek MijnOnderneming — januari 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Rapportage%20-%20BZK%20Ontwerpend%20Onderzoek%20MijnOnderneming%20-%20Januari%202025.pdf)** — rapportage van het ontwerpend onderzoek MijnOnderneming.
 - **[Rapportage WetWijzer Design en Iteratie Sprint — februari 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Feb%202025/Rapportage%20_%20BZK%20WetWijzer%20Design%20en%20Iteratie%20Sprint%20_%20def%20feb%202025.pdf)** — rapportage van de WetWijzer design- en iteratiesprint.
-- **[Onderzoek inzichten MOZa (ZZP'ers en MKB'ers) — juli 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Juli%202025/Onderzoek%20inzichten%20MOZa%20(gesprekken%20met%20ZZP%27ers%20en%20MKB%27ers)_juli%202025_UX%20Research.pdf)** — UX-onderzoek met ZZP'ers en MKB'ers.
+- **[Onderzoek inzichten MOZa (ZZP’ers en MKB’ers) — juli 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Juli%202025/Onderzoek%20inzichten%20MOZa%20(gesprekken%20met%20ZZP%27ers%20en%20MKB%27ers)_juli%202025_UX%20Research.pdf)** — UX-onderzoek met ZZP’ers en MKB’ers.
 - **[Ontwerpend onderzoek Ondernemers — Inzichtkaarten — juli 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Juli%202025/BZK%20Ontwerpendonderzoek%20Ondernemers%20-%20Analyse%20sessie%2018%20juli%20-%20Inzichtkaarten%20-%20alle%20minisessies.pdf)** — inzichtkaarten uit analysesessies met ondernemers.
-- **[Rapportage usability onderzoek MOZa (MKB'ers) — augustus 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Aug%202025/Rapportage%20usability%20onderzoek%20inzichten%20MOZa%20(gesprekken%20met%20MKB%27ers)_augustus%202025_UX%20Research.pdf)** — rapportage usability-onderzoek met MKB'ers.
+- **[Rapportage usability onderzoek MOZa (MKB’ers) — augustus 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20Aug%202025/Rapportage%20usability%20onderzoek%20inzichten%20MOZa%20(gesprekken%20met%20MKB%27ers)_augustus%202025_UX%20Research.pdf)** — rapportage usability-onderzoek met MKB’ers.
 - **[MOZa usability onderzoek — oktober 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/MOZa%20usability%20onderzoek%20oktober%202025%20DEF.pdf)** — definitief rapport van het usability-onderzoek.
 - **[Verslaglegging aanname-sessie MOZa — oktober 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/Verslaglegging%20aanname%20sessie%20MOZa%20(1%20oktober%202025).pdf)** — verslag van de aanname-sessie.
 - **[WetWijzerBedrijven — Eindrapport v2.0 — oktober 2025](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/01%20-%20okt%202025/WetWijzerBedrijven%20-%20Eindrapport%20v2.0.pdf)** — eindrapport WetWijzerBedrijven.
@@ -116,7 +118,7 @@ Een overzicht van projecten en gebruikersonderzoeken die als input dienen voor h
 - **[Verkenning onderzoek gegevensdeling](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Verkenning%20onderzoek%20gegevensdeling)** — map met onderzoeken over gegevensdeling.
 - **[Verkenning authenticatie](https://www.samenwerkruimten.nl/teamsites/programma%20mijnoverheid%20voor%20ondernemers/Gedeelde%20%20documenten/03%20-%20Programma%20inhoudelijke%20documenten/01%20-%20Gebruikersonderzoeken%20en%20input/01%20-%20Onderzoeken/Verkenning%20authenticatie)** — map met onderzoeken over authenticatie.
 
-#### Oveige gebruikersonderzoeken
+#### Overige gebruikersonderzoeken
 
 - **[Gebruikersonderzoeken.nl](https://gebruikersonderzoeken.nl/docs/thema/mijn-omgeving/)** — verzameling van gebruikersonderzoeken binnen de overheid.
 
@@ -167,7 +169,9 @@ Een overzicht van bestaande Mijn-omgevingen van de overheid die als referentie d
 - **[Prototype 1Overheid](https://azdpc.github.io/prototype-1overheid/home.html)** — prototype van een geïntegreerde overheidsomgeving.
 - **[Miro-board workshop Mijn Mijn Mijn](https://miro.com/app/board/uXjVIekQtL0=/)** — workshop-board over de opbouw en functionaliteit van Mijn-omgevingen van overheidsorganisaties.
 
-## Technische ontwerpkeuzes
+---
+
+## Hoe — Technische keuzes en werkwijze
 
 De stylesheets maken gebruik van moderne CSS-functionaliteit die breed ondersteund wordt door de huidige generatie browsers. Dit maakt preprocessors en polyfills overbodig en houdt de technische stack zo dicht mogelijk bij het webplatform.
 
@@ -201,6 +205,17 @@ Claude wordt onder andere ingezet voor:
 - **Refactoring en abstractie** — herhalende patronen in de code worden met hulp van Claude geïdentificeerd en omgezet naar herbruikbare includes of geautomatiseerde logica, waardoor de codebase onderhoudbaar blijft naarmate het prototype groeit.
 
 De inzet van AI-assistentie past bij het principe van *de eenvoudigst mogelijke oplossing*: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.
+
+### Schrijfwijzer
+
+Het prototype hanteert een schrijfwijzer die consistentie waarborgt in taalgebruik, aanspreekvormen, terminologie, datumnotatie en microcopy. De schrijfwijzer is gedocumenteerd in Storybook en gedestilleerd uit de bestaande content. Kernafspraken zijn onder andere: formele aanspreekvorm ("u"), genderneutraal taalgebruik, vaste termen per concept (bijv. "Bewaar" in plaats van "Opslaan"), en typografische aanhalingstekens in lopende tekst.
+
+### Ontwerppatronen
+
+Het prototype documenteert terugkerende ontwerppatronen in Storybook, met onderbouwing vanuit gebruikersonderzoek en externe bronnen:
+
+- **Interactie op inhoud** — het patroon waarmee gebruikers door middel van acties als Bewaar, Relevant, Niet relevant en Deel een profiel opbouwen dat de basis vormt voor gepersonaliseerde content (aanbevelingssysteem).
+- **Context wisselen** — het patroon waarmee een gebruiker kan wisselen tussen privé- en zakelijke contexten, eigen ondernemingen en machtigingen, zonder opnieuw in te loggen. Geïmplementeerd als accountwisselaar in de header.
 
 ### Feature flags
 
