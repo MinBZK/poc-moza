@@ -1,0 +1,308 @@
+<h1>Digital Assistent MCP-laag</h1>
+<p>De Digitale Assistent met MCP-laag biedt ondernemers hulp met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) delen dezelfde MCP-tools.</p>
+<p>Zie <a href="mcp/decisions">Product Decisions Records</a> voor gemaakte keuzes in de opzet.</p>
+<ul>
+<li><a href="decisions/PDR-001-dual-llm-backend.md">PDR-001</a> de achtergrond bij de dual-backend keuze.</li>
+</ul>
+<h2>Architectuur</h2>
+<pre><code>                     ┌──────────────────────────────────┐
+  moza-portaal ─────▶│  host (poort 8000)                │
+  /chat endpoint     │  VLAM (Mistral) of Claude         │
+                     │  + MCP-tools (indien beschikbaar)  │
+                     └──────┬───────┬───────┬───────┬────┘
+                            │       │       │       │
+                            ▼       ▼       ▼       ▼
+                          kvk    koop   regelrecht  rvo
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Server</th>
+<th>MCP-type</th>
+<th>Bron</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kvk</td>
+<td>Resource + Tool</td>
+<td>Bedrijfsgegevens ingelogde gebruiker (KvK Test API, sessie-gebonden)</td>
+</tr>
+<tr>
+<td>koop</td>
+<td>Resource + Tool</td>
+<td>KOOP Regelingenbank (productie-API)</td>
+</tr>
+<tr>
+<td>regelrecht</td>
+<td>Tool (non-muterend)</td>
+<td>Beslislogica Informatieplicht (API via poc-machine-law)</td>
+</tr>
+<tr>
+<td>rvo</td>
+<td>Tool (muterend)</td>
+<td>RVO indienings-API (mock)</td>
+</tr>
+</tbody>
+</table>
+<p>De host werkt ook zonder MCP-servers, de assistent antwoordt dan op basis van eigen kennis.</p>
+<blockquote>
+<p><strong>KvK testomgeving:</strong> De KvK-server haalt bedrijfsgegevens op via de KvK Test API (<code>api.kvk.nl/test/api/v1/basisprofielen</code>). Toegang is beperkt tot het bedrijf van de ingelogde gebruiker (demo: Test BV Donald, KvK 68750110). In productie wordt het KvK-nummer bepaald door de sessie-authenticatie.</p>
+</blockquote>
+<h2>Routering: welke bron bij welke vraag?</h2>
+<p>Het LLM kiest op basis van de systeemprompt welke MCP-server wordt aangesproken. De routeringsregels zijn gedefinieerd in <code>host/prompts/blocks/shared/tool_usage.md</code> en volgen onderstaande beslisboom:</p>
+<pre><code class="language-mermaid">flowchart TD
+    Start([Gebruikersvraag]) --&gt; Q1{Vraagt naar eigen\nbedrijfsgegevens?}
+
+    Q1 -- ja --&gt; KVK_TOOL[/Tool: kvk__mijn_bedrijf/]
+    Q1 -- nee --&gt; Q5{Vraagt of een verplichting\nvan toepassing is?}
+
+    Q5 -- ja --&gt; KVK_TOOL
+    KVK_TOOL --&gt; Q5b{KvK-nummer\nverkregen}
+    Q5b --&gt; RR_TOOL[/Tool: regelrecht__check/]
+    RR_TOOL --&gt; Q5c{Wil gebruiker\nde wettekst lezen?}
+    Q5c -- ja --&gt; KOOP_RES[/Resource: koop://regeling/bwb_id/]
+    Q5c -- nee --&gt; Antwoord
+    Q5 -- nee --&gt; Q4{Vraagt naar een\nspecifieke wet of regel?}
+
+    Q4 -- ja --&gt; KOOP_TOOL[/Tool: koop__zoek_regelgeving/]
+    KOOP_TOOL --&gt; Q4b{Wil gebruiker\nde inhoud lezen?}
+    Q4b -- ja --&gt; KOOP_RES
+    Q4b -- nee --&gt; Antwoord
+    Q4 -- nee --&gt; Q3{Bevat een\nBWB-ID?}
+
+    Q3 -- ja --&gt; KOOP_RES
+    Q3 -- nee --&gt; Q6{Vraagt naar subsidies\nof rapportage?}
+
+    Q6 -- ja --&gt; Q6b{Wil indienen\nof alleen informatie?}
+    Q6b -- informatie --&gt; RVO_ZOEK[/Tool: rvo__zoek_regeling/]
+    Q6b -- indienen --&gt; Q6c{Gebruiker\nbevestigt?}
+    Q6c -- ja --&gt; RVO_IND[/Tool: rvo__indienen/]
+    Q6c -- nee --&gt; Antwoord
+    Q6 -- nee --&gt; Q7{Algemene vraag\nover regelgeving?}
+
+    Q7 -- ja --&gt; KOOP_TOOL
+    Q7 -- nee --&gt; EIGEN[Eigen kennis\n+ disclaimer]
+
+    KOOP_RES --&gt; Antwoord([Antwoord aan gebruiker])
+    RVO_ZOEK --&gt; Antwoord
+    RVO_IND --&gt; Antwoord
+    EIGEN --&gt; Antwoord
+
+    style KVK_TOOL fill:#4A90D9,color:#fff
+    style KOOP_RES fill:#48BB78,color:#fff
+    style KOOP_TOOL fill:#4A90D9,color:#fff
+    style RR_TOOL fill:#4A90D9,color:#fff
+    style RVO_ZOEK fill:#4A90D9,color:#fff
+    style RVO_IND fill:#ED8936,color:#fff
+    style EIGEN fill:#A0AEC0,color:#fff
+</code></pre>
+<p>Legenda:
+<strong>groen</strong> = Resource (read-only ophalen)
+<strong>blauw</strong> = Tool (read-only zoeken/berekenen)
+<strong>oranje</strong> = Tool (muterend, vereist bevestiging)
+<strong>grijs</strong> = eigen kennis</p>
+<p>Bij gecombineerde vragen geldt de volgorde: KvK (wie?) → RegelRecht (wat geldt er?) → KOOP (verdieping wettekst) → RVO (actie ondernemen).</p>
+<h2>Voorbeeldscenario's</h2>
+<h3>Scenario 1: Eigen bedrijfsgegevens opvragen (KvK)</h3>
+<blockquote>
+<p>Gebruiker: &quot;Wat zijn mijn bedrijfsgegevens?&quot;</p>
+</blockquote>
+<pre><code class="language-mermaid">sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+
+    Gebruiker-&gt;&gt;Host: &quot;Wat zijn mijn bedrijfsgegevens?&quot;
+    Note over Host: Routeringsregel: eigen gegevens&lt;br/&gt;→ kvk__mijn_bedrijf
+    Host-&gt;&gt;KvK: tools/call [mijn_bedrijf]
+    Note over KvK: Sessie-gebonden:&lt;br/&gt;retourneert profiel van&lt;br/&gt;de ingelogde gebruiker
+    KvK--&gt;&gt;Host: basisprofiel (KvK API-formaat) + provenance
+    Host-&gt;&gt;Gebruiker: &quot;Uw bedrijf Test BV Donald (KvK 68750110)&lt;br/&gt;is een Besloten Vennootschap gevestigd&lt;br/&gt;in Lollum. SBI-code: 01241.&quot;
+</code></pre>
+<h3>Scenario 2: Regelgeving zoeken (KOOP)</h3>
+<blockquote>
+<p>Gebruiker: &quot;Welke regels gelden er voor energiebesparing?&quot;</p>
+</blockquote>
+<pre><code class="language-mermaid">sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KOOP as MCP Server (KOOP)
+    participant SRU as SRU zoekservice
+
+    Gebruiker-&gt;&gt;Host: &quot;Welke regels gelden er voor energiebesparing?&quot;
+    Note over Host: Routeringsregel: vraag over regelgeving&lt;br/&gt;→ koop__zoek_regelgeving
+    Host-&gt;&gt;KOOP: tools/call [zoek_regelgeving, trefwoord=&quot;energiebesparing&quot;]
+    KOOP-&gt;&gt;SRU: GET zoekservice.overheid.nl/sru/Search&lt;br/&gt;?x-connection=BWB&amp;query=overheidbwb.titel any &quot;energiebesparing&quot;
+    SRU--&gt;&gt;KOOP: XML met regelingen
+    KOOP--&gt;&gt;Host: resultaten + provenance
+    Host-&gt;&gt;Gebruiker: &quot;Er zijn 86 regelingen gevonden, waaronder...&quot;
+
+    Gebruiker-&gt;&gt;Host: &quot;Wat staat er in de Subsidieregeling energiebesparing?&quot;
+    Note over Host: Routeringsregel: BWB-ID bekend&lt;br/&gt;→ resource koop://regeling
+    Host-&gt;&gt;KOOP: resources/read [koop://regeling/BWBR0038472]
+    KOOP-&gt;&gt;SRU: SRU lookup → resolve naar XML-URL
+    SRU--&gt;&gt;KOOP: locatie_toestand URL
+    KOOP-&gt;&gt;SRU: GET repository XML
+    SRU--&gt;&gt;KOOP: volledige wettekst
+    KOOP--&gt;&gt;Host: artikelen + provenance
+    Host-&gt;&gt;Gebruiker: &quot;De regeling bevat X artikelen. Artikel 1 bepaalt...&quot;
+</code></pre>
+<h3>Scenario 3: Gecombineerde vraag (KvK + RegelRecht)</h3>
+<blockquote>
+<p>Gebruiker: &quot;Moet mijn bedrijf voldoen aan de Informatieplicht Energiebesparing?&quot;</p>
+</blockquote>
+<pre><code class="language-mermaid">sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+    participant RR as MCP Server (RegelRecht)
+    participant Engine as RegelRecht Engine
+
+    Gebruiker-&gt;&gt;Host: &quot;Moet mijn bedrijf voldoen aan de&lt;br/&gt;Informatieplicht Energiebesparing?&quot;
+
+    Note over Host: Stap 1: bedrijfsgegevens ophalen&lt;br/&gt;via sessie-gebonden KvK
+    Host-&gt;&gt;KvK: tools/call [mijn_bedrijf]
+    KvK--&gt;&gt;Host: Test BV Donald, KvK 68750110,&lt;br/&gt;SBI 01241 + provenance
+
+    Note over Host: Stap 2: verplichting checken&lt;br/&gt;met verkregen KvK-nummer
+    Host-&gt;&gt;RR: tools/call [check, kvk_nummer=&quot;68750110&quot;]
+    RR-&gt;&gt;Engine: POST /mcp/rpc [execute_law,&lt;br/&gt;service=RVO, law=informatieplicht]
+    Engine--&gt;&gt;RR: beslisboom-resultaat + wettelijke grondslag
+    RR--&gt;&gt;Host: resultaat + provenance
+
+    Host-&gt;&gt;Gebruiker: &quot;Op basis van art. 5.15d Bal: de informatieplicht&lt;br/&gt;is van toepassing als uw energieverbruik boven&lt;br/&gt;50.000 kWh of 25.000 m³ gas per jaar ligt.&lt;br/&gt;Wat is uw jaarlijks energieverbruik?&quot;
+</code></pre>
+<h3>Scenario 4: Subsidie zoeken en rapportage indienen (RVO)</h3>
+<blockquote>
+<p>Gebruiker: &quot;Welke subsidies zijn er voor energiebesparing?&quot;</p>
+</blockquote>
+<pre><code class="language-mermaid">sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KvK as MCP Server (KvK)
+    participant RVO as MCP Server (RVO)
+
+    Gebruiker-&gt;&gt;Host: &quot;Welke subsidies zijn er voor energiebesparing?&quot;
+    Note over Host: Routeringsregel: vraag over subsidies&lt;br/&gt;→ rvo__zoek_regeling
+    Host-&gt;&gt;RVO: tools/call [zoek_regeling, trefwoord=&quot;energiebesparing&quot;]
+    Note over RVO: Zoekt in mock-regelingen&lt;br/&gt;op naam en beschrijving
+    RVO--&gt;&gt;Host: 3 resultaten (EBR-2026, EIA-2026, ISDE-2026) + provenance
+    Host-&gt;&gt;Gebruiker: &quot;Er zijn 3 regelingen gevonden:&lt;br/&gt;1. Informatieplicht Energiebesparing (open, deadline 2027-12-01)&lt;br/&gt;2. Energie-investeringsaftrek EIA (open)&lt;br/&gt;3. Investeringssubsidie Duurzame Energie ISDE (open)&quot;
+
+    Gebruiker-&gt;&gt;Host: &quot;Ik wil mijn energiebesparingsrapportage indienen&quot;
+    Note over Host: Muterende actie →&lt;br/&gt;eerst bedrijfsgegevens ophalen,&lt;br/&gt;dan bevestiging vragen
+    Host-&gt;&gt;KvK: tools/call [mijn_bedrijf]
+    KvK--&gt;&gt;Host: Test BV Donald, KvK 68750110 + provenance
+    Host-&gt;&gt;Gebruiker: &quot;Ik kan de rapportage voor Test BV Donald (KvK 68750110)&lt;br/&gt;indienen bij regeling EBR-2026.&lt;br/&gt;Welke maatregelen heeft u genomen?&quot;
+
+    Gebruiker-&gt;&gt;Host: &quot;LED-verlichting en HR++ beglazing&quot;
+    Host-&gt;&gt;Gebruiker: &quot;Ter bevestiging: ik dien de volgende rapportage in:&lt;br/&gt;• Bedrijf: Test BV Donald (68750110)&lt;br/&gt;• Regeling: Informatieplicht Energiebesparing (EBR-2026)&lt;br/&gt;• Maatregelen: LED-verlichting, HR++ beglazing&lt;br/&gt;Wilt u doorgaan?&quot;
+
+    Gebruiker-&gt;&gt;Host: &quot;Ja&quot;
+    Host-&gt;&gt;RVO: tools/call [indienen, kvk_nummer=&quot;68750110&quot;,&lt;br/&gt;regeling_id=&quot;EBR-2026&quot;,&lt;br/&gt;maatregelen=[&quot;LED-verlichting&quot;,&quot;HR++ beglazing&quot;]]
+    Note over RVO: Mock: simuleert succesvolle&lt;br/&gt;indiening en genereert&lt;br/&gt;referentienummer
+    RVO--&gt;&gt;Host: status=INGEDIEND,&lt;br/&gt;ref=RVO-EBR-2026-68750110-001 + provenance
+    Host-&gt;&gt;Gebruiker: &quot;Uw rapportage is succesvol ingediend.&lt;br/&gt;Referentienummer: RVO-EBR-2026-68750110-001.&lt;br/&gt;U ontvangt een bevestiging per e-mail.&lt;br/&gt;De voortgang is te volgen onder 'Lopende zaken'.&quot;
+</code></pre>
+<blockquote>
+<p><strong>Let op:</strong> De <code>indienen</code>-tool is muterend. Het AI-platform vraagt daarom <em>altijd</em> om expliciete bevestiging van de gebruiker voordat de tool wordt aangeroepen. Dit is afgedwongen via de <code>ToolAnnotations</code> (<code>readOnlyHint=False</code>) én de systeemprompt.</p>
+</blockquote>
+<h3>Scenario 5: Bron niet beschikbaar</h3>
+<blockquote>
+<p>Gebruiker: &quot;Welke regels gelden voor voedselveiligheid?&quot;</p>
+</blockquote>
+<pre><code class="language-mermaid">sequenceDiagram
+    actor Gebruiker
+    participant Host as AI-platform (Host)
+    participant KOOP as MCP Server (KOOP)
+    participant SRU as SRU zoekservice
+
+    Gebruiker-&gt;&gt;Host: &quot;Welke regels gelden voor voedselveiligheid?&quot;
+    Host-&gt;&gt;KOOP: tools/call [zoek_regelgeving, trefwoord=&quot;voedselveiligheid&quot;]
+    KOOP-&gt;&gt;SRU: GET zoekservice.overheid.nl/sru/Search...
+    SRU--xKOOP: timeout / 503
+    KOOP--&gt;&gt;Host: error: SOURCE_UNAVAILABLE
+    Host-&gt;&gt;Gebruiker: &quot;De KOOP Regelingenbank is op dit moment&lt;br/&gt;niet bereikbaar. U kunt het rechtstreeks&lt;br/&gt;proberen via wetten.overheid.nl.&quot;
+</code></pre>
+<h2>Snel starten</h2>
+<pre><code class="language-bash">cd mcp/host
+cp .env.example .env        # Vul API-keys in
+pip install -r requirements.txt
+python api.py               # Start host op poort 8000
+</code></pre>
+<p>Start daarna het moza-portaal (<code>npm run dev</code> in de root) en open de Digitale Assistent-pagina.</p>
+<h3>Met MCP-servers (Docker)</h3>
+<pre><code class="language-bash">cd mcp
+docker compose up --build
+</code></pre>
+<h2>Configuratie (.env)</h2>
+<pre><code class="language-bash"># Claude (Anthropic)
+ANTHROPIC_API_KEY=sk-ant-...
+CLAUDE_MODEL=claude-sonnet-4-...
+
+# VLAM (UbiOps/Mistral)
+VLAM_API_KEY=...
+VLAM_BASE_URL=https://...
+VLAM_MODEL_ID=...
+</code></pre>
+<p>Zonder VLAM-keys wordt alleen Claude beschikbaar.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Methode</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/chat</code></td>
+<td>POST</td>
+<td>Stuur bericht, ontvang antwoord. Body: <code>{ message, session_id?, mode? }</code></td>
+</tr>
+<tr>
+<td><code>/health</code></td>
+<td>GET</td>
+<td>Status van backends en MCP-servers</td>
+</tr>
+<tr>
+<td><code>/tools</code></td>
+<td>GET</td>
+<td>Lijst van beschikbare MCP-tools</td>
+</tr>
+<tr>
+<td><code>/chat/{id}</code></td>
+<td>DELETE</td>
+<td>Wis sessie</td>
+</tr>
+</tbody>
+</table>
+<h2>Mappenstructuur</h2>
+<pre><code>mcp/
+  README.md
+  docker-compose.yml
+  decisions/             Product Decision Records
+  host/
+    api.py               FastAPI REST-server
+    vlam_host.py         LLM-orchestrator (VLAM + Claude)
+    mcp_client.py        MCP-server verbindingen
+    config.py            Configuratie
+    prompts/             Modulaire systeemprompts
+      composer.py        Stelt blokken samen tot system prompt
+      blocks/
+        identity/        Per-model identiteit (vlam.md, claude.md)
+        shared/          Gedeelde blokken (tone, format, guardrails, ...)
+          domain/        Domeinkennis per onderwerp
+        model_specific/  Fijnsturing per model
+      examples/          Few-shot voorbeelden
+    requirements.txt
+    Dockerfile
+    .env.example
+  servers/
+    kvk/                 MCP Resource + Tool — Bedrijfsgegevens (KvK Test API, sessie-gebonden)
+    koop/                MCP Resource + Tool — Regelingenbank
+    regelrecht/          MCP Tool — beslislogica
+    rvo/                 MCP Tool — indienen rapportage
+</code></pre>

@@ -1,0 +1,154 @@
+<h1>PDR-002: VLAM timeout en graceful fallback bij tool-calling</h1>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Waarde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td>Geaccepteerd</td>
+</tr>
+<tr>
+<td>Datum</td>
+<td>2026-03-19</td>
+</tr>
+<tr>
+<td>Beslisser(s)</td>
+<td>Projectteam poc-moza</td>
+</tr>
+<tr>
+<td>Gerelateerd</td>
+<td>PDR-001</td>
+</tr>
+</tbody>
+</table>
+<h2>Context</h2>
+<p>De VLAM-backend (Mistral via UbiOps) vertoont instabiel gedrag bij tool-calling. Systematisch testen toonde aan dat het probleem in het UbiOps-platform zit, niet in onze code:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Responstijd</th>
+<th>Resultaat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Geen tools</td>
+<td>~1,3s</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>1 tool (KvK mijn_bedrijf)</td>
+<td>~23s</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>1 tool (RegelRecht)</td>
+<td>~53s</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>2 tools (KvK + RegelRecht)</td>
+<td>~37s</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>1 tool (KOOP only)</td>
+<td>~39s</td>
+<td>500-fout</td>
+</tr>
+<tr>
+<td>3 tools (alle)</td>
+<td>~37s</td>
+<td>500-fout</td>
+</tr>
+<tr>
+<td>2 tools + lang prompt</td>
+<td>~110s</td>
+<td>500-fout</td>
+</tr>
+</tbody>
+</table>
+<p>Conclusies:</p>
+<ul>
+<li>Zonder tools antwoordt VLAM in ~1,3 seconde.</li>
+<li>Met tools neemt de responstijd toe tot 20-50+ seconden, ongeacht welke tool.</li>
+<li>Bij meerdere tools of langere prompts crasht het platform regelmatig met een HTTP 500.</li>
+<li>Het probleem is niet specifiek voor een bepaalde MCP-server; zelfs KOOP alleen kan een 500 veroorzaken.</li>
+</ul>
+<p>De gebruiker wacht hierdoor soms meer dan een minuut op een antwoord dat nooit komt.</p>
+<h2>Beslissing</h2>
+<p><strong>Configureerbare timeout per LLM-call met automatische fallback naar een call zonder tools.</strong></p>
+<h3>Mechanisme</h3>
+<ol>
+<li>Elke LLM-call wordt gewrapped in <code>asyncio.wait_for()</code> met een configureerbare timeout.</li>
+<li>Bij een <code>TimeoutError</code> of <code>APIStatusError</code> (HTTP 500) op de VLAM-call:
+<ul>
+<li>De call wordt automatisch opnieuw gedaan <strong>zonder tools</strong> (geen <code>tools</code>-parameter).</li>
+<li>De gebruiker krijgt een statusbericht: <em>&quot;Bronnen niet bereikbaar, antwoord op eigen kennis...&quot;</em></li>
+<li>Het uiteindelijke antwoord bevat een disclaimer: <em>&quot;Let op: dit antwoord is gebaseerd op eigen kennis. Er is geen actuele bron geraadpleegd.&quot;</em></li>
+</ul>
+</li>
+<li>Als ook de retry zonder tools faalt, krijgt de gebruiker een foutmelding: <em>&quot;De assistent is op dit moment niet bereikbaar.&quot;</em></li>
+<li>De Claude-backend krijgt dezelfde timeout-bescherming, maar zonder tool-fallback (Claude is stabiel met tools).</li>
+</ol>
+<h3>Configuratie</h3>
+<pre><code class="language-bash">VLAM_TIMEOUT=30    # seconden per VLAM-call (default: 30)
+CLAUDE_TIMEOUT=60  # seconden per Claude-call (default: 60)
+</code></pre>
+<p>De VLAM-timeout is bewust kort (30s) omdat VLAM zonder tools ~1,3s doet. Een call die na 30 seconden niet terugkomt, is waarschijnlijk vastgelopen. De Claude-timeout is ruimer omdat Claude-calls met tool-aanroepen betrouwbaar zijn maar soms langer duren.</p>
+<h3>Betroffene bestanden</h3>
+<table>
+<thead>
+<tr>
+<th>Bestand</th>
+<th>Wijziging</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host/config.py</code></td>
+<td><code>VLAM_TIMEOUT</code> en <code>CLAUDE_TIMEOUT</code> configuratie</td>
+</tr>
+<tr>
+<td><code>host/vlam_host.py</code></td>
+<td><code>asyncio.wait_for()</code> rond alle LLM-calls, <code>_chat_vlam_no_tools()</code> en <code>_vlam_no_tools_blocking()</code> fallback-methodes</td>
+</tr>
+</tbody>
+</table>
+<h2>Alternatieven overwogen</h2>
+<h3>A. Langere timeout zonder fallback</h3>
+<ul>
+<li>(+) Eenvoudiger — geen retry-logica.</li>
+<li>(-) De gebruiker wacht tot 2 minuten om daarna alsnog een foutmelding te krijgen.</li>
+<li>(-) Lost het 500-probleem niet op; de call komt nooit terug.</li>
+</ul>
+<h3>B. Aantal tools beperken voor VLAM</h3>
+<ul>
+<li>(+) Minder kans op crashes met minder tools.</li>
+<li>(-) Beperkt de functionaliteit van de assistent voor VLAM-gebruikers.</li>
+<li>(-) Fragiel — het is niet voorspelbaar bij hoeveel tools het misgaat.</li>
+</ul>
+<h3>C. Automatisch wisselen naar Claude bij VLAM-fout</h3>
+<ul>
+<li>(+) Gebruiker krijgt altijd het beste antwoord.</li>
+<li>(-) Verwarrend: de gebruiker heeft bewust VLAM gekozen en krijgt dan onverwacht Claude-output.</li>
+<li>(-) Maskeert het platformprobleem, waardoor het niet wordt opgelost.</li>
+</ul>
+<h3>D. Queue-mechanisme met retry</h3>
+<ul>
+<li>(+) Robuuster bij intermitterende fouten.</li>
+<li>(-) Overkill voor een POC — voegt complexiteit toe die het probleem niet bij de bron oplost.</li>
+</ul>
+<h2>Consequenties</h2>
+<ol>
+<li><strong>Gebruikerservaring</strong> — bij een VLAM-timeout krijgt de gebruiker binnen ~32 seconden alsnog een antwoord (30s timeout + ~2s retry zonder tools), in plaats van minutenlang wachten op een fout.</li>
+<li><strong>Beperkte antwoordkwaliteit bij fallback</strong> — het antwoord zonder tools bevat geen actuele bedrijfsgegevens of regelgeving-checks. De disclaimer maakt dit transparant.</li>
+<li><strong>Logging</strong> — timeouts en fallbacks worden gelogd (<code>WARNING</code> bij eerste fout, <code>ERROR</code> als ook de retry faalt), zodat de frequentie van UbiOps-problemen meetbaar is.</li>
+<li><strong>Geen dependency</strong> — de oplossing gebruikt alleen <code>asyncio.wait_for()</code> uit de standaardbibliotheek.</li>
+<li><strong>Platformsignaal</strong> — de logs bieden onderbouwing om het timeout-gedrag bij het UbiOps-team aan te kaarten.</li>
+</ol>

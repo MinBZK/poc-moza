@@ -1,0 +1,165 @@
+<h1>PDR-003: VLAM orchestratie-modus — host-gestuurde tool-aanroepen</h1>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Waarde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td>Geaccepteerd</td>
+</tr>
+<tr>
+<td>Datum</td>
+<td>2026-03-19</td>
+</tr>
+<tr>
+<td>Beslisser(s)</td>
+<td>Projectteam poc-moza</td>
+</tr>
+<tr>
+<td>Gerelateerd</td>
+<td>PDR-001, PDR-002</td>
+</tr>
+</tbody>
+</table>
+<h2>Context</h2>
+<p>VLAM (Mistral via UbiOps) is instabiel bij OpenAI-compatibele tool-calling (zie PDR-002). Zonder tools antwoordt VLAM in ~1,5 seconde; met tool-definities in het request stijgt de responstijd naar 20-60+ seconden en crasht het platform regelmatig met HTTP 500-fouten.</p>
+<p>Het probleem is niet het <strong>aanroepen</strong> van een specifieke tool, maar het <strong>meesturen van tool-definities</strong> in het request. Zelfs met één tool is VLAM al 15-20x trager. Met drie tools is het onbetrouwbaar.</p>
+<p>Eerder werkten we rond dit probleem met een timeout + fallback op eigen kennis (PDR-002). Dat voorkomt dat de gebruiker minutenlang wacht, maar het resultaat is een antwoord zonder actuele bronnen — een degradatie van de functionaliteit.</p>
+<h2>Beslissing</h2>
+<p><strong>VLAM gebruikt geen OpenAI tool-calling meer. In plaats daarvan stuurt de host de tool-aanroepen aan op basis van VLAM's instructies in platte tekst.</strong></p>
+<h3>Mechanisme</h3>
+<p>Het principe is: VLAM denkt, de host voert uit.</p>
+<pre><code>Gebruiker: &quot;Kom ik in aanmerking voor de informatieplicht?&quot;
+
+Ronde 1: VLAM (zonder tools, ~1.5s)
+   → ```json {&quot;tool&quot;: &quot;kvk__mijn_bedrijf&quot;, &quot;arguments&quot;: {}}```
+
+         Host voert kvk__mijn_bedrijf uit (~0.1s)
+
+Ronde 2: VLAM (zonder tools + tool-resultaat, ~1.5s)
+   → ```json {&quot;tool&quot;: &quot;regelrecht__check&quot;, &quot;arguments&quot;: {&quot;kvk_nummer&quot;: &quot;12345678&quot;}}```
+
+         Host voert regelrecht__check uit (~0.5s)
+
+Ronde 3: VLAM (zonder tools + beide resultaten, ~1.5s)
+   → &quot;Op basis van art. 5.15d Bal is de informatieplicht van toepassing...&quot;
+
+Totaal: ~5 seconden (was: 30-60s+ met crashes)
+</code></pre>
+<p>Elke VLAM-call is een snelle tekst-call (~1,5s) zonder tool-definities in het request. De host:</p>
+<ol>
+<li>Stuurt de gebruikersvraag naar VLAM met een systeem-prompt die beschikbare tools beschrijft als tekst</li>
+<li>Parsed VLAM's antwoord op JSON-blokken (<code>{&quot;tool&quot;: &quot;...&quot;, &quot;arguments&quot;: {...}}</code>)</li>
+<li>Voert de gevraagde tool uit via de MCP-server</li>
+<li>Stuurt het resultaat terug naar VLAM als vervolgbericht</li>
+<li>Herhaalt tot VLAM een direct antwoord geeft (max 5 rondes)</li>
+</ol>
+<h3>Prompt-instructie aan VLAM</h3>
+<p>VLAM krijgt in de systeemprompt een compacte tool-catalogus (naam, beschrijving, parameters) en de instructie:</p>
+<blockquote>
+<p>Je kunt GEEN tools zelf aanroepen. Als je een bron nodig hebt, antwoord dan ALLEEN met een JSON-blok: <code>{&quot;tool&quot;: &quot;&lt;naam&gt;&quot;, &quot;arguments&quot;: {...}}</code>. Vraag per keer maximaal één tool aan.</p>
+</blockquote>
+<h3>Configuratie</h3>
+<pre><code class="language-bash"># Orchestratie aan (standaard) — host stuurt tools aan
+VLAM_ORCHESTRATED=true
+
+# Orchestratie uit — klassieke OpenAI tool-calling (instabiel)
+VLAM_ORCHESTRATED=false
+</code></pre>
+<p>De vlag staat standaard op <code>true</code>. Met <code>false</code> wordt de oude aanpak gebruikt (met timeout-fallback uit PDR-002), zodat de klassieke modus beschikbaar blijft voor testen of als UbiOps het tool-calling-probleem oplost.</p>
+<h3>Betroffen bestanden</h3>
+<table>
+<thead>
+<tr>
+<th>Bestand</th>
+<th>Wijziging</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host/config.py</code></td>
+<td><code>VLAM_ORCHESTRATED</code> configuratie</td>
+</tr>
+<tr>
+<td><code>host/vlam_host.py</code></td>
+<td><code>_chat_vlam_orchestrated_stream()</code>, <code>_build_tool_catalog()</code>, <code>_extract_tool_request()</code>, <code>_vlam_call()</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Vergelijking</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Klassiek (tool-calling)</th>
+<th>Orchestratie (nieuw)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLAM-calls per vraag</td>
+<td>1-3 (met tools)</td>
+<td>2-4 (zonder tools)</td>
+</tr>
+<tr>
+<td>Tijd per call</td>
+<td>20-60s</td>
+<td>~1,5s</td>
+</tr>
+<tr>
+<td>Totale doorlooptijd</td>
+<td>30-120s</td>
+<td>3-8s</td>
+</tr>
+<tr>
+<td>Stabiliteit</td>
+<td>Crasht regelmatig (500)</td>
+<td>Stabiel</td>
+</tr>
+<tr>
+<td>Tool-definities in request</td>
+<td>Ja (~400 tokens)</td>
+<td>Nee</td>
+</tr>
+<tr>
+<td>Afhankelijk van UbiOps tool-calling</td>
+<td>Ja</td>
+<td>Nee</td>
+</tr>
+</tbody>
+</table>
+<h2>Alternatieven overwogen</h2>
+<h3>A. Timeout + fallback op eigen kennis (PDR-002)</h3>
+<ul>
+<li>(+) Simpelste oplossing, al geïmplementeerd.</li>
+<li>(-) Gebruiker krijgt een antwoord zonder actuele bronnen — de kernfunctionaliteit van de assistent (bronverwijzingen) gaat verloren.</li>
+<li>(-) Lost het snelheidsprobleem niet op, alleen de crash.</li>
+</ul>
+<h3>B. Compactere tool-definities</h3>
+<ul>
+<li>(+) Minder tokens in het request, mogelijk sneller.</li>
+<li>(-) Het probleem zit niet in de grootte maar in de tool-calling functionaliteit van UbiOps. Zelfs met één simpele tool (geen parameters) is VLAM 15x trager.</li>
+</ul>
+<h3>C. Host routeert volledig op keywords (zonder VLAM)</h3>
+<ul>
+<li>(+) Snelst mogelijk — slechts één VLAM-call voor het eindantwoord.</li>
+<li>(-) Keyword-matching is fragiel en schaalt niet bij nieuwe tools of onverwachte vragen.</li>
+<li>(-) Dupliceert de routeringslogica die VLAM al begrijpt uit de systeemprompt.</li>
+</ul>
+<h3>D. Wachten tot UbiOps het oplost</h3>
+<ul>
+<li>(+) Geen workaround nodig.</li>
+<li>(-) Geen controle over de tijdlijn. Blokkeert de demo.</li>
+</ul>
+<h2>Consequenties</h2>
+<ol>
+<li><strong>Claude ongewijzigd</strong> — Claude blijft native tool-calling gebruiken via de Anthropic API. De orchestratie geldt alleen voor VLAM.</li>
+<li><strong>Parsing-risico</strong> — de host moet JSON uit VLAM's tekst-antwoord extraheren. Als VLAM een ongeldig formaat genereert, wordt het als direct antwoord behandeld (graceful degradation).</li>
+<li><strong>Meer VLAM-calls</strong> — een gecombineerde vraag (KvK + RegelRecht) kost nu 3-4 calls in plaats van 1-2. Maar elke call is ~1,5s in plaats van 30-60s, dus de totale doorlooptijd is korter.</li>
+<li><strong>Geen dependency</strong> — de oplossing gebruikt alleen standaard Python (<code>re</code>, <code>json</code>). Geen extra pakketten.</li>
+<li><strong>Reversibel</strong> — <code>VLAM_ORCHESTRATED=false</code> schakelt terug naar de klassieke aanpak. De oude code is ongewijzigd.</li>
+</ol>

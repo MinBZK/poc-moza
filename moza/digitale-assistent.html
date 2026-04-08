@@ -17,17 +17,30 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	<section class="card chat-container">
 		<div class="chat-header">
 			<p>Stel een vraag over regelgeving, vergunningen, subsidies of uw bedrijfsregistratie.</p>
-			<fieldset class="mode-switch" role="radiogroup" aria-label="Kies assistent">
-				<legend class="visually-hidden">Assistent-modus</legend>
-				<label class="mode-option">
-					<input type="radio" name="chat-mode" value="vlam" checked>
-					<span>VLAM</span>
-				</label>
-				<label class="mode-option">
-					<input type="radio" name="chat-mode" value="claude">
-					<span>Claude</span>
-				</label>
-			</fieldset>
+			<div class="chat-switches">
+				<fieldset class="mode-switch" role="radiogroup" aria-label="Kies LLM">
+					<legend class="visually-hidden">LLM</legend>
+					<label class="mode-option">
+						<input type="radio" name="chat-llm" value="vlam" checked>
+						<span>VLAM</span>
+					</label>
+					<label class="mode-option">
+						<input type="radio" name="chat-llm" value="claude">
+						<span>Claude</span>
+					</label>
+				</fieldset>
+				<fieldset class="mode-switch" role="radiogroup" aria-label="Kies transport">
+					<legend class="visually-hidden">Transport</legend>
+					<label class="mode-option">
+						<input type="radio" name="chat-transport" value="mcp" checked>
+						<span>MCP</span>
+					</label>
+					<label class="mode-option">
+						<input type="radio" name="chat-transport" value="cli">
+						<span>CLI</span>
+					</label>
+				</fieldset>
+			</div>
 		</div>
 
 		<div class="chat-status" id="chat-status" aria-live="polite"></div>
@@ -84,9 +97,10 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	var input = document.getElementById("chat-input");
 	var messages = document.getElementById("chat-messages");
 	var statusEl = document.getElementById("chat-status");
-	var modeInputs = document.querySelectorAll('input[name="chat-mode"]');
-	var sessions = { vlam: null, claude: null };
-	var chatHistory = { vlam: null, claude: null };
+	var llmInputs = document.querySelectorAll('input[name="chat-llm"]');
+	var transportInputs = document.querySelectorAll('input[name="chat-transport"]');
+	var sessions = {};
+	var chatHistory = {};
 	var serverStatus = null;
 	var submitting = false;
 
@@ -97,8 +111,22 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		rvo: "RVO",
 	};
 
-	function getMode() {
-		return document.querySelector('input[name="chat-mode"]:checked').value;
+	function getLLM() {
+		return document.querySelector('input[name="chat-llm"]:checked').value;
+	}
+
+	function getTransport() {
+		return document.querySelector('input[name="chat-transport"]:checked').value;
+	}
+
+	function getComboKey() {
+		return getLLM() + ":" + getTransport();
+	}
+
+	function getAPIMode() {
+		var transport = getTransport();
+		if (transport === "cli") return "cli:" + getLLM();
+		return getLLM();
 	}
 
 	function parseMarkdown(text) {
@@ -159,9 +187,13 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		var btn = form.querySelector("button");
 		if (loading) {
 			btn.setAttribute("aria-disabled", "true");
+			llmInputs.forEach(function (r) { r.disabled = true; });
+			transportInputs.forEach(function (r) { r.disabled = true; });
 			showThinking("Vraag analyseren...");
 		} else {
 			btn.removeAttribute("aria-disabled");
+			llmInputs.forEach(function (r) { r.disabled = false; });
+			transportInputs.forEach(function (r) { r.disabled = false; });
 			hideThinking();
 		}
 	}
@@ -185,15 +217,22 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 
 	function renderStatus(data) {
 		serverStatus = data;
-		var servers = data.servers || {};
-		var keys = Object.keys(servers);
-		if (keys.length === 0 && data.tools === 0) {
+		updateStatusDisplay();
+	}
+
+	function updateStatusDisplay() {
+		if (!serverStatus) return;
+		var transport = getTransport();
+		var sources = transport === "cli" ? serverStatus.cli : serverStatus.servers;
+		if (!sources) sources = {};
+		var keys = Object.keys(sources);
+		if (keys.length === 0) {
 			statusEl.innerHTML =
-				'<p class="chat-status-warning">Geen MCP-bronnen verbonden — de assistent antwoordt op basis van eigen kennis.</p>';
+				'<p class="chat-status-warning">Geen bronnen verbonden — de assistent antwoordt op basis van eigen kennis.</p>';
 			return;
 		}
 		var items = keys.map(function (key) {
-			var connected = servers[key] === "verbonden";
+			var connected = sources[key] === "verbonden";
 			var label = SERVER_LABELS[key] || key;
 			var dot = connected ? "connected" : "disconnected";
 			return '<li class="chat-status-' + dot + '">' + label + "</li>";
@@ -213,34 +252,37 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		.then(renderStatus)
 		.catch(renderStatusOffline);
 
-	// Bewaar en herstel gesprek bij wisselen van modus
-	modeInputs.forEach(function (radio) {
-		radio.addEventListener("change", function () {
-			// Blokkeer wisselen zolang er een request loopt
-			if (submitting) {
-				// Zet de vorige modus terug
-				var other = this.value === "vlam" ? "claude" : "vlam";
-				document.querySelector('input[name="chat-mode"][value="' + other + '"]').checked = true;
-				return;
-			}
+	// Bewaar en herstel gesprek bij wisselen van LLM of transport
+	var previousCombo = "vlam:mcp";
 
-			var prev = this.value === "vlam" ? "claude" : "vlam";
-			// Sla huidige chat op
-			chatHistory[prev] = messages.innerHTML;
+	function handleSwitch() {
+		if (submitting) return;
 
-			// Herstel of start nieuw gesprek
-			var mode = getMode();
-			if (chatHistory[mode]) {
-				messages.innerHTML = chatHistory[mode];
-			} else {
-				messages.innerHTML = "";
-				addMessage(
-					"Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?",
-					"assistant"
-				);
-			}
-			messages.scrollTop = messages.scrollHeight;
-		});
+		var prev = previousCombo;
+		var next = getComboKey();
+		if (prev === next) return;
+
+		previousCombo = next;
+		chatHistory[prev] = messages.innerHTML;
+
+		if (chatHistory[next]) {
+			messages.innerHTML = chatHistory[next];
+		} else {
+			messages.innerHTML = "";
+			addMessage(
+				"Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?",
+				"assistant"
+			);
+		}
+		messages.scrollTop = messages.scrollHeight;
+		updateStatusDisplay();
+	}
+
+	llmInputs.forEach(function (radio) {
+		radio.addEventListener("change", handleSwitch);
+	});
+	transportInputs.forEach(function (radio) {
+		radio.addEventListener("change", handleSwitch);
 	});
 
 	input.addEventListener("input", function () {
@@ -260,8 +302,9 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		var message = input.value.trim();
 		if (!message || submitting) return;
 
-		// Leg mode vast op moment van verzenden, niet bij ontvangst
-		var mode = getMode();
+		// Leg mode en combo vast op moment van verzenden
+		var mode = getAPIMode();
+		var comboKey = getComboKey();
 
 		submitting = true;
 		addMessage(message, "user");
@@ -277,7 +320,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					message: message,
-					session_id: sessions[mode],
+					session_id: sessions[comboKey],
 					mode: mode,
 				}),
 			});
@@ -318,16 +361,16 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 					} else if (eventType === "answer" && !answered) {
 						answered = true;
 						hideThinking();
-						sessions[mode] = payload.session_id;
-						// Toon alleen als gebruiker nog in dezelfde modus zit
-						if (getMode() === mode) {
+						sessions[comboKey] = payload.session_id;
+						// Toon alleen als gebruiker nog in dezelfde combinatie zit
+						if (getComboKey() === comboKey) {
 							addMessage(payload.message, "assistant");
 						} else {
 							// Sla op in chatHistory zodat het zichtbaar wordt bij terugwisselen
 							var temp = messages.innerHTML;
-							messages.innerHTML = chatHistory[mode] || "";
+							messages.innerHTML = chatHistory[comboKey] || "";
 							addMessage(payload.message, "assistant");
-							chatHistory[mode] = messages.innerHTML;
+							chatHistory[comboKey] = messages.innerHTML;
 							messages.innerHTML = temp;
 						}
 					} else if (eventType === "done") {

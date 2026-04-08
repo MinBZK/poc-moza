@@ -1,0 +1,331 @@
+<h1>Prompt: Breid de MCP-standaard uit met een CLI-profiel</h1>
+<p>Gebruik deze prompt in de repo <code>moza-mcp-standaard-poc</code> met Claude Code.</p>
+<hr>
+<h2>Context</h2>
+<p>We hebben in de poc-moza repo (https://github.com/user/poc-moza, branch feat/add_digitale_assistent) een vergelijkend onderzoek gedaan tussen MCP en CLI als interface tussen AI-agents en overheidsdiensten. De bevindingen:</p>
+<h3>Bevindingen: MCP-protocol (zonder standaard) vs CLI</h3>
+<table>
+<thead>
+<tr>
+<th>Criterium</th>
+<th>MCP (protocol)</th>
+<th>CLI</th>
+<th>Winnaar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Token-efficiëntie</td>
+<td>Volledige response, geen filtering</td>
+<td>~14 tokens met <code>--fields</code> (97% reductie)</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Dataminimalisatie</td>
+<td>Niet in protocol</td>
+<td>Ingebouwd via <code>--fields</code>, <code>--select</code></td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Provenance</td>
+<td>Niet in protocol</td>
+<td>Niet standaard</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Audit logging</td>
+<td>Niet in protocol</td>
+<td>Niet standaard</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Tool discovery</td>
+<td>Automatisch via schema</td>
+<td>Expliciet via <code>--help</code></td>
+<td>MCP</td>
+</tr>
+<tr>
+<td>Mutatie-beveiliging</td>
+<td><code>ToolAnnotations</code> (optioneel)</td>
+<td>Zelf implementeren</td>
+<td>MCP</td>
+</tr>
+<tr>
+<td>Foutafhandeling</td>
+<td>Gestructureerde error types</td>
+<td>Exit codes + stderr</td>
+<td>MCP</td>
+</tr>
+<tr>
+<td>Infra-kosten</td>
+<td>Server-proces moet draaien</td>
+<td>Geen server, alleen bij aanroep</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Protocol-overhead</td>
+<td>JSON-RPC + handshake + capability negotiation</td>
+<td>Directe HTTP call</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>Python, mcp-pakket, asyncio</td>
+<td>bash, curl, jq (overal aanwezig)</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Geheugengebruik</td>
+<td>Continu in geheugen</td>
+<td>Tijdelijk bij aanroep</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Onderhoudslast</td>
+<td>MCP-library updates</td>
+<td>POSIX — stabiel</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Aanvalsvlak</td>
+<td>Extra proces met credentials</td>
+<td>Credentials alleen bij aanroep</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Composability</td>
+<td>Chaining via LLM-iteraties</td>
+<td>Unix piping zonder LLM</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Adoptiedrempel</td>
+<td>MCP-kennis nodig</td>
+<td>Bash-kennis voldoende</td>
+<td>CLI</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Score: CLI 10, MCP 3, Gelijk 2</strong></p>
+<h3>Bevindingen: MCP + standaard vs CLI + standaard</h3>
+<p>Wanneer beide een overheidsstandaard krijgen (provenance, audit, discovery, mutatie-beveiliging) verschuift de balans:</p>
+<table>
+<thead>
+<tr>
+<th>Criterium</th>
+<th>MCP + standaard</th>
+<th>CLI + standaard</th>
+<th>Winnaar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Token-efficiëntie</td>
+<td>~14 tokens (met field filtering)</td>
+<td>~14 tokens</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Dataminimalisatie</td>
+<td>Capability in standaard</td>
+<td>Ingebouwd</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Provenance</td>
+<td>Verplicht</td>
+<td>Verplicht</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Audit logging</td>
+<td>Verplicht</td>
+<td>Verplicht</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Tool discovery</td>
+<td>Automatisch via schema</td>
+<td>Gestandaardiseerd via <code>--help --json</code></td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Mutatie-beveiliging</td>
+<td>ToolAnnotations</td>
+<td>Gestandaardiseerde flags</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Foutafhandeling</td>
+<td>Gestructureerde error types</td>
+<td>Gestandaardiseerde exit codes + JSON</td>
+<td>Gelijk</td>
+</tr>
+<tr>
+<td>Infra-kosten</td>
+<td>Server moet draaien</td>
+<td>Geen server</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Protocol-overhead</td>
+<td>JSON-RPC + handshake</td>
+<td>Directe HTTP call</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>Python, mcp-pakket</td>
+<td>bash, curl, jq</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Geheugengebruik</td>
+<td>Continu in geheugen</td>
+<td>Tijdelijk bij aanroep</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Onderhoudslast</td>
+<td>MCP-library updates</td>
+<td>POSIX — stabiel</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Aanvalsvlak</td>
+<td>Extra proces met credentials</td>
+<td>Credentials bij aanroep</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Composability</td>
+<td>Chaining via LLM</td>
+<td>Unix piping zonder LLM</td>
+<td>CLI</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Score: CLI 6, Gelijk 8, MCP 0</strong></p>
+<h3>Kerninzicht</h3>
+<p>De waarde zit in de standaard, niet in het transport. MCP is geschikt voor omgevingen zonder shell (managed AI-platforms). CLI is zuiniger voor omgevingen met shell (servers, Docker, lokale agents). De standaard moet beide ondersteunen.</p>
+<h3>Bewijs: kvk-cli</h3>
+<p>We hebben een kvk-cli gebouwd (Bash + jq) die dezelfde KvK API aanspreekt als de bestaande MCP-server. Resultaten:</p>
+<table>
+<thead>
+<tr>
+<th>Methode</th>
+<th>Bytes</th>
+<th>Tokens (geschat)</th>
+<th>Reductie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP (volledige response)</td>
+<td>2126</td>
+<td>~531</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CLI --fields naam,kvkNummer</td>
+<td>58</td>
+<td>~14</td>
+<td>97%</td>
+</tr>
+<tr>
+<td>CLI --fields sbiActiviteiten</td>
+<td>156</td>
+<td>~39</td>
+<td>93%</td>
+</tr>
+<tr>
+<td>CLI + provenance</td>
+<td>237</td>
+<td>~59</td>
+<td>89%</td>
+</tr>
+</tbody>
+</table>
+<h3>Referentie-implementatie</h3>
+<p>De CLI-tools staan in <code>poc-moza/services/cli/</code>:</p>
+<pre><code>services/
+├── host/          ← orchestratie (transport-agnostisch)
+├── mcp/           ← MCP-servers (kvk, koop, regelrecht, rvo)
+├── cli/           ← CLI-tools (kvk, koop, regelrecht, rvo)
+│   ├── kvk-cli
+│   ├── koop-cli
+│   ├── regelrecht-cli
+│   ├── rvo-cli
+│   └── lib/       ← gedeelde modules (output, provenance, audit)
+└── decisions/     ← architectuurbeslissingen
+</code></pre>
+<hr>
+<h2>Opdracht</h2>
+<p>Breid de MCP-standaard uit met ondersteuning voor CLI als derde deployment-profiel. De standaard heeft nu twee lagen:</p>
+<ul>
+<li><strong>Laag 1 (§2-7)</strong>: Host-agnostisch — servereisen die voor alle implementaties gelden</li>
+<li><strong>Laag 2 (§8)</strong>: Deploymentprofielen — VLAM-profiel (on-premise) en Cloud-profiel (managed)</li>
+</ul>
+<h3>Wat moet er gebeuren</h3>
+<h4>1. Standaard-document (<code>docs/standaard.md</code>)</h4>
+<p><strong>§4 — MCP Capabilities</strong>: Voeg field-level filtering toe als optionele capability. Servers MOGEN een <code>fields</code>-parameter ondersteunen in tool- en resource-aanroepen waarmee de client specificeert welke velden worden geretourneerd. Dit vermindert token-gebruik en bevordert dataminimalisatie (§7).</p>
+<p><strong>§7 — Servereisen</strong>: Voeg een eis toe:</p>
+<ul>
+<li>Dataminimalisatie: Servers MOETEN field-level filtering ondersteunen via een <code>fields</code>-parameter. Response bevat alleen de gevraagde velden plus verplichte provenance-metadata.</li>
+</ul>
+<p><strong>§8 — Deploymentprofielen</strong>: Voeg §8.3 toe: CLI-profiel. Structureer het analoog aan §8.1 (VLAM) en §8.2 (Cloud):</p>
+<ul>
+<li><strong>Transport</strong>: Shell subprocess (stdin/stdout), geen persistent server-proces</li>
+<li><strong>Serverdiscovery</strong>: Via <code>&lt;cli-naam&gt; --help --json</code> dat een JSON-schema retourneert conform het MCP tool-schema formaat (naam, beschrijving, inputSchema, ToolAnnotations)</li>
+<li><strong>Provenance</strong>: MOET beschikbaar zijn via <code>--provenance</code> flag. Response bevat dan <code>provenance</code>-object conform §4.1</li>
+<li><strong>Audit logging</strong>: MOET loggen naar stderr (standaard) of configureerbaar bestand. Formaat conform §7 logging-eisen</li>
+<li><strong>Foutafhandeling</strong>: Gestandaardiseerde exit codes (0=succes, 1=client-fout, 2=server-fout, 3=bron-onbeschikbaar) + JSON error object op stderr</li>
+<li><strong>Mutatie-beveiliging</strong>: Muterende commando's MOETEN <code>--dry-run</code> ondersteunen (preview) en MOETEN interactieve bevestiging vragen tenzij <code>--confirm</code> is meegegeven</li>
+<li><strong>Dataminimalisatie</strong>: <code>--fields</code> parameter voor field-level filtering. <code>--select</code> voor jq-expressies (optioneel)</li>
+<li><strong>Output</strong>: <code>--output raw|pretty|table</code> voor verschillende consumers (agent vs mens)</li>
+<li><strong>Authenticatie</strong>: Via omgevingsvariabelen of config-bestand, niet als CLI-argument (voorkom credentials in process listing)</li>
+</ul>
+<h4>2. Technische specificaties (<code>docs/technische-specificaties.md</code>)</h4>
+<p>Voeg een sectie toe voor CLI-profiel specificaties:</p>
+<ul>
+<li><strong>Command-structuur</strong>: <code>&lt;cli-naam&gt; [opties] &lt;resource&gt; &lt;actie&gt; [id] [--param waarde]</code></li>
+<li><strong>Discovery-formaat</strong>: JSON-schema dat <code>--help --json</code> retourneert, inclusief ToolAnnotations-equivalent</li>
+<li><strong>Exit codes</strong>: Tabel met gestandaardiseerde codes</li>
+<li><strong>Stderr-formaat</strong>: JSON error objects met dezelfde error codes als MCP (CONSENT_MISSING, SOURCE_UNAVAILABLE, etc.)</li>
+<li><strong>Provenance-formaat</strong>: Zelfde structuur als MCP provenance, als wrapper om de data</li>
+</ul>
+<h4>3. Validatie-pakket uitbreiden (<code>src/mcp_standaard/</code>)</h4>
+<p>Voeg CLI-validatie checks toe naast de bestaande MCP-checks:</p>
+<ul>
+<li><code>CLI-DISC</code>: <code>--help --json</code> retourneert geldig discovery-schema</li>
+<li><code>CLI-FIELDS</code>: <code>--fields</code> parameter werkt en retourneert alleen gevraagde velden</li>
+<li><code>CLI-PROV</code>: <code>--provenance</code> flag voegt correct provenance-object toe</li>
+<li><code>CLI-AUDIT</code>: Audit logging naar stderr conform standaardformaat</li>
+<li><code>CLI-ERR</code>: Exit codes en stderr JSON conform specificatie</li>
+<li><code>CLI-DRY</code>: Muterende commando's ondersteunen <code>--dry-run</code></li>
+<li><code>CLI-AUTH</code>: Credentials niet zichtbaar in process listing</li>
+</ul>
+<h4>4. Skill uitbreiden (<code>skills/</code>)</h4>
+<ul>
+<li>Update <code>mcp-standaard/SKILL.md</code> met CLI-profiel in het overzicht</li>
+<li>Maak een nieuwe skill <code>cli-server-bouwen/SKILL.md</code> analoog aan <code>mcp-server-bouwen/SKILL.md</code></li>
+<li>Update <code>mcp-validatie/SKILL.md</code> met de CLI-checks</li>
+</ul>
+<h4>5. ADR toevoegen (<code>docs/adr/</code>)</h4>
+<p>Voeg <code>003-cli-als-deployment-profiel.md</code> toe:</p>
+<ul>
+<li><strong>Status</strong>: Proposed</li>
+<li><strong>Context</strong>: Onderzoek in poc-moza toonde aan dat CLI 97% token-reductie biedt t.o.v. MCP zonder field filtering. MCP voegt protocol-overhead toe (JSON-RPC, handshake, persistent proces) die niet altijd nodig is. Managed AI-platforms zonder shell-toegang hebben MCP nodig, maar omgevingen met shell-toegang zijn zuiniger met CLI.</li>
+<li><strong>Besluit</strong>: CLI als derde deployment-profiel opnemen in Laag 2 van de standaard. Laag 1 servereisen (provenance, audit, dataminimalisatie) gelden ongewijzigd — het transport verschilt.</li>
+<li><strong>Gevolgen</strong>: Standaard wordt transport-agnostisch. Bestaande MCP-servers hoeven niet te veranderen. CLI-profiel verlaagt adoptiedrempel. Validatie-pakket moet uitgebreid worden.</li>
+</ul>
+<h3>Richtlijnen</h3>
+<ul>
+<li>Lees EERST de volledige bestaande standaard (<code>docs/standaard.md</code>, <code>docs/technische-specificaties.md</code>) en de bestaande skills/checks voordat je wijzigingen maakt</li>
+<li>Behoud de bestaande structuur en schrijfstijl van het document</li>
+<li>Voeg toe, vervang niet — MCP en Cloud profielen blijven ongewijzigd</li>
+<li>Houd rekening met de NeRDS-richtlijnen: open standaarden (richtlijn 4), dataminimalisatie, en vermijd vendor lock-in (richtlijn 12)</li>
+<li>De standaard is in het Nederlands, schrijf in het Nederlands</li>
+<li>Status van nieuwe toevoegingen is &quot;concept&quot; (consistent met de rest)</li>
+<li>Voeg field-level filtering toe als capability in Laag 1, niet alleen in het CLI-profiel — MCP-servers profiteren hier ook van</li>
+</ul>

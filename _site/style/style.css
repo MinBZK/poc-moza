@@ -1129,6 +1129,12 @@ body.moza {
 	gap: var(--toepassing-space-padding-md);
 	flex-wrap: wrap;
 }
+.chat-switches {
+	display: flex;
+	gap: var(--toepassing-space-padding-sm);
+	flex-shrink: 0;
+	align-items: center;
+}
 .mode-switch {
 	border: var(--toepassing-border-default);
 	border-radius: var(--toepassing-border-radius-md);
@@ -1166,6 +1172,13 @@ body.moza {
 	input:focus-visible + span {
 		outline: var(--toepassing-focus-outline);
 		outline-offset: var(--toepassing-size-5xs);
+	}
+	input:disabled + span {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	&:has(input:disabled) {
+		cursor: not-allowed;
 	}
 }
 .chat-status {

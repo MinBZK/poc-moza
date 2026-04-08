@@ -1,0 +1,103 @@
+<h1>Testvragen Digitale Assistent</h1>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Waarde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Datum</td>
+<td>2026-03-19</td>
+</tr>
+<tr>
+<td>Doel</td>
+<td>Handmatige testvragen per tool en per toolcombinatie</td>
+</tr>
+</tbody>
+</table>
+<h2>Individuele tools</h2>
+<h3>KvK -- <code>mijn_bedrijf</code></h3>
+<ol>
+<li>&quot;Wat zijn de gegevens van mijn bedrijf?&quot;</li>
+<li>&quot;Hoeveel werknemers heeft mijn bedrijf en wat is onze SBI-code?&quot;</li>
+</ol>
+<h3>KOOP -- <code>zoek_regelgeving</code></h3>
+<ol>
+<li>&quot;Welke wetgeving is er over energiebesparing?&quot;</li>
+<li>&quot;Zoek regelgeving over arbeidsomstandigheden.&quot;</li>
+</ol>
+<h3>RegelRecht -- <code>check</code></h3>
+<ol>
+<li>&quot;Moet ik voldoen aan de informatieplicht energiebesparing?&quot;</li>
+<li>&quot;Is de informatieplicht van toepassing als mijn bedrijf 60.000 kWh per jaar verbruikt?&quot;</li>
+</ol>
+<h3>RVO -- <code>zoek_regeling</code></h3>
+<ol>
+<li>&quot;Welke subsidies zijn er voor warmtepompen?&quot;</li>
+<li>&quot;Zijn er openstaande regelingen voor energiebesparing?&quot;</li>
+</ol>
+<h3>RVO -- <code>indienen</code></h3>
+<ol>
+<li>&quot;Ik wil mijn energiebesparingsrapportage indienen voor EBR-2026. De maatregelen zijn LED-verlichting en HR++ beglazing.&quot;</li>
+<li>&quot;Dien een rapportage in voor regeling EBR-2026 met maatregelen: dakisolatie, zonnepanelen en warmtepomp.&quot;</li>
+</ol>
+<hr>
+<h2>Toolcombinaties (2 tools)</h2>
+<h3>KvK + RegelRecht</h3>
+<ol>
+<li>&quot;Is de informatieplicht energiebesparing op mijn bedrijf van toepassing?&quot;
+-&gt; KvK <code>mijn_bedrijf</code> (bedrijfsgegevens ophalen) -&gt; RegelRecht <code>check</code> (KvK-nummer doorgeven)</li>
+<li>&quot;Aan welke energieverplichtingen moet mijn bedrijf voldoen?&quot;</li>
+</ol>
+<h3>KvK + KOOP</h3>
+<ol>
+<li>&quot;Welke wetgeving is relevant voor de sector waarin mijn bedrijf actief is?&quot;
+-&gt; KvK <code>mijn_bedrijf</code> (SBI-code ophalen) -&gt; KOOP <code>zoek_regelgeving</code> (zoeken op sector)</li>
+<li>&quot;Mijn bedrijf zit in de horeca -- welke regelgeving geldt voor ons?&quot;</li>
+</ol>
+<h3>KvK + RVO <code>zoek_regeling</code></h3>
+<ol>
+<li>&quot;Voor welke subsidies komt mijn bedrijf in aanmerking?&quot;
+-&gt; KvK <code>mijn_bedrijf</code> (bedrijfsprofiel) -&gt; RVO <code>zoek_regeling</code> (zoeken op relevante termen)</li>
+<li>&quot;Zijn er openstaande RVO-regelingen die relevant zijn voor mijn bedrijf?&quot;</li>
+</ol>
+<h3>KvK + RVO <code>indienen</code></h3>
+<ol>
+<li>&quot;Dien de energiebesparingsrapportage in voor mijn bedrijf met maatregelen: LED-verlichting en spouwmuurisolatie.&quot;
+-&gt; KvK <code>mijn_bedrijf</code> (KvK-nummer ophalen) -&gt; RVO <code>indienen</code> (indienen met KvK-nummer)</li>
+<li>&quot;Ik wil rapporteren dat ik dakisolatie en een warmtepomp heb geinstalleerd. Dien dit in bij RVO.&quot;</li>
+</ol>
+<h3>KOOP + RegelRecht</h3>
+<ol>
+<li>&quot;Wat zegt de wet over de informatieplicht energiebesparing, en is die op mijn bedrijf van toepassing?&quot;
+-&gt; KOOP <code>zoek_regelgeving</code> (wettekst zoeken) -&gt; RegelRecht <code>check</code> (toetsen)</li>
+<li>&quot;Zoek de wettelijke grondslag van de informatieplicht en controleer of die geldt bij een verbruik van 30.000 kWh.&quot;</li>
+</ol>
+<h3>RVO <code>zoek_regeling</code> + RVO <code>indienen</code></h3>
+<ol>
+<li>&quot;Zoek de regeling voor energiebesparing en dien mijn rapportage in met maatregelen: HR-ketel en LED.&quot;
+-&gt; RVO <code>zoek_regeling</code> (regeling-ID vinden) -&gt; RVO <code>indienen</code> (indienen met gevonden ID)</li>
+<li>&quot;Welke energiebesparingsregeling is er? En dien daar mijn rapportage voor in.&quot;</li>
+</ol>
+<hr>
+<h2>Toolcombinaties (3+ tools)</h2>
+<h3>KvK + RegelRecht + RVO <code>indienen</code></h3>
+<ol>
+<li>&quot;Moet ik een energiebesparingsrapportage indienen? Zo ja, doe dat dan met de maatregelen LED-verlichting en warmtepomp.&quot;
+-&gt; KvK <code>mijn_bedrijf</code> -&gt; RegelRecht <code>check</code> -&gt; als plicht geldt: RVO <code>indienen</code></li>
+<li>&quot;Controleer of de informatieplicht op mijn bedrijf van toepassing is en dien een rapportage in met dakisolatie en zonnepanelen.&quot;</li>
+</ol>
+<h3>KvK + KOOP + RegelRecht</h3>
+<ol>
+<li>&quot;Wat zijn mijn verplichtingen op het gebied van energiebesparing? Geef ook de wettelijke onderbouwing.&quot;
+-&gt; KvK <code>mijn_bedrijf</code> -&gt; RegelRecht <code>check</code> -&gt; KOOP <code>zoek_regelgeving</code> (wettekst)</li>
+<li>&quot;Leg uit welke energiewetgeving op mijn bedrijf van toepassing is, met verwijzing naar de relevante wetsartikelen.&quot;</li>
+</ol>
+<h3>KvK + RVO <code>zoek_regeling</code> + RVO <code>indienen</code> + RegelRecht</h3>
+<ol>
+<li>&quot;Kijk of ik moet rapporteren, zoek de juiste regeling, en dien de rapportage in met maatregelen: LED, isolatie en warmtepomp.&quot;
+-&gt; KvK <code>mijn_bedrijf</code> -&gt; RegelRecht <code>check</code> -&gt; RVO <code>zoek_regeling</code> -&gt; RVO <code>indienen</code></li>
+<li>&quot;Help me van begin tot eind: controleer mijn verplichtingen, vind de juiste regeling en dien mijn rapportage in.&quot;</li>
+</ol>
