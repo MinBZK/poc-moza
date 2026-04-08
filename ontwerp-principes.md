@@ -19,7 +19,7 @@ Het ministerie van Binnenlandse Zaken en Koninkrijksrelaties heeft in 2024 MKB'e
 
 In interactieve sessies, interviews en gebruikerstests leggen we onze inzichten en ideeën voor aan de eindgebruikers. Zo toetsen we aannames en krijgen we waardevolle feedback op functionaliteit, gebruiksgemak en flows. Deze inzichten vormen de basis voor onze ontwerprichtingen.
 
-Voor gebruikerstests maken we vaak gebruik van interactive Figma prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
+Voor gebruikerstests maken we vaak gebruik van interactive prototypes. We gebruiken ze als hulpmiddel om samen te verkennen, keuzes te onderbouwen en verbeteringen door te voeren. De feedback die we ophalen verwerken we direct in het ontwerp, waarna we opnieuw testen en itereren.
 
 Door deze continue cyclus van onderzoeken, ontwerpen, testen en verfijnen zorgen we ervoor dat wat we bouwen aansluit op de behoeften en verwachtingen van eindgebruikers. Waar directe inzichten nog ontbreken, werken we op basis van expliciete aannames. Deze aannames maken we zo snel mogelijk toetsbaar door ze te vertalen naar concrete ontwerpen die we voorleggen aan gebruikers.
 
@@ -178,6 +178,38 @@ De stylesheets maken gebruik van CSS logical properties (`inline-size`, `margin-
 ### CSS nesting en custom properties
 
 De stylesheets maken gebruik van native CSS nesting voor component-staten en varianten, en CSS custom properties voor alle ontwerp-waarden. Er worden geen preprocessors zoals Sass gebruikt.
+
+### Layout en spacing
+
+Spacing tussen elementen wordt aangestuurd door één schaal van layout tokens (`--toepassing-space-layout-*`), ongeacht richting. Het juiste CSS-mechanisme wordt gekozen op basis van de context:
+
+- **`> * + *` met margin** — voor content flow waar de parent geen specifiek layout-model nodig heeft. Voorbeelden: `body`, `header`, `.card`, `.accordion`, `footer nav`, `ul`/`ol`. Het voordeel is dat het eerste kind geen onnodige marge krijgt en dat spacing alleen ontstaat *tussen* elementen.
+
+- **`gap` met flexbox of grid** — voor layouts waarbij alignment, richting-wisseling of een 2D-raster nodig is. Voorbeelden: `.action-group` (wisselt van kolom naar rij), `.tiles` (grid), `.footer-links` (wisselt van kolom naar rij), `.icon-link` (horizontaal, icoon naast tekst), `summary` (icoon naast tekst).
+
+Per container wordt altijd één van deze twee mechanismes gebruikt, nooit beide tegelijk. De keuze voor `gap` of `> * + *` is een implementatiedetail — de spacing-waarde komt altijd uit dezelfde `layout-*` tokens.
+
+### AI-assistentie in het ontwerpproces
+
+In het ontwerpproces wordt [Claude](https://claude.ai/) ingezet als assistent bij het maken en itereren van het prototype. Dit is geen vervanging van het ontwerpproces, maar een versnelling ervan. De ontwerper blijft verantwoordelijk voor de richting, de keuzes en de kwaliteit.
+
+Claude wordt onder andere ingezet voor:
+
+- **Semi-realistische content** — het prototype wordt gevuld met inhoud die dicht bij de werkelijkheid ligt: bestaande subsidienamen, echte wetten, herkenbare bekendmakingen. Dit maakt het prototype geloofwaardiger in gebruikerstests dan lorem ipsum of duidelijk verzonnen tekst. Claude genereert deze content op basis van publiek beschikbare overheidsinformatie.
+- **Variatie en volume** — waar een ontwerp meerdere pagina's of varianten nodig heeft (bijvoorbeeld gepagineerde lijsten met berichten, subsidies of regelgeving), helpt Claude bij het aanmaken van consistente, gevarieerde content zonder dat elke regel handmatig geschreven hoeft te worden.
+- **Component- en patronenontwikkeling** — Claude assisteert bij het schrijven van HTML, CSS en JavaScript voor nieuwe componenten en interactiepatronen, altijd binnen de bestaande ontwerpprincipes (semantische HTML, design tokens, toegankelijkheid).
+- **Refactoring en abstractie** — herhalende patronen in de code worden met hulp van Claude geïdentificeerd en omgezet naar herbruikbare includes of geautomatiseerde logica, waardoor de codebase onderhoudbaar blijft naarmate het prototype groeit.
+
+De inzet van AI-assistentie past bij het principe van *de eenvoudigst mogelijke oplossing*: het versnelt het werk zonder extra tooling, frameworks of afhankelijkheden te introduceren. De gegenereerde code en content worden altijd beoordeeld en waar nodig aangepast door de ontwerper.
+
+### Feature flags
+
+Het prototype bevat een feature-flag systeem waarmee secties en functionaliteit per pagina in- of uitgeschakeld kunnen worden. Dit maakt het mogelijk om verschillende configuraties van het prototype te tonen zonder aparte versies te hoeven bouwen — bijvoorbeeld tijdens gebruikerstests of stakeholdergesprekken.
+
+- **Togglebaar via het paneel** — rechtsonder in het prototype bevindt zich een "Flags"-knop die een paneel opent met alle beschikbare feature flags, gegroepeerd in *Pagina's* (navigatie-items en secties) en *Functionaliteit* (interactiemogelijkheden zoals delen en relevantie aangeven).
+- **Persistent in localStorage** — feature flags worden opgeslagen in de browser. Standaard staan alle features aan; pas als een feature expliciet wordt uitgezet, wordt deze verborgen. Dit geldt zowel voor het navigatie-item als voor bijbehorende content op de pagina.
+- **Declaratief in de markup** — een element markeren als feature-flagged is een kwestie van `data-feature="Naam"` en `data-feature-type="pagina|functionaliteit"` toevoegen. Het JavaScript en de CSS doen de rest.
+- **localStorage wissen** — het paneel bevat een knop om alle opgeslagen staten (feature flags, favorieten, verborgen topics, gesloten notificaties) in één keer te resetten.
 
 ### Statische site-generatie
 

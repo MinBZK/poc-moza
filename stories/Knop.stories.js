@@ -1,3 +1,14 @@
+const icons = {};
+const iconNames = ["berichtenbox", "bewerken", "chevron", "financieen", "foutmelding", "gegevens", "gegevensdeling", "gezondheid", "home", "informatie", "instellingen", "link-extern", "link-intern", "lopende-zaken", "menu", "minus", "nieuws", "personeel", "persoon", "plus", "sluiten", "succes", "uitloggen", "vervoer", "vink", "waarschuwing"];
+
+async function loadIcon(name) {
+	if (!icons[name]) {
+		const response = await fetch(`/assets/icons/icon-${name}.svg`);
+		icons[name] = await response.text();
+	}
+	return icons[name];
+}
+
 export default {
 	title: "Componenten/Knop",
 	tags: ["autodocs"],
@@ -134,19 +145,25 @@ export const MetIcoon = {
 	parameters: {
 		docs: {
 			description: {
-				story: "Knop met een icoon voor de tekst.",
+				story: "Knop met een SVG-icoon voor de tekst. Het icoon kleurt mee via currentColor.",
 			},
 		},
 	},
 	argTypes: {
 		label: { control: "text" },
+		icoon: { control: "select", options: iconNames },
 	},
 	args: {
-		label: "Knop met icoon voor tekst",
+		label: "Knop met icoon",
+		icoon: "plus",
 	},
-	render: ({ label }) => `
-<button type="button"><span>⚑</span> ${label}</button>
-`,
+	render: ({ label, icoon }) => {
+		const container = document.createElement("div");
+		loadIcon(icoon).then((svg) => {
+			container.innerHTML = `<button type="button"><span>${svg}</span> ${label}</button>`;
+		});
+		return container;
+	},
 };
 
 export const AlleVarianten = {

@@ -57,7 +57,7 @@ StyleDictionary.registerTransform({
   type: 'value',
   filter: (token) => {
     const path = token.path.join('.');
-    return (path.includes('border-width') || path.includes('border-radius'));
+    return (path.includes('border-width') || path.includes('border-radius') || path.includes('logo'));
   },
   transform: (token) => {
     const val = `${token.value ?? token.$value}`;

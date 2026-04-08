@@ -1039,6 +1039,16 @@
           "$type": "color",
           "$value": "{color.feedback.neutral.text}"
         }
+      },
+      "favorite": {
+        "icon": {
+          "$type": "color",
+          "$value": "{color.robijnrood.400}"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{color.robijnrood.500}"
+        }
       }
     },
     "background": {
@@ -1640,7 +1650,8 @@
         "$value": {
           "fontFamily": "{text.font-family.default}",
           "fontWeight": "{text.font-weight.regular}",
-          "fontSize": "{text.size.body.sm}"
+          "fontSize": "{text.size.body.sm}",
+          "lineHeight": "{text.line-height.md}"
         }
       }
     },
@@ -1875,6 +1886,10 @@
       }
     },
     "margin": {
+      "3xs": {
+        "$type": "spacing",
+        "$value": "{space.2xs}"
+      },
       "2xs": {
         "$type": "spacing",
         "$value": "{space.xs}"
@@ -1902,6 +1917,32 @@
           "$type": "spacing",
           "$value": "{space.padding.xl}"
         }
+      }
+    },
+    "layout": {
+      "3xs": {
+        "$type": "spacing",
+        "$value": "{space.margin.3xs}"
+      },
+      "2xs": {
+        "$type": "spacing",
+        "$value": "{space.margin.2xs}"
+      },
+      "xs": {
+        "$type": "spacing",
+        "$value": "{space.margin.xs}"
+      },
+      "sm": {
+        "$type": "spacing",
+        "$value": "{space.margin.sm}"
+      },
+      "md": {
+        "$type": "spacing",
+        "$value": "{space.margin.md}"
+      },
+      "lg": {
+        "$type": "spacing",
+        "$value": "{space.margin.lg}"
       }
     }
   },
@@ -1949,7 +1990,7 @@
         "y": "2",
         "blur": "6",
         "spread": "0",
-        "color": "#000000",
+        "color": "{color.neutraal.gebroken-zwart}",
         "type": "dropShadow"
       }
     },
@@ -1960,7 +2001,7 @@
         "y": "8",
         "blur": "16",
         "spread": "0",
-        "color": "#000000",
+        "color": "{color.neutraal.gebroken-zwart}",
         "type": "dropShadow"
       }
     },
@@ -2002,16 +2043,14 @@
       "$value": "{border-width.lg} dotted {color.interactive.focus.outline}"
     },
     "outline-offset": {
-      "2": {
-        "$type": "spacing",
-        "$value": "{space.2}"
-      }
+      "$type": "spacing",
+      "$value": "{space.2}"
     }
   },
   "transition": {
     "default": {
       "$type": "other",
-      "$value": "background .2s ease, border .2s ease, color .2s ease, accent-color .2 ease",
+      "$value": "background .2s ease, border .2s ease, color .2s ease",
       "$description": "Standaard transitie die toegepast wordt op alle CSS properties."
     },
     "transform": {

@@ -11,7 +11,9 @@ export const Gemarkeerd = {
 			},
 		},
 	},
-	render: () => `<p><mark>Dit is gemarkeerde tekst.</mark></p>`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "Dit is gemarkeerde tekst." },
+	render: ({ tekst }) => `<p><mark>${tekst}</mark></p>`,
 };
 
 export const Doorgestreept = {
@@ -22,7 +24,9 @@ export const Doorgestreept = {
 			},
 		},
 	},
-	render: () => `<p><del>Dit is doorgestreepte tekst.</del></p>`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "Dit is doorgestreepte tekst." },
+	render: ({ tekst }) => `<p><del>${tekst}</del></p>`,
 };
 
 export const Ingevoegd = {
@@ -33,7 +37,9 @@ export const Ingevoegd = {
 			},
 		},
 	},
-	render: () => `<p><ins>Dit is ingevoegde tekst.</ins></p>`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "Dit is ingevoegde tekst." },
+	render: ({ tekst }) => `<p><ins>${tekst}</ins></p>`,
 };
 
 export const SubscriptSuperscript = {
@@ -44,12 +50,9 @@ export const SubscriptSuperscript = {
 			},
 		},
 	},
-	render: () => `
-<p>
-	<sub>subscript</sub> en <sup>superscript</sup> voor bijvoorbeeld een
-	wiskundige formule als x<sup>2</sup><sub>n</sub> + y<sup>2</sup><sub>n</sub> = r<sup>2</sup>
-</p>
-`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "x² + y² = r²" },
+	render: ({ tekst }) => `<p>${tekst}</p>`,
 };
 
 export const InlineCode = {
@@ -60,7 +63,9 @@ export const InlineCode = {
 			},
 		},
 	},
-	render: () => `<p>Dit is <code>inline code</code> in een zin.</p>`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "inline code" },
+	render: ({ tekst }) => `<p>Dit is <code>${tekst}</code> in een zin.</p>`,
 };
 
 export const Afkorting = {
@@ -71,8 +76,15 @@ export const Afkorting = {
 			},
 		},
 	},
-	render: () =>
-`<p>Dit is een <abbr title="afkorting">afk.</abbr> in een zin.</p>`,
+	argTypes: {
+		afkorting: { control: "text", name: "Afkorting" },
+		volledig: { control: "text", name: "Volledige term" },
+	},
+	args: {
+		afkorting: "afk.",
+		volledig: "afkorting",
+	},
+	render: ({ afkorting, volledig }) => `<p>Dit is een <abbr title="${volledig}">${afkorting}</abbr> in een zin.</p>`,
 };
 
 export const Toetsenbord = {
@@ -83,8 +95,15 @@ export const Toetsenbord = {
 			},
 		},
 	},
-	render: () =>
-`<p><kbd>Ctrl</kbd> + <kbd>S</kbd> om op te slaan.</p>`,
+	argTypes: {
+		toets1: { control: "text", name: "Toets 1" },
+		toets2: { control: "text", name: "Toets 2" },
+	},
+	args: {
+		toets1: "Ctrl",
+		toets2: "S",
+	},
+	render: ({ toets1, toets2 }) => `<p><kbd>${toets1}</kbd> + <kbd>${toets2}</kbd> om op te slaan.</p>`,
 };
 
 export const Voorbeelduitvoer = {
@@ -95,8 +114,9 @@ export const Voorbeelduitvoer = {
 			},
 		},
 	},
-	render: () =>
-`<p>Het resultaat is <samp>voorbeelduitvoer</samp>.</p>`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "voorbeelduitvoer" },
+	render: ({ tekst }) => `<p>Het resultaat is <samp>${tekst}</samp>.</p>`,
 };
 
 export const Variabele = {
@@ -107,6 +127,7 @@ export const Variabele = {
 			},
 		},
 	},
-	render: () =>
-`<p>De variabele <var>x</var> staat voor een onbekende waarde.</p>`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "x" },
+	render: ({ tekst }) => `<p>De variabele <var>${tekst}</var> staat voor een onbekende waarde.</p>`,
 };

@@ -26,6 +26,40 @@ const preview = {
 				format: true,
 			},
 		},
+		options: {
+			storySort: {
+				order: [
+					"Introductie",
+					["Over dit prototype"],
+					"Typografie",
+					["Koppen", "Paragraaf", "Block-level tekst", "Inline tekst"],
+					"Design tokens",
+					["Kleurenpalet", "Ruimtelijk systeem", "Transities"],
+					"Ontwerppatronen",
+					["Interactie op inhoud"],
+					"Componenten",
+					[
+						"Navigatie",
+						"Footer",
+						"Feedback",
+						"Tekstinvoer",
+						"Selectie",
+						"Knop",
+						"Actiegroep",
+						"Link",
+						"Iconen",
+						"Link met icoon",
+						"Label met icoon",
+						"Lijsten",
+						"Tabel",
+						"Card",
+						"Tiles",
+						"Accordeon",
+						"Badge",
+					]
+				],
+			},
+		},
 	},
 };
 

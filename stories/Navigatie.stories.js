@@ -87,6 +87,52 @@ ${items}
 	},
 };
 
+export const Paginering = {
+	parameters: {
+		docs: {
+			description: {
+				story: "Pagineringsnavigatie met `aria-current=\"page\"` op de huidige pagina (als `<span>`, niet als link). Bevat optioneel Vorige/Volgende-links met `rel=\"prev\"`/`rel=\"next\"`.",
+			},
+		},
+	},
+	argTypes: {
+		aantalPaginas: { name: "Aantal pagina's", control: { type: "range", min: 2, max: 10, step: 1 } },
+		huidigePagina: { name: "Huidige pagina", control: { type: "range", min: 1, max: 10, step: 1 } },
+	},
+	args: {
+		aantalPaginas: 3,
+		huidigePagina: 1,
+	},
+	render: ({ aantalPaginas, huidigePagina }) => {
+		const pagina = Math.min(huidigePagina, aantalPaginas);
+		const items = [];
+
+		if (pagina > 1) {
+			items.push(`\t\t<li><a href="#" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a></li>`);
+		}
+
+		for (let i = 1; i <= aantalPaginas; i++) {
+			if (i === pagina) {
+				items.push(`\t\t<li><span aria-current="page">${i}</span></li>`);
+			} else {
+				items.push(`\t\t<li><a href="#">${i}</a></li>`);
+			}
+		}
+
+		if (pagina < aantalPaginas) {
+			items.push(`\t\t<li><a href="#" rel="next">Volgende<span class="visually-hidden"> pagina</span></a></li>`);
+		}
+
+		return `
+<nav class="pagination" aria-label="Paginering">
+	<ol>
+${items.join("\n")}
+	</ol>
+</nav>
+`;
+	},
+};
+
 export const Breadcrumb = {
 	parameters: {
 		docs: {

@@ -8,5 +8,5 @@ storybook-static/
 mcp/host/.env
 __pycache__/
 .claude/*
-_site/.claude/*
+_site/
 agent-os/standards/index.yml

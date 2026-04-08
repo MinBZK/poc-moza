@@ -11,12 +11,11 @@ export const Citaat = {
 			},
 		},
 	},
-	render: () => `
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "Dit is een citaat. De beste manier om de toekomst te voorspellen is om deze zelf te creëren." },
+	render: ({ tekst }) => `
 <blockquote>
-	<p>
-		Dit is een citaat. De beste manier om de toekomst te voorspellen is om
-		deze zelf te creëren.
-	</p>
+	<p>${tekst}</p>
 </blockquote>
 `,
 };
@@ -29,11 +28,9 @@ export const VoorgeformatteerdeTekst = {
 			},
 		},
 	},
-	render: () => `
-<pre>Dit is voorgeformatteerde tekst.
-            Spaties en regelovergangen
-            worden behouden.</pre>
-`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "Dit is voorgeformatteerde tekst.\n            Spaties en regelovergangen\n            worden behouden." },
+	render: ({ tekst }) => `<pre>${tekst}</pre>`,
 };
 
 export const Codeblok = {
@@ -44,12 +41,9 @@ export const Codeblok = {
 			},
 		},
 	},
-	render: () => `
-<pre><code>// Dit is een codeblok
-function groet(naam) {
-    return \`Hallo, \${naam}!\`;
-}</code></pre>
-`,
+	argTypes: { tekst: { control: "text" } },
+	args: { tekst: "// Dit is een codeblok\nfunction groet(naam) {\n    return `Hallo, ${naam}!`;\n}" },
+	render: ({ tekst }) => `<pre><code>${tekst}</code></pre>`,
 };
 
 export const Adres = {
@@ -60,11 +54,21 @@ export const Adres = {
 			},
 		},
 	},
-	render: () => `
+	argTypes: {
+		regel1: { control: "text", name: "Regel 1" },
+		regel2: { control: "text", name: "Regel 2" },
+		regel3: { control: "text", name: "Regel 3" },
+	},
+	args: {
+		regel1: "Contactgegevens",
+		regel2: "Voorbeeldstraat 1",
+		regel3: "1234 AB Den Haag",
+	},
+	render: ({ regel1, regel2, regel3 }) => `
 <address>
-	Contactgegevens<br />
-	Voorbeeldstraat 1<br />
-	1234 AB Den Haag
+	${regel1}<br />
+	${regel2}<br />
+	${regel3}
 </address>
 `,
 };

@@ -5,9 +5,7 @@ storybook-static/
 .git/
 .github/
 .claude/
-.storybook/
 .vscode/
-stories/
 MOx.git/
 *.crdownload
 .DS_Store

@@ -1,0 +1,190 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introductie/Over dit prototype" />
+
+# Over dit prototype
+
+Dit prototype van MijnOverheid Zakelijk (MOZa) is gebouwd als statische site met [Eleventy](https://www.11ty.dev/) en gedocumenteerd in Storybook. Het doel is om interactiepatronen en visueel ontwerp te verkennen, zonder een backend.
+
+## Hoe staten worden onthouden
+
+Omdat er geen server of database is, worden gebruikersacties opgeslagen in de **localStorage** van de browser. Dit betekent dat interacties alleen lokaal bestaan en per browser/apparaat verschillen.
+
+### Opgeslagen staten
+
+<table>
+	<thead>
+		<tr>
+			<th>Actie</th>
+			<th>localStorage-sleutel</th>
+			<th>Waarde</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<strong>Bewaar</strong> (checkbox)
+			</td>
+			<td>
+				<code>favorite:Titel van item</code>
+			</td>
+			<td>JSON met titel, URL en beschrijving</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Niet relevant voor mij</strong> (verbergen)
+			</td>
+			<td>
+				<code>hidden:Titel van item</code>
+			</td>
+			<td>JSON met titel, URL en beschrijving</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Relevant / Niet relevant</strong> (toggle)
+			</td>
+			<td>
+				<code>relevant:Titel van item</code>
+			</td>
+			<td>
+				JSON met titel, URL, beschrijving en waarde (<code>"relevant"</code> of <code>"irrelevant"</code>)
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Notificatie sluiten</strong>
+			</td>
+			<td>
+				<code>dismissed:element-id</code>
+			</td>
+			<td>
+				<code>"true"</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Hoe het werkt
+
+Alle interactielogica staat in **content-interactions.js**, dat op elke pagina wordt geladen via de base-template. Het script:
+
+- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, `aria-pressed`, verborgen items, gesloten notificaties)
+- Slaat wijzigingen direct op bij interactie
+- Gebruikt event delegation (`document.addEventListener`) zodat het ook werkt met dynamisch gegenereerde elementen
+
+### Semantiek van de toggle-buttons
+
+De **Relevant** en **Niet relevant** knoppen zijn geïmplementeerd als `<button>` elementen met `aria-pressed`:
+
+```html
+<button class="link-button mark-relevant" aria-pressed="false">Relevant</button> <button class="link-button mark-irrelevant" aria-pressed="false">Niet relevant</button>
+```
+
+- `aria-pressed="false"` — niet ingedrukt (standaard, neutraal)
+- `aria-pressed="true"` — ingedrukt (actief)
+- De twee knoppen zijn wederzijds exclusief: het indrukken van de ene zet de andere uit
+- Screenreaders communiceren de staat als "ingedrukt" of "niet ingedrukt"
+
+Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toestanden zijn: neutraal, relevant, en niet relevant.
+
+### De pagina Bewaard
+
+De pagina **Bewaard** leest alle `favorite:` en `hidden:` sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel.
+
+## Feature flags
+
+Het prototype bevat een ingebouwd feature-flag systeem waarmee pagina's en functionaliteit in- of uitgeschakeld kunnen worden — zonder aparte versies te hoeven bouwen.
+
+### Hoe te gebruiken
+
+Klik op de **Flags**-knop rechtsonder in het prototype. Er opent een paneel met twee groepen:
+
+- **Pagina's** — navigatie-items zoals Berichtenbox, Belastingen en Zakelijk vervoer. Uitschakelen verbergt zowel het navigatie-item als de bijbehorende content op de homepage.
+- **Functionaliteit** — interactiemogelijkheden zoals _Delen_ en _Relevantie_. Uitschakelen verbergt de betreffende knoppen in alle actiegroepen.
+
+Feature flags worden opgeslagen in localStorage en blijven staan na herladen. Standaard staan alle features aan.
+
+### Hoe toe te voegen
+
+Voeg `data-feature` en `data-feature-type` attributen toe aan een HTML-element:
+
+```html
+{/* Pagina-sectie verbergen */}
+<div data-feature="Belastingen" data-feature-type="pagina">...</div>
+
+{/* Functionaliteit verbergen */}
+<button data-feature="Delen" data-feature-type="functionaliteit">Deel</button>
+```
+
+Het element verschijnt automatisch in het Flags-paneel en kan door de gebruiker aan- en uitgezet worden.
+
+Voor navigatie-items in de sidebar wordt de feature flag ingesteld via het `feature` veld in de data-bestanden (`moza.json` en de subdirectory JSON-bestanden):
+
+```json
+{
+	"label": "Belastingen",
+	"url": "/moza/belastingen/",
+	"feature": "Belastingen"
+}
+```
+
+De template voegt automatisch `data-feature` en `data-feature-type="pagina"` toe aan het `<li>` element.
+
+### Opgeslagen sleutels
+
+<table>
+	<thead>
+		<tr>
+			<th>Sleutel</th>
+			<th>Waarde als uitgeschakeld</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<code>feature:Naam</code>
+			</td>
+			<td>
+				<code>"false"</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+Wanneer een feature is ingeschakeld (standaard), bestaat er geen sleutel in localStorage.
+
+## localStorage legen
+
+Het Flags-paneel bevat een **localStorage wissen**-knop die alle opgeslagen state in één keer reset en de pagina herlaadt.
+
+Handmatig kan het ook via de browserconsole (F12 of Cmd+Option+I):
+
+```js
+localStorage.clear();
+```
+
+Herlaad daarna de pagina. Alle bewaarde items, verborgen topics, relevantie-keuzes en gesloten notificaties worden gereset.
+
+Om alleen een specifieke categorie te wissen:
+
+```js
+// Alleen bewaarde items wissen
+Object.keys(localStorage)
+	.filter((k) => k.startsWith("favorite:"))
+	.forEach((k) => localStorage.removeItem(k));
+
+// Alleen verborgen items wissen
+Object.keys(localStorage)
+	.filter((k) => k.startsWith("hidden:"))
+	.forEach((k) => localStorage.removeItem(k));
+
+// Alleen relevantie-keuzes wissen
+Object.keys(localStorage)
+	.filter((k) => k.startsWith("relevant:"))
+	.forEach((k) => localStorage.removeItem(k));
+
+// Alleen gesloten notificaties wissen
+Object.keys(localStorage)
+	.filter((k) => k.startsWith("dismissed:"))
+	.forEach((k) => localStorage.removeItem(k));
+```
