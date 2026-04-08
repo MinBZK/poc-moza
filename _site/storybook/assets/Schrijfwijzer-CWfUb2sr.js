@@ -1,4 +1,4 @@
-import{u as s,j as e,M as l}from"./blocks-9eKEkKWO.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-Cgm1CB6M.js";function r(i){const n={code:"code",em:"em",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",strong:"strong",ul:"ul",...s(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{title:"Introductie/Schrijfwijzer"}),`
+import{u as s,j as e,M as l}from"./blocks-Gcp8G2N-.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-DVALVSfo.js";function r(i){const n={code:"code",em:"em",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",strong:"strong",ul:"ul",...s(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{title:"Introductie/Schrijfwijzer"}),`
 `,e.jsx(n.h1,{id:"schrijfwijzer",children:"Schrijfwijzer"}),`
 `,e.jsx(n.p,{children:"Deze schrijfwijzer beschrijft de taal- en stijlafspraken voor alle teksten in het prototype van MijnOverheid Zakelijk."}),`
 `,e.jsx(n.h2,{id:"aanspreking",children:"Aanspreking"}),`
