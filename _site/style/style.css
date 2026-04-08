@@ -1243,7 +1243,7 @@ summary {
 	border-radius: var(--toepassing-border-radius-round);
 	color: var(--toepassing-color-component-badge-text);
 	font: var(--toepassing-text-component-text-badge);
-	margin-inline-start: var(--toepassing-space-margin-2xs);
+	margin-inline-start: auto;
 	min-inline-size: var(--toepassing-size-icon-xs);
 	padding: 0 var(--toepassing-space-padding-xs);
 	text-align: center;
