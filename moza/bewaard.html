@@ -175,14 +175,40 @@ title: "MijnOverheid Zakelijk: Bewaard"
 		});
 	}
 
+	function fadeOut(li, direction, callback) {
+		let done = false;
+		function hide() {
+			if (done) return;
+			done = true;
+			li.remove();
+			callback();
+		}
+		li.offsetHeight;
+		li.classList.add(direction === "up" ? "restore-item" : "remove-item");
+		li.addEventListener("transitionend", hide, { once: true });
+		setTimeout(hide, 1000);
+	}
+
 	renderGroups(savedGroups, savedEmpty, favorites, "delete-topic", "Verwijderen", (li, item) => {
 		localStorage.removeItem(item.key);
-		li.remove();
+		const ul = li.closest("ul");
+		const section = li.closest("section");
+		fadeOut(li, "down", () => {
+			if (ul && ul.children.length === 0 && section) section.remove();
+			if (savedGroups && savedGroups.children.length === 0) savedEmpty.hidden = false;
+		});
 	});
 
-	renderGroups(hiddenGroups, hiddenEmpty, hiddenTopics, "show-topic", "Toch relevant", (li, item) => {
+	renderGroups(hiddenGroups, hiddenEmpty, hiddenTopics, "restore-topic", "Toch relevant", (li, item) => {
 		localStorage.removeItem(item.key);
-		li.remove();
+		const ul = li.closest("ul");
+		const section = li.closest("section");
+		fadeOut(li, "up", () => {
+			if (ul && ul.children.length === 0 && section) section.remove();
+			if (hiddenGroups && hiddenGroups.children.length === 0) {
+				hiddenEmpty.hidden = false;
+			}
+		});
 	});
 
 	// Verberg hele "Niet relevant" sectie als er geen items zijn

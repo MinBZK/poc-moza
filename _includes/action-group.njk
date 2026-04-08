@@ -1,5 +1,21 @@
 <div class="action-group">
-	<label class="save-favorite"><input type="checkbox" /> <span class="favorite-label">Bewaar</span> <span class="visually-hidden"></span></label>
+
 	<button class="link-button share-topic" data-feature="Delen" data-feature-type="functionaliteit">{% icon "/assets/icons/icon-delen.svg" %} Deel</button>
-	<button class="link-button hide-topic" data-feature="Relevantie" data-feature-type="functionaliteit">Niet relevant voor mij</button>
+
+	<label class="save-favorite"><input type="checkbox" /> <span class="favorite-label">Bewaar</span> <span class="visually-hidden"></span></label>
+	
+	<fieldset class="relevance-group" data-feature="Relevantie" data-feature-type="functionaliteit">
+		<legend class="visually-hidden">Is dit relevant voor u?</legend>
+		<label class="relevance-option relevance-yes">
+			<input type="radio" name="" value="relevant" />
+			<span class="relevance-icon"></span>
+			<span>Relevant</span>
+		</label>
+		<label class="relevance-option relevance-no">
+			<input type="radio" name="" value="irrelevant" />
+			<span class="relevance-icon"></span>
+			<span>Niet relevant</span>
+		</label>
+	</fieldset>
+	
 </div>

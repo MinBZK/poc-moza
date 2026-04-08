@@ -1,618 +1,625 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Components Manifest</title>
-		<style>
-			:root {
-				--bg: #0b0c10;
-				--panel: #121318;
-				--muted: #9aa0a6;
-				--fg: #e8eaed;
-				--ok: #22c55e;
-				--info: #1e88e5;
-				--err: #c62828;
-				--ok-bg: #0c1a13;
-				--info-bg: #0c1624;
-				--err-bg: #1a0e0e;
-				--chip: #1f2330;
-				--border: #2b2f3a;
-				--link: #8ab4f8;
-				--active-ring: 1px; /* 1px active ring for pills and toggles */
-			}
-
-			* {
-				box-sizing: border-box;
-			}
-
-			html,
-			body {
-				margin: 0;
-				background: var(--bg);
-				color: var(--fg);
-				font:
-					14px/1.5 system-ui,
-					-apple-system,
-					Segoe UI,
-					Roboto,
-					Ubuntu,
-					Cantarell,
-					"Helvetica Neue",
-					Arial,
-					"Noto Sans";
-			}
-
-			.wrap {
-				max-width: 1100px;
-				margin: 0 auto;
-				padding: 16px 20px;
-			}
-
-			header {
-				position: sticky;
-				top: 0;
-				backdrop-filter: blur(6px);
-				background: color-mix(in srgb, var(--bg) 84%, transparent);
-				border-bottom: 1px solid var(--border);
-				z-index: 10;
-			}
-
-			h1 {
-				font-size: 20px;
-				margin: 0 0 6px;
-			}
-
-			.summary {
-				display: flex;
-				gap: 12px;
-				flex-wrap: wrap;
-				align-items: center;
-			}
-
-			/* Top filter pills */
-			.filter-pill {
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				padding: 6px 12px;
-				border: 1px solid var(--border);
-				border-radius: 999px;
-				background: var(--panel);
-				text-decoration: none;
-				cursor: pointer;
-				user-select: none;
-				color: var(--fg);
-			}
-
-			.filter-pill.ok {
-				color: #b9f6ca;
-				border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
-				background: color-mix(in srgb, var(--ok) 18%, #000);
-			}
-
-			.filter-pill.info {
-				color: #b3d9ff;
-				border-color: color-mix(in srgb, var(--info) 55%, var(--border));
-				background: var(--info-bg);
-			}
-
-			.filter-pill.err {
-				color: #ff9aa0;
-				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-				background: var(--err-bg);
-			}
-
-			.filter-pill.all {
-				color: #d7dbe0;
-				border-color: var(--border);
-				background: var(--panel);
-			}
-
-			.filter-pill[aria-disabled="true"] {
-				cursor: default;
-				text-decoration: none;
-			}
-
-			.filter-pill:focus,
-			.filter-pill:active {
-				outline: none;
-				box-shadow: none;
-			}
-
-			/* Selected top pill ring via :target */
-			#filter-all:target ~ header .filter-pill[data-k="all"],
-			#filter-errors:target ~ header .filter-pill[data-k="errors"],
-			#filter-infos:target ~ header .filter-pill[data-k="infos"],
-			#filter-story-errors:target ~ header .filter-pill[data-k="story-errors"],
-			#filter-doc-errors:target ~ header .filter-pill[data-k="docs"],
-			#filter-docs:target ~ header .filter-pill[data-k="docs"] {
-				box-shadow: 0 0 0 var(--active-ring) currentColor;
-				border-color: currentColor;
-			}
-
-			/* Hidden targets for filtering */
-			#filter-all,
-			#filter-errors,
-			#filter-infos,
-			#filter-story-errors,
-			#filter-doc-errors,
-			#filter-docs {
-				display: none;
-			}
-
-			main {
-				padding: 36px 0 40px;
-			}
-
-			.grid {
-				display: grid;
-				grid-template-columns: 1fr;
-				gap: 18px;
-			}
-
-			/* one card per row */
-
-			.card {
-				border: 1px solid var(--border);
-				background: var(--panel);
-				border-radius: 14px;
-				padding: 14px;
-				display: flex;
-				flex-direction: column;
-				gap: 10px;
-			}
-
-			.head {
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-			}
-
-			.title {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 10px;
-			}
-
-			.title h2 {
-				font-size: 16px;
-				margin: 0;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-
-			.meta {
-				font-size: 12px;
-				color: var(--muted);
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-
-			.kv {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 6px;
-			}
-
-			.chip {
-				font-size: 12px;
-				padding: 4px 8px;
-				border-radius: 999px;
-				background: var(--chip);
-				border: 1px solid var(--border);
-			}
-
-			.hint {
-				color: var(--muted);
-				font-size: 12px;
-			}
-
-			.badges {
-				display: flex;
-				gap: 8px;
-				flex-wrap: wrap;
-			}
-
-			/* Per-card badges: labels become toggles when clickable */
-			.badge {
-				font-size: 12px;
-				padding: 3px 8px;
-				border-radius: 999px;
-				border: 1px solid var(--border);
-				background: var(--chip);
-				color: #d7dbe0;
-			}
-
-			.badge.ok {
-				color: #b9f6ca;
-				border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
-			}
-
-			.badge.info {
-				color: #b3d9ff;
-				border-color: color-mix(in srgb, var(--info) 55%, var(--border));
-			}
-
-			.badge.err {
-				color: #ff9aa0;
-				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-			}
-
-			.as-toggle {
-				cursor: pointer;
-			}
-
-			/* 1px ring on active toggle */
-			.tg-err:checked + label.as-toggle,
-			.tg-info:checked + label.as-toggle,
-			.tg-stories:checked + label.as-toggle,
-			.tg-docs:checked + label.as-toggle,
-			.tg-content:checked + label.as-toggle,
-			.tg-props:checked + label.as-toggle {
-				box-shadow: 0 0 0 var(--active-ring) currentColor;
-				border-color: currentColor;
-			}
-
-			/* Panels: hidden by default, shown when respective toggle checked */
-			.panels {
-				display: grid;
-				gap: 10px;
-			}
-
-			.panel {
-				display: none;
-			}
-
-			.tg-err:checked ~ .panels .panel-err {
-				display: grid;
-			}
-
-			.tg-info:checked ~ .panels .panel-info {
-				display: grid;
-				gap: 8px;
-			}
-
-			.tg-stories:checked ~ .panels .panel-stories {
-				display: grid;
-				gap: 8px;
-			}
-
-			.tg-docs:checked ~ .panels .panel-docs {
-				display: grid;
-				gap: 8px;
-			}
-
-			.tg-content:checked ~ .panels .panel-content {
-				display: grid;
-				gap: 8px;
-			}
-
-			.tg-props:checked ~ .panels .panel-props {
-				display: grid;
-			}
-
-			/* Colored notes for prop type error + info */
-			.note {
-				padding: 12px;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-			}
-
-			.note.err {
-				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-				background: var(--err-bg);
-				color: #ffd1d4;
-			}
-
-			.note.info {
-				border-color: color-mix(in srgb, var(--info) 55%, var(--border));
-				background: var(--info-bg);
-				color: #d6e8ff;
-			}
-
-			.note.ok {
-				border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
-				background: var(--ok-bg);
-				color: var(--fg);
-			}
-
-			.note-title {
-				font-weight: 600;
-				margin-bottom: 6px;
-			}
-
-			.note-body {
-				white-space: normal;
-			}
-
-			/* Story error cards */
-			.ex {
-				padding: 10px;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-				background: #0f131b;
-			}
-
-			.ex.err {
-				border-color: color-mix(in srgb, var(--err) 55%, var(--border));
-			}
-
-			.row {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				flex-wrap: wrap;
-			}
-
-			.status-dot {
-				width: 8px;
-				height: 8px;
-				border-radius: 50%;
-				display: inline-block;
-			}
-
-			.dot-ok {
-				background: var(--ok);
-			}
-
-			.dot-err {
-				background: var(--err);
-			}
-
-			.ex-name {
-				font-weight: 600;
-			}
-
-			/* Error groups (visible in errors filter) */
-			.error-groups {
-				display: none;
-				margin-bottom: 16px;
-			}
-
-			.group {
-				border: 1px solid var(--border);
-				background: var(--panel);
-				border-radius: 14px;
-				overflow: hidden;
-			}
-
-			.group + .group {
-				margin-top: 12px;
-			}
-
-			.group-header {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding: 12px 14px;
-				cursor: pointer;
-				border-bottom: 1px solid var(--border);
-			}
-
-			.group-header:hover {
-				background: #141722;
-			}
-
-			.group-title {
-				font-weight: 600;
-				flex: 1;
-			}
-
-			.group-count {
-				font-size: 12px;
-				color: var(--muted);
-			}
-
-			.group-cards {
-				display: none;
-				padding: 12px;
-			}
-
-			.group .card {
-				margin: 12px 0;
-			}
-
-			.group .card:first-child {
-				margin-top: 0;
-			}
-
-			.group .card:last-child {
-				margin-bottom: 0;
-			}
-
-			/* caret rotation */
-			.group-tg:checked + label .caret {
-				transform: rotate(90deg);
-			}
-
-			.caret {
-				transition: transform 0.15s ease;
-			}
-
-			/* toggle body */
-			.group-tg:checked ~ .group-cards {
-				display: block;
-			}
-
-			/* CSS-only filtering of cards via top pills */
-			#filter-errors:target ~ main .card:not(.has-error):not(.has-story-error) {
-				display: none;
-			}
-
-			#filter-infos:target ~ main .card:not(.has-info) {
-				display: none;
-			}
-
-			#filter-story-errors:target ~ main .card:not(.has-story-error) {
-				display: none;
-			}
-
-			#filter-doc-errors:target ~ main .card:not(.has-doc-error) {
-				display: none;
-			}
-
-			#filter-docs:target ~ main .card:has(> .tg-docs),
-			#filter-docs:target ~ main .card.is-doc {
-				display: block;
-			}
-
-			#filter-docs:target ~ main .card:not(:has(> .tg-docs)):not(.is-doc) {
-				display: none;
-			}
-
-			#filter-all:target ~ main .card {
-				display: block;
-			}
-
-			/* In errors view, hide standalone component-error cards in the regular grid (they will appear in groups) */
-			#filter-errors:target ~ main .grid .card.has-error {
-				display: none;
-			}
-
-			/* Show grouped section only in errors view */
-			#filter-errors:target ~ main .error-groups {
-				display: block;
-			}
-
-			/* Section titles */
-			.section-title {
-				font-size: 16px;
-				font-weight: 600;
-				color: var(--muted);
-				margin: 24px 0 12px;
-				padding-bottom: 8px;
-				border-bottom: 1px solid var(--border);
-			}
-			.section-title:first-child {
-				margin-top: 0;
-			}
-
-			/* When a toggle is checked, show the corresponding panel */
-			.card > .tg-err:checked ~ .panels .panel-err {
-				display: grid;
-			}
-
-			.card > .tg-info:checked ~ .panels .panel-info {
-				display: grid;
-			}
-
-			.card > .tg-stories:checked ~ .panels .panel-stories {
-				display: grid;
-			}
-
-			.card > .tg-docs:checked ~ .panels .panel-docs {
-				display: grid;
-			}
-
-			.card > .tg-content:checked ~ .panels .panel-content {
-				display: grid;
-			}
-
-			/* Add vertical spacing around panels only when any panel is visible */
-			.card > .tg-err:checked ~ .panels,
-			.card > .tg-info:checked ~ .panels,
-			.card > .tg-stories:checked ~ .panels,
-			.card > .tg-docs:checked ~ .panels,
-			.card > .tg-content:checked ~ .panels,
-			.card > .tg-props:checked ~ .panels {
-				margin: 10px 0;
-			}
-
-			/* Optional: a subtle 1px ring on the active badge, using :has() if available */
-			@supports selector(.card:has(.tg-err:checked)) {
-				.card:has(.tg-err:checked) label[for$="-err"],
-				.card:has(.tg-info:checked) label[for$="-info"],
-				.card:has(.tg-stories:checked) label[for$="-stories"],
-				.card:has(.tg-docs:checked) label[for$="-docs"],
-				.card:has(.tg-content:checked) label[for$="-content"],
-				.card:has(.tg-props:checked) label[for$="-props"] {
-					box-shadow: 0 0 0 1px currentColor;
-					border-color: currentColor;
-				}
-			}
-
-			/* Wrap long lines in code blocks at ~120 characters */
-			pre,
-			code {
-				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-			}
-			pre {
-				white-space: pre-wrap;
-				overflow-wrap: anywhere;
-				word-break: break-word;
-				overflow-x: auto; /* fallback for extremely long tokens */
-				margin: 8px 0 0;
-			}
-			pre > code {
-				display: block;
-				white-space: inherit;
-				overflow-wrap: inherit;
-				word-break: inherit;
-				inline-size: min(100%, 120ch);
-			}
-
-			/* MDX content container for docs */
-			.mdx-content {
-				background: #0f131b;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-				padding: 12px;
-				max-height: 400px;
-				overflow-y: auto;
-				margin-top: 8px;
-			}
-		</style>
-	</head>
-	<body>
-		<!-- Hidden targets for the top-level filters -->
-		<span id="filter-all"></span>
-		<span id="filter-errors"></span>
-		<span id="filter-infos"></span>
-		<span id="filter-story-errors"></span>
-		<span id="filter-doc-errors"></span>
-		<span id="filter-docs"></span>
-		<header>
-			<div class="wrap">
-				<h1>Manifest Debugger</h1>
-				<div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">3 docs ok</a></div>
-			</div>
-		</header>
-		<main>
-			<div class="wrap">
-				<div class="note info" style="margin-bottom: 16px">
-					<strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>0.0s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
-					<pre><code>typescript: {
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Components Manifest</title>
+  <style>
+      :root {
+          --bg: #0b0c10;
+          --panel: #121318;
+          --muted: #9aa0a6;
+          --fg: #e8eaed;
+          --ok: #22c55e;
+          --info: #1e88e5;
+          --err: #c62828;
+          --ok-bg: #0c1a13;
+          --info-bg: #0c1624;
+          --err-bg: #1a0e0e;
+          --chip: #1f2330;
+          --border: #2b2f3a;
+          --link: #8ab4f8;
+          --active-ring: 1px; /* 1px active ring for pills and toggles */
+      }
+
+      * {
+          box-sizing: border-box;
+      }
+
+      html,
+      body {
+          margin: 0;
+          background: var(--bg);
+          color: var(--fg);
+          font: 14px/1.5 system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Ubuntu,
+          Cantarell,
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans';
+      }
+
+      .wrap {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 16px 20px;
+      }
+
+      header {
+          position: sticky;
+          top: 0;
+          backdrop-filter: blur(6px);
+          background: color-mix(in srgb, var(--bg) 84%, transparent);
+          border-bottom: 1px solid var(--border);
+          z-index: 10;
+      }
+
+      h1 {
+          font-size: 20px;
+          margin: 0 0 6px;
+      }
+
+      .summary {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          align-items: center;
+      }
+
+      /* Top filter pills */
+      .filter-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          background: var(--panel);
+          text-decoration: none;
+          cursor: pointer;
+          user-select: none;
+          color: var(--fg);
+      }
+
+      .filter-pill.ok {
+          color: #b9f6ca;
+          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+          background: color-mix(in srgb, var(--ok) 18%, #000);
+      }
+
+      .filter-pill.info {
+          color: #b3d9ff;
+          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+          background: var(--info-bg);
+      }
+
+      .filter-pill.err {
+          color: #ff9aa0;
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+          background: var(--err-bg);
+      }
+
+      .filter-pill.all {
+          color: #d7dbe0;
+          border-color: var(--border);
+          background: var(--panel);
+      }
+
+      .filter-pill[aria-disabled='true'] {
+          cursor: default;
+          text-decoration: none;
+      }
+
+      .filter-pill:focus,
+      .filter-pill:active {
+          outline: none;
+          box-shadow: none;
+      }
+
+      /* Selected top pill ring via :target */
+      #filter-all:target ~ header .filter-pill[data-k='all'],
+      #filter-errors:target ~ header .filter-pill[data-k='errors'],
+      #filter-infos:target ~ header .filter-pill[data-k='infos'],
+      #filter-story-errors:target ~ header .filter-pill[data-k='story-errors'],
+      #filter-doc-errors:target ~ header .filter-pill[data-k='docs'],
+      #filter-docs:target ~ header .filter-pill[data-k='docs'] {
+          box-shadow: 0 0 0 var(--active-ring) currentColor;
+          border-color: currentColor;
+      }
+
+      /* Hidden targets for filtering */
+      #filter-all,
+      #filter-errors,
+      #filter-infos,
+      #filter-story-errors,
+      #filter-doc-errors,
+      #filter-docs {
+          display: none;
+      }
+
+      main {
+          padding: 36px 0 40px;
+      }
+
+      .grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 18px;
+      }
+
+      /* one card per row */
+
+      .card {
+          border: 1px solid var(--border);
+          background: var(--panel);
+          border-radius: 14px;
+          padding: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+      }
+
+      .head {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+      }
+
+      .title {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+      }
+
+      .title h2 {
+          font-size: 16px;
+          margin: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+      }
+
+      .meta {
+          font-size: 12px;
+          color: var(--muted);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+      }
+
+      .kv {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+      }
+
+      .chip {
+          font-size: 12px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          background: var(--chip);
+          border: 1px solid var(--border);
+      }
+
+      .hint {
+          color: var(--muted);
+          font-size: 12px;
+      }
+
+      .badges {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+      }
+
+      /* Per-card badges: labels become toggles when clickable */
+      .badge {
+          font-size: 12px;
+          padding: 3px 8px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          background: var(--chip);
+          color: #d7dbe0;
+      }
+
+      .badge.ok {
+          color: #b9f6ca;
+          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+      }
+
+      .badge.info {
+          color: #b3d9ff;
+          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+      }
+
+      .badge.err {
+          color: #ff9aa0;
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+      }
+
+      .as-toggle {
+          cursor: pointer;
+      }
+
+      /* 1px ring on active toggle */
+      .tg-err:checked + label.as-toggle,
+      .tg-info:checked + label.as-toggle,
+      .tg-stories:checked + label.as-toggle,
+      .tg-docs:checked + label.as-toggle,
+      .tg-content:checked + label.as-toggle,
+      .tg-props:checked + label.as-toggle {
+          box-shadow: 0 0 0 var(--active-ring) currentColor;
+          border-color: currentColor;
+      }
+
+      /* Panels: hidden by default, shown when respective toggle checked */
+      .panels {
+          display: grid;
+          gap: 10px;
+      }
+
+      .panel {
+          display: none;
+      }
+
+      .tg-err:checked ~ .panels .panel-err {
+          display: grid;
+      }
+
+      .tg-info:checked ~ .panels .panel-info {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-stories:checked ~ .panels .panel-stories {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-docs:checked ~ .panels .panel-docs {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-content:checked ~ .panels .panel-content {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-props:checked ~ .panels .panel-props {
+          display: grid;
+      }
+
+      /* Colored notes for prop type error + info */
+      .note {
+          padding: 12px;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+      }
+
+      .note.err {
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+          background: var(--err-bg);
+          color: #ffd1d4;
+      }
+
+      .note.info {
+          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+          background: var(--info-bg);
+          color: #d6e8ff;
+      }
+
+      .note.ok {
+          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+          background: var(--ok-bg);
+          color: var(--fg);
+      }
+
+      .note-title {
+          font-weight: 600;
+          margin-bottom: 6px;
+      }
+
+      .note-body {
+          white-space: normal;
+      }
+
+      /* Story error cards */
+      .ex {
+          padding: 10px;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          background: #0f131b;
+      }
+
+      .ex.err {
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+      }
+
+      .row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+      }
+
+      .status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          display: inline-block;
+      }
+
+      .dot-ok {
+          background: var(--ok);
+      }
+
+      .dot-err {
+          background: var(--err);
+      }
+
+      .ex-name {
+          font-weight: 600;
+      }
+
+      /* Error groups (visible in errors filter) */
+      .error-groups {
+          display: none;
+          margin-bottom: 16px;
+      }
+
+      .group {
+          border: 1px solid var(--border);
+          background: var(--panel);
+          border-radius: 14px;
+          overflow: hidden;
+      }
+
+      .group + .group {
+          margin-top: 12px;
+      }
+
+      .group-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 14px;
+          cursor: pointer;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .group-header:hover {
+          background: #141722;
+      }
+
+      .group-title {
+          font-weight: 600;
+          flex: 1;
+      }
+
+      .group-count {
+          font-size: 12px;
+          color: var(--muted);
+      }
+
+      .group-cards {
+          display: none;
+          padding: 12px;
+      }
+
+      .group .card {
+          margin: 12px 0;
+      }
+
+      .group .card:first-child {
+          margin-top: 0;
+      }
+
+      .group .card:last-child {
+          margin-bottom: 0;
+      }
+
+      /* caret rotation */
+      .group-tg:checked + label .caret {
+          transform: rotate(90deg);
+      }
+
+      .caret {
+          transition: transform 0.15s ease;
+      }
+
+      /* toggle body */
+      .group-tg:checked ~ .group-cards {
+          display: block;
+      }
+
+      /* CSS-only filtering of cards via top pills */
+      #filter-errors:target ~ main .card:not(.has-error):not(.has-story-error) {
+          display: none;
+      }
+
+      #filter-infos:target ~ main .card:not(.has-info) {
+          display: none;
+      }
+
+      #filter-story-errors:target ~ main .card:not(.has-story-error) {
+          display: none;
+      }
+
+      #filter-doc-errors:target ~ main .card:not(.has-doc-error) {
+          display: none;
+      }
+
+      #filter-docs:target ~ main .card:has(> .tg-docs),
+      #filter-docs:target ~ main .card.is-doc {
+          display: block;
+      }
+
+      #filter-docs:target ~ main .card:not(:has(> .tg-docs)):not(.is-doc) {
+          display: none;
+      }
+
+      #filter-all:target ~ main .card {
+          display: block;
+      }
+
+      /* In errors view, hide standalone component-error cards in the regular grid (they will appear in groups) */
+      #filter-errors:target ~ main .grid .card.has-error {
+          display: none;
+      }
+
+      /* Show grouped section only in errors view */
+      #filter-errors:target ~ main .error-groups {
+          display: block;
+      }
+
+      /* Section titles */
+      .section-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--muted);
+          margin: 24px 0 12px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--border);
+      }
+      .section-title:first-child {
+          margin-top: 0;
+      }
+
+      /* When a toggle is checked, show the corresponding panel */
+      .card > .tg-err:checked ~ .panels .panel-err {
+          display: grid;
+      }
+      
+      .card > .tg-info:checked ~ .panels .panel-info {
+          display: grid;
+      }
+      
+      .card > .tg-stories:checked ~ .panels .panel-stories {
+          display: grid;
+      }
+
+      .card > .tg-docs:checked ~ .panels .panel-docs {
+          display: grid;
+      }
+
+      .card > .tg-content:checked ~ .panels .panel-content {
+          display: grid;
+      }
+
+      /* Add vertical spacing around panels only when any panel is visible */
+      .card > .tg-err:checked ~ .panels,
+      .card > .tg-info:checked ~ .panels,
+      .card > .tg-stories:checked ~ .panels,
+      .card > .tg-docs:checked ~ .panels,
+      .card > .tg-content:checked ~ .panels,
+      .card > .tg-props:checked ~ .panels {
+          margin: 10px 0;
+      }
+
+      /* Optional: a subtle 1px ring on the active badge, using :has() if available */
+      @supports selector(.card:has(.tg-err:checked)) {
+          .card:has(.tg-err:checked) label[for$='-err'],
+          .card:has(.tg-info:checked) label[for$='-info'],
+          .card:has(.tg-stories:checked) label[for$='-stories'],
+          .card:has(.tg-docs:checked) label[for$='-docs'],
+          .card:has(.tg-content:checked) label[for$='-content'],
+          .card:has(.tg-props:checked) label[for$='-props'] {
+              box-shadow: 0 0 0 1px currentColor;
+              border-color: currentColor;
+          }
+      }
+
+      /* Wrap long lines in code blocks at ~120 characters */
+      pre, code {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      }
+      pre {
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          overflow-x: auto; /* fallback for extremely long tokens */
+          margin: 8px 0 0;
+      }
+      pre > code {
+          display: block;
+          white-space: inherit;
+          overflow-wrap: inherit;
+          word-break: inherit;
+          inline-size: min(100%, 120ch);
+      }
+
+      /* MDX content container for docs */
+      .mdx-content {
+          background: #0f131b;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 12px;
+          max-height: 400px;
+          overflow-y: auto;
+          margin-top: 8px;
+      }
+  </style>
+</head>
+<body>
+<!-- Hidden targets for the top-level filters -->
+<span id="filter-all"></span>
+<span id="filter-errors"></span>
+<span id="filter-infos"></span>
+<span id="filter-story-errors"></span>
+<span id="filter-doc-errors"></span>
+<span id="filter-docs"></span>
+<header>
+  <div class="wrap">
+    <h1>Manifest Debugger</h1>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">4 docs ok</a></div>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="note info" style="margin-bottom: 16px;">
+            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>0.0s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
+            <pre><code>typescript: {
   reactDocgen: 'react-docgen-typescript',
 }</code></pre>
-					Note: <code>react-docgen-typescript</code> can be slower. If performance is acceptable for your project, it generally produces better results.
-					<a href="https://storybook.js.org/docs/api/main-config/main-config-typescript#reactdocgen" target="_blank">Learn more</a>
-				</div>
+            Note: <code>react-docgen-typescript</code> can be slower. If performance is acceptable for your project, it generally produces better results.
+            <a href="https://storybook.js.org/docs/api/main-config/main-config-typescript#reactdocgen" target="_blank">Learn more</a>
+          </div>
+    
+    
+    <h2 class="section-title">Unattached Docs</h2>
+    <div class="grid" role="list">
+      
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Introductie/Over dit prototype</h2>
+      <div class="badges">
+        
+        <label for="doc-0-introductie-over-dit-prototype-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/OverDitPrototype.mdx">introductie-over-dit-prototype--docs · ./stories/OverDitPrototype.mdx</div>
+    
+  </div>
 
-				<h2 class="section-title">Unattached Docs</h2>
-				<div class="grid" role="list">
-					<article class="card is-doc no-doc-error" role="listitem" aria-label="Docs">
-						<div class="head">
-							<div class="title">
-								<h2><span class="status-dot dot-ok"></span> Introductie/Over dit prototype</h2>
-								<div class="badges">
-									<label for="doc-0-introductie-over-dit-prototype-docs-content" class="badge ok as-toggle">view content</label>
-								</div>
-							</div>
-							<div class="meta" title="./stories/OverDitPrototype.mdx">introductie-over-dit-prototype--docs · ./stories/OverDitPrototype.mdx</div>
-						</div>
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-0-introductie-over-dit-prototype-docs-content" class="tg tg-content" type="checkbox" hidden />
 
-						<!-- Hidden toggles must be siblings BEFORE .panels -->
-
-						<input id="doc-0-introductie-over-dit-prototype-docs-content" class="tg tg-content" type="checkbox" hidden />
-
-						<div class="panels">
-							<div class="panel panel-content">
-								<div class="mdx-content">
-									<pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
 &lt;Meta title=&quot;Introductie/Over dit prototype&quot; /&gt;
 
@@ -636,24 +643,44 @@ Omdat er geen server of database is, worden gebruikersacties opgeslagen in de **
 	&lt;/thead&gt;
 	&lt;tbody&gt;
 		&lt;tr&gt;
-			&lt;td&gt;&lt;strong&gt;Bewaar&lt;/strong&gt; (checkbox)&lt;/td&gt;
-			&lt;td&gt;&lt;code&gt;favorite:Titel van item&lt;/code&gt;&lt;/td&gt;
+			&lt;td&gt;
+				&lt;strong&gt;Bewaar&lt;/strong&gt; (checkbox)
+			&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;favorite:Titel van item&lt;/code&gt;
+			&lt;/td&gt;
 			&lt;td&gt;JSON met titel, URL en beschrijving&lt;/td&gt;
 		&lt;/tr&gt;
 		&lt;tr&gt;
-			&lt;td&gt;&lt;strong&gt;Niet relevant voor mij&lt;/strong&gt; (verbergen)&lt;/td&gt;
-			&lt;td&gt;&lt;code&gt;hidden:Titel van item&lt;/code&gt;&lt;/td&gt;
+			&lt;td&gt;
+				&lt;strong&gt;Niet relevant voor mij&lt;/strong&gt; (verbergen)
+			&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;hidden:Titel van item&lt;/code&gt;
+			&lt;/td&gt;
 			&lt;td&gt;JSON met titel, URL en beschrijving&lt;/td&gt;
 		&lt;/tr&gt;
 		&lt;tr&gt;
-			&lt;td&gt;&lt;strong&gt;Relevant / Niet relevant&lt;/strong&gt; (toggle)&lt;/td&gt;
-			&lt;td&gt;&lt;code&gt;relevant:Titel van item&lt;/code&gt;&lt;/td&gt;
-			&lt;td&gt;JSON met titel, URL, beschrijving en waarde (&lt;code&gt;&quot;relevant&quot;&lt;/code&gt; of &lt;code&gt;&quot;irrelevant&quot;&lt;/code&gt;)&lt;/td&gt;
+			&lt;td&gt;
+				&lt;strong&gt;Relevant / Niet relevant&lt;/strong&gt; (toggle)
+			&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;relevant:Titel van item&lt;/code&gt;
+			&lt;/td&gt;
+			&lt;td&gt;
+				JSON met titel, URL, beschrijving en waarde (&lt;code&gt;&quot;relevant&quot;&lt;/code&gt; of &lt;code&gt;&quot;irrelevant&quot;&lt;/code&gt;)
+			&lt;/td&gt;
 		&lt;/tr&gt;
 		&lt;tr&gt;
-			&lt;td&gt;&lt;strong&gt;Notificatie sluiten&lt;/strong&gt;&lt;/td&gt;
-			&lt;td&gt;&lt;code&gt;dismissed:element-id&lt;/code&gt;&lt;/td&gt;
-			&lt;td&gt;&lt;code&gt;&quot;true&quot;&lt;/code&gt;&lt;/td&gt;
+			&lt;td&gt;
+				&lt;strong&gt;Notificatie sluiten&lt;/strong&gt;
+			&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;dismissed:element-id&lt;/code&gt;
+			&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;&quot;true&quot;&lt;/code&gt;
+			&lt;/td&gt;
 		&lt;/tr&gt;
 	&lt;/tbody&gt;
 &lt;/table&gt;
@@ -662,25 +689,36 @@ Omdat er geen server of database is, worden gebruikersacties opgeslagen in de **
 
 Alle interactielogica staat in **content-interactions.js**, dat op elke pagina wordt geladen via de base-template. Het script:
 
-- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, `aria-pressed`, verborgen items, gesloten notificaties)
+- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, radio buttons, verborgen items, gesloten notificaties)
 - Slaat wijzigingen direct op bij interactie
 - Gebruikt event delegation (`document.addEventListener`) zodat het ook werkt met dynamisch gegenereerde elementen
 
-### Semantiek van de toggle-buttons
+### Semantiek van de relevantie-keuze
 
-De **Relevant** en **Niet relevant** knoppen zijn geïmplementeerd als `&lt;button&gt;` elementen met `aria-pressed`:
+De **Relevant** en **Niet relevant** opties zijn geïmplementeerd als een radio button group binnen een `&lt;fieldset&gt;`:
 
 ```html
-&lt;button class=&quot;link-button mark-relevant&quot; aria-pressed=&quot;false&quot;&gt;Relevant&lt;/button&gt;
-&lt;button class=&quot;link-button mark-irrelevant&quot; aria-pressed=&quot;false&quot;&gt;Niet relevant&lt;/button&gt;
+&lt;fieldset class=&quot;relevance-group&quot;&gt;
+	&lt;legend class=&quot;visually-hidden&quot;&gt;Is dit relevant voor u?&lt;/legend&gt;
+	&lt;label class=&quot;relevance-option relevance-yes&quot;&gt;
+		&lt;input type=&quot;radio&quot; name=&quot;relevance-0&quot; value=&quot;relevant&quot; /&gt;
+		&lt;span class=&quot;relevance-icon&quot;&gt;&lt;/span&gt;
+		&lt;span&gt;Relevant&lt;/span&gt;
+	&lt;/label&gt;
+	&lt;label class=&quot;relevance-option relevance-no&quot;&gt;
+		&lt;input type=&quot;radio&quot; name=&quot;relevance-0&quot; value=&quot;irrelevant&quot; /&gt;
+		&lt;span class=&quot;relevance-icon&quot;&gt;&lt;/span&gt;
+		&lt;span&gt;Niet relevant&lt;/span&gt;
+	&lt;/label&gt;
+&lt;/fieldset&gt;
 ```
 
-- `aria-pressed=&quot;false&quot;` — niet ingedrukt (standaard, neutraal)
-- `aria-pressed=&quot;true&quot;` — ingedrukt (actief)
-- De twee knoppen zijn wederzijds exclusief: het indrukken van de ene zet de andere uit
-- Screenreaders communiceren de staat als &quot;ingedrukt&quot; of &quot;niet ingedrukt&quot;
-
-Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toestanden zijn: neutraal, relevant, en niet relevant.
+- De `&lt;fieldset&gt;` met `&lt;legend&gt;` geeft screenreaders context: “Is dit relevant voor u?”
+- Radio buttons zijn natively wederzijds exclusief — de browser handhaaft dit zonder JavaScript
+- Toetsenbordnavigatie werkt automatisch via pijltoetsen binnen de groep
+- De radio inputs zijn visueel verborgen; de labels zijn gestyled als knoppen met iconen
+- Bij “Niet relevant” wordt het item verborgen en schuift een reserve-topic door
+- Unieke `name`-attributen worden per groep toegewezen door JavaScript, zodat elke radio group onafhankelijk werkt
 
 ### De pagina Bewaard
 
@@ -695,7 +733,7 @@ Het prototype bevat een ingebouwd feature-flag systeem waarmee pagina&#39;s en f
 Klik op de **Flags**-knop rechtsonder in het prototype. Er opent een paneel met twee groepen:
 
 - **Pagina&#39;s** — navigatie-items zoals Berichtenbox, Belastingen en Zakelijk vervoer. Uitschakelen verbergt zowel het navigatie-item als de bijbehorende content op de homepage.
-- **Functionaliteit** — interactiemogelijkheden zoals *Delen* en *Relevantie*. Uitschakelen verbergt de betreffende knoppen in alle actiegroepen.
+- **Functionaliteit** — interactiemogelijkheden zoals _Delen_ en _Relevantie_. Uitschakelen verbergt de betreffende knoppen in alle actiegroepen.
 
 Feature flags worden opgeslagen in localStorage en blijven staan na herladen. Standaard staan alle features aan.
 
@@ -717,9 +755,9 @@ Voor navigatie-items in de sidebar wordt de feature flag ingesteld via het `feat
 
 ```json
 {
-  &quot;label&quot;: &quot;Belastingen&quot;,
-  &quot;url&quot;: &quot;/moza/belastingen/&quot;,
-  &quot;feature&quot;: &quot;Belastingen&quot;
+	&quot;label&quot;: &quot;Belastingen&quot;,
+	&quot;url&quot;: &quot;/moza/belastingen/&quot;,
+	&quot;feature&quot;: &quot;Belastingen&quot;
 }
 ```
 
@@ -736,8 +774,12 @@ De template voegt automatisch `data-feature` en `data-feature-type=&quot;pagina&
 	&lt;/thead&gt;
 	&lt;tbody&gt;
 		&lt;tr&gt;
-			&lt;td&gt;&lt;code&gt;feature:Naam&lt;/code&gt;&lt;/td&gt;
-			&lt;td&gt;&lt;code&gt;&quot;false&quot;&lt;/code&gt;&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;feature:Naam&lt;/code&gt;
+			&lt;/td&gt;
+			&lt;td&gt;
+				&lt;code&gt;&quot;false&quot;&lt;/code&gt;
+			&lt;/td&gt;
 		&lt;/tr&gt;
 	&lt;/tbody&gt;
 &lt;/table&gt;
@@ -751,7 +793,7 @@ Het Flags-paneel bevat een **localStorage wissen**-knop die alle opgeslagen stat
 Handmatig kan het ook via de browserconsole (F12 of Cmd+Option+I):
 
 ```js
-localStorage.clear()
+localStorage.clear();
 ```
 
 Herlaad daarna de pagina. Alle bewaarde items, verborgen topics, relevantie-keuzes en gesloten notificaties worden gereset.
@@ -760,41 +802,260 @@ Om alleen een specifieke categorie te wissen:
 
 ```js
 // Alleen bewaarde items wissen
-Object.keys(localStorage).filter(k =&gt; k.startsWith(&quot;favorite:&quot;)).forEach(k =&gt; localStorage.removeItem(k))
+Object.keys(localStorage)
+	.filter((k) =&gt; k.startsWith(&quot;favorite:&quot;))
+	.forEach((k) =&gt; localStorage.removeItem(k));
 
 // Alleen verborgen items wissen
-Object.keys(localStorage).filter(k =&gt; k.startsWith(&quot;hidden:&quot;)).forEach(k =&gt; localStorage.removeItem(k))
+Object.keys(localStorage)
+	.filter((k) =&gt; k.startsWith(&quot;hidden:&quot;))
+	.forEach((k) =&gt; localStorage.removeItem(k));
 
 // Alleen relevantie-keuzes wissen
-Object.keys(localStorage).filter(k =&gt; k.startsWith(&quot;relevant:&quot;)).forEach(k =&gt; localStorage.removeItem(k))
+Object.keys(localStorage)
+	.filter((k) =&gt; k.startsWith(&quot;relevant:&quot;))
+	.forEach((k) =&gt; localStorage.removeItem(k));
 
 // Alleen gesloten notificaties wissen
-Object.keys(localStorage).filter(k =&gt; k.startsWith(&quot;dismissed:&quot;)).forEach(k =&gt; localStorage.removeItem(k))
+Object.keys(localStorage)
+	.filter((k) =&gt; k.startsWith(&quot;dismissed:&quot;))
+	.forEach((k) =&gt; localStorage.removeItem(k));
 ```
 </code></pre>
-								</div>
-							</div>
-						</div>
-					</article>
-					<article class="card is-doc no-doc-error" role="listitem" aria-label="Docs">
-						<div class="head">
-							<div class="title">
-								<h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Interactie op inhoud</h2>
-								<div class="badges">
-									<label for="doc-1-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
-								</div>
-							</div>
-							<div class="meta" title="./stories/InteracterenOpInhoud.mdx">ontwerppatronen-interactie-op-inhoud--docs · ./stories/InteracterenOpInhoud.mdx</div>
-						</div>
+          </div>
+        </div>
+  </div>
+</article>
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Introductie/Schrijfwijzer</h2>
+      <div class="badges">
+        
+        <label for="doc-1-introductie-schrijfwijzer-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/Schrijfwijzer.mdx">introductie-schrijfwijzer--docs · ./stories/Schrijfwijzer.mdx</div>
+    
+  </div>
 
-						<!-- Hidden toggles must be siblings BEFORE .panels -->
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-1-introductie-schrijfwijzer-docs-content" class="tg tg-content" type="checkbox" hidden />
 
-						<input id="doc-1-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
-						<div class="panels">
-							<div class="panel panel-content">
-								<div class="mdx-content">
-									<pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+&lt;Meta title=&quot;Introductie/Schrijfwijzer&quot; /&gt;
+
+# Schrijfwijzer
+
+Deze schrijfwijzer beschrijft de taal- en stijlafspraken voor alle teksten in het prototype van MijnOverheid Zakelijk.
+
+## Aanspreking
+
+- Spreek de gebruiker aan met **“u”** en **“uw”**, nooit met “je” of “jij”.
+- Bij een persoonlijke begroeting mag de voornaam gebruikt worden: _“Welkom Robin Vogel”_.
+- Vermijd het benoemen van geslacht. Gebruik “de ondernemer” of “u” in plaats van “hij”, “zij” of “hij/zij”. Waar een verwijswoord nodig is, gebruik “die” of “diegene”.
+
+## Toon en register
+
+- **Formeel maar toegankelijk** — professioneel taalgebruik op B1-niveau, geen jargon zonder uitleg.
+- **Actief boven passief** — schrijf “Bekijk uw gegevens” in plaats van “Uw gegevens kunnen bekeken worden”.
+- **Direct en praktisch** — zeg wat de gebruiker kan doen, niet wat het systeem doet. _“Bekijk welke regelingen bij uw bedrijf passen”_ in plaats van _“Het systeem filtert relevante regelingen”_.
+- **Stimulerend, niet alarmerend** — bij lege staten of foutmeldingen: geef aan wat de gebruiker kan doen, niet alleen wat er misgaat.
+
+## Zinslengte
+
+- Streef naar **8 tot 16 woorden** per zin.
+- Gebruik korte hoofdzinnen. Beperk bijzinnen tot maximaal één per zin.
+- Splits lange zinnen op in twee kortere:
+  - Niet: _“De overheid staat borg voor een deel van uw lening, hierdoor kunt u als MKB’er makkelijker geld lenen bij de bank.”_
+  - Wel: _“De overheid staat borg voor een deel van uw lening. Hierdoor kunt u als MKB’er makkelijker geld lenen bij de bank.”_
+
+## Terminologie
+
+Gebruik overal dezelfde termen voor dezelfde concepten:
+
+&lt;table&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Concept&lt;/th&gt;
+			&lt;th&gt;Gebruik&lt;/th&gt;
+			&lt;th&gt;Niet&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Item opslaan voor later&lt;/td&gt;
+			&lt;td&gt;Bewaar&lt;/td&gt;
+			&lt;td&gt;Opslaan, Favoriet, Bladwijzer&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Item verbergen&lt;/td&gt;
+			&lt;td&gt;Niet relevant voor mij&lt;/td&gt;
+			&lt;td&gt;Verbergen, Verwijderen, Niet tonen&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Item doorsturen&lt;/td&gt;
+			&lt;td&gt;Deel&lt;/td&gt;
+			&lt;td&gt;Verstuur, Doorsturen, Verzend&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Digitale post&lt;/td&gt;
+			&lt;td&gt;Berichten&lt;/td&gt;
+			&lt;td&gt;Post, E-mail, Inbox&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Registratiegegevens&lt;/td&gt;
+			&lt;td&gt;Bedrijfsgegevens&lt;/td&gt;
+			&lt;td&gt;Gegevens, Registratie, Profiel&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Openstaande aanvragen&lt;/td&gt;
+			&lt;td&gt;Lopende zaken&lt;/td&gt;
+			&lt;td&gt;Taken, Aanvragen, Dossiers&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Gepersonaliseerd overzicht&lt;/td&gt;
+			&lt;td&gt;Actualiteiten&lt;/td&gt;
+			&lt;td&gt;Nieuws, Updates, Feed&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Formulier opslaan&lt;/td&gt;
+			&lt;td&gt;Opslaan&lt;/td&gt;
+			&lt;td&gt;Bewaar, Verstuur, Bevestig&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Formulier afbreken&lt;/td&gt;
+			&lt;td&gt;Annuleren&lt;/td&gt;
+			&lt;td&gt;Terug, Sluiten, Stoppen&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+
+**Afkortingen:** schrijf bij eerste vermelding de volledige term met de afkorting tussen haakjes. Daarna mag de afkorting alleen gebruikt worden.
+
+- _“Kleinschaligheidsinvesteringsaftrek (KIA)”_
+- _“Privacywetgeving (AVG)”_
+
+## Datums en tijden
+
+- Schrijf datums als **dag maandnaam jaar**: _12 februari 2018_.
+- Gebruik de volledige maandnaam, niet afgekort: _februari_, niet _feb_.
+- Bij een datum gevolgd door een beschrijving, gebruik een gedachtestreep: _“19 februari 2026 — De Stationsweg is afgesloten.”_
+
+## Nummers en bedragen
+
+- **Telefoonnummers:** groepeer met spaties: _06 12 34 56 78_.
+- **KVK-nummers:** zonder punten of spaties: _12345678_.
+- **BTW-nummers:** aaneengeschreven met landcode: _NL00012345678_.
+- **Bedragen:** euroteken, spatie, getal met punt als duizendtalscheider: _€ 385.000_.
+
+## Kopteksten
+
+- **H1:** het hoofdonderwerp van de pagina, als zelfstandig naamwoord of begroeting. _“Bedrijfsgegevens”_, _“Welkom Robin Vogel”_.
+- **H2:** sectietitel, als zelfstandig naamwoord of -groep. _“Actualiteiten”_, _“Subsidies en financiering”_.
+- **H3:** onderwerpstitel binnen een lijst of sectie. _“WBSO: belastingvoordeel voor innovatie”_.
+- **FAQ-koppen:** als vraag in de eerste persoon of met “u”. _“Hoe vraag ik een subsidie aan via MijnOverheid Zakelijk?”_
+
+Kopteksten bevatten geen punt aan het einde.
+
+## Microcopy
+
+### Knopteksten
+
+- Kort en werkwoord-gericht: _“Opslaan”_, _“Annuleren”_, _“Inloggen”_.
+- Actielabels bij content: _“Bewaar”_, _“Deel”_, _“Niet relevant”_.
+- Navigatie: _“Volgende”_, _“Vorige”_, _“Meer Subsidies en financiering”_.
+
+### Lege staten
+
+- Benoem wat er nog niet is en geef een suggestie:
+  - _“U hebt nog geen items bewaard. Gebruik de ‘Bewaar’-optie bij actualiteiten om items hier te verzamelen.”_
+
+### Foutmeldingen
+
+- Constructief en handelingsgericht. Benoem wat nodig is om een fout te herstellen, niet wat fout ging:
+  - _“U dient minimaal één optie voor berichtgeving over taken te selecteren.”_
+
+### Feedback en informatieberichten
+
+- Informatief, niet alarmerend:
+  - _“Contactgegevens die u hier aanpast, worden automatisch bijgewerkt bij alle organisaties waarmee u uw gegevens centraal deelt.”_
+
+## Context en uitleg
+
+- **Leg uit waarom iets relevant is** voor de gebruiker:
+  - _“Subsidies en financiering waar u mogelijk voor in aanmerking komt op basis van uw branche en rechtsvorm.”_
+- **Geef aan waar actie nodig is** en bij welke organisatie:
+  - _“Neem contact op met de KVK via kvk.nl om uw handelsregistergegevens aan te passen.”_
+- **Maak bronnen en selectiecriteria expliciet:**
+  - _“Deze actualiteiten zijn geselecteerd op basis van uw vestigingsadres, branche en rechtsvorm.”_
+
+## Links en verwijzingen
+
+- Gebruik **beschrijvende linktekst**, nooit “klik hier” of een kale URL.
+  - Wel: _“Ga naar Contactvoorkeuren om dit in te stellen.”_
+  - Niet: _“Klik hier om uw contactvoorkeuren te wijzigen.”_
+- Externe links zijn herkenbaar via `rel=&quot;external&quot;` en worden waar nodig van context voorzien.
+
+## Interpunctie
+
+- **Gedachtestreep (—):** voor scheiding tussen datum en beschrijving, of voor een toelichting.
+  - _“Status: In behandeling — Uw aanvraag is ontvangen.”_
+- **Dubbele punt (:):** voor een introductie van een lijst of toelichting.
+- **Geen punt** na opsommingsitems in lijsten, tenzij het volledige zinnen zijn.
+- **Geen spatie** voor komma’s, dubbele punten of puntkomma’s.
+- **Aanhalingstekens:** gebruik typografische (smart) quotes, niet rechte quotes.
+  - Dubbel: **“** en **”** (niet **&quot;**)
+  - Enkel: **‘** en **’** (niet **&#39;**) — ook in samentrekkingen zoals _MKB’er_ en _komma’s_
+  - Rechte quotes alleen in code en HTML-attributen
+
+## Inclusief taalgebruik
+
+- Gebruik **genderneutrale taal**: “u”, “de gebruiker”, “de ondernemer”, “die”, “diegene”.
+- Vermijd het gebruik van uitsluitend mannelijke of vrouwelijke voornaamwoorden.
+- Gebruik geen taalgebruik dat beperkingen veronderstelt (“u kunt niet zien” → “dit is niet zichtbaar”).
+- Voorbeeldnamen in het prototype (zoals “Robin Vogel”) zijn bewust genderneutraal gekozen.
+</code></pre>
+          </div>
+        </div>
+  </div>
+</article>
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Interactie op inhoud</h2>
+      <div class="badges">
+        
+        <label for="doc-2-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/InteracterenOpInhoud.mdx">ontwerppatronen-interactie-op-inhoud--docs · ./stories/InteracterenOpInhoud.mdx</div>
+    
+  </div>
+
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-2-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
 &lt;Meta title=&quot;Ontwerppatronen/Interactie op inhoud&quot; /&gt;
 
@@ -840,7 +1101,9 @@ Elke interactie is een signaal dat positief of negatief meeweegt in dat profiel.
 		&lt;tr&gt;
 			&lt;td&gt;Relevant&lt;/td&gt;
 			&lt;td&gt;Positief&lt;/td&gt;
-			&lt;td&gt;Licht signaal: &quot;dit type content is relevant voor mij&quot;.&lt;/td&gt;
+			&lt;td&gt;
+				Sterk signaal: “&lt;i&gt;dit type content is relevant voor mij&lt;/i&gt;”.
+			&lt;/td&gt;
 		&lt;/tr&gt;
 		&lt;tr&gt;
 			&lt;td&gt;Meer zoals dit&lt;/td&gt;
@@ -872,45 +1135,41 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
 **[UX Guidelines for Recommended Content](https://www.nngroup.com/articles/recommendation-guidelines/)** — Nielsen Norman Group
 
 - Toon gepersonaliseerde actualiteiten prominent, boven generieke content — in MOZa betekent dit dat Actualiteiten op de homepage voorrang krijgen naarmate het profiel rijker wordt
-- Leg uit _waarom_ iets wordt getoond: &quot;Op basis van uw branche&quot; of &quot;Relevant voor uw vestigingsadres&quot; — vergelijkbaar met hoe Actualiteiten nu al zijn opgedeeld in berichten, subsidies en regelgeving
-- Bied directe feedbackmechanismen aan bij elk item (bewaar, relevant, niet relevant) — precies het patroon dat MOZa implementeert
-- Werk aanbevelingen snel bij na interactie — als een gebruiker &quot;Niet relevant&quot; kiest, moet dat direct zichtbaar effect hebben
+- Leg uit _waarom_ iets wordt getoond: “Op basis van uw branche” of “Relevant voor uw vestigingsadres” — vergelijkbaar met hoe Actualiteiten nu al zijn opgedeeld in berichten, subsidies en regelgeving
+- Bied directe feedbackmechanismen aan bij elk item (bewaar, relevant, niet relevant)
+- Werk aanbevelingen snel bij na interactie — als een gebruiker “Niet relevant” kiest, moet dat direct zichtbaar effect hebben
 
 **[Customization vs. Personalization](https://www.nngroup.com/articles/customization-personalization/)** — Nielsen Norman Group
 
-- MOZa combineert beide: **personalisatie** (systeem filtert op basis van KvK-gegevens, SBI-code, vestigingsadres) en **customisatie** (gebruiker stuurt bij via Bewaar/Relevant/Niet relevant)
-- Begin met een bruikbaar basisontwerp — personalisatie mag geen slecht gestructureerde informatie maskeren. De categorisering in berichten, subsidies en regelgeving is die basis
+- MOZa combineert beide: **personalisatie** (systeem filtert op basis van KvK-gegevens, SBI-code, vestigingsadres) en **customisatie** (gebruiker stuurt bij via de acties voor: bewaren, een item als relevant of niet relevant aanmerken, of het item delen met anderen)
 - Personalisatie werkt het best wanneer gebruikers niet precies weten wat ze nodig hebben — dat geldt voor ondernemers die niet alle subsidies of regelgeving kennen die op hen van toepassing zijn
 
 **[Users&#39; Expectations for Recommendations](https://www.nngroup.com/articles/recommendation-expectations/)** — Nielsen Norman Group
 
-- Gebruikers accepteren dat hun gedrag wordt bijgehouden als de aanbevelingen duidelijke waarde bieden — bij MOZa is die waarde concreet: relevante subsidies, regelgeving en berichten voor hun bedrijf
-- Bij diensten met hogere consequenties (subsidies, regelgeving) investeren gebruikers meer in het geven van feedback — MOZa-gebruikers hebben een sterke motivatie om hun profiel te verfijnen
+- Gebruikers accepteren dat hun gedrag wordt bijgehouden als de aanbevelingen duidelijke waarde bieden — bij MOZa is die waarde concreet: relevante subsidies, regelgeving en berichten over de buurt van vestigingsadres(sen) of werkgebied(en)
+- Bij diensten met hogere consequenties (subsidies, regelgeving) investeren gebruikers meer in het geven van feedback
 - Nieuwe gebruikers vergeven onnauwkeurige aanbevelingen vanwege beperkte data — het profiel hoeft niet direct perfect te zijn
-- Slechte suggesties worden makkelijk genegeerd als de interactiekosten laag zijn — de &quot;Niet relevant&quot; knop moet dus laagdrempelig blijven
+- Slechte suggesties worden makkelijk genegeerd als de interactiekosten laag zijn — de “Niet relevant” knop moet dus laagdrempelig blijven
 
 **[Can Users Control a UI Driven by ML?](https://www.nngroup.com/articles/machine-learning-ux/)** — Nielsen Norman Group
 
-- Gebruikers begrijpen slecht welke acties het systeem beïnvloeden — MOZa moet expliciet maken dat Bewaar, Relevant en Niet relevant het profiel vormen (de pagina Bewaard doet dit al deels)
+- Gebruikers begrijpen slecht welke acties het systeem beïnvloeden — MOZa moet expliciet maken dat Bewaar, Relevant en Niet relevant het profiel vormen
 - Onduidelijkheid leidt tot wantrouwen: gebruikers gaan dan veronderstellen dat er meer data wordt verzameld dan daadwerkelijk het geval is — voor een overheidsportaal is dit extra risicovol
-- Maak feedbackknoppen prominent — de zichtbaarheid moet in verhouding staan tot de hoeveelheid content. Bij MOZa staan de acties direct onder elk item, wat goed is
-- Vermijd dubbele content in verschillende categorieën — als een subsidie zowel bij &quot;Subsidies&quot; als bij &quot;Berichten over uw buurt&quot; past, kies dan één plek
+- Maak feedbackknoppen prominent — de zichtbaarheid moet in verhouding staan tot de hoeveelheid content. Bij MOZa staan de acties direct onder elk item
 
 ### Design patterns
 
 **[Favorites — ui-patterns.com](https://ui-patterns.com/patterns/favorites)**
 
-- Favorites zijn voor **persoonlijke organisatie**, niet voor sociale promotie — in MOZa is &quot;Bewaar&quot; puur privé, wat past bij de overheidscontext
-- Gebruik een simpele aan/uit-toggle (hartje, ster) bij elk item — MOZa gebruikt een checkbox met hartje, wat correct is
+- Favorites zijn voor **persoonlijke organisatie**, niet voor sociale promotie — in MOZa is “Bewaar” privé, ter ondersteuning van het aan kunnen bieden van steeds relevantere inhoud
 - Bied een aparte lijst van bewaarde items aan — de pagina Bewaard vervult deze rol
-- Gebruik favorites niet voor categorisering — als gebruikers items willen groeperen, zijn tags of mappen een beter patroon
 
 **[Bookmarks vs. Favorites vs. Social Validation](https://dorve.com/blog/like-vs-bookmarks-vs-favorites/)**
 
-- **Bewaar** in MOZa is een _bookmark_: privé opslaan voor later, &quot;voor het geval dat&quot;
+- **Bewaar** in MOZa is een _bookmark_: privé opslaan voor later, “_voor het geval dat_”
 - **Relevant/Niet relevant** is _validatie_: een signaal over bruikbaarheid, niet over opslaan
-- **Delen** (toekomstig) zou een _sociaal_ patroon zijn: doorsturen naar een collega
-- Elk patroon draagt anders bij aan het profiel: bookmarks tonen privé-interesses, validatie stuurt aanbevelingen bij, delen toont wat iemand belangrijk genoeg vindt voor anderen
+- **Delen** (toekomstig) zou een _sociaal_ patroon zijn: doorsturen naar een collega, werknemer of andere belanghebbende
+- Elk patroon draagt anders bij aan het profiel: bookmarks tonen interesses, validatie stuurt aanbevelingen bij, delen toont wat iemand belangrijk genoeg vindt voor anderen
 - Combineer deze patronen niet in één knop — MOZa scheidt ze terecht in aparte acties
 
 ### Impliciet vs. expliciet feedback
@@ -919,53 +1178,53 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
 
 - Naast expliciete feedback (Bewaar, Relevant, Niet relevant) en impliciete feedback (klikgedrag, leestijd) bestaat er een derde categorie: **intentional implicit feedback** — bewuste acties die geen expliciete feedbackknop gebruiken, zoals doelbewust scrollen voorbij een item
 - Expliciete feedback wordt vooral gebruikt om de feed aan te passen — dit is precies wat de Relevant/Niet relevant toggles in MOZa doen
-- Intentional implicit feedback wordt gebruikt om **diversiteit** te vergroten — gebruikers zoeken bewust buiten hun profiel om nieuwe content te ontdekken
-- Ontwerp aanbeveling: behandel niet alle impliciete signalen als passieve consumptie. Als een MOZa-gebruiker bewust een subsidie-categorie opent die niet bij het profiel past, kan dat een signaal zijn om het profiel te verbreden
+- Ontwerp aanbeveling: als een MOZa-gebruiker bewust een subsidie-categorie opent die niet bij het profiel past, kan dat een signaal zijn om het profiel te verbreden
 
 ### Overheidsspecifiek
 
 **[GOV.UK Design System — Patterns](https://design-system.service.gov.uk/patterns/)**
 
-- Patronen zijn _&quot;best practice design solutions for specific user-focused tasks&quot;_ — een niveau boven componenten
-- GOV.UK structureert patronen rond gebruikerstaken: &quot;Help users to...&quot; en &quot;Ask users for...&quot; — MOZa&#39;s interactiepatroon zou passen in een categorie als &quot;Help users to discover relevant content&quot;
-- Noch GOV.UK noch NL Design System heeft patronen voor content-personalisatie — MOZa&#39;s &quot;Interactie op inhoud&quot; is pionierswerk in de overheidscontext
-
-**[NL Design System](https://nldesignsystem.nl/)**
-
-- Componenten die in 2+ organisaties bewezen zijn, kunnen het centrale systeem instromen — als MOZa&#39;s interactiepatroon succesvol is, kan het een kandidaat zijn voor bredere adoptie
-- De focus ligt op toegankelijke, consistente componenten — de `aria-pressed` toggles en `hidden`-attributen in MOZa sluiten hier op aan
+- Patronen zijn _“best practice design solutions for specific user-focused tasks”_ — een niveau boven componenten
+- GOV.UK structureert patronen rond gebruikerstaken: “Help users to…” en “Ask users for…” — MOZa&#39;s interactiepatroon past in een categorie als “Help users to discover relevant content”
 </code></pre>
-								</div>
-							</div>
-						</div>
-					</article>
-					<article class="card is-doc no-doc-error" role="listitem" aria-label="Docs">
-						<div class="head">
-							<div class="title">
-								<h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Context wisselen</h2>
-								<div class="badges">
-									<label for="doc-2-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
-								</div>
-							</div>
-							<div class="meta" title="./stories/ContextWisselen.mdx">ontwerppatronen-context-wisselen--docs · ./stories/ContextWisselen.mdx</div>
-						</div>
+          </div>
+        </div>
+  </div>
+</article>
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Context wisselen</h2>
+      <div class="badges">
+        
+        <label for="doc-3-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/ContextWisselen.mdx">ontwerppatronen-context-wisselen--docs · ./stories/ContextWisselen.mdx</div>
+    
+  </div>
 
-						<!-- Hidden toggles must be siblings BEFORE .panels -->
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-3-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
 
-						<input id="doc-2-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
-
-						<div class="panels">
-							<div class="panel panel-content">
-								<div class="mdx-content">
-									<pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
 
 &lt;Meta title=&quot;Ontwerppatronen/Context wisselen&quot; /&gt;
 
 # Context wisselen (_account switching_)
 
-Een gebruiker van MijnOverheid opereert niet in één vaste rol. Dezelfde persoon kan als burger, als ondernemer van meerdere bedrijven, als gemachtigde van een familielid én als professioneel dienstverlener voor weer andere organisaties ingelogd zijn. Het ontwerp moet dit ondersteunen idealiter zonder dat de gebruiker steeds opnieuw moet inloggen.
+Een gebruiker van MijnOverheid opereert niet in één vaste rol. Dezelfde persoon kan als burger, ondernemer van meerdere bedrijven, gemachtigde van een familielid én professioneel dienstverlener voor weer andere organisaties ingelogd zijn. Het ontwerp moet dit ondersteunen, idealiter zonder dat de gebruiker steeds opnieuw moet inloggen.
 
-**Let wel: De geschetse ontwerp-oplossingen zijn niet gestaaft met huidige technische, juridische en/of organisatorische mogelijkheden, beperkingen en uitdagingen! Het schets een ideaalbeeld om naartoe te werken.**
+**Let wel: De geschetste ontwerp-oplossingen zijn niet gestaafd met huidige technische, juridische en/of organisatorische mogelijkheden, beperkingen en uitdagingen. Het schetst een ideaalbeeld om naartoe te werken.**
 
 ## Contexten
 
@@ -1009,9 +1268,9 @@ Binnen de privé-context kan een burger **gemachtigd** zijn om bijvoorbeeld onde
 	&lt;/tbody&gt;
 &lt;/table&gt;
 
-### Zakelijk (ondernemer)
+### Zakelijke gebruiker
 
-De zakelijke omgeving toont gegevens, verplichtingen en actualiteiten die specifiek zijn voor een onderneming. Een persoon kan eigenaar zijn van meerdere ondernemingen, zoals bijvoorbeeld:
+De zakelijke omgeving toont gegevens, verplichtingen en actualiteiten die specifiek zijn voor een zakelijke gebruiker. Een persoon kan eigenaar zijn van meerdere ondernemingen, zoals bijvoorbeeld:
 
 &lt;table&gt;
 	&lt;thead&gt;
@@ -1070,7 +1329,7 @@ Naast eigen ondernemingen kan een persoon een zakelijke relatie hebben met onder
 		&lt;/tr&gt;
 		&lt;tr&gt;
 			&lt;td&gt;Gemachtigde medewerker&lt;/td&gt;
-			&lt;td&gt;Machtiging via eHerkenning&lt;/td&gt;
+			&lt;td&gt;Machtiging&lt;/td&gt;
 			&lt;td&gt;Specifieke taken uitvoeren namens de onderneming, afhankelijk van het machtigingsniveau&lt;/td&gt;
 		&lt;/tr&gt;
 	&lt;/tbody&gt;
@@ -1100,7 +1359,6 @@ R.J. Vogel — Bloom B.V. ▾
 - **Rol zichtbaar per context** — naast de organisatienaam staat de rol (Eigenaar, Bestuurslid, Aandeelhouder, Boekhouder). Dit verduidelijkt de rechten en voorkomt verwarring bij organisaties waar de gebruiker meerdere rollen kan hebben.
 - **Actieve context visueel gemarkeerd** — de huidige context heeft een visuele indicator (`aria-current`), zodat de gebruiker altijd ziet namens wie er gehandeld wordt.
 - **Paginatitel past mee** — bij het wisselen van context past de titel in de header mee (&quot;MijnOverheid Zakelijk&quot; vs. &quot;MijnOverheid&quot;).
-- **Fallback zonder wisselaar** — als de feature flag uit staat, toont de header alleen de naam van de ingelogde persoon zonder dropdown. Dit maakt het mogelijk om de wisselaar geleidelijk te introduceren.
 
 ### Toegankelijkheid
 
@@ -1118,7 +1376,7 @@ R.J. Vogel ▾
 │   └── R.J. Vogel
 ├── Ik handel namens
 │   ├── A.M. Vogel-de Groot          Mantelzorg
-│   └── S.R. Vogel                    Ouderlijk gezag
+│   └── S.R. Vogel                   Ouderlijk gezag
 ```
 
 Dit is hetzelfde interactiepatroon als de zakelijke wisselaar maar met andere groepslabels en rollen. De implementatie kan hetzelfde component hergebruiken.
@@ -1130,8 +1388,8 @@ Bij het wisselen tussen contexten moet de gebruiker onmiddellijk herkennen _waar
 ### Uitgangspunten
 
 - **Consistentie boven variatie** — de interface blijft in alle contexten herkenbaar als MijnOverheid. Layout, typografie, componenten en interactiepatronen zijn identiek. Het onderscheid zit in signalen, niet in een heel ander ontwerp.
-- **Niet alleen kleur** — kleur kan een ondersteunend signaal zijn, maar mag nooit het enige onderscheidende kenmerk zijn (WCAG 1.4.1: _Use of Color_). Elk visueel onderscheid moet ook zonder kleurwaarneming werken.
-- **Beperkt aantal contexttypes** — het onderscheid hoeft niet per organisatie maar per _type_ context: privé, zakelijk (eigen) en gemachtigd/belang. Dat zijn maximaal vier visuele varianten.
+- **Niet alleen kleur** — kleur kan een ondersteunend signaal zijn, maar mag nooit het enige onderscheidende kenmerk zijn ([WCAG 1.4.1: _Use of Color_](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)). Elk visueel onderscheid moet ook zonder kleurwaarneming werken.
+- **Beperkt aantal contexttypes** — het onderscheid hoeft niet per organisatie maar per _type_ context: privé (eigen en gemachtigd), zakelijk (eigen en gemachtigd/belang). Dat zijn maximaal vier visuele varianten.
 
 ### Mogelijke signalen
 
@@ -1184,7 +1442,7 @@ Het visueel onderscheiden van contexten kan via een combinatie van onderstaande 
 
 Wanneer iemand handelt namens een ander persoon of een andere organisatie, is extra duidelijkheid nodig om fouten te voorkomen. Een verkeerde belastingaangifte indienen namens de verkeerde organisatie heeft reële consequenties.
 
-- **Permanente indicator** — de contextbanner (&quot;U handelt namens...&quot;) moet zichtbaar blijven zolang de gemachtigde context actief is, ook bij scrollen. Dit voorkomt dat de gebruiker vergeet namens wie er gehandeld wordt.
+- **Permanente indicator** — de contextbanner (“U handelt namens…”) moet zichtbaar blijven zolang de gemachtigde context actief is, ook bij scrollen. Dit voorkomt dat de gebruiker vergeet namens wie er gehandeld wordt.
 - **Bevestiging bij gevoelige acties** — bij het indienen van formulieren, wijzigen van gegevens of doen van aangiften kan een extra bevestigingsstap tonen namens wie de actie wordt uitgevoerd.
 - **Visueel onderscheid t.o.v. eigen context** — de gemachtigde context moet duidelijk _anders_ aanvoelen dan de eigen context. Als het ontwerp te gelijk is, vergroot dat de kans op vergissingen.
 
@@ -1194,9 +1452,9 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 - **Herkenning** — Herkennen gebruikers in welke context ze zich bevinden? Hoe snel? Welke signalen vallen op en welke worden gemist?
 - **Verwarring** — Ontstaat er verwarring bij het wisselen, met name bij snel achter elkaar schakelen tussen eigen en gemachtigde contexten?
-- **Voldoende onderscheid** — Is het onderscheid tussen &quot;eigen zakelijk&quot; en &quot;gemachtigd zakelijk&quot; sterk genoeg? Of worden die twee als hetzelfde ervaren?
+- **Voldoende onderscheid** — Is het onderscheid tussen “eigen zakelijk” en “gemachtigd zakelijk” sterk genoeg? Of worden die twee als hetzelfde ervaren?
 - **Kleur als ondersteuning** — Voegt een accentkleur (bijv. een gekleurde headerlijn) iets toe bovenop tekst en iconen, of is het overbodig?
-- **Contextbanner** — Wordt de banner &quot;U handelt namens...&quot; opgemerkt? Raakt deze na verloop van tijd onzichtbaar door bannerblindheid?
+- **Contextbanner** — Wordt de banner “U handelt namens…” opgemerkt? Raakt deze na verloop van tijd onzichtbaar door bannerblindheid?
 - **Doelgroepverschillen** — Ervaren professionele gemachtigden (boekhouders die dagelijks wisselen) het anders dan incidentele gemachtigden (mantelzorger die af en toe iets regelt voor een ouder)?
 
 ### Referenties
@@ -1226,7 +1484,7 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 - **Hoe worden machtigingen technisch opgehaald?** — DigiD Machtigen, eHerkenning en het Handelsregister zijn drie verschillende bronnen. De accountwisselaar moet deze samenvoegen tot één overzicht.
 - **Wat gebeurt er bij veel contexten?** — een boekhouder met tientallen klanten heeft een ander overzicht nodig dan een ondernemer met twee B.V.&#39;s. Mogelijk is een zoekfunctie of categorisering nodig bij meer dan ~8 contexten.
 - **Welke gegevens wisselen mee?** — bij het wisselen van context veranderen bedrijfsgegevens, actualiteiten, berichten en lopende zaken. Persoonlijke voorkeuren (taal, notificatie-instellingen) blijven waarschijnlijk hetzelfde.
-- **Hoe wordt misbruik voorkomen?** — als iemand gemachtigd is voor een ander, moeten acties gelogd worden. De gebruiker moet altijd zien namens wie er gehandeld wordt (prominente indicator).
+- **Hoe wordt misbruik voorkomen?** — als iemand gemachtigd is voor een ander, moeten deze acties gelogd worden. De gebruiker moet altijd zien namens wie er gehandeld wordt (prominente indicator).
 
 ## Bronnen
 
@@ -1238,11 +1496,11 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 **[Material Design — Account switching](https://m3.material.io/)**
 
-- Google&#39;s richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd. MOZa volgt dit patroon maar groepeert op relatietype.
+- Google’s richtlijnen voor het wisselen tussen accounts in apps. Het patroon: gebruikerspictogram in de header, klik opent een paneel met alle accounts, actief account is gemarkeerd.
 
 **[Microsoft Fluent UI — Persona](https://fluent2.microsoft.design/)**
 
-- Microsoft&#39;s patroon voor identiteitsweergave en rolwisseling. Relevant voor hoe naam, rol en organisatie visueel samengebracht worden in een compact formaat.
+- Microsoft’s patroon voor identiteitsweergave en rolwisseling. Relevant voor hoe naam, rol en organisatie visueel samengebracht worden in een compact formaat.
 
 ### Machtigingen en vertegenwoordiging
 
@@ -1252,17 +1510,17 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 **[eHerkenning — Machtigingsregister](https://www.eherkenning.nl/)**
 
-- Het zakelijke equivalent van DigiD Machtigen. Via eHerkenning-ketenmachtiging kan een boekhouder namens meerdere ondernemingen handelen. Dit is de bron voor de &quot;Belangen&quot;-groep in de wisselaar.
+- Het zakelijke equivalent van DigiD Machtigen. Via eHerkenning-ketenmachtiging kan een boekhouder namens meerdere ondernemingen handelen. Dit is de bron voor de “Belangen”-groep in de wisselaar.
 
 **[Handelsregister (KvK)](https://www.kvk.nl/)**
 
-- De bron voor wie welke rol heeft bij welke onderneming: eigenaar, bestuurder, vennoot, gevolmachtigde. De accountwisselaar haalt hier de &quot;Mijn ondernemingen&quot; en &quot;Belangen&quot; uit.
+- De bron voor wie welke rol heeft bij welke onderneming: eigenaar, bestuurder, vennoot, gevolmachtigde. De accountwisselaar haalt hier de “Mijn ondernemingen” en “Belangen” uit.
 
 ### Overheidsspecifiek
 
 **[MijnOverheid](https://mijn.overheid.nl/)**
 
-- Huidige situatie: burger en ondernemer zijn gescheiden ingangen, zonder inline wisselmechanisme. Het accountwisselaar-patroon zou dit vervangen door een geïntegreerde ervaring.
+- Huidige situatie: burger en ondernemer zijn gescheiden ingangen, zonder inline wisselmechanisme. Het accountwisselaar-patroon kan dit eventueel vervangen door een geïntegreerde ervaring.
 
 **[GOV.UK Design System — Header](https://design-system.service.gov.uk/components/header/)**
 
@@ -1276,12 +1534,13 @@ Dit onderwerp vraagt om gericht gebruikersonderzoek. Onderstaande vragen kunnen 
 
 - Architectuurprincipe dat gegevens bij de bron blijven. Relevant voor hoe de accountwisselaar contexten ophaalt: niet alles kopiëren naar één plek, maar per context de juiste bronnen raadplegen.
 </code></pre>
-								</div>
-							</div>
-						</div>
-					</article>
-				</div>
-			</div>
-		</main>
-	</body>
-</html>
+          </div>
+        </div>
+  </div>
+</article>
+    </div>
+    
+  </div>
+</main>
+</body>
+</html>  

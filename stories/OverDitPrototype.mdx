@@ -68,24 +68,36 @@ Omdat er geen server of database is, worden gebruikersacties opgeslagen in de **
 
 Alle interactielogica staat in **content-interactions.js**, dat op elke pagina wordt geladen via de base-template. Het script:
 
-- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, `aria-pressed`, verborgen items, gesloten notificaties)
+- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, radio buttons, verborgen items, gesloten notificaties)
 - Slaat wijzigingen direct op bij interactie
 - Gebruikt event delegation (`document.addEventListener`) zodat het ook werkt met dynamisch gegenereerde elementen
 
-### Semantiek van de toggle-buttons
+### Semantiek van de relevantie-keuze
 
-De **Relevant** en **Niet relevant** knoppen zijn geïmplementeerd als `<button>` elementen met `aria-pressed`:
+De **Relevant** en **Niet relevant** opties zijn geïmplementeerd als een radio button group binnen een `<fieldset>`:
 
 ```html
-<button class="link-button mark-relevant" aria-pressed="false">Relevant</button> <button class="link-button mark-irrelevant" aria-pressed="false">Niet relevant</button>
+<fieldset class="relevance-group">
+	<legend class="visually-hidden">Is dit relevant voor u?</legend>
+	<label class="relevance-option relevance-yes">
+		<input type="radio" name="relevance-0" value="relevant" />
+		<span class="relevance-icon"></span>
+		<span>Relevant</span>
+	</label>
+	<label class="relevance-option relevance-no">
+		<input type="radio" name="relevance-0" value="irrelevant" />
+		<span class="relevance-icon"></span>
+		<span>Niet relevant</span>
+	</label>
+</fieldset>
 ```
 
-- `aria-pressed="false"` — niet ingedrukt (standaard, neutraal)
-- `aria-pressed="true"` — ingedrukt (actief)
-- De twee knoppen zijn wederzijds exclusief: het indrukken van de ene zet de andere uit
-- Screenreaders communiceren de staat als "ingedrukt" of "niet ingedrukt"
-
-Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toestanden zijn: neutraal, relevant, en niet relevant.
+- De `<fieldset>` met `<legend>` geeft screenreaders context: “Is dit relevant voor u?”
+- Radio buttons zijn natively wederzijds exclusief — de browser handhaaft dit zonder JavaScript
+- Toetsenbordnavigatie werkt automatisch via pijltoetsen binnen de groep
+- De radio inputs zijn visueel verborgen; de labels zijn gestyled als knoppen met iconen
+- Bij “Niet relevant” wordt het item verborgen en schuift een reserve-topic door
+- Unieke `name`-attributen worden per groep toegewezen door JavaScript, zodat elke radio group onafhankelijk werkt
 
 ### De pagina Bewaard
 

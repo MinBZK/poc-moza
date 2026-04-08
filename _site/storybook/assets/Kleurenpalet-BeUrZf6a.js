@@ -1,7 +1,0 @@
-<<<<<<<< HEAD:_site/storybook/assets/Kleurenpalet-BeUrZf6a.js
-import{u as r,j as t,M as a,S as n}from"./blocks-CxtOXix5.js";import{K as i,R as m,T as p}from"./Kleurenpalet.stories-DhvIr_zM.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-DmxB1sBT.js";function e(s){return t.jsxs(t.Fragment,{children:[t.jsx(a,{of:i}),`
-========
-import{u as r,j as t,M as a,S as n}from"./blocks-Cw1Up5EZ.js";import{K as i,R as m,T as p}from"./Kleurenpalet.stories-DhvIr_zM.js";import"./preload-helper-Dp1pzeXC.js";import"./_commonjsHelpers-CqkleIqs.js";import"./iframe-CYv8R4G7.js";function e(s){return t.jsxs(t.Fragment,{children:[t.jsx(a,{of:i}),`
->>>>>>>> origin/wisselen-prive-zakelijk:_site/storybook/assets/Kleurenpalet-PnhgSV3f.js
-`,t.jsx(n,{of:m}),`
-`,t.jsx(n,{of:p})]})}function l(s={}){const{wrapper:o}={...r(),...s.components};return o?t.jsx(o,{...s,children:t.jsx(e,{...s})}):e()}export{l as default};
