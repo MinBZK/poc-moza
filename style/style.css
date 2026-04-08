@@ -1394,6 +1394,44 @@ h4 {
 		gap: var(--toepassing-space-padding-xs);
 		padding-block: var(--toepassing-space-padding-2xs);
 	}
+	.settings-radio-group {
+		border: none;
+		display: flex;
+		align-items: center;
+		gap: var(--toepassing-space-padding-xs);
+		margin-block: var(--toepassing-space-padding-2xs);
+		padding: 0;
+		legend {
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
+			margin-inline-end: var(--toepassing-space-padding-xs);
+		}
+		.mode-option {
+			display: flex;
+			align-items: center;
+			gap: var(--toepassing-space-padding-2xs);
+			padding: 0;
+		}
+	}
+	.settings-field {
+		margin-block: var(--toepassing-space-padding-2xs);
+		label {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
+			padding-block: 0;
+		}
+		input[type="password"],
+		input[type="text"] {
+			border: var(--toepassing-border-default);
+			border-radius: var(--toepassing-border-radius-sm);
+			box-sizing: border-box;
+			font: inherit;
+			font-weight: normal;
+			inline-size: 100%;
+			padding: var(--toepassing-space-padding-2xs) var(--toepassing-space-padding-xs);
+		}
+	}
 	.feature-flags-clear {
 		background: var(--toepassing-color-feedback-error-default);
 		border: none;

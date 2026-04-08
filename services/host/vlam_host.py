@@ -182,30 +182,65 @@ class VLAMHost:
             "tools": len(self.registry.tool_map),
         }
 
-    async def chat(self, session_id: str, user_message: str, mode: str = "vlam") -> str:
+    def _resolve_clients(
+        self,
+        vlam_api_key_override: str = "",
+        claude_api_key_override: str = "",
+    ) -> tuple:
+        """Geef (claude_client, vlam_client) terug, met overrides indien opgegeven."""
+        claude = self.claude_client
+        vlam = self.vlam_client
+        if claude_api_key_override:
+            claude = anthropic.AsyncAnthropic(api_key=claude_api_key_override)
+        if vlam_api_key_override and VLAM_BASE_URL:
+            vlam = openai.AsyncOpenAI(
+                api_key=vlam_api_key_override, base_url=VLAM_BASE_URL
+            )
+        return claude, vlam
+
+    async def chat(
+        self,
+        session_id: str,
+        user_message: str,
+        mode: str = "vlam",
+        vlam_api_key_override: str = "",
+        claude_api_key_override: str = "",
+    ) -> str:
         """Verwerk een gebruikersbericht en retourneer het antwoord.
 
         mode: "vlam" (Mistral via UbiOps) of "claude" (Anthropic).
         Beide modi hebben toegang tot dezelfde MCP-tools (indien beschikbaar).
         """
+        orig_claude, orig_vlam = self.claude_client, self.vlam_client
+        self.claude_client, self.vlam_client = self._resolve_clients(
+            vlam_api_key_override, claude_api_key_override
+        )
         conv_key = f"{session_id}:{mode}"
         if conv_key not in self.conversations:
             self.conversations[conv_key] = []
         messages = self.conversations[conv_key]
         messages.append({"role": "user", "content": user_message})
 
-        if mode == "vlam":
-            if not self.vlam_client:
-                return "VLAM-backend is niet geconfigureerd. Stel VLAM_API_KEY en VLAM_BASE_URL in."
-            return await self._chat_vlam(messages)
-        return await self._chat_claude(messages)
+        try:
+            if mode == "vlam":
+                if not self.vlam_client:
+                    return "VLAM-backend is niet geconfigureerd. Stel VLAM_API_KEY en VLAM_BASE_URL in."
+                return await self._chat_vlam(messages)
+            return await self._chat_claude(messages)
+        finally:
+            self.claude_client, self.vlam_client = orig_claude, orig_vlam
 
     # ------------------------------------------------------------------
     # Streaming — yieldt status-events voor de UI
     # ------------------------------------------------------------------
 
     async def chat_stream(
-        self, session_id: str, user_message: str, mode: str = "vlam"
+        self,
+        session_id: str,
+        user_message: str,
+        mode: str = "vlam",
+        vlam_api_key_override: str = "",
+        claude_api_key_override: str = "",
     ) -> AsyncGenerator[dict, None]:
         """Verwerk een bericht en yield status-events als dicts.
 
@@ -215,6 +250,11 @@ class VLAMHost:
           {"type": "answer", "message": "Het antwoord...", "session_id": "..."}
           {"type": "done"}
         """
+        orig_claude, orig_vlam = self.claude_client, self.vlam_client
+        self.claude_client, self.vlam_client = self._resolve_clients(
+            vlam_api_key_override, claude_api_key_override
+        )
+
         conv_key = f"{session_id}:{mode}"
         if conv_key not in self.conversations:
             self.conversations[conv_key] = []
@@ -250,8 +290,11 @@ class VLAMHost:
         else:
             gen = self._chat_claude_stream(messages)
 
-        async for event in gen:
-            yield event
+        try:
+            async for event in gen:
+                yield event
+        finally:
+            self.claude_client, self.vlam_client = orig_claude, orig_vlam
 
         yield {"type": "done"}
 

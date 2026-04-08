@@ -11,6 +11,16 @@
  */
 
 const FEATURE_PREFIX = "feature:";
+const SETTING_PREFIX = "setting:";
+
+function getSettingValue(name, defaultValue) {
+	return localStorage.getItem(SETTING_PREFIX + name) || defaultValue;
+}
+
+function setSettingValue(name, value) {
+	localStorage.setItem(SETTING_PREFIX + name, value);
+	window.dispatchEvent(new CustomEvent("setting-changed", { detail: { key: name } }));
+}
 
 function getFeaturesByType() {
 	const groups = {};
@@ -104,6 +114,73 @@ function buildTogglePanel() {
 			list.appendChild(li);
 		});
 		panel.appendChild(list);
+	});
+
+	// --- Digitale Assistent instellingen ---
+	const settingsHeading = document.createElement("p");
+	settingsHeading.className = "feature-flags-group-heading";
+	settingsHeading.textContent = "Digitale Assistent";
+	panel.appendChild(settingsHeading);
+
+	// LLM keuze
+	const llmFieldset = document.createElement("fieldset");
+	llmFieldset.className = "settings-radio-group";
+	const llmLegend = document.createElement("legend");
+	llmLegend.textContent = "LLM";
+	llmFieldset.appendChild(llmLegend);
+	["vlam", "claude"].forEach((value) => {
+		const label = document.createElement("label");
+		label.className = "mode-option";
+		const radio = document.createElement("input");
+		radio.type = "radio";
+		radio.name = "admin-llm";
+		radio.value = value;
+		radio.checked = getSettingValue("llm", "vlam") === value;
+		radio.addEventListener("change", () => setSettingValue("llm", value));
+		label.appendChild(radio);
+		label.appendChild(document.createElement("span")).textContent = value.toUpperCase();
+		llmFieldset.appendChild(label);
+	});
+	panel.appendChild(llmFieldset);
+
+	// Transport keuze
+	const transportFieldset = document.createElement("fieldset");
+	transportFieldset.className = "settings-radio-group";
+	const transportLegend = document.createElement("legend");
+	transportLegend.textContent = "Transport";
+	transportFieldset.appendChild(transportLegend);
+	["mcp", "cli"].forEach((value) => {
+		const label = document.createElement("label");
+		label.className = "mode-option";
+		const radio = document.createElement("input");
+		radio.type = "radio";
+		radio.name = "admin-transport";
+		radio.value = value;
+		radio.checked = getSettingValue("transport", "mcp") === value;
+		radio.addEventListener("change", () => setSettingValue("transport", value));
+		label.appendChild(radio);
+		label.appendChild(document.createElement("span")).textContent = value.toUpperCase();
+		transportFieldset.appendChild(label);
+	});
+	panel.appendChild(transportFieldset);
+
+	// API Key velden
+	[
+		{ key: "vlam-api-key", label: "VLAM API Key" },
+		{ key: "claude-api-key", label: "Claude API Key" },
+	].forEach(({ key, label: labelText }) => {
+		const field = document.createElement("div");
+		field.className = "settings-field";
+		const label = document.createElement("label");
+		label.textContent = labelText;
+		const input = document.createElement("input");
+		input.type = "password";
+		input.value = getSettingValue(key, "");
+		input.placeholder = "sk-...";
+		input.addEventListener("input", () => setSettingValue(key, input.value));
+		label.appendChild(input);
+		field.appendChild(label);
+		panel.appendChild(field);
 	});
 
 	const clearBtn = document.createElement("button");

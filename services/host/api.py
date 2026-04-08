@@ -9,7 +9,7 @@ import logging
 import uuid
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -79,20 +79,29 @@ class ToolInfo(BaseModel):
 # --- Endpoints ---
 
 
+def _extract_api_keys(request: Request) -> dict:
+    """Lees optionele API key overrides uit request headers."""
+    return {
+        "vlam_api_key_override": request.headers.get("x-vlam-api-key", "").strip(),
+        "claude_api_key_override": request.headers.get("x-claude-api-key", "").strip(),
+    }
+
+
 @app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat(body: ChatRequest, request: Request):
     """Stuur een bericht naar de assistent en ontvang een antwoord."""
-    session_id = request.session_id or str(uuid.uuid4())
+    session_id = body.session_id or str(uuid.uuid4())
     VALID_MODES = ("vlam", "claude", "cli:vlam", "cli:claude")
-    mode = request.mode if request.mode in VALID_MODES else "vlam"
-    reply = await host.chat(session_id, request.message, mode=mode)
+    mode = body.mode if body.mode in VALID_MODES else "vlam"
+    api_keys = _extract_api_keys(request)
+    reply = await host.chat(session_id, body.message, mode=mode, **api_keys)
     return ChatResponse(
         reply=reply, session_id=session_id, mode=mode, has_tools=host.has_tools
     )
 
 
 @app.post("/chat/stream")
-async def chat_stream(request: ChatRequest):
+async def chat_stream(body: ChatRequest, request: Request):
     """Stuur een bericht en ontvang status-updates via Server-Sent Events.
 
     Events:
@@ -101,13 +110,14 @@ async def chat_stream(request: ChatRequest):
       event: answer  — het definitieve antwoord
       event: done    — stream is afgelopen
     """
-    session_id = request.session_id or str(uuid.uuid4())
+    session_id = body.session_id or str(uuid.uuid4())
     VALID_MODES = ("vlam", "claude", "cli:vlam", "cli:claude")
-    mode = request.mode if request.mode in VALID_MODES else "vlam"
-    logging.getLogger("vlam.api").info("POST /chat/stream — mode=%r (raw=%r)", mode, request.mode)
+    mode = body.mode if body.mode in VALID_MODES else "vlam"
+    api_keys = _extract_api_keys(request)
+    logging.getLogger("vlam.api").info("POST /chat/stream — mode=%r (raw=%r)", mode, body.mode)
 
     async def event_generator():
-        async for event in host.chat_stream(session_id, request.message, mode=mode):
+        async for event in host.chat_stream(session_id, body.message, mode=mode, **api_keys):
             event_type = event.get("type", "status")
             # Voeg session_id en mode toe aan answer-events
             if event_type == "answer":

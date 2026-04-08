@@ -17,30 +17,6 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	<section class="card chat-container">
 		<div class="chat-header">
 			<p>Stel een vraag over regelgeving, vergunningen, subsidies of uw bedrijfsregistratie.</p>
-			<div class="chat-switches">
-				<fieldset class="mode-switch" role="radiogroup" aria-label="Kies LLM">
-					<legend class="visually-hidden">LLM</legend>
-					<label class="mode-option">
-						<input type="radio" name="chat-llm" value="vlam" checked>
-						<span>VLAM</span>
-					</label>
-					<label class="mode-option">
-						<input type="radio" name="chat-llm" value="claude">
-						<span>Claude</span>
-					</label>
-				</fieldset>
-				<fieldset class="mode-switch" role="radiogroup" aria-label="Kies transport">
-					<legend class="visually-hidden">Transport</legend>
-					<label class="mode-option">
-						<input type="radio" name="chat-transport" value="mcp" checked>
-						<span>MCP</span>
-					</label>
-					<label class="mode-option">
-						<input type="radio" name="chat-transport" value="cli">
-						<span>CLI</span>
-					</label>
-				</fieldset>
-			</div>
 		</div>
 
 		<div class="chat-status" id="chat-status" aria-live="polite"></div>
@@ -97,8 +73,6 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	var input = document.getElementById("chat-input");
 	var messages = document.getElementById("chat-messages");
 	var statusEl = document.getElementById("chat-status");
-	var llmInputs = document.querySelectorAll('input[name="chat-llm"]');
-	var transportInputs = document.querySelectorAll('input[name="chat-transport"]');
 	var sessions = {};
 	var chatHistory = {};
 	var serverStatus = null;
@@ -112,11 +86,11 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	};
 
 	function getLLM() {
-		return document.querySelector('input[name="chat-llm"]:checked').value;
+		return localStorage.getItem("setting:llm") || "vlam";
 	}
 
 	function getTransport() {
-		return document.querySelector('input[name="chat-transport"]:checked').value;
+		return localStorage.getItem("setting:transport") || "mcp";
 	}
 
 	function getComboKey() {
@@ -187,13 +161,9 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		var btn = form.querySelector("button");
 		if (loading) {
 			btn.setAttribute("aria-disabled", "true");
-			llmInputs.forEach(function (r) { r.disabled = true; });
-			transportInputs.forEach(function (r) { r.disabled = true; });
 			showThinking("Vraag analyseren...");
 		} else {
 			btn.removeAttribute("aria-disabled");
-			llmInputs.forEach(function (r) { r.disabled = false; });
-			transportInputs.forEach(function (r) { r.disabled = false; });
 			hideThinking();
 		}
 	}
@@ -253,7 +223,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		.catch(renderStatusOffline);
 
 	// Bewaar en herstel gesprek bij wisselen van LLM of transport
-	var previousCombo = "vlam:mcp";
+	var previousCombo = getComboKey();
 
 	function handleSwitch() {
 		if (submitting) return;
@@ -278,12 +248,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		updateStatusDisplay();
 	}
 
-	llmInputs.forEach(function (radio) {
-		radio.addEventListener("change", handleSwitch);
-	});
-	transportInputs.forEach(function (radio) {
-		radio.addEventListener("change", handleSwitch);
-	});
+	window.addEventListener("setting-changed", handleSwitch);
 
 	input.addEventListener("input", function () {
 		this.style.blockSize = "auto";
@@ -317,7 +282,11 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		try {
 			var response = await fetch(API_BASE + "/chat/stream", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: {
+					"Content-Type": "application/json",
+					"X-VLAM-API-Key": localStorage.getItem("setting:vlam-api-key") || "",
+					"X-Claude-API-Key": localStorage.getItem("setting:claude-api-key") || "",
+				},
 				body: JSON.stringify({
 					message: message,
 					session_id: sessions[comboKey],
