@@ -406,6 +406,7 @@ label {
 		display: inline-flex;
 		font: var(--toepassing-text-smalltext);
 		gap: var(--toepassing-space-layout-3xs);
+		position: relative;
 		svg {
 			block-size: var(--toepassing-size-icon-sm);
 			fill: currentColor;
@@ -1207,12 +1208,23 @@ summary {
 	}
 	&:hover,
 	&:active,
-	&:focus,
+	&:focus {
+		color: var(--toepassing-color-feedback-success-emphasis);
+		.relevance-icon {
+			mask-image: url("../assets/icons/icon-feedback.svg");
+		}
+	}
 	&:has(input:checked) {
 		color: var(--toepassing-color-feedback-success-icon);
 		.relevance-icon {
 			mask-image: url("../assets/icons/icon-feedback.svg");
 		}
+		&:hover {
+			color: var(--toepassing-color-feedback-success-emphasis);
+		}
+	}
+	&:has(input:checked) {
+		color: var(--toepassing-color-feedback-success-icon);
 	}
 }
 .relevance-no {
@@ -1224,7 +1236,7 @@ summary {
 	&:active,
 	&:focus,
 	&:has(input:checked) {
-		color: var(--toepassing-color-feedback-error-icon);
+		color: var(--toepassing-color-feedback-error-emphasis);
 		.relevance-icon {
 			mask-image: url("../assets/icons/icon-feedback.svg");
 		}

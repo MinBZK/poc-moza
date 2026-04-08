@@ -921,7 +921,7 @@
         },
         "emphasis": {
           "$type": "color",
-          "$value": "{color.groen.500}"
+          "$value": "{color.groen.600}"
         },
         "text": {
           "$type": "color",
@@ -947,7 +947,7 @@
         },
         "emphasis": {
           "$type": "color",
-          "$value": "{color.oranje.500}"
+          "$value": "{color.oranje.600}"
         },
         "text": {
           "$type": "color",
