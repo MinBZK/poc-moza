@@ -352,7 +352,7 @@
 		return groups;
 	}
 
-	function renderCard(parent, item, btnClass, btnText, onClickFn) {
+	function renderCard(parent, item, btnClass, btnText, onClickFn, options) {
 		const li = document.createElement("li");
 		if (item.url) {
 			const a = document.createElement("a");
@@ -369,15 +369,36 @@
 			p.textContent = item.desc;
 			li.appendChild(p);
 		}
+		const actions = document.createElement("div");
+		actions.className = "action-group";
+		if (options?.share && item.url) {
+			const shareBtn = document.createElement("button");
+			shareBtn.className = "link-button share-topic";
+			shareBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M48 42c-2.045 0-3.925.69-5.436 1.84L23.921 33.13c.046-.372.078-.747.078-1.13a8.956 8.956 0 0 0-1.975-5.618c.088-.08.31-.095.518.038.378.239 1.78 1.273 3.323 3.4l16.712-9.648A8.948 8.948 0 0 0 48 22a9 9 0 1 0-9-9c0 .377.03.746.076 1.111L20.46 24.858A8.95 8.95 0 0 0 15 23a9 9 0 0 0 0 18c2.032 0 3.9-.681 5.407-1.817l18.666 10.725A9.047 9.047 0 0 0 39 51a9 9 0 1 0 9-9z"/></svg> Deel';
+			shareBtn.addEventListener("click", async () => {
+				try {
+					if (navigator.share) {
+						await navigator.share({ title: item.title, text: item.desc, url: item.url });
+					} else {
+						await navigator.clipboard.writeText(item.url);
+						const svgHtml = shareBtn.querySelector("svg").outerHTML;
+						shareBtn.innerHTML = svgHtml + " Link gekopieerd";
+						setTimeout(() => { shareBtn.innerHTML = svgHtml + " Deel"; }, 2000);
+					}
+				} catch {}
+			});
+			actions.appendChild(shareBtn);
+		}
 		const btn = document.createElement("button");
 		btn.className = "link-button " + btnClass;
 		btn.textContent = btnText;
 		btn.addEventListener("click", () => onClickFn(li, item));
-		li.appendChild(btn);
+		actions.appendChild(btn);
+		li.appendChild(actions);
 		parent.appendChild(li);
 	}
 
-	function renderGroups(container, emptyEl, items, btnClass, btnText, onClickFn) {
+	function renderGroups(container, emptyEl, items, btnClass, btnText, onClickFn, options) {
 		if (!container) return;
 		if (items.length === 0) {
 			if (emptyEl) emptyEl.hidden = false;
@@ -394,11 +415,9 @@
 			groups[cat].forEach((item) => {
 				renderCard(ul, item, btnClass, btnText, (li, item) => {
 					onClickFn(li, item);
-					// Verberg sectie als de lijst leeg is
 					if (ul.children.length === 0) section.remove();
-					// Toon lege melding als alle secties weg zijn
 					if (container.children.length === 0) emptyEl.hidden = false;
-				});
+				}, options);
 			});
 			section.appendChild(ul);
 			container.appendChild(section);
@@ -427,7 +446,7 @@
 			if (ul && ul.children.length === 0 && section) section.remove();
 			if (savedGroups && savedGroups.children.length === 0) savedEmpty.hidden = false;
 		});
-	});
+	}, { share: true });
 
 	renderGroups(hiddenGroups, hiddenEmpty, hiddenTopics, "restore-topic", "Toch relevant", (li, item) => {
 		localStorage.removeItem(item.key);
