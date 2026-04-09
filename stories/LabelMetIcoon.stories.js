@@ -23,8 +23,8 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
-		icoon: { control: "select", options: iconNames },
+		label: { control: "text", name: "Label" },
+		icoon: { control: "select", options: iconNames, name: "Icoon" },
 	},
 	args: {
 		label: "R.J. Vogel",

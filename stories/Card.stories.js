@@ -12,20 +12,20 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
-		toonKnop: { control: "boolean", name: "Toon actieknop" },
+		titel: { control: "text", name: "Titel" },
+		inhoud: { control: "text", name: "Inhoud" },
+		toonKnop: { control: "inline-radio", options: ["Aan", "Uit"], name: "Toon actieknop" },
 	},
 	args: {
 		titel: "Bedrijfsactiviteiten",
 		inhoud: "Bekijk de SBI-codes en omschrijvingen van de activiteiten die bij uw onderneming geregistreerd staan.",
-		toonKnop: true,
+		toonKnop: "Aan",
 	},
 	render: ({ titel, inhoud, toonKnop }) => `
 <section class="card">
 	<h2>${titel}</h2>
 	<p>${inhoud}</p>
-	${toonKnop ? '<a class="btn-cta" href="#">Ga naar Bedrijfsactiviteiten</a>' : ""}
+	${toonKnop === "Aan" ? '<a class="btn-cta" href="#">Ga naar Bedrijfsactiviteiten</a>' : ""}
 </section>`,
 };
 
