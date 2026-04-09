@@ -30,7 +30,7 @@ const preview = {
 			storySort: {
 				order: [
 					"Introductie",
-					["Over dit prototype", "Ontwerpprincipes: Wat — Visie en principes", "Ontwerpprincipes: Hoe — Werkwijze en techniek", "Schrijfwijzer"],
+					["Over dit prototype", "Ontwerpprincipes", "Ontwerpprincipes: Wat: Visie en principes", "Ontwerpprincipes: Hoe: Werkwijze en techniek", "Schrijfwijzer"],
 					"Typografie",
 					["Koppen", "Paragraaf", "Block-level tekst", "Inline tekst"],
 					"Design tokens",

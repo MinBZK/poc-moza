@@ -576,7 +576,7 @@
 <header>
   <div class="wrap">
     <h1>Manifest Debugger</h1>
-    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">6 docs ok</a></div>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill ok" data-k="docs" href="#filter-docs">7 docs ok</a></div>
   </div>
 </header>
 <main>
@@ -832,10 +832,65 @@ Object.keys(localStorage)
   aria-label="Docs">
   <div class="head">
     <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Introductie/Ontwerpprincipes</h2>
+      <div class="badges">
+        
+        <label for="doc-1-introductie-ontwerpprincipes-docs-content" class="badge ok as-toggle">view content</label>
+      </div>
+    </div>
+    <div class="meta" title="./stories/OntwerpprincipesIntro.mdx">introductie-ontwerpprincipes--docs · ./stories/OntwerpprincipesIntro.mdx</div>
+    
+  </div>
+
+  <!-- Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="doc-1-introductie-ontwerpprincipes-docs-content" class="tg tg-content" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-content">
+          <div class="mdx-content">
+            <pre><code>import { Meta } from &quot;@storybook/addon-docs/blocks&quot;;
+
+&lt;Meta title=&quot;Introductie/Ontwerpprincipes&quot; /&gt;
+
+# Ontwerpprincipes
+
+Het prototype van MijnOverheid Zakelijk is gebouwd vanuit een set ontwerpprincipes die richting geven aan elke keuze — van de structuur van een pagina tot de tekst op een knop. Deze principes zijn geen checklist achteraf, maar het startpunt van elk ontwerpbesluit.
+
+De principes zijn opgedeeld in twee delen:
+
+## Wat — Visie en principes
+
+Het _Wat_ beschrijft de overtuigingen en uitgangspunten die aan het ontwerp ten grondslag liggen. Waarom ontwerpen we met de eindgebruiker centraal? Waarom direct in code en niet in design tooling? Wat betekent toegankelijkheid als fundament, en hoe verhoudt eenvoud zich tot volledigheid?
+
+Dit deel is bedoeld voor iedereen die wil begrijpen _waarom_ het prototype is zoals het is — ontwerpers, ontwikkelaars, beleidsmakers en stakeholders.
+
+**Onderwerpen:** ontwerp met de eindgebruiker centraal, ontwerpen in code, toegankelijkheid, Rijkshuisstijl, design tokens, component-gedreven ontwerp, eenvoud, prototypen als communicatiemiddel, iteratief ontwerpen.
+
+## Hoe — Werkwijze en techniek
+
+Het _Hoe_ beschrijft de concrete technische keuzes en werkwijze waarmee de principes worden vertaald naar code. Welke CSS-technieken gebruiken we en waarom? Hoe werken de design tokens? Hoe zetten we AI-assistentie in? Hoe waarborgt de schrijfwijzer consistentie?
+
+Dit deel is bedoeld voor iedereen die aan het prototype werkt of wil begrijpen hoe het technisch in elkaar zit.
+
+**Onderwerpen:** CSS logical properties, nesting, layout en spacing, AI-assistentie, schrijfwijzer, ontwerppatronen, feature flags, statische site-generatie.
+</code></pre>
+          </div>
+        </div>
+  </div>
+</article>
+<article
+  class="card is-doc no-doc-error"
+  role="listitem"
+  aria-label="Docs">
+  <div class="head">
+    <div class="title">
       <h2><span class="status-dot dot-ok"></span> Introductie/Ontwerpprincipes: Wat — Visie en principes</h2>
       <div class="badges">
         
-        <label for="doc-1-introductie-ontwerpprincipes-wat-visie-en-principes-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-2-introductie-ontwerpprincipes-wat-visie-en-principes-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/OntwerpprincipesWat.mdx">introductie-ontwerpprincipes-wat-visie-en-principes--docs · ./stories/OntwerpprincipesWat.mdx</div>
@@ -844,7 +899,7 @@ Object.keys(localStorage)
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-1-introductie-ontwerpprincipes-wat-visie-en-principes-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-2-introductie-ontwerpprincipes-wat-visie-en-principes-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -958,7 +1013,7 @@ Het ontwerpproces beweegt zich continu tussen twee perspectieven: wat we nu kunn
       <h2><span class="status-dot dot-ok"></span> Introductie/Ontwerpprincipes: Hoe — Werkwijze en techniek</h2>
       <div class="badges">
         
-        <label for="doc-2-introductie-ontwerpprincipes-hoe-werkwijze-en-techniek-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-3-introductie-ontwerpprincipes-hoe-werkwijze-en-techniek-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/OntwerpprincipesHoe.mdx">introductie-ontwerpprincipes-hoe-werkwijze-en-techniek--docs · ./stories/OntwerpprincipesHoe.mdx</div>
@@ -967,7 +1022,7 @@ Het ontwerpproces beweegt zich continu tussen twee perspectieven: wat we nu kunn
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-2-introductie-ontwerpprincipes-hoe-werkwijze-en-techniek-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-3-introductie-ontwerpprincipes-hoe-werkwijze-en-techniek-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -1052,7 +1107,7 @@ Het prototype bevat een feature-flag systeem waarmee secties en functionaliteit 
       <h2><span class="status-dot dot-ok"></span> Introductie/Schrijfwijzer</h2>
       <div class="badges">
         
-        <label for="doc-3-introductie-schrijfwijzer-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-4-introductie-schrijfwijzer-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/Schrijfwijzer.mdx">introductie-schrijfwijzer--docs · ./stories/Schrijfwijzer.mdx</div>
@@ -1061,7 +1116,7 @@ Het prototype bevat een feature-flag systeem waarmee secties en functionaliteit 
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-3-introductie-schrijfwijzer-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-4-introductie-schrijfwijzer-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -1256,7 +1311,7 @@ Kopteksten bevatten geen punt aan het einde.
       <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Interactie op inhoud</h2>
       <div class="badges">
         
-        <label for="doc-4-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-5-ontwerppatronen-interactie-op-inhoud-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/InteracterenOpInhoud.mdx">ontwerppatronen-interactie-op-inhoud--docs · ./stories/InteracterenOpInhoud.mdx</div>
@@ -1265,7 +1320,7 @@ Kopteksten bevatten geen punt aan het einde.
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-4-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-5-ontwerppatronen-interactie-op-inhoud-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -1417,7 +1472,7 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
       <h2><span class="status-dot dot-ok"></span> Ontwerppatronen/Context wisselen</h2>
       <div class="badges">
         
-        <label for="doc-5-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
+        <label for="doc-6-ontwerppatronen-context-wisselen-docs-content" class="badge ok as-toggle">view content</label>
       </div>
     </div>
     <div class="meta" title="./stories/ContextWisselen.mdx">ontwerppatronen-context-wisselen--docs · ./stories/ContextWisselen.mdx</div>
@@ -1426,7 +1481,7 @@ De gebruiker heeft altijd inzicht in welke signalen zijn vastgelegd en kan deze 
 
   <!-- Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="doc-5-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
+  <input id="doc-6-ontwerppatronen-context-wisselen-docs-content" class="tg tg-content" type="checkbox" hidden />
 
   <div class="panels">
     
