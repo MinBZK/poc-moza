@@ -203,6 +203,26 @@ h6 {
 	font: var(--toepassing-text-heading-h6);
 }
 
+/* Heading-stijlklassen: visueel als een ander niveau, semantisch het juiste element */
+.h1 {
+	font: var(--toepassing-text-heading-h1);
+}
+.h2 {
+	font: var(--toepassing-text-heading-h2);
+}
+.h3 {
+	font: var(--toepassing-text-heading-h3);
+}
+.h4 {
+	font: var(--toepassing-text-heading-h4);
+}
+.h5 {
+	font: var(--toepassing-text-heading-h5);
+}
+.h6 {
+	font: var(--toepassing-text-heading-h6);
+}
+
 p {
 	font: var(--toepassing-text-paragraph-default);
 	&.intro {
@@ -250,6 +270,10 @@ var {
 }
 pre {
 	padding: var(--toepassing-space-padding-sm);
+}
+
+.text-muted {
+	color: var(--toepassing-color-text-subtle-1);
 }
 
 /* Visueel verborgen maar toegankelijk voor screenreaders */
@@ -335,6 +359,7 @@ button,
 [type="week"],
 select,
 textarea,
+.btn,
 .btn-cta {
 	align-self: flex-start; /* Voorkomt full-width in flex containers */
 	background: var(--toepassing-color-interactive-default-surface);
@@ -354,6 +379,7 @@ textarea,
 	}
 	&[aria-invalid] {
 		border-color: var(--toepassing-color-feedback-error-border);
+		outline-color: var(--toepassing-color-feedback-error-border);
 	}
 	&.negative {
 		border-color: var(--toepassing-color-feedback-error-border);
@@ -368,6 +394,45 @@ textarea,
 	margin-inline-start: var(--toepassing-space-margin-2xs);
 	mask: url("../assets/icons/icon-link-intern.svg") no-repeat center / contain;
 	vertical-align: middle;
+}
+
+/* Formulieren: verificatiecode (6-cijferige code-invoer) */
+
+.code-input {
+	display: flex;
+	gap: var(--toepassing-space-layout-2xs);
+	.verify-digit {
+		font: var(--toepassing-text-heading-h3);
+		inline-size: 2.5em;
+		min-inline-size: unset;
+		padding-inline: 0;
+		text-align: center;
+	}
+}
+
+/* Formulieren: inline feedback bij invoervelden */
+
+td .feedback {
+	font: var(--toepassing-text-smalltext-default);
+	margin-block-start: var(--toepassing-space-margin-2xs);
+	padding: var(--toepassing-space-padding-sm);
+}
+td:has(.feedback) {
+	max-inline-size: 0;
+}
+
+#verify-resend {
+	display: block;
+	margin-block-start: var(--toepassing-space-margin-2xs);
+}
+
+.form-field-error {
+	color: var(--toepassing-color-feedback-error-icon);
+	font: var(--toepassing-text-smalltext-default);
+	margin-block-start: var(--toepassing-space-margin-3xs);
+	&[hidden] {
+		display: none;
+	}
 }
 
 /* Formulieren: labels */
@@ -807,13 +872,14 @@ button.side-nav-toggle {
 
 footer {
 	a {
-		color: inherit;
+		color: inherit !important;
 		display: inline-block;
 		font: var(--toepassing-text-nav-footer);
 		padding-block: var(--toepassing-space-padding-xs);
 		text-decoration: none;
 		&:hover {
 			color: inherit;
+			text-decoration: var(--toepassing-text-text-decoration-hyperlink) !important;
 		}
 	}
 }
@@ -866,7 +932,7 @@ tr {
 }
 th,
 td {
-	border-block-end: var(--toepassing-border-default);
+	/* border-block-end: var(--toepassing-border-default); */
 	padding-block: var(--toepassing-space-padding-xs);
 	text-align: start;
 	.feedback {
@@ -1278,10 +1344,29 @@ h4 {
 	border-color: var(--toepassing-color-feedback-neutral-border);
 	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
-	gap: var(--toepassing-space-layout-xs);
+	gap: var(--toepassing-space-layout-2xs);
 	padding: var(--toepassing-space-padding-md);
 	&[hidden] {
 		display: none;
+	}
+	div {
+		display: flex;
+		flex-direction: column;
+		gap: var(--toepassing-space-layout-2xs);
+	}
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font: var(--toepassing-text-heading-h6);
+		margin-block-end: var(--toepassing-space-margin-3xs);
+	}
+	p {
+		margin-block: 0;
+	}
+	.btn-close {
+		min-block-size: auto;
 	}
 	svg {
 		align-self: self-start;

@@ -36,7 +36,7 @@ const preview = {
 					"Design tokens",
 					["Kleurenpalet", "Ruimtelijk systeem", "Transities"],
 					"Ontwerppatronen",
-					["Interactie op inhoud", "Context wisselen"],
+					["Interactie op inhoud", "Context wisselen", "E-mailverificatie"],
 					"Componenten",
 					[
 						"Navigatie",

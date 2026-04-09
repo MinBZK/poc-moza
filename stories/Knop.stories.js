@@ -23,7 +23,7 @@ export const Primair = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
+		label: { control: "text", name: "Label" },
 	},
 	args: {
 		label: "Standaard primaire knop",
@@ -42,7 +42,7 @@ export const Secundair = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
+		label: { control: "text", name: "Label" },
 	},
 	args: {
 		label: "Secundaire knop",
@@ -61,7 +61,7 @@ export const Reset = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
+		label: { control: "text", name: "Label" },
 	},
 	args: {
 		label: "Reset knop",
@@ -80,7 +80,7 @@ export const Submit = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
+		label: { control: "text", name: "Label" },
 	},
 	args: {
 		label: "Submit knop",
@@ -99,7 +99,7 @@ export const Inactief = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
+		label: { control: "text", name: "Label" },
 	},
 	args: {
 		label: "Inactieve knop",
@@ -118,7 +118,7 @@ export const Destructief = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
+		label: { control: "text", name: "Label" },
 	},
 	args: {
 		label: "Destructieve actie",
@@ -150,8 +150,8 @@ export const MetIcoon = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
-		icoon: { control: "select", options: iconNames },
+		label: { control: "text", name: "Label" },
+		icoon: { control: "select", options: iconNames, name: "Icoon" },
 	},
 	args: {
 		label: "Knop met icoon",

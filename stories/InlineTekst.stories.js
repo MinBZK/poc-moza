@@ -11,7 +11,7 @@ export const Gemarkeerd = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Dit is gemarkeerde tekst." },
 	render: ({ tekst }) => `<p><mark>${tekst}</mark></p>`,
 };
@@ -24,7 +24,7 @@ export const Doorgestreept = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Dit is doorgestreepte tekst." },
 	render: ({ tekst }) => `<p><del>${tekst}</del></p>`,
 };
@@ -37,7 +37,7 @@ export const Ingevoegd = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Dit is ingevoegde tekst." },
 	render: ({ tekst }) => `<p><ins>${tekst}</ins></p>`,
 };
@@ -50,7 +50,7 @@ export const SubscriptSuperscript = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "x² + y² = r²" },
 	render: ({ tekst }) => `<p>${tekst}</p>`,
 };
@@ -63,7 +63,7 @@ export const InlineCode = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "inline code" },
 	render: ({ tekst }) => `<p>Dit is <code>${tekst}</code> in een zin.</p>`,
 };
@@ -114,7 +114,7 @@ export const Voorbeelduitvoer = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "voorbeelduitvoer" },
 	render: ({ tekst }) => `<p>Het resultaat is <samp>${tekst}</samp>.</p>`,
 };
@@ -127,7 +127,7 @@ export const Variabele = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "x" },
 	render: ({ tekst }) => `<p>De variabele <var>${tekst}</var> staat voor een onbekende waarde.</p>`,
 };

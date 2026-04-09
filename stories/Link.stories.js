@@ -12,8 +12,8 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		tekst: { control: "text" },
-		href: { control: "text" },
+		tekst: { control: "text", name: "Tekst" },
+		href: { control: "text", name: "URL" },
 	},
 	args: {
 		tekst: "hyperlink",
@@ -32,8 +32,8 @@ export const Alleenstaand = {
 		},
 	},
 	argTypes: {
-		tekst: { control: "text" },
-		href: { control: "text" },
+		tekst: { control: "text", name: "Tekst" },
+		href: { control: "text", name: "URL" },
 	},
 	args: {
 		tekst: "Hyperlink",

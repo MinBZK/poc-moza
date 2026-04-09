@@ -12,8 +12,8 @@ export const Paneel = {
 		},
 	},
 	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
+		titel: { control: "text", name: "Titel" },
+		inhoud: { control: "text", name: "Inhoud" },
 	},
 	args: {
 		titel: "Titel",

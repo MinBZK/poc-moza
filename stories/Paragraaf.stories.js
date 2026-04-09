@@ -12,7 +12,7 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		tekst: { control: "text" },
+		tekst: { control: "text", name: "Tekst" },
 	},
 	args: {
 		tekst: "Dit is een standaard alinea met lopende tekst.",
@@ -35,7 +35,7 @@ export const Introductie = {
 		},
 	},
 	argTypes: {
-		tekst: { control: "text" },
+		tekst: { control: "text", name: "Tekst" },
 	},
 	args: {
 		tekst: "Dit is een introductie alinea. Deze maakt het mogelijk om de introductie van de rest van de tekst te onderscheiden.",
@@ -52,7 +52,7 @@ export const KleineTekst = {
 		},
 	},
 	argTypes: {
-		tekst: { control: "text" },
+		tekst: { control: "text", name: "Tekst" },
 	},
 	args: {
 		tekst: "Dit is kleine tekst.",

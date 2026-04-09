@@ -156,8 +156,8 @@ export const Toepassing = {
 
 			colorGroup("Rand", [
 				swatch("--toepassing-color-border-default", "Default", "Standaardranden voor invoervelden, kaarten en scheidingslijnen"),
-				swatch("--toepassing-color-border-strong", "Strong", "Randen met hoge nadruk; bijv. invoervelden of visuele groepering"),
-				swatch("--toepassing-color-border-subtle", "Subtle", "Zachtere scheiding, bijv. tussen lijstitems of tabelrijen"),
+				swatch("--toepassing-color-border-strong", "Strong", "Randen met hoge nadruk; bijvoorbeeld invoervelden of visuele groepering"),
+				swatch("--toepassing-color-border-subtle", "Subtle", "Zachtere scheiding, bijvoorbeeld tussen lijstitems of tabelrijen"),
 				swatch("--toepassing-color-border-inverse", "Inverse", "Randen op inverse en donkere oppervlakken"),
 			].join("")),
 
