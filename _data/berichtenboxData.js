@@ -1,0 +1,188 @@
+// Genereert de dataset voor de FBS Berichtenbox-mock.
+// 400 magazijnen (10 instanties + gemeentes), ~120 berichten, 2 voorgevulde mappen.
+
+const INSTANTIES = [
+	{ id: "belastingdienst", naam: "Belastingdienst" },
+	{ id: "kvk", naam: "Kamer van Koophandel" },
+	{ id: "rvo", naam: "Rijksdienst voor Ondernemend Nederland" },
+	{ id: "svb", naam: "Sociale Verzekeringsbank" },
+	{ id: "uwv", naam: "UWV" },
+	{ id: "rdw", naam: "RDW" },
+	{ id: "cbs", naam: "Centraal Bureau voor de Statistiek" },
+	{ id: "ind", naam: "IND" },
+	{ id: "ap", naam: "Autoriteit Persoonsgegevens" },
+	{ id: "kadaster", naam: "Kadaster" },
+];
+
+// Nederlandse gemeentes (selectie van ~390 — echte namen)
+const GEMEENTES = [
+	"Amsterdam", "Rotterdam", "'s-Gravenhage", "Utrecht", "Eindhoven", "Groningen",
+	"Tilburg", "Almere", "Breda", "Nijmegen", "Enschede", "Apeldoorn", "Haarlem",
+	"Arnhem", "Amersfoort", "Zaanstad", "'s-Hertogenbosch", "Haarlemmermeer", "Zwolle",
+	"Zoetermeer", "Leeuwarden", "Leiden", "Dordrecht", "Maastricht", "Emmen",
+	"Ede", "Westland", "Venlo", "Delft", "Deventer", "Alkmaar", "Helmond", "Sittard-Geleen",
+	"Alphen aan den Rijn", "Hilversum", "Heerlen", "Amstelveen", "Roosendaal",
+	"Purmerend", "Oss", "Schiedam", "Hoorn", "Spijkenisse", "Gouda", "Lelystad",
+	"Vlaardingen", "Almelo", "Assen", "Capelle aan den IJssel", "Veenendaal",
+	"Bergen op Zoom", "Nieuwegein", "Hengelo", "Zeist", "Katwijk", "Roermond",
+	"Hardenberg", "Tiel", "Zutphen", "Weert", "Middelburg", "Kerkrade",
+	"Papendrecht", "Rijswijk", "Brunssum", "Waalwijk", "Ridderkerk", "Barneveld",
+	"Culemborg", "IJsselstein", "Gorinchem", "Houten", "Woerden", "Terneuzen",
+	"Stichtse Vecht", "Wageningen", "Harderwijk", "Noordoostpolder", "Soest",
+	"Veldhoven", "Doetinchem", "Huizen", "De Bilt", "Etten-Leur", "Oosterhout",
+	"Smallingerland", "Goes", "Veere", "Kampen", "Meppel", "Epe", "Dronten", "Coevorden",
+	"Zandvoort", "Vlissingen", "Opsterland", "Sluis", "Stadskanaal", "Emmeloord",
+	"Ooststellingwerf", "Beverwijk", "Hof van Twente", "Teylingen", "Wijchen",
+	"Noordwijk", "Bloemendaal", "Weesp", "Nijkerk", "Montferland", "Medemblik",
+	"Heiloo", "Geldrop-Mierlo", "Waadhoeke", "Drechterland", "Bodegraven-Reeuwijk",
+	"Bunnik", "Oirschot", "Oude IJsselstreek", "Oudewater", "Pijnacker-Nootdorp",
+	"Raalte", "Renkum", "Rheden", "Rhenen", "Roerdalen", "Staphorst", "Steenbergen",
+	"Steenwijkerland", "Tynaarlo", "Tytsjerksteradiel", "Uden", "Uithoorn",
+	"Urk", "Valkenburg aan de Geul", "Valkenswaard", "Veldhoven", "Venray",
+	"Voerendaal", "Voorst", "Vught", "Waddinxveen", "Wassenaar", "Waterland",
+	"Westerveld", "Westervoort", "Westland", "Wierden", "Wijdemeren", "Winterswijk",
+	"Zevenaar", "Zoeterwoude", "Zuidplas", "Zundert", "Zwijndrecht", "Noardeast-Fryslân",
+	"Vijfheerenlanden", "Molenlanden", "Het Hogeland", "Westerkwartier", "Midden-Groningen",
+	"Dijk en Waard", "Maashorst", "Land van Cuijk", "Voorne aan Zee", "Altena",
+	"Nissewaard", "Gooise Meren", "Krimpenerwaard", "De Fryske Marren", "De Wolden",
+	"Dantumadiel", "Eemsdelta", "Meierijstad",
+];
+// Vul verder aan met fictieve varianten om op ~390 te komen.
+while (GEMEENTES.length < 390) {
+	GEMEENTES.push(`Gemeente ${GEMEENTES.length + 1}`);
+}
+
+function slugify(naam) {
+	return naam
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "");
+}
+
+// ---- Magazijnen ----
+const magazijnen = [
+	...INSTANTIES.map((i) => ({ id: i.id, naam: i.naam, type: "instantie" })),
+	...GEMEENTES.map((g) => ({
+		id: "gem-" + slugify(g),
+		naam: `Gemeente ${g}`,
+		type: "gemeente",
+	})),
+];
+
+// ---- Mappen (voorgevuld) ----
+const mappen = [
+	{ slug: "belastingen-2025", naam: "Belastingen 2025" },
+	{ slug: "subsidies", naam: "Subsidies" },
+];
+
+// ---- Berichten ----
+// Deterministic pseudo-random zodat de build reproduceerbaar is.
+let seed = 42;
+function rnd() {
+	seed = (seed * 9301 + 49297) % 233280;
+	return seed / 233280;
+}
+function pick(arr) {
+	return arr[Math.floor(rnd() * arr.length)];
+}
+
+const ONDERWERPEN = {
+	belastingdienst: [
+		"Voorlopige aanslag inkomstenbelasting 2025",
+		"Btw-aangifte eerste kwartaal beschikbaar",
+		"Beschikking kleineondernemersregeling",
+		"Vooraankondiging btw-controle",
+		"Bevestiging aangifte omzetbelasting",
+	],
+	kvk: [
+		"Bevestiging inschrijving handelsregister",
+		"Wijziging bestuurder geregistreerd",
+		"Herinnering jaarstukken deponeren",
+		"Bevestiging uittreksel aangevraagd",
+	],
+	rvo: [
+		"Subsidie SLIM toegekend",
+		"Aanvraag MIT-regeling in behandeling",
+		"Beschikking WBSO 2025",
+		"Betaalspecificatie subsidie",
+	],
+	svb: ["Bevestiging AOW-aanvraag", "Wijziging uitkering doorgegeven"],
+	uwv: ["Aanvraag WW verwerkt", "Loonheffingskorting gewijzigd"],
+	rdw: ["Kenteken overgeschreven", "APK-herinnering bedrijfsauto"],
+	cbs: ["Verzoek productie-enquête", "Herinnering statistiek-opgave"],
+	ind: ["Besluit aanvraag kennismigrant"],
+	ap: ["Melding datalek ontvangen"],
+	kadaster: ["Inschrijving eigendomsoverdracht"],
+	gemeente: [
+		"Aanslag toeristenbelasting",
+		"Aanslag reclamebelasting",
+		"Vergunning evenement verleend",
+		"Bevestiging melding openbare ruimte",
+		"Aanslag onroerendezaakbelasting",
+		"Besluit ontheffing venstertijden",
+		"Besluit terrasvergunning",
+		"Parkeervergunning verleend",
+		"Handhavingsbesluit reclame-uiting",
+		"Melding werkzaamheden openbare weg",
+	],
+};
+
+function onderwerpVoor(mag) {
+	if (mag.type === "gemeente") return pick(ONDERWERPEN.gemeente);
+	return pick(ONDERWERPEN[mag.id] || ONDERWERPEN.gemeente);
+}
+
+function inhoudVoor(mag, onderwerp) {
+	return [
+		`Geachte ondernemer,`,
+		`Dit bericht van ${mag.naam} betreft "${onderwerp}". De behandeling van dit bericht verloopt volgens de standaardprocedure van de betreffende organisatie.`,
+		`Voor vragen over de inhoud kunt u contact opnemen via de bij ${mag.naam} bekende kanalen.`,
+	].join("\n\n");
+}
+
+// Kies ~25 magazijnen die berichten leveren (mix instanties + gemeentes).
+const leverendeMagazijnen = [
+	...magazijnen.filter((m) => m.type === "instantie"),
+	...magazijnen.filter((m) => m.type === "gemeente").slice(0, 15),
+];
+
+function datumVoorIndex(i) {
+	// Spreid datums van ~6 maanden terug tot vandaag.
+	const eind = new Date("2026-04-10");
+	const dag = new Date(eind);
+	dag.setDate(eind.getDate() - Math.floor((i / 120) * 180) - Math.floor(rnd() * 4));
+	return dag.toISOString().slice(0, 10);
+}
+
+const berichten = [];
+for (let i = 0; i < 120; i++) {
+	const mag = pick(leverendeMagazijnen);
+	const onderwerp = onderwerpVoor(mag);
+	const isOngelezen = i < 12; // de eerste (nieuwste) 12 zijn ongelezen
+	let map = null;
+	if (mag.id === "belastingdienst" && rnd() < 0.7) map = "belastingen-2025";
+	else if (mag.id === "rvo" && rnd() < 0.6) map = "subsidies";
+	berichten.push({
+		id: "msg-" + String(i + 1).padStart(4, "0"),
+		magazijnId: mag.id,
+		afzender: mag.naam,
+		onderwerp,
+		inhoud: inhoudVoor(mag, onderwerp),
+		datum: datumVoorIndex(i),
+		isOngelezen,
+		map,
+		heeftBijlage: rnd() < 0.4,
+	});
+}
+
+// Sorteer op datum, nieuwste eerst.
+berichten.sort((a, b) => (a.datum < b.datum ? 1 : -1));
+
+module.exports = {
+	magazijnen,
+	berichten,
+	mappen,
+	aantalMagazijnen: magazijnen.length,
+};
