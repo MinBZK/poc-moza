@@ -1,0 +1,35 @@
+{% set box = berichtenboxData %}
+{% set path = page.url %}
+<nav class="berichtenbox-nav" aria-label="Berichtenbox">
+	<ul>
+		<li>
+			<a href="{{ '/moza/berichtenbox/' | url }}"{% if path == '/moza/berichtenbox/' %} aria-current="page"{% endif %}>
+				Inbox
+				<span class="berichtenbox-nav-count" data-berichtenbox-count="inbox">{{ box.berichten | length }}</span>
+			</a>
+		</li>
+		<li>
+			<a href="{{ '/moza/berichtenbox/archief/' | url }}"{% if path == '/moza/berichtenbox/archief/' %} aria-current="page"{% endif %}>
+				Archief
+				<span class="berichtenbox-nav-count" data-berichtenbox-count="archief">0</span>
+			</a>
+		</li>
+		<li>
+			<a href="{{ '/moza/berichtenbox/prullenbak/' | url }}"{% if path == '/moza/berichtenbox/prullenbak/' %} aria-current="page"{% endif %}>
+				Prullenbak
+				<span class="berichtenbox-nav-count" data-berichtenbox-count="prullenbak">0</span>
+			</a>
+		</li>
+	</ul>
+	<p class="berichtenbox-nav-mappen-kop" data-berichtenbox-mappen-kop hidden>Mappen</p>
+	<ul class="berichtenbox-nav-mappen" data-berichtenbox-mappen hidden>
+		{% for map in box.mappen %}
+			<li data-map-slug="{{ map.slug }}">
+				<a href="{{ '/moza/berichtenbox/?map=' | url }}{{ map.slug }}">
+					{{ map.naam }}
+					<span class="berichtenbox-nav-count" data-berichtenbox-count="map:{{ map.slug }}">0</span>
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+</nav>
