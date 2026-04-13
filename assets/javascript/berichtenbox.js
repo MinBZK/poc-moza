@@ -484,12 +484,77 @@
 		});
 	}
 
+	function toonMappenZijbalk() {
+		const kop = document.querySelector('[data-berichtenbox-mappen-kop]');
+		const lijst = document.querySelector('[data-berichtenbox-mappen]');
+		if (kop) kop.hidden = false;
+		if (lijst) lijst.hidden = false;
+		// Voeg eigen mappen toe
+		state.eigenMappen.forEach(voegMapToeAanZijbalk);
+	}
+
+	function voortgangsAnimatie(opKlaar) {
+		const wrap = document.querySelector('[data-berichtenbox-voortgang]');
+		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const pagnav = document.querySelector('.berichtenbox-content .pagination');
+		if (!wrap || !lijst) { opKlaar(); return; }
+
+		// Verberg lijst tijdens animatie
+		lijst.hidden = true;
+		if (pagnav) pagnav.hidden = true;
+		wrap.hidden = false;
+
+		const data = window.berichtenboxData;
+		const totaalBronnen = data.aantalMagazijnen;
+		const duur = 3000; // ms
+		const start = performance.now();
+
+		const bronEl = document.querySelector('[data-berichtenbox-voortgang-bron]');
+		const totaalEl = document.querySelector('[data-berichtenbox-voortgang-totaal]');
+		const gevondenEl = document.querySelector('[data-berichtenbox-voortgang-gevonden]');
+		const balk = document.querySelector('[data-berichtenbox-voortgang-balk]');
+		if (totaalEl) totaalEl.textContent = totaalBronnen;
+
+		// Aantal berichten dat in de inbox hoort (dynamisch, rekening houdend met state)
+		const totaalBerichten = data.berichten.filter((b) => statusVan(b.id) === 'inbox').length;
+
+		function stap(nu) {
+			const t = Math.min(1, (nu - start) / duur);
+			const eased = 1 - Math.pow(1 - t, 2);
+			if (bronEl) bronEl.textContent = Math.floor(eased * totaalBronnen);
+			if (gevondenEl) gevondenEl.textContent = Math.floor(eased * totaalBerichten);
+			if (balk) balk.style.inlineSize = (eased * 100) + '%';
+			if (t < 1) {
+				requestAnimationFrame(stap);
+			} else {
+				wrap.hidden = true;
+				lijst.hidden = false;
+				if (pagnav) pagnav.hidden = false;
+				opKlaar();
+			}
+		}
+		requestAnimationFrame(stap);
+	}
+
 	// Initialisatie
 	pasStateToeOpRijen();
 	renderLijstVoorView(huidigeView());
 	render(huidigeView());
 	bindDetailPaginaActies();
-	bindInboxFilters();
+
+	const isEerstePagina = !/\/pagina-\d+\/$/.test(location.pathname);
+
+	if (huidigeView() === 'inbox' && isEerstePagina && !state.eersteBezoekGehad) {
+		voortgangsAnimatie(() => {
+			state.eersteBezoekGehad = true;
+			opslaan();
+			toonMappenZijbalk();
+			bindInboxFilters();
+		});
+	} else {
+		toonMappenZijbalk();
+		bindInboxFilters();
+	}
 
 	// Exporteer voor latere taken via een global namespace
 	window.Berichtenbox = {
