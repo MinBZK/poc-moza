@@ -135,6 +135,19 @@
 		if (navArchief) navArchief.textContent = Object.keys(state.gearchiveerd).length;
 		const navPrullenbak = document.querySelector('[data-berichtenbox-count="prullenbak"]');
 		if (navPrullenbak) navPrullenbak.textContent = Object.keys(state.verwijderd).length;
+
+		// Map-tellers: tel berichten in inbox per map
+		const alleMappen = [...data.mappen, ...state.eigenMappen];
+		alleMappen.forEach((m) => {
+			const el = document.querySelector(`[data-berichtenbox-count="map:${m.slug}"]`);
+			if (!el) return;
+			const n = data.berichten.filter((b) => {
+				if (statusVan(b.id) !== 'inbox') return false;
+				const effMap = (b.id in state.mapOverride) ? state.mapOverride[b.id] : b.map;
+				return effMap === m.slug;
+			}).length;
+			el.textContent = n;
+		});
 	}
 
 	function opslaan() {
@@ -271,6 +284,171 @@
 		lijst.appendChild(li);
 	}
 
+	/**
+	 * Bouwt een <li> bericht-rij als DOM-element.
+	 * Retourneert HTMLLIElement (niet string).
+	 */
+	function createRij(bericht) {
+		const ongelezen = isOngelezen(bericht.id, bericht.isOngelezen);
+		const effMap = mapVan(bericht.id, bericht.map);
+		const MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+		const d = new Date(bericht.datum);
+		const datumNL = d.getDate() + ' ' + MAANDEN[d.getMonth()] + ' ' + d.getFullYear();
+
+		const li = document.createElement('li');
+		li.className = 'berichtenbox-rij' + (ongelezen ? ' is-ongelezen' : '');
+		li.dataset.berichtId = bericht.id;
+		li.dataset.afzenderId = bericht.magazijnId;
+		if (effMap) li.dataset.map = effMap;
+
+		const link = document.createElement('a');
+		link.href = '/moza/berichtenbox/bericht/' + bericht.id + '/';
+
+		if (ongelezen) {
+			const vh = document.createElement('span');
+			vh.className = 'visually-hidden';
+			vh.textContent = 'Ongelezen. ';
+			link.appendChild(vh);
+		}
+
+		const spanAfz = document.createElement('span');
+		spanAfz.className = 'berichtenbox-rij-afzender';
+		spanAfz.textContent = bericht.afzender;
+		link.appendChild(spanAfz);
+
+		const spanOnd = document.createElement('span');
+		spanOnd.className = 'berichtenbox-rij-onderwerp';
+		spanOnd.textContent = bericht.onderwerp;
+		link.appendChild(spanOnd);
+
+		const spanDat = document.createElement('span');
+		spanDat.className = 'berichtenbox-rij-datum';
+		spanDat.textContent = datumNL;
+		link.appendChild(spanDat);
+
+		if (bericht.heeftBijlage) {
+			const spanBij = document.createElement('span');
+			spanBij.className = 'berichtenbox-rij-bijlage';
+			spanBij.setAttribute('aria-label', 'heeft bijlage');
+			spanBij.textContent = '📎';
+			link.appendChild(spanBij);
+		}
+
+		if (effMap) {
+			const spanMap = document.createElement('span');
+			spanMap.className = 'berichtenbox-rij-maplabel';
+			spanMap.dataset.maplabel = '';
+			spanMap.textContent = effMap;
+			link.appendChild(spanMap);
+		}
+
+		li.appendChild(link);
+		return li;
+	}
+
+	function renderLijstVoorView(view) {
+		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const leeg = document.querySelector('[data-berichtenbox-leeg]');
+		if (!lijst) return;
+		const data = window.berichtenboxData;
+		let items = [];
+		if (view === 'archief') {
+			items = data.berichten.filter((b) => state.gearchiveerd[b.id]);
+		} else if (view === 'prullenbak') {
+			items = data.berichten.filter((b) => state.verwijderd[b.id]);
+		}
+		if (view === 'archief' || view === 'prullenbak') {
+			// Leeg eerst, dan rijen toevoegen
+			while (lijst.firstChild) lijst.removeChild(lijst.firstChild);
+			items.forEach((b) => lijst.appendChild(createRij(b)));
+			if (leeg) leeg.hidden = items.length > 0;
+		}
+	}
+
+	function bindInboxFilters() {
+		if (huidigeView() !== 'inbox') return;
+		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		if (!lijst) return;
+
+		const zoekInput = document.querySelector('[data-berichtenbox-zoek]');
+		const afzenderPaneel = document.querySelector('[data-berichtenbox-afzender-paneel]');
+
+		// Vul afzender-filterpaneel met unieke afzenders uit data (als DOM-elementen)
+		if (afzenderPaneel) {
+			while (afzenderPaneel.firstChild) afzenderPaneel.removeChild(afzenderPaneel.firstChild);
+			const data = window.berichtenboxData;
+			const uniek = new Map();
+			data.berichten.forEach((b) => uniek.set(b.magazijnId, b.afzender));
+			[...uniek.entries()]
+				.sort((a, b) => a[1].localeCompare(b[1]))
+				.forEach(([id, naam]) => {
+					const label = document.createElement('label');
+					const cb = document.createElement('input');
+					cb.type = 'checkbox';
+					cb.value = id;
+					cb.dataset.afzenderCheck = '';
+					label.appendChild(cb);
+					label.appendChild(document.createTextNode(' ' + naam));
+					afzenderPaneel.appendChild(label);
+				});
+		}
+
+		function mapUitUrl() {
+			const params = new URLSearchParams(location.search);
+			return params.get('map');
+		}
+
+		function pasFilterToe() {
+			const zoek = (zoekInput ? zoekInput.value : '').trim().toLowerCase();
+			const gekozenAfzenders = new Set(
+				[...document.querySelectorAll('[data-afzender-check]:checked')].map((c) => c.value)
+			);
+			const mapFilter = mapUitUrl();
+			let zichtbaar = 0;
+			document.querySelectorAll('.berichtenbox-rij').forEach((rij) => {
+				if (statusVan(rij.dataset.berichtId) !== 'inbox') {
+					rij.hidden = true;
+					return;
+				}
+				let match = true;
+				if (zoek) {
+					const afzEl = rij.querySelector('.berichtenbox-rij-afzender');
+					const ondEl = rij.querySelector('.berichtenbox-rij-onderwerp');
+					const tekst = ((afzEl ? afzEl.textContent : '') + ' ' + (ondEl ? ondEl.textContent : '')).toLowerCase();
+					if (!tekst.includes(zoek)) match = false;
+				}
+				if (gekozenAfzenders.size > 0) {
+					if (!gekozenAfzenders.has(rij.dataset.afzenderId)) match = false;
+				}
+				if (mapFilter) {
+					const dataMap = rij.dataset.map;
+					const overrideMap = state.mapOverride[rij.dataset.berichtId];
+					const effectieveMap = (rij.dataset.berichtId in state.mapOverride) ? overrideMap : dataMap;
+					if (effectieveMap !== mapFilter) match = false;
+				}
+				rij.hidden = !match;
+				if (match) zichtbaar++;
+			});
+			const leeg = document.querySelector('[data-berichtenbox-leeg]');
+			if (leeg) leeg.hidden = zichtbaar > 0;
+		}
+
+		if (zoekInput) zoekInput.addEventListener('input', pasFilterToe);
+		if (afzenderPaneel) afzenderPaneel.addEventListener('change', pasFilterToe);
+
+		// Als er een map-filter actief is, toon dat visueel in de kop
+		const mapFilter = mapUitUrl();
+		if (mapFilter) {
+			const data = window.berichtenboxData;
+			const mapObj = [...data.mappen, ...state.eigenMappen].find((m) => m.slug === mapFilter);
+			if (mapObj) {
+				const kop = document.querySelector('.berichtenbox h1');
+				if (kop) kop.textContent = 'Berichtenbox — ' + mapObj.naam;
+			}
+		}
+		pasFilterToe();
+	}
+
 	function bindDetailPaginaActies() {
 		const content = document.querySelector('[data-bericht-id]');
 		if (!content || !content.matches('.berichtenbox-content')) return;
@@ -308,8 +486,10 @@
 
 	// Initialisatie
 	pasStateToeOpRijen();
+	renderLijstVoorView(huidigeView());
 	render(huidigeView());
 	bindDetailPaginaActies();
+	bindInboxFilters();
 
 	// Exporteer voor latere taken via een global namespace
 	window.Berichtenbox = {
