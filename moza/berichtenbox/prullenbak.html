@@ -1,0 +1,35 @@
+---
+title: "MijnOverheid Zakelijk: Berichtenbox — Prullenbak"
+---
+
+{% include "side-nav-overheid.njk" %}
+
+<article class="berichtenbox">
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li><a href="{{ '/moza/berichtenbox/' | url }}">Berichtenbox</a></li>
+			<li aria-current="page">Prullenbak</li>
+		</ol>
+	</nav>
+
+	<h1>Prullenbak</h1>
+
+	<div class="berichtenbox-layout">
+		{% include "berichtenbox-side-nav.njk" %}
+
+		<section class="berichtenbox-content">
+			<p class="berichtenbox-teller">
+				<span data-berichtenbox-teller-totaal>0</span> verwijderde berichten
+			</p>
+			<ul class="berichtenbox-lijst" data-berichtenbox-lijst data-berichtenbox-view="prullenbak">
+				{# Wordt gevuld door JS op basis van localStorage #}
+			</ul>
+			<div class="berichtenbox-leeg" data-berichtenbox-leeg>
+				Uw prullenbak is leeg.
+			</div>
+		</section>
+	</div>
+
+	{% include "berichtenbox-footer-link.njk" ignore missing %}
+</article>
