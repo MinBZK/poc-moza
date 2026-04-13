@@ -612,23 +612,23 @@
 		if (totaalEl) totaalEl.textContent = totaalBronnen;
 
 		// Simuleer SSE-gedrag: elke bron arriveert op eigen moment. Trekken uit een
-		// heavy-tailed verdeling (x^3) zodat de meeste bronnen snel antwoorden, maar
-		// een trage staart tot het einde doortikt. Berichten komen mee met hun bron.
+		// zware-staart-verdeling (x^4) zodat de meeste bronnen snel antwoorden maar
+		// de trage magazijnen tot laat in de rit nog binnendruppelen.
 		const bronTijden = [];
 		for (let i = 0; i < totaalBronnen; i++) {
 			const r = Math.random();
-			bronTijden.push(Math.pow(r, 3));
+			bronTijden.push(Math.pow(r, 4));
 		}
 		bronTijden.sort((a, b) => a - b);
 
 		const berichtTijden = [];
 		for (let i = 0; i < totaalBerichten; i++) {
 			const r = Math.random();
-			berichtTijden.push(Math.pow(r, 3));
+			berichtTijden.push(Math.pow(r, 4));
 		}
 		berichtTijden.sort((a, b) => a - b);
 
-		const duur = 3500;
+		const duur = 7000;
 		const start = performance.now();
 
 		function aantalVoor(tijden, t) {
