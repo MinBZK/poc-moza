@@ -651,6 +651,15 @@
 		}
 	}
 
+	// Demo-reset
+	document.querySelectorAll('[data-berichtenbox-reset]').forEach((link) => {
+		link.addEventListener('click', (e) => {
+			e.preventDefault();
+			localStorage.removeItem(LS_KEY);
+			location.href = '/moza/berichtenbox/';
+		});
+	});
+
 	// Initialisatie
 	pasStateToeOpRijen();
 	renderLijstVoorView(huidigeView());
