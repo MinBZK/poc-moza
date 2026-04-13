@@ -1,5 +1,13 @@
 {% set box = berichtenboxData %}
 {% set path = page.url %}
+<script>
+	window.berichtenboxData = {
+		berichten: {{ box.berichten | dump | safe }},
+		magazijnen: {{ box.magazijnen | dump | safe }},
+		mappen: {{ box.mappen | dump | safe }},
+		aantalMagazijnen: {{ box.aantalMagazijnen }}
+	};
+</script>
 <nav class="berichtenbox-nav" aria-label="Berichtenbox">
 	<ul>
 		<li>
