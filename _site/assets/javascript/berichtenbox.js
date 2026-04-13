@@ -21,7 +21,10 @@
 	}
 
 	// Eleventy pathPrefix — via window.PATH_PREFIX uit base.njk.
-	const PATH_PREFIX = (typeof window.PATH_PREFIX === 'string' && window.PATH_PREFIX) ? window.PATH_PREFIX : '/';
+	// pathPrefix moet beginnen met '/'; herstel dat als dat niet zo is.
+	let rawPrefix = (typeof window.PATH_PREFIX === 'string' && window.PATH_PREFIX) ? window.PATH_PREFIX : '/';
+	if (!rawPrefix.startsWith('/')) rawPrefix = '/' + rawPrefix;
+	const PATH_PREFIX = rawPrefix;
 	function url(absPath) {
 		if (PATH_PREFIX === '/') return absPath;
 		return PATH_PREFIX.replace(/\/$/, '') + absPath;
@@ -47,7 +50,18 @@
 		try {
 			const raw = localStorage.getItem(LS_KEY);
 			if (!raw) return { ...defaultState };
-			return { ...defaultState, ...JSON.parse(raw) };
+			const parsed = JSON.parse(raw);
+			if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+				throw new Error('state is geen object');
+			}
+			const merged = { ...defaultState, ...parsed };
+			// Normaliseer types zodat writeState/render niet kunnen crashen op corrupte keys.
+			if (!Array.isArray(merged.nieuweBerichten)) merged.nieuweBerichten = [];
+			if (!Array.isArray(merged.eigenMappen)) merged.eigenMappen = [];
+			['gelezen','ongelezenToegevoegd','gearchiveerd','verwijderd','mapOverride'].forEach((k) => {
+				if (!merged[k] || typeof merged[k] !== 'object' || Array.isArray(merged[k])) merged[k] = {};
+			});
+			return merged;
 		} catch (e) {
 			console.warn('[Berichtenbox] State corrupt of niet toegankelijk; terugvallen op default.', e);
 			return { ...defaultState };
@@ -650,6 +664,8 @@
 		if (huidigeView() !== 'inbox') return;
 		// Alleen op pagina 1 — nieuwe berichten landen bovenaan, op pagina 2+ zouden ze onzichtbaar zijn.
 		if (/\/pagina-\d+\/$/.test(location.pathname)) return;
+		// Niet op detail-pagina's (geen inbox-lijst om aan te prepender).
+		if (!document.querySelector('[data-berichtenbox-lijst]')) return;
 		const params = new URLSearchParams(location.search);
 		const pollParam = parseInt(params.get('poll'), 10);
 		let intervalSec = Number.isFinite(pollParam) && pollParam > 0 ? pollParam : 60;
