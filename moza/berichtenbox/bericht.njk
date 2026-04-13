@@ -1,0 +1,59 @@
+---
+pagination:
+  data: berichtenboxData.berichten
+  size: 1
+  alias: bericht
+permalink: "/moza/berichtenbox/bericht/{{ bericht.id }}/"
+eleventyComputed:
+  title: "MijnOverheid Zakelijk: {{ bericht.onderwerp }}"
+---
+
+{% include "side-nav-overheid.njk" %}
+
+<article class="berichtenbox">
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li><a href="{{ '/moza/berichtenbox/' | url }}">Berichtenbox</a></li>
+			<li aria-current="page">{{ bericht.onderwerp }}</li>
+		</ol>
+	</nav>
+
+	<div class="berichtenbox-layout">
+		{% include "berichtenbox-side-nav.njk" %}
+
+		<section class="berichtenbox-content" data-bericht-id="{{ bericht.id }}" data-afzender-id="{{ bericht.magazijnId }}" data-afzender-naam="{{ bericht.afzender }}"{% if bericht.heeftBijlage %} data-heeft-bijlage="true"{% endif %}>
+			<h1>{{ bericht.onderwerp }}</h1>
+
+			<p class="berichtenbox-detail-meta">
+				{{ bericht.afzender }} · {{ bericht.datum | datumNL }}
+				{% if bericht.map %}· <span data-maplabel>{{ bericht.map }}</span>{% endif %}
+			</p>
+
+			<div class="berichtenbox-detail-acties">
+				<button type="button" class="button" data-actie="archiveren">Archiveren</button>
+				<button type="button" class="button button-secondary" data-actie="verplaatsen">Verplaatsen naar map…</button>
+				<button type="button" class="link-button" data-actie="markeer-ongelezen">Markeer als ongelezen</button>
+				<button type="button" class="link-button" data-actie="verwijderen">Verwijderen</button>
+			</div>
+
+			<div class="berichtenbox-detail-inhoud">
+				{% for alinea in bericht.inhoud.split('\n\n') %}
+				<p>{{ alinea }}</p>
+				{% endfor %}
+			</div>
+
+			{% if bericht.heeftBijlage %}
+			<section class="berichtenbox-bijlagen" data-berichtenbox-bijlagen>
+				<h2>Bijlagen</h2>
+				<p class="berichtenbox-bijlagen-laden" data-berichtenbox-bijlagen-laden>Bijlagen ophalen bij {{ bericht.afzender }}…</p>
+				<ul class="berichtenbox-bijlagen-lijst" data-berichtenbox-bijlagen-lijst hidden>
+					{# Wordt gevuld door JS na ±1,5s (latere taak) #}
+				</ul>
+			</section>
+			{% endif %}
+		</section>
+	</div>
+
+	{% include "berichtenbox-footer-link.njk" ignore missing %}
+</article>
