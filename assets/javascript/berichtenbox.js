@@ -445,6 +445,22 @@
 			return params.get('map');
 		}
 
+		// Bij actief map-filter: herbouw de lijst volledig uit data (berichten uit die
+		// map kunnen op elke pagineringspagina staan, niet per se op de huidige). Voor
+		// zoek/afzender filteren we de statisch gerenderde rijen op deze pagina.
+		const mapFilterAanvankelijk = mapUitUrl();
+		const paginering = document.querySelector('.berichtenbox-content .pagination');
+		if (mapFilterAanvankelijk) {
+			const berichtenInMap = data.berichten.filter((b) => {
+				if (statusVan(b.id) !== 'inbox') return false;
+				const effMap = (b.id in state.mapOverride) ? state.mapOverride[b.id] : b.map;
+				return effMap === mapFilterAanvankelijk;
+			});
+			while (lijst.firstChild) lijst.removeChild(lijst.firstChild);
+			berichtenInMap.forEach((b) => lijst.appendChild(createRij(b)));
+			if (paginering) paginering.hidden = true;
+		}
+
 		function pasFilterToe() {
 			const zoek = (zoekInput ? zoekInput.value : '').trim().toLowerCase();
 			const gekozenAfzenders = new Set(
