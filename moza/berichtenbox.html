@@ -1,10 +1,15 @@
 ---
 title: "MijnOverheid Zakelijk: Berichtenbox"
+pagination:
+  data: berichtenboxData.berichten
+  size: 25
+  alias: berichtenPagina
+permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagination.pageNumber + 1 }}/{% endif %}"
 ---
 
 {% include "side-nav-overheid.njk" %}
 
-<article>
+<article class="berichtenbox">
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
@@ -14,57 +19,69 @@ title: "MijnOverheid Zakelijk: Berichtenbox"
 
 	<h1>Berichtenbox</h1>
 
-	<section class="card">
-		<h2>Binnenkort beschikbaar <span class="badge">najaar 2026</span></h2>
-		<p>Straks vindt u hier al uw officiële berichten van overheidsorganisaties op één plek. Denk aan kennisgevingen en bevestigingen van de Belastingdienst, KVK, RVO en andere instanties.</p>
-	</section>
+	<div class="berichtenbox-layout">
+		{% include "berichtenbox-side-nav.njk" %}
 
-	<section class="card">
-		<video controls src="https://placeholdervideo.dev/1920x1080" poster="/assets/images/video-placeholder-poster.png">
-			<p>Uw browser ondersteunt geen video.</p>
-		</video>
-	</section>
+		<section class="berichtenbox-content">
+			<p class="berichtenbox-teller">
+				<span data-berichtenbox-teller-totaal>{{ berichtenboxData.berichten | length }}</span> berichten ·
+				<span data-berichtenbox-teller-ongelezen>0</span> ongelezen
+				<span class="berichtenbox-bronnen">opgehaald uit <span data-berichtenbox-bronnen>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</span>
+			</p>
 
-	<section class="card">
-		<h2>Wat kunt u zoal verwachten?</h2>
-		<ul>
-			<li>Bekijk berichten van de Belastingdienst, KVK, RVO en andere organisaties</li>
-			<li>Zie in één oogopslag of er nieuwe berichten voor u klaarstaan</li>
-			<li>Stel e-mailmeldingen in zodat u niks mist</li>
-		</ul>
-	</section>
+			<div class="berichtenbox-filters">
+				<label class="berichtenbox-zoek">
+					<span class="visually-hidden">Zoek in afzender of onderwerp</span>
+					<input type="search" data-berichtenbox-zoek placeholder="Zoek in afzender of onderwerp" />
+				</label>
+				<details class="berichtenbox-filter-afzender">
+					<summary>Afzender</summary>
+					<div class="berichtenbox-filter-afzender-paneel" data-berichtenbox-afzender-paneel>
+						{# Wordt gevuld door JS (latere taak) op basis van afzenders met berichten #}
+					</div>
+				</details>
+			</div>
 
-	<section class="card">
-		<h2>Veelgestelde vragen</h2>
-		<ul class="accordion">
-			<li>
-				<details name="faq">
-					<summary>
-						<h3>Welke berichten ontvang ik in mijn Berichtenbox?</h3>
-					</summary>
-					<p>In uw Berichtenbox ontvangt u officiële berichten van overheidsorganisaties die betrekking hebben op uw onderneming. Denk aan beschikkingen, kennisgevingen, bevestigingen van aanvragen en berichten van de Belastingdienst of de KVK.</p>
-				</details>
-			</li>
-			<li>
-				<details name="faq">
-					<summary>
-						<h3>Kan ik een melding krijgen als er een nieuw bericht binnenkomt?</h3>
-					</summary>
-					<p>
-						Ja, via uw contactvoorkeuren kunt u instellen dat u per e-mail een notificatie ontvangt wanneer er een nieuw bericht in uw Berichtenbox staat. Ga naar
-						<a href="{{ '/moza/contactvoorkeuren/' | url }}">Contactvoorkeuren</a>
-						om dit in te stellen.
-					</p>
-				</details>
-			</li>
-			<li>
-				<details name="faq">
-					<summary>
-						<h3>Waarom ontvang ik niet van alle overheidsorganisaties berichten?</h3>
-					</summary>
-					<p>Op dit moment verschijnen in uw Berichtenbox alleen berichten van overheidsorganisaties die zijn aangesloten op MijnOverheid Zakelijk. Het aantal aangesloten organisaties wordt stapsgewijs uitgebreid. Berichten van nog niet aangesloten organisaties ontvangt u via de gebruikelijke kanalen, zoals post of e-mail.</p>
-				</details>
-			</li>
-		</ul>
-	</section>
+			<div class="berichtenbox-voortgang" data-berichtenbox-voortgang hidden role="status" aria-live="polite">
+				Berichten ophalen…
+				<span class="berichtenbox-voortgang-telling"><span data-berichtenbox-voortgang-bron>0</span> van <span data-berichtenbox-voortgang-totaal>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</span>
+				<span class="berichtenbox-voortgang-berichten"><span data-berichtenbox-voortgang-gevonden>0</span> berichten gevonden</span>
+				<div class="berichtenbox-voortgang-balk"><div class="berichtenbox-voortgang-balk-vulling" data-berichtenbox-voortgang-balk></div></div>
+			</div>
+
+			<ul class="berichtenbox-lijst" data-berichtenbox-lijst>
+				{% for bericht in berichtenPagina %}
+					{% include "berichtenbox-row.njk" %}
+				{% endfor %}
+			</ul>
+
+			<div class="berichtenbox-leeg" data-berichtenbox-leeg hidden>
+				Er zijn geen berichten die overeenkomen met uw zoekopdracht.
+			</div>
+
+			{% if pagination.pages.length > 1 %}
+			<nav class="pagination" aria-label="Paginering">
+				<ol>
+					{% if pagination.previousPageHref %}
+					<li><a href="{{ pagination.previousPageHref | url }}" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a></li>
+					{% endif %}
+					{% for href in pagination.hrefs %}
+					<li>
+						{% if loop.index0 == pagination.pageNumber %}
+							<span aria-current="page">{{ loop.index }}</span>
+						{% else %}
+							<a href="{{ href | url }}">{{ loop.index }}</a>
+						{% endif %}
+					</li>
+					{% endfor %}
+					{% if pagination.nextPageHref %}
+					<li><a href="{{ pagination.nextPageHref | url }}" rel="next">Volgende<span class="visually-hidden"> pagina</span></a></li>
+					{% endif %}
+				</ol>
+			</nav>
+			{% endif %}
+		</section>
+	</div>
+
+	{% include "berichtenbox-footer-link.njk" ignore missing %}
 </article>

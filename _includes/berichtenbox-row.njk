@@ -1,0 +1,11 @@
+{# Verwacht: bericht (object uit berichtenboxData.berichten) #}
+<li class="berichtenbox-rij{% if bericht.isOngelezen %} is-ongelezen{% endif %}" data-bericht-id="{{ bericht.id }}" data-afzender-id="{{ bericht.magazijnId }}"{% if bericht.map %} data-map="{{ bericht.map }}"{% endif %}>
+	<a href="{{ '/moza/berichtenbox/bericht/' | url }}{{ bericht.id }}/">
+		{% if bericht.isOngelezen %}<span class="visually-hidden">Ongelezen. </span>{% endif %}
+		<span class="berichtenbox-rij-afzender">{{ bericht.afzender }}</span>
+		<span class="berichtenbox-rij-onderwerp">{{ bericht.onderwerp }}</span>
+		<span class="berichtenbox-rij-datum">{{ bericht.datum | datumNL }}</span>
+		{% if bericht.heeftBijlage %}<span class="berichtenbox-rij-bijlage" aria-label="heeft bijlage">📎</span>{% endif %}
+		{% if bericht.map %}<span class="berichtenbox-rij-maplabel" data-maplabel>{{ bericht.map }}</span>{% endif %}
+	</a>
+</li>

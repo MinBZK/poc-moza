@@ -10,6 +10,14 @@ module.exports = function (eleventyConfig) {
         return fs.readFileSync(filePath, 'utf8');
     });
 
+    // Nederlandse datum-notatie: "19 februari 2026"
+    eleventyConfig.addFilter('datumNL', function(datumStr) {
+        if (!datumStr) return '';
+        const MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+        const d = new Date(datumStr);
+        return d.getDate() + ' ' + MAANDEN[d.getMonth()] + ' ' + d.getFullYear();
+    });
+
     // Statische bestanden kopiëren naar _site
     eleventyConfig.addPassthroughCopy("assets");
     eleventyConfig.addPassthroughCopy("style");
