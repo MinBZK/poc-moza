@@ -1,5 +1,9 @@
 {% set box = berichtenboxData %}
 {% set path = page.url %}
+{% set isArchief = '/archief/' in path %}
+{% set isPrullenbak = '/prullenbak/' in path %}
+{# Inbox is current voor alle berichtenbox-pagina's die niet archief/prullenbak zijn (ook detail en paginering). #}
+{% set isInbox = '/moza/berichtenbox' in path and not isArchief and not isPrullenbak %}
 <script>
 	window.berichtenboxData = {
 		berichten: {{ box.berichten | dump | safe }},
@@ -11,19 +15,19 @@
 <nav class="berichtenbox-nav" aria-label="Berichtenbox">
 	<ul>
 		<li>
-			<a href="{{ '/moza/berichtenbox/' | url }}"{% if path == '/moza/berichtenbox/' %} aria-current="page"{% endif %}>
+			<a href="{{ '/moza/berichtenbox/' | url }}"{% if isInbox %} aria-current="page"{% endif %}>
 				Inbox
 				<span class="berichtenbox-nav-count" data-berichtenbox-count="inbox">{{ box.berichten | length }}</span>
 			</a>
 		</li>
 		<li>
-			<a href="{{ '/moza/berichtenbox/archief/' | url }}"{% if path == '/moza/berichtenbox/archief/' %} aria-current="page"{% endif %}>
+			<a href="{{ '/moza/berichtenbox/archief/' | url }}"{% if isArchief %} aria-current="page"{% endif %}>
 				Archief
 				<span class="berichtenbox-nav-count" data-berichtenbox-count="archief">0</span>
 			</a>
 		</li>
 		<li>
-			<a href="{{ '/moza/berichtenbox/prullenbak/' | url }}"{% if path == '/moza/berichtenbox/prullenbak/' %} aria-current="page"{% endif %}>
+			<a href="{{ '/moza/berichtenbox/prullenbak/' | url }}"{% if isPrullenbak %} aria-current="page"{% endif %}>
 				Prullenbak
 				<span class="berichtenbox-nav-count" data-berichtenbox-count="prullenbak">0</span>
 			</a>
@@ -33,7 +37,7 @@
 	<ul class="berichtenbox-nav-mappen" data-berichtenbox-mappen hidden>
 		{% for map in box.mappen %}
 			<li data-map-slug="{{ map.slug }}">
-				<a href="{{ '/moza/berichtenbox/?map=' | url }}{{ map.slug }}">
+				<a href="{{ '/moza/berichtenbox/' | url }}?map={{ map.slug }}">
 					{{ map.naam }}
 					<span class="berichtenbox-nav-count" data-berichtenbox-count="map:{{ map.slug }}">0</span>
 				</a>

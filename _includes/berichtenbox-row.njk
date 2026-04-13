@@ -5,7 +5,7 @@
 		<span class="berichtenbox-rij-afzender">{{ bericht.afzender }}</span>
 		<span class="berichtenbox-rij-onderwerp">{{ bericht.onderwerp }}</span>
 		<span class="berichtenbox-rij-datum">{{ bericht.datum | datumNL }}</span>
-		{% if bericht.heeftBijlage %}<span class="berichtenbox-rij-bijlage" aria-label="heeft bijlage">📎</span>{% endif %}
+		{% if bericht.heeftBijlage %}<span class="berichtenbox-rij-bijlage" aria-hidden="true">📎</span><span class="visually-hidden">Heeft bijlage. </span>{% endif %}
 		{% if bericht.map %}<span class="berichtenbox-rij-maplabel" data-maplabel>{{ bericht.map }}</span>{% endif %}
 	</a>
 </li>

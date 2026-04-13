@@ -1,5 +1,9 @@
 // Genereert de dataset voor de FBS Berichtenbox-mock.
-// 400 magazijnen (10 instanties + gemeentes), ~120 berichten, 2 voorgevulde mappen.
+// 400 magazijnen (10 instanties + 390 gemeentes), 120 berichten, 2 voorgevulde mappen.
+// Vaste seed zodat dezelfde dataset ontstaat bij elke build (nodig voor reproduceerbare permalinks).
+
+const AANTAL_BERICHTEN = 120;
+const AANTAL_ONGELEZEN = 12;
 
 const INSTANTIES = [
 	{ id: "belastingdienst", naam: "Belastingdienst" },
@@ -14,7 +18,7 @@ const INSTANTIES = [
 	{ id: "kadaster", naam: "Kadaster" },
 ];
 
-// Nederlandse gemeentes (selectie van ~390 — echte namen)
+// Echte Nederlandse gemeentenamen; aangevuld tot 390 hieronder met fictieve varianten.
 const GEMEENTES = [
 	"Amsterdam", "Rotterdam", "'s-Gravenhage", "Utrecht", "Eindhoven", "Groningen",
 	"Tilburg", "Almere", "Breda", "Nijmegen", "Enschede", "Apeldoorn", "Haarlem",
@@ -47,9 +51,8 @@ const GEMEENTES = [
 	"Nissewaard", "Gooise Meren", "Krimpenerwaard", "De Fryske Marren", "De Wolden",
 	"Dantumadiel", "Eemsdelta", "Meierijstad",
 ];
-// Vul verder aan met fictieve varianten om op ~390 te komen.
 while (GEMEENTES.length < 390) {
-	GEMEENTES.push(`Gemeente ${GEMEENTES.length + 1}`);
+	GEMEENTES.push(`Fictief ${GEMEENTES.length + 1}`);
 }
 
 function slugify(naam) {
@@ -78,7 +81,6 @@ const mappen = [
 ];
 
 // ---- Berichten ----
-// Deterministic pseudo-random zodat de build reproduceerbaar is.
 let seed = 42;
 function rnd() {
 	seed = (seed * 9301 + 49297) % 233280;
@@ -142,25 +144,28 @@ function inhoudVoor(mag, onderwerp) {
 	].join("\n\n");
 }
 
-// Kies ~25 magazijnen die berichten leveren (mix instanties + gemeentes).
+// 25 leverende magazijnen: alle instanties + de 15 grootste gemeentes.
 const leverendeMagazijnen = [
 	...magazijnen.filter((m) => m.type === "instantie"),
 	...magazijnen.filter((m) => m.type === "gemeente").slice(0, 15),
 ];
 
+if (leverendeMagazijnen.length === 0) {
+	throw new Error("Geen leverende magazijnen — berichten kunnen niet worden gegenereerd.");
+}
+
 function datumVoorIndex(i) {
-	// Spreid datums van ~6 maanden terug tot vandaag.
 	const eind = new Date("2026-04-10");
 	const dag = new Date(eind);
-	dag.setDate(eind.getDate() - Math.floor((i / 120) * 180) - Math.floor(rnd() * 4));
+	dag.setDate(eind.getDate() - Math.floor((i / AANTAL_BERICHTEN) * 180) - Math.floor(rnd() * 4));
 	return dag.toISOString().slice(0, 10);
 }
 
 const berichten = [];
-for (let i = 0; i < 120; i++) {
+for (let i = 0; i < AANTAL_BERICHTEN; i++) {
 	const mag = pick(leverendeMagazijnen);
 	const onderwerp = onderwerpVoor(mag);
-	const isOngelezen = i < 12; // de eerste (nieuwste) 12 zijn ongelezen
+	const isOngelezen = i < AANTAL_ONGELEZEN;
 	let map = null;
 	if (mag.id === "belastingdienst" && rnd() < 0.7) map = "belastingen-2025";
 	else if (mag.id === "rvo" && rnd() < 0.6) map = "subsidies";
