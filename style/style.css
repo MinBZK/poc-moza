@@ -1608,7 +1608,7 @@ h4 {
 	margin-block: 0;
 }
 .berichtenbox-nav li {
-	margin-block-end: 0.25rem;
+	margin-block-end: var(--toepassing-space-2xs);
 }
 .berichtenbox-nav a {
 	display: flex;
@@ -1815,8 +1815,8 @@ h4 {
 
 /* Verplaats-naar-map-paneel */
 .berichtenbox-verplaats-paneel {
-	margin-block: 1rem;
-	padding: 1rem;
+	margin-block: var(--toepassing-space-md);
+	padding: var(--toepassing-space-md);
 	border: 1px solid var(--toepassing-color-border-default);
 	border-radius: var(--toepassing-border-radius-md);
 	background: var(--toepassing-color-background-raised);
@@ -1824,5 +1824,5 @@ h4 {
 .berichtenbox-verplaats-paneel ul {
 	list-style: none;
 	padding-inline-start: 0;
-	margin-block: 0.5rem;
+	margin-block: var(--toepassing-space-xs);
 }
