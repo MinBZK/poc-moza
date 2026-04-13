@@ -485,6 +485,44 @@
 				}
 			});
 		});
+
+		laadBijlagen();
+	}
+
+	function laadBijlagen() {
+		const bijlSec = document.querySelector('[data-berichtenbox-bijlagen]');
+		if (!bijlSec) return;
+		const laden = bijlSec.querySelector('[data-berichtenbox-bijlagen-laden]');
+		const lijst = bijlSec.querySelector('[data-berichtenbox-bijlagen-lijst]');
+		if (!laden || !lijst) return;
+
+		setTimeout(() => {
+			const namen = [
+				'Beschikking.pdf',
+				'Bijlage-specificatie.pdf',
+				'Toelichting.pdf',
+				'Overzicht.pdf',
+			];
+			const aantal = 1 + Math.floor(Math.random() * 3);
+			const gekozen = namen.slice(0, aantal);
+
+			// Leeg eerst
+			while (lijst.firstChild) lijst.removeChild(lijst.firstChild);
+
+			// Bouw via DOM-methoden (geen innerHTML)
+			gekozen.forEach((n) => {
+				const li = document.createElement('li');
+				const a = document.createElement('a');
+				a.href = '#';
+				a.textContent = n;
+				a.addEventListener('click', (e) => e.preventDefault());
+				li.appendChild(a);
+				lijst.appendChild(li);
+			});
+
+			laden.hidden = true;
+			lijst.hidden = false;
+		}, 1500);
 	}
 
 	function toonMappenZijbalk() {
