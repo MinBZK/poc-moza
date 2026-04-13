@@ -49,6 +49,8 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 				<div class="berichtenbox-voortgang-balk"><div class="berichtenbox-voortgang-balk-vulling" data-berichtenbox-voortgang-balk></div></div>
 			</div>
 
+			<div class="visually-hidden" data-berichtenbox-live aria-live="polite"></div>
+
 			<ul class="berichtenbox-lijst" data-berichtenbox-lijst>
 				{% for bericht in berichtenPagina %}
 					{% include "berichtenbox-row.njk" %}

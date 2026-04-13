@@ -287,51 +287,54 @@
 	/**
 	 * Bouwt een <li> bericht-rij als DOM-element.
 	 * Retourneert HTMLLIElement (niet string).
+	 * Als bericht.id begint met 'msg-live-', wordt een niet-klikbare <div> gebruikt.
 	 */
 	function createRij(bericht) {
 		const ongelezen = isOngelezen(bericht.id, bericht.isOngelezen);
 		const effMap = mapVan(bericht.id, bericht.map);
+		const dynamisch = bericht.id.startsWith('msg-live-');
 		const MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 		const d = new Date(bericht.datum);
 		const datumNL = d.getDate() + ' ' + MAANDEN[d.getMonth()] + ' ' + d.getFullYear();
 
 		const li = document.createElement('li');
-		li.className = 'berichtenbox-rij' + (ongelezen ? ' is-ongelezen' : '');
+		li.className = 'berichtenbox-rij' + (ongelezen ? ' is-ongelezen' : '') + (dynamisch ? ' is-dynamisch' : '');
 		li.dataset.berichtId = bericht.id;
 		li.dataset.afzenderId = bericht.magazijnId;
 		if (effMap) li.dataset.map = effMap;
 
-		const link = document.createElement('a');
-		link.href = '/moza/berichtenbox/bericht/' + bericht.id + '/';
+		// Inner wrapper: <a> voor klikbaar, <div> voor dynamisch
+		const inner = document.createElement(dynamisch ? 'div' : 'a');
+		if (!dynamisch) inner.href = '/moza/berichtenbox/bericht/' + bericht.id + '/';
 
 		if (ongelezen) {
 			const vh = document.createElement('span');
 			vh.className = 'visually-hidden';
 			vh.textContent = 'Ongelezen. ';
-			link.appendChild(vh);
+			inner.appendChild(vh);
 		}
 
 		const spanAfz = document.createElement('span');
 		spanAfz.className = 'berichtenbox-rij-afzender';
 		spanAfz.textContent = bericht.afzender;
-		link.appendChild(spanAfz);
+		inner.appendChild(spanAfz);
 
 		const spanOnd = document.createElement('span');
 		spanOnd.className = 'berichtenbox-rij-onderwerp';
-		spanOnd.textContent = bericht.onderwerp;
-		link.appendChild(spanOnd);
+		spanOnd.textContent = bericht.onderwerp + (dynamisch ? ' (demo)' : '');
+		inner.appendChild(spanOnd);
 
 		const spanDat = document.createElement('span');
 		spanDat.className = 'berichtenbox-rij-datum';
 		spanDat.textContent = datumNL;
-		link.appendChild(spanDat);
+		inner.appendChild(spanDat);
 
 		if (bericht.heeftBijlage) {
 			const spanBij = document.createElement('span');
 			spanBij.className = 'berichtenbox-rij-bijlage';
 			spanBij.setAttribute('aria-label', 'heeft bijlage');
 			spanBij.textContent = '📎';
-			link.appendChild(spanBij);
+			inner.appendChild(spanBij);
 		}
 
 		if (effMap) {
@@ -339,10 +342,10 @@
 			spanMap.className = 'berichtenbox-rij-maplabel';
 			spanMap.dataset.maplabel = '';
 			spanMap.textContent = effMap;
-			link.appendChild(spanMap);
+			inner.appendChild(spanMap);
 		}
 
-		li.appendChild(link);
+		li.appendChild(inner);
 		return li;
 	}
 
@@ -536,6 +539,80 @@
 		requestAnimationFrame(stap);
 	}
 
+	let nieuwBerichtTeller = 0;
+
+	function voegNieuwBerichtToe() {
+		if (huidigeView() !== 'inbox') return;
+		const data = window.berichtenboxData;
+		nieuwBerichtTeller++;
+		const mag = data.magazijnen[Math.floor(Math.random() * data.magazijnen.length)];
+		const nu = new Date().toISOString().slice(0, 10);
+		const id = 'msg-live-' + Date.now() + '-' + nieuwBerichtTeller;
+		const onderwerpen = [
+			'Nieuw bericht ontvangen',
+			'Bevestiging ontvangst',
+			'Bericht beschikbaar',
+			'Actie mogelijk vereist',
+		];
+		const bericht = {
+			id,
+			magazijnId: mag.id,
+			afzender: mag.naam,
+			onderwerp: onderwerpen[Math.floor(Math.random() * onderwerpen.length)],
+			inhoud: 'Dit is een automatisch toegevoegd demo-bericht van ' + mag.naam + '. In productie zou dit een echt bericht uit het magazijn zijn.',
+			datum: nu,
+			isOngelezen: true,
+			map: null,
+			heeftBijlage: Math.random() < 0.3,
+		};
+		state.nieuweBerichten.push(bericht);
+		opslaan();
+
+		// Voeg ook toe aan window-data zodat render/filter het meenemen
+		data.berichten.unshift(bericht);
+
+		// Render nieuw rij bovenaan
+		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		if (lijst) {
+			const li = createRij(bericht);
+			li.classList.add('is-nieuw-binnen');
+			lijst.prepend(li);
+		}
+		render('inbox');
+
+		// Announceer voor screenreaders
+		const live = document.querySelector('[data-berichtenbox-live]');
+		if (live) live.textContent = 'Nieuw bericht van ' + bericht.afzender + ': ' + bericht.onderwerp;
+	}
+
+	function startPolling() {
+		if (huidigeView() !== 'inbox') return;
+		// Alleen op de eerste inbox-pagina — nieuwe berichten landen bovenaan daar
+		if (/\/pagina-\d+\/$/.test(location.pathname)) return;
+		const params = new URLSearchParams(location.search);
+		const pollParam = parseInt(params.get('poll'), 10);
+		const intervalSec = Number.isFinite(pollParam) && pollParam > 0 ? pollParam : 60;
+		setInterval(voegNieuwBerichtToe, intervalSec * 1000);
+	}
+
+	// Herstel eerder gepolde berichten (na reload): voeg ze aan data toe
+	if (state.nieuweBerichten.length > 0) {
+		const data = window.berichtenboxData;
+		state.nieuweBerichten.forEach((b) => {
+			if (!data.berichten.some((x) => x.id === b.id)) {
+				data.berichten.unshift(b);
+			}
+		});
+		// De statisch gegenereerde HTML bevat deze niet — voeg dynamisch toe
+		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		if (lijst && huidigeView() === 'inbox' && !(/\/pagina-\d+\/$/.test(location.pathname))) {
+			state.nieuweBerichten.forEach((b) => {
+				if (lijst.querySelector('[data-bericht-id="' + b.id + '"]')) return;
+				lijst.prepend(createRij(b));
+			});
+		}
+	}
+
 	// Initialisatie
 	pasStateToeOpRijen();
 	renderLijstVoorView(huidigeView());
@@ -550,10 +627,12 @@
 			opslaan();
 			toonMappenZijbalk();
 			bindInboxFilters();
+			startPolling();
 		});
 	} else {
 		toonMappenZijbalk();
 		bindInboxFilters();
+		startPolling();
 	}
 
 	// Exporteer voor latere taken via een global namespace
