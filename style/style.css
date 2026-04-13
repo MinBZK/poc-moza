@@ -1812,3 +1812,17 @@ h4 {
 	color: var(--toepassing-color-text-subtle-1);
 	text-align: center;
 }
+
+/* Verplaats-naar-map-paneel */
+.berichtenbox-verplaats-paneel {
+	margin-block: 1rem;
+	padding: 1rem;
+	border: 1px solid var(--toepassing-color-border-default);
+	border-radius: var(--toepassing-border-radius-md);
+	background: var(--toepassing-color-background-raised);
+}
+.berichtenbox-verplaats-paneel ul {
+	list-style: none;
+	padding-inline-start: 0;
+	margin-block: 0.5rem;
+}
