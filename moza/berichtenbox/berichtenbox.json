@@ -1,0 +1,6 @@
+{
+	"layout": "base.njk",
+	"bodyClass": "moza",
+	"headerType": "overheid",
+	"footerType": "overheid"
+}
