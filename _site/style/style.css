@@ -1751,17 +1751,6 @@ h4 {
 .berichtenbox-rij.is-ongelezen .berichtenbox-rij-onderwerp {
 	font-weight: var(--toepassing-text-font-weight-bold);
 }
-.berichtenbox-rij.is-ongelezen::before {
-	content: "";
-	display: inline-block;
-	inline-size: 0.5rem;
-	block-size: 0.5rem;
-	background: var(--toepassing-color-accent-default);
-	border-radius: 50%;
-	position: relative;
-	inset-inline-start: 0.25rem;
-	inset-block-start: 1rem;
-}
 
 /* Nieuwe-binnenkomer animatie */
 @media (prefers-reduced-motion: no-preference) {

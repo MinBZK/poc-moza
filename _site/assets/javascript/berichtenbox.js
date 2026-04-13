@@ -587,8 +587,7 @@
 		wrap.hidden = false;
 
 		const totaalBronnen = data.aantalMagazijnen;
-		const duur = 3000;
-		const start = performance.now();
+		const totaalBerichten = data.berichten.filter((b) => statusVan(b.id) === 'inbox').length;
 
 		const bronEl = document.querySelector('[data-berichtenbox-voortgang-bron]');
 		const totaalEl = document.querySelector('[data-berichtenbox-voortgang-totaal]');
@@ -596,14 +595,43 @@
 		const balk = document.querySelector('[data-berichtenbox-voortgang-balk]');
 		if (totaalEl) totaalEl.textContent = totaalBronnen;
 
-		const totaalBerichten = data.berichten.filter((b) => statusVan(b.id) === 'inbox').length;
+		// Simuleer SSE-gedrag: elke bron arriveert op eigen moment. Trekken uit een
+		// heavy-tailed verdeling (x^3) zodat de meeste bronnen snel antwoorden, maar
+		// een trage staart tot het einde doortikt. Berichten komen mee met hun bron.
+		const bronTijden = [];
+		for (let i = 0; i < totaalBronnen; i++) {
+			const r = Math.random();
+			bronTijden.push(Math.pow(r, 3));
+		}
+		bronTijden.sort((a, b) => a - b);
+
+		const berichtTijden = [];
+		for (let i = 0; i < totaalBerichten; i++) {
+			const r = Math.random();
+			berichtTijden.push(Math.pow(r, 3));
+		}
+		berichtTijden.sort((a, b) => a - b);
+
+		const duur = 3500;
+		const start = performance.now();
+
+		function aantalVoor(tijden, t) {
+			// Binary-search lookup: hoeveel tijden <= t?
+			let lo = 0, hi = tijden.length;
+			while (lo < hi) {
+				const mid = (lo + hi) >>> 1;
+				if (tijden[mid] <= t) lo = mid + 1; else hi = mid;
+			}
+			return lo;
+		}
 
 		function stap(nu) {
 			const t = Math.min(1, (nu - start) / duur);
-			const eased = 1 - Math.pow(1 - t, 2);
-			if (bronEl) bronEl.textContent = Math.floor(eased * totaalBronnen);
-			if (gevondenEl) gevondenEl.textContent = Math.floor(eased * totaalBerichten);
-			if (balk) balk.style.inlineSize = (eased * 100) + '%';
+			const bronnenBinnen = aantalVoor(bronTijden, t);
+			const berichtenBinnen = aantalVoor(berichtTijden, t);
+			if (bronEl) bronEl.textContent = bronnenBinnen;
+			if (gevondenEl) gevondenEl.textContent = berichtenBinnen;
+			if (balk) balk.style.inlineSize = ((bronnenBinnen / totaalBronnen) * 100) + '%';
 			if (t < 1) {
 				requestAnimationFrame(stap);
 			} else {
