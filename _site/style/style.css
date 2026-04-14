@@ -12,19 +12,22 @@
  * Alle properties gebruiken CSS logical properties (inline/block i.p.v. left/right/top/bottom).
  */
 
+/* Importeer rijkshuisstijl design tokens */
 @import "_rijkshuisstijl.css";
+
+/* Importeer toegepaste design tokens */
 @import "_toepassing.css";
+
+/* CSS reset */
 @import "_reset.css";
 
-/* Lettertype */
-
+/* Rijks Sans webfont */
 @font-face {
 	font-family: "RijksSansVF";
 	font-style: normal;
 	font-weight: 400;
 	src: url("../assets/fonts/RijksSansVF-Regular.ttf") format("truetype");
 }
-
 @font-face {
 	font-family: "RijksSansVF";
 	font-style: italic;
@@ -33,7 +36,6 @@
 }
 
 /* Pagina-layout */
-
 body {
 	color: var(--toepassing-color-text-default);
 	display: flex;
@@ -59,6 +61,7 @@ body {
 header {
 	position: relative;
 	.logo {
+		margin-block-start: 0;
 		text-align: center;
 		img {
 			inline-size: var(--toepassing-size-logo-width);
@@ -137,6 +140,17 @@ footer {
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
 }
 
+.skip-link {
+	margin-block-start: var(--toepassing-space-margin-sm);
+	margin-inline-start: var(--toepassing-space-margin-sm);
+	padding: var(--toepassing-space-component-md) var(--toepassing-space-component-lg);
+	position: absolute;
+	translate: -200% 0%;
+	&:focus-visible {
+		translate: 0 0;
+	}
+}
+
 /* MijnOverheid Zakelijk specifiek */
 
 body.moza {
@@ -184,42 +198,28 @@ hgroup {
 		margin-block-start: var(--toepassing-space-layout-2xs);
 	}
 }
-h1 {
-	font: var(--toepassing-text-heading-h1);
-}
-h2 {
-	font: var(--toepassing-text-heading-h2);
-}
-h3 {
-	font: var(--toepassing-text-heading-h3);
-}
-h4 {
-	font: var(--toepassing-text-heading-h4);
-}
-h5 {
-	font: var(--toepassing-text-heading-h5);
-}
-h6 {
-	font: var(--toepassing-text-heading-h6);
-}
 
-/* Heading-stijlklassen: visueel als een ander niveau, semantisch het juiste element */
-.h1 {
+/* Titels en kopteksten, uitgebreid met heading-stijlklassen: visueel als een ander niveau, semantisch het juiste element */
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
 	font: var(--toepassing-text-heading-h1);
+	-webkit-line-clamp: 2;
+	line-clamp: 2; /* Beperkt titels en kopteksten tot maximaal twee regels tekst */
 }
-.h2 {
+h2, .h2 {
 	font: var(--toepassing-text-heading-h2);
 }
-.h3 {
+h3, .h3 {
 	font: var(--toepassing-text-heading-h3);
 }
-.h4 {
+h4, .h4 {
 	font: var(--toepassing-text-heading-h4);
 }
-.h5 {
+h5, .h5 {
 	font: var(--toepassing-text-heading-h5);
 }
-.h6 {
+h6, .h6 {
 	font: var(--toepassing-text-heading-h6);
 }
 
@@ -1169,6 +1169,10 @@ summary {
 		padding: 0;
 		transition: var(--toepassing-transition-default);
 		vertical-align: middle;
+		&:focus-visible {
+			outline: var(--toepassing-focus-outline);
+			outline-offset: var(--toepassing-focus-outline-offset);
+		}
 		&:hover {
 			color: var(--toepassing-color-feedback-favorite-hover);
 			background-color: var(--toepassing-color-feedback-favorite-hover);
@@ -1263,9 +1267,9 @@ summary {
 		inline-size: var(--toepassing-size-icon-sm);
 		vertical-align: middle;
 	}
-	input:focus-visible + .relevance-icon {
+	&:has(input:focus-visible) {
 		outline: var(--toepassing-focus-outline);
-		outline-offset: 2px;
+		outline-offset: var(--toepassing-focus-outline-offset);
 	}
 }
 .relevance-yes {

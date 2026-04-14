@@ -1,6 +1,7 @@
 {
 	"plugins": ["stylelint-use-logical"],
 	"rules": {
-		"csstools/use-logical": "always"
+		"csstools/use-logical": "always",
+		"no-descending-specificity": nul
 	}
 }
