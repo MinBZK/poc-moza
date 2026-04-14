@@ -6,12 +6,15 @@ Ondersteunt zowel blocking (/chat) als streaming (/chat/stream) responses.
 
 import json
 import logging
+import os
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from config import VLAM_HOST, VLAM_PORT
@@ -167,6 +170,15 @@ async def health():
         "status": "actief",
         **host.get_status(),
     }
+
+
+_default_static = Path(__file__).resolve().parent.parent.parent / "_site"
+_static_dir = Path(os.getenv("STATIC_DIR") or _default_static)
+if _static_dir.is_dir():
+    app.mount("/", StaticFiles(directory=_static_dir, html=True), name="site")
+    logging.getLogger("vlam.api").info("Statische site gemount vanuit %s", _static_dir)
+else:
+    logging.getLogger("vlam.api").warning("Geen statische site gevonden op %s", _static_dir)
 
 
 if __name__ == "__main__":

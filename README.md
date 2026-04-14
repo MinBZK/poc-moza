@@ -111,6 +111,38 @@ Bij het gebruik van `npm run dev` worden design tokens automatisch opnieuw gebou
 
 ---
 
+## Digitale Assistent (backend)
+
+De [Digitale Assistent](services/README.md) draait op een Python-host (FastAPI) die twee LLM-backends (VLAM en Claude) combineert met overheidsbronnen via MCP of CLI.
+
+### Lokaal draaien met `uv`
+
+Bouw eerst de statische site (`npx @11ty/eleventy`), start dan de host — deze serveert zowel de API als de statische site op dezelfde poort:
+
+``` bash
+cd services/host
+uv run --with-requirements requirements.txt \
+  uvicorn api:app --host 0.0.0.0 --port 8090
+```
+
+De Digitale Assistent is dan bereikbaar op [`localhost:8090/moza/digitale-assistent/`](http://localhost:8090/moza/digitale-assistent/).
+
+API-sleutels kunnen op twee manieren worden gezet:
+
+- via `services/host/.env` (zie `services/host/.env.example`)
+- via het feature-flags paneel rechtsonder in de site — deze worden per request als header meegestuurd en overrulen de `.env`
+
+### Containerisatie
+
+De `container/Containerfile` bouwt een single-image deployment: een Node-builder genereert de Eleventy-site, een Python-release-image installeert de host-dependencies en serveert alles via `uvicorn` op poort 8080. Dezelfde image wordt gebruikt voor preview- en productiedeploys (ZAD).
+
+``` bash
+docker build -f container/Containerfile -t moza .
+docker run --rm -p 8080:8080 --env-file services/host/.env moza
+```
+
+---
+
 ## Storybook
 
 [Storybook](https://storybook.js.org/) is de omgeving om afzonderlijke componenten te bekijken, testen en documenteren.
@@ -172,7 +204,12 @@ npm install
     📁 fonts                Rijkslettertype webfonts
     📁 icons                iconen
     📁 images               afbeeldingen
+📂 container                Containerfile voor de gebundelde deployment (site + host)
 📂 moza                     prototype voor MijnOverheid Zakelijk, gebaseerd op deze omgeving
+📂 services                 Digitale Assistent — FastAPI-host, MCP-servers en CLI-tools
+    📁 host                 FastAPI-host die statische site én chat-API serveert
+    📁 mcp                  MCP-servers (kvk, koop, regelrecht, rvo)
+    📁 cli                  Bash-CLI's als alternatief transport
 📂 stories                  ‘stories’ om componenten weer te geven in Storybook
 📂 style
     📄 _reset.css           cross-browser stijl normalisatie
