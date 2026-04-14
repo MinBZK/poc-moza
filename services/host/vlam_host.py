@@ -46,11 +46,39 @@ def _tool_label(tool_key: str) -> str:
     return TOOL_LABELS.get(tool_key, tool_key)
 
 
+def _extract_lopende_zaak(tool_name: str, result: str) -> dict | None:
+    """Extraheer lopende_zaak uit een rvo__indienen resultaat."""
+    if tool_name != "rvo__indienen":
+        return None
+    try:
+        parsed = json.loads(result)
+        data = parsed.get("data", parsed)
+        return data.get("lopende_zaak")
+    except (json.JSONDecodeError, AttributeError):
+        return None
+
+
+def _log_tokens(backend: str, response) -> None:
+    """Log token-gebruik uit een LLM-response (Anthropic of OpenAI)."""
+    usage = getattr(response, "usage", None)
+    if not usage:
+        return
+    # Anthropic: input_tokens / output_tokens
+    # OpenAI:    prompt_tokens / completion_tokens
+    input_t = getattr(usage, "input_tokens", None) or getattr(usage, "prompt_tokens", None) or 0
+    output_t = getattr(usage, "output_tokens", None) or getattr(usage, "completion_tokens", None) or 0
+    total = input_t + output_t
+    logger.info(
+        "TOKENS [%s] input=%d output=%d total=%d",
+        backend, input_t, output_t, total,
+    )
+
+
 # Tool-definities voor CLI-modus (onafhankelijk van MCP-registry)
 CLI_TOOL_DEFINITIONS_ANTHROPIC = [
     {
         "name": "kvk__mijn_bedrijf",
-        "description": "Haal het KvK-basisprofiel op van het bedrijf van de ingelogde gebruiker. Geeft bedrijfsnaam, KvK-nummer, rechtsvorm, SBI-activiteiten, vestigingsadres en aantal medewerkers.",
+        "description": "Haal het KvK-basisprofiel op van het bedrijf van de ingelogde gebruiker. Geeft bedrijfsnaam, KvK-nummer, rechtsvorm, SBI-activiteiten, vestigingsadres en aantal medewerkers. Het profiel wordt automatisch verrijkt met BAG-gegevens (gebruiksdoel pand en is_woonfunctie) via het Kadaster.",
         "input_schema": {"type": "object", "properties": {}, "required": []},
     },
     {
@@ -325,6 +353,7 @@ class VLAMHost:
                     self.claude_client.messages.create(**api_kwargs),
                     timeout=CLAUDE_TIMEOUT,
                 )
+                _log_tokens("claude", response)
             except (TimeoutError, anthropic.APIStatusError) as e:
                 logger.error("Claude-call mislukt: %s", e)
                 yield {
@@ -355,6 +384,11 @@ class VLAMHost:
                 }
 
             tool_results = await self._execute_tools(tool_uses)
+            # Emit lopende zaak als case-event bij succesvolle indiening
+            for tu, tr in zip(tool_uses, tool_results):
+                zaak = _extract_lopende_zaak(tu.name, tr.get("content", ""))
+                if zaak:
+                    yield {"type": "case", "data": zaak}
             messages.append({"role": "user", "content": tool_results})
             yield {"type": "status", "message": "Antwoord opstellen..."}
 
@@ -390,6 +424,7 @@ class VLAMHost:
                     self.vlam_client.chat.completions.create(**api_kwargs),
                     timeout=VLAM_TIMEOUT,
                 )
+                _log_tokens("vlam", response)
             except (TimeoutError, openai.APIStatusError) as e:
                 logger.warning("VLAM-call mislukt (%s), retry zonder tools", e)
                 yield {
@@ -428,6 +463,10 @@ class VLAMHost:
                 except Exception as e:
                     result = f"Fout bij tool '{tool_key}': {e}"
                     logger.error(result)
+
+                zaak = _extract_lopende_zaak(tool_key, result)
+                if zaak:
+                    yield {"type": "case", "data": zaak}
 
                 openai_messages.append(
                     {"role": "tool", "tool_call_id": tc.id, "content": result}
@@ -487,6 +526,7 @@ REGELS:
             ),
             timeout=VLAM_TIMEOUT,
         )
+        _log_tokens("vlam", response)
         return response.choices[0].message.content or ""
 
     @staticmethod
@@ -587,6 +627,10 @@ REGELS:
                 result = f"Fout bij tool '{tool_key}': {e}"
                 logger.error(result)
 
+            zaak = _extract_lopende_zaak(tool_key, result)
+            if zaak:
+                yield {"type": "case", "data": zaak}
+
             # Voeg VLAM's plan en het tool-resultaat toe aan de conversatie
             openai_messages.append({"role": "assistant", "content": vlam_response})
             openai_messages.append(
@@ -642,6 +686,7 @@ REGELS:
                     self.claude_client.messages.create(**api_kwargs),
                     timeout=CLAUDE_TIMEOUT,
                 )
+                _log_tokens("claude", response)
             except (TimeoutError, anthropic.APIStatusError) as e:
                 logger.error("Claude-call (CLI-modus) mislukt: %s", e)
                 yield {
@@ -678,6 +723,10 @@ REGELS:
                 except Exception as e:
                     result = f"Fout bij CLI tool '{tu.name}': {e}"
                     logger.error(result)
+
+                zaak = _extract_lopende_zaak(tu.name, result)
+                if zaak:
+                    yield {"type": "case", "data": zaak}
 
                 tool_results.append(
                     {
@@ -767,6 +816,10 @@ REGELS:
                 result = f"Fout bij CLI tool '{tool_key}': {e}"
                 logger.error(result)
 
+            zaak = _extract_lopende_zaak(tool_key, result)
+            if zaak:
+                yield {"type": "case", "data": zaak}
+
             openai_messages.append({"role": "assistant", "content": vlam_response})
             openai_messages.append(
                 {
@@ -807,6 +860,7 @@ REGELS:
                 ),
                 timeout=VLAM_TIMEOUT,
             )
+            _log_tokens("vlam", response)
             content = response.choices[0].message.content or ""
             disclaimer = (
                 "\n\n*Let op: dit antwoord is gebaseerd op eigen kennis. "
@@ -848,6 +902,7 @@ REGELS:
                     self.claude_client.messages.create(**api_kwargs),
                     timeout=CLAUDE_TIMEOUT,
                 )
+                _log_tokens("claude", response)
             except (TimeoutError, anthropic.APIStatusError) as e:
                 logger.error("Claude-call mislukt: %s", e)
                 return (
@@ -893,6 +948,7 @@ REGELS:
                     self.vlam_client.chat.completions.create(**api_kwargs),
                     timeout=VLAM_TIMEOUT,
                 )
+                _log_tokens("vlam", response)
             except (TimeoutError, openai.APIStatusError) as e:
                 logger.warning("VLAM-call mislukt (%s), retry zonder tools", e)
                 return await self._vlam_no_tools_blocking(messages, system_prompt)
@@ -946,6 +1002,7 @@ REGELS:
                 ),
                 timeout=VLAM_TIMEOUT,
             )
+            _log_tokens("vlam", response)
             content = response.choices[0].message.content or ""
             disclaimer = (
                 "\n\n*Let op: dit antwoord is gebaseerd op eigen kennis. "

@@ -107,6 +107,7 @@ async def chat_stream(body: ChatRequest, request: Request):
     Events:
       event: status  — de assistent is bezig (nadenken, tool aanroepen)
       event: tool    — een specifieke tool wordt aangeroepen
+      event: case    — een lopende zaak is aangemaakt (na indiening)
       event: answer  — het definitieve antwoord
       event: done    — stream is afgelopen
     """

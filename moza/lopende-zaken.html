@@ -14,25 +14,15 @@ title: "MijnOverheid Zakelijk: Lopende zaken"
 
 	<h1>Lopende zaken</h1>
 
-	<section class="card">
-		<h2>Binnenkort beschikbaar <span class="badge">juni 2027</span></h2>
-		<p>Straks vindt u hier een overzicht van al uw aanvragen, vergunningen en meldingen bij de overheid. U ziet direct de status en voortgang per zaak.</p>
-	</section>
+	<!-- Lege staat -->
+	<div id="no-cases">
+		<section class="card">
+			<p>U heeft op dit moment geen lopende zaken. Zodra u een aanvraag, melding of rapportage indient, verschijnt deze hier met de voortgang, een verslag van alle stappen en uw volgende acties.</p>
+		</section>
+	</div>
 
-	<section class="card">
-		<video controls src="https://placeholdervideo.dev/1920x1080" poster="/assets/images/video-placeholder-poster.png">
-			<p>Uw browser ondersteunt geen video.</p>
-		</video>
-	</section>
-
-	<section class="card">
-		<h2>Wat kunt u zoal verwachten?</h2>
-		<ul>
-			<li>Bekijk de status van uw aanvragen, vergunningen en meldingen</li>
-			<li>Zie direct of er actie van u nodig is</li>
-			<li>Volg de voortgang van begin tot eind</li>
-		</ul>
-	</section>
+	<!-- Gevulde staat: account + journal + task list -->
+	<div id="cases-container" hidden></div>
 
 	<section class="card">
 		<h2>Veelgestelde vragen</h2>
@@ -48,19 +38,116 @@ title: "MijnOverheid Zakelijk: Lopende zaken"
 			<li>
 				<details name="faq">
 					<summary>
-						<h3>Hoe lang duurt de behandeling van mijn zaak?</h3>
+						<h3>Wat is het verslag?</h3>
 					</summary>
-					<p>De behandeltijd verschilt per type zaak en per overheidsorganisatie. Bij elke zaak ziet u de verwachte doorlooptijd en de huidige status. Bij overschrijding van de wettelijke termijn ontvangt u hierover automatisch bericht.</p>
+					<p>Het verslag toont alle stappen die zijn doorlopen bij uw zaak: welke bronnen zijn geraadpleegd, welke beslissingen zijn genomen en waarom. Zo kunt u altijd terugzien wat er precies is gebeurd.</p>
 				</details>
 			</li>
 			<li>
 				<details name="faq">
 					<summary>
-						<h3>Kan ik aanvullende documenten toevoegen aan een lopende zaak?</h3>
+						<h3>Hoe lang duurt de behandeling van mijn zaak?</h3>
 					</summary>
-					<p>Dat hangt af van de betreffende organisatie en het type zaak. Als het mogelijk is om documenten na te sturen, vindt u bij de zaak een optie om bestanden toe te voegen. Neem anders contact op met de behandelende organisatie.</p>
+					<p>De behandeltijd verschilt per type zaak en per overheidsorganisatie. Bij elke zaak ziet u de verwachte doorlooptijd en de huidige status. Bij overschrijding van de wettelijke termijn ontvangt u hierover automatisch bericht.</p>
 				</details>
 			</li>
 		</ul>
 	</section>
 </article>
+
+<script>
+(function () {
+	var cases = JSON.parse(localStorage.getItem("lopende-zaken") || "[]");
+	if (cases.length === 0) return;
+
+	document.getElementById("no-cases").hidden = true;
+	var container = document.getElementById("cases-container");
+	container.hidden = false;
+
+	for (var i = 0; i < cases.length; i++) {
+		var zaak = cases[i];
+		renderCase(container, zaak);
+	}
+
+	function formatDate(isoString) {
+		if (!isoString) return "—";
+		var d = new Date(isoString);
+		return d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+	}
+
+	function formatTime(isoString) {
+		if (!isoString) return "";
+		var d = new Date(isoString);
+		return d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+	}
+
+	function esc(text) {
+		var el = document.createElement("span");
+		el.textContent = text || "";
+		return el.innerHTML;
+	}
+
+	function renderCase(parent, zaak) {
+		// --- Account: overzicht ---
+		var accountCard = document.createElement("section");
+		accountCard.className = "card";
+		accountCard.innerHTML =
+			'<h2>' + esc(zaak.zaak_type || "Lopende zaak") + ' <span class="badge">' + esc(zaak.status || "Onbekend") + '</span></h2>' +
+			'<table class="data-overview">' +
+			'<tr><th>Referentienummer</th><td>' + esc(zaak.referentienummer) + '</td></tr>' +
+			'<tr><th>Regeling</th><td>' + esc(zaak.regeling) + '</td></tr>' +
+			'<tr><th>KvK-nummer</th><td>' + esc(zaak.kvk_nummer) + '</td></tr>' +
+			'<tr><th>Ingediend op</th><td>' + formatDate(zaak.ingediend_op) + '</td></tr>' +
+			(zaak.maatregelen && zaak.maatregelen.length > 0
+				? '<tr><th>Maatregelen</th><td>' + zaak.maatregelen.map(esc).join(", ") + '</td></tr>'
+				: '') +
+			'</table>';
+		parent.appendChild(accountCard);
+
+		// --- Task list: volgende stappen ---
+		var taken = zaak.taken || [];
+		if (taken.length > 0) {
+			var taskCard = document.createElement("section");
+			taskCard.className = "card";
+			var taskHtml = '<h2>Volgende stappen</h2><ul class="list-content-links">';
+			for (var t = 0; t < taken.length; t++) {
+				var taak = taken[t];
+				var statusIcon = taak.status === "wachtend"
+					? '<span class="badge">Wachtend</span>'
+					: '<span class="badge">Toekomst</span>';
+				taskHtml +=
+					'<li>' +
+					'<h3>' + esc(taak.beschrijving) + ' ' + statusIcon + '</h3>' +
+					'<p>' + esc(taak.toelichting) + '</p>' +
+					(taak.grondslag ? '<p><small>Grondslag: ' + esc(taak.grondslag) + '</small></p>' : '') +
+					'</li>';
+			}
+			taskHtml += '</ul>';
+			taskCard.innerHTML = taskHtml;
+			parent.appendChild(taskCard);
+		}
+
+		// --- Journal: verslag ---
+		var journal = zaak.journal || [];
+		if (journal.length > 0) {
+			var journalCard = document.createElement("section");
+			journalCard.className = "card";
+			var journalHtml = '<h2>Verslag</h2><ul class="list-content-links">';
+			for (var j = 0; j < journal.length; j++) {
+				var entry = journal[j];
+				journalHtml +=
+					'<li>' +
+					'<h3>' + esc(entry.gebeurtenis) + '</h3>' +
+					'<p>' + formatDate(entry.timestamp) + (formatTime(entry.timestamp) ? ' om ' + formatTime(entry.timestamp) : '') +
+					(entry.actor ? ' — ' + esc(entry.actor) : '') + '</p>' +
+					(entry.toelichting ? '<p>' + esc(entry.toelichting) + '</p>' : '') +
+					(entry.grondslag ? '<p><small>Grondslag: ' + esc(entry.grondslag) + '</small></p>' : '') +
+					'</li>';
+			}
+			journalHtml += '</ul>';
+			journalCard.innerHTML = journalHtml;
+			parent.appendChild(journalCard);
+		}
+	}
+})();
+</script>

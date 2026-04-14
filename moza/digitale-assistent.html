@@ -15,15 +15,19 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	<h1>Digitale Assistent</h1>
 
 	<section class="card chat-container">
-		<div class="chat-header">
-			<p>Stel een vraag over regelgeving, vergunningen, subsidies of uw bedrijfsregistratie.</p>
-		</div>
-
 		<div class="chat-status" id="chat-status" aria-live="polite"></div>
-
 		<div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
 			<div class="chat-message chat-message-assistant">
-				<p>Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?</p>
+				<p>Welkom bij de Digitale Assistent van MijnOverheid Zakelijk.</p>
+				<p>Dit kan ik voor u doen:</p>
+				<ul>
+					<li>Bedrijfsgegevens opzoeken</li>
+					<li>Verplichtingen controleren</li>
+					<li>Regelgeving, subsidies en rapportages opzoeken</li>
+					<li>Rapportages indienen</li>
+				</ul>
+				<p>Hiervoor gebruik ik KvK Handelsregister, KOOP Regelingenbank, RegelRecht en RVO.</p>
+				<p>Waarmee kan ik u helpen?</p>
 			</div>
 		</div>
 
@@ -68,7 +72,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 
 <script>
 (function () {
-	var API_BASE = "http://localhost:8000";
+	var API_BASE = window.location.hostname === "localhost" ? "http://localhost:8000" : "";
 	var form = document.getElementById("chat-form");
 	var input = document.getElementById("chat-input");
 	var messages = document.getElementById("chat-messages");
@@ -77,6 +81,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	var chatHistory = {};
 	var serverStatus = null;
 	var submitting = false;
+	var initialMessages = messages.innerHTML;
 
 	var SERVER_LABELS = {
 		kvk: "KvK Handelsregister",
@@ -238,11 +243,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		if (chatHistory[next]) {
 			messages.innerHTML = chatHistory[next];
 		} else {
-			messages.innerHTML = "";
-			addMessage(
-				"Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?",
-				"assistant"
-			);
+			messages.innerHTML = initialMessages;
 		}
 		messages.scrollTop = messages.scrollHeight;
 		updateStatusDisplay();
@@ -278,6 +279,7 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		setLoading(true);
 
 		var answered = false;
+		var pendingJournal = [];
 
 		try {
 			var response = await fetch(API_BASE + "/chat/stream", {
@@ -327,6 +329,23 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 						showThinking(payload.message);
 					} else if (eventType === "tool") {
 						showThinking(payload.message + "...");
+						// Verzamel tool-aanroepen als journal entries
+						pendingJournal.push({
+							timestamp: new Date().toISOString(),
+							gebeurtenis: payload.message,
+							actor: "Digitale Assistent",
+						});
+					} else if (eventType === "case" && payload.data) {
+						// Voeg verzamelde tool-stappen toe aan het journal
+						var journal = payload.data.journal || [];
+						for (var j = 0; j < pendingJournal.length; j++) {
+							journal.unshift(pendingJournal[j]);
+						}
+						payload.data.journal = journal;
+						// Sla lopende zaak op in localStorage
+						var cases = JSON.parse(localStorage.getItem("lopende-zaken") || "[]");
+						cases.push(payload.data);
+						localStorage.setItem("lopende-zaken", JSON.stringify(cases));
 					} else if (eventType === "answer" && !answered) {
 						answered = true;
 						hideThinking();

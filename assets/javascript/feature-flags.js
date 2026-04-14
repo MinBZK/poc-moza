@@ -183,6 +183,48 @@ function buildTogglePanel() {
 		panel.appendChild(field);
 	});
 
+	// --- Weergave ---
+	const displayHeading = document.createElement("p");
+	displayHeading.className = "feature-flags-group-heading";
+	displayHeading.textContent = "Weergave";
+	panel.appendChild(displayHeading);
+
+	const fullscreenList = document.createElement("ul");
+	const fullscreenLi = document.createElement("li");
+	const fullscreenBtn = document.createElement("button");
+	fullscreenBtn.className = "feature-flags-fullscreen";
+	fullscreenBtn.textContent = "⛶ Volledig scherm";
+
+	function updateFullscreenLabel() {
+		fullscreenBtn.textContent = document.fullscreenElement
+			? "⤓ Volledig scherm verlaten"
+			: "⛶ Volledig scherm";
+	}
+
+	fullscreenBtn.addEventListener("click", () => {
+		if (!document.fullscreenElement) {
+			const el = document.documentElement;
+			if (el.requestFullscreen) {
+				el.requestFullscreen();
+			} else if (el.webkitRequestFullscreen) {
+				el.webkitRequestFullscreen();
+			}
+		} else {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if (document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			}
+		}
+	});
+
+	document.addEventListener("fullscreenchange", updateFullscreenLabel);
+	document.addEventListener("webkitfullscreenchange", updateFullscreenLabel);
+
+	fullscreenLi.appendChild(fullscreenBtn);
+	fullscreenList.appendChild(fullscreenLi);
+	panel.appendChild(fullscreenList);
+
 	const clearBtn = document.createElement("button");
 	clearBtn.className = "feature-flags-clear";
 	clearBtn.textContent = "localStorage wissen";

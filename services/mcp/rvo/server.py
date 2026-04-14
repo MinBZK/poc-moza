@@ -295,11 +295,53 @@ def _indienen(arguments: dict) -> list[TextContent]:
             "regeling": regeling_id,
             "status": "In behandeling",
             "ingediend_op": ingediend_op,
+            "kvk_nummer": kvk_nummer,
+            "maatregelen": maatregelen,
             "melding": (
                 f"Deze indiening is opgenomen als lopende zaak onder "
                 f"referentienummer {referentienummer}. U kunt de voortgang "
                 f"volgen op MijnOverheid Zakelijk onder 'Lopende zaken'."
             ),
+            "journal": [
+                {
+                    "timestamp": ingediend_op,
+                    "gebeurtenis": "Rapportage ingediend",
+                    "toelichting": (
+                        f"Uw energiebesparingsrapportage is ingediend via de "
+                        f"Digitale Assistent van MijnOverheid Zakelijk. "
+                        f"De rapportage bevat {len(maatregelen)} maatregel(en)."
+                    ),
+                    "actor": "Digitale Assistent",
+                    "grondslag": "art. 5.15d Besluit activiteiten leefomgeving",
+                },
+            ],
+            "taken": [
+                {
+                    "beschrijving": "Bevestiging per e-mail ontvangen",
+                    "toelichting": (
+                        "U ontvangt een bevestiging op het e-mailadres dat "
+                        "gekoppeld is aan uw eHerkenning-account."
+                    ),
+                    "status": "wachtend",
+                },
+                {
+                    "beschrijving": "Beoordeling door RVO",
+                    "toelichting": (
+                        "RVO beoordeelt of uw rapportage volledig is en of de "
+                        "genomen maatregelen voldoen aan de erkende maatregelenlijst."
+                    ),
+                    "status": "wachtend",
+                },
+                {
+                    "beschrijving": "Volgende rapportage indienen",
+                    "toelichting": (
+                        "De informatieplicht geldt vierjaarlijks. Uw volgende "
+                        "rapportage is naar verwachting in 2030."
+                    ),
+                    "status": "toekomst",
+                    "grondslag": "art. 5.15d Besluit activiteiten leefomgeving",
+                },
+            ],
         },
     }
     _audit_log("indienen", arguments, output)

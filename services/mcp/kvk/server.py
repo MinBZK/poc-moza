@@ -4,6 +4,11 @@ Haalt bedrijfsgegevens op via de KvK Test API (api.kvk.nl/test/api) en
 beperkt toegang tot het bedrijf van de ingelogde gebruiker (demo: Robin
 Vogel, KvK-nummer 68750110 — Test BV Donald).
 
+Verrijkt het profiel automatisch met BAG-gegevens (gebruiksdoel pand)
+via de PDOK LVBAG API. Hiermee kan de woonfunctie-check automatisch
+worden ingevuld bij de RegelRecht-toets, zonder dat de gebruiker dit
+zelf hoeft op te geven.
+
 In productie wordt het KvK-nummer bepaald door de sessie/authenticatie
 van de ingelogde gebruiker. Voor de poc is dit hardcoded.
 
@@ -18,6 +23,7 @@ import asyncio
 import json
 import logging
 from datetime import UTC, datetime
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
@@ -73,6 +79,102 @@ async def _get_basisprofiel() -> dict:
         None, _kvk_fetch, f"/v1/basisprofielen/{SESSIE_KVK_NUMMER}"
     )
     return _profiel_cache
+
+
+# ---------------------------------------------------------------------------
+# BAG-verrijking via PDOK LVBAG API (openbare data, geen API-key nodig)
+# ---------------------------------------------------------------------------
+
+BAG_API_BASE = "https://api.pdok.nl/lv/bag/individuelebevragingen/v2"
+
+# Fallback BAG-data voor bekende demo-adressen (als PDOK niet bereikbaar is
+# of het adres niet bestaat in de BAG, bv. bij KvK test-adressen)
+_BAG_DEMO_FALLBACK = {
+    "8823SJ-3": {
+        "gebruiksdoelen": ["industriefunctie"],
+        "oppervlakte": 250,
+        "oorspronkelijkBouwjaar": "1985",
+        "nummeraanduidingIdentificatie": "0081200000012345",
+    }
+}
+
+
+def _extract_address(profiel: dict) -> dict | None:
+    """Extraheer het hoofdvestigingsadres uit een KvK-basisprofiel."""
+    embedded = profiel.get("_embedded", {})
+    hoofdvestiging = embedded.get("hoofdvestiging", {})
+    adressen = hoofdvestiging.get("adressen", [])
+    if not adressen:
+        return None
+    for adres in adressen:
+        if adres.get("type") == "bezoekadres":
+            return adres
+    return adressen[0]
+
+
+def _bag_fetch(postcode: str, huisnummer: int, huisletter: str = "") -> dict | None:
+    """Haal BAG-gegevens op via de PDOK LVBAG API (openbaar, geen key nodig)."""
+    params = {"postcode": postcode, "huisnummer": huisnummer}
+    if huisletter:
+        params["huisletter"] = huisletter
+    url = f"{BAG_API_BASE}/adressenuitgebreid?{urlencode(params)}"
+
+    logger.info("BAG API call: %s", url)
+    try:
+        req = Request(url, headers={"Accept": "application/hal+json"})
+        with urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read())
+        adressen = data.get("_embedded", {}).get("adressen", [])
+        if adressen:
+            adres = adressen[0]
+            return {
+                "gebruiksdoelen": adres.get("gebruiksdoelen", []),
+                "oppervlakte": adres.get("oppervlakte"),
+                "oorspronkelijkBouwjaar": adres.get("oorspronkelijkBouwjaar"),
+                "nummeraanduidingIdentificatie": adres.get(
+                    "nummeraanduidingIdentificatie"
+                ),
+            }
+    except Exception as e:
+        logger.warning("BAG API niet bereikbaar: %s — fallback naar demo-data", e)
+
+    # Fallback naar demo-data
+    key = f"{postcode.replace(' ', '')}-{huisnummer}"
+    return _BAG_DEMO_FALLBACK.get(key)
+
+
+async def _enrich_with_bag(profiel: dict) -> dict:
+    """Verrijk een KvK-profiel met BAG-gegevens (gebruiksdoel/woonfunctie)."""
+    adres = _extract_address(profiel)
+    if not adres:
+        return profiel
+
+    postcode = (adres.get("postcode") or "").replace(" ", "")
+    huisnummer = adres.get("huisnummer")
+    huisletter = adres.get("huisletter") or ""
+
+    if not postcode or not huisnummer:
+        return profiel
+
+    loop = asyncio.get_event_loop()
+    bag_data = await loop.run_in_executor(
+        None, _bag_fetch, postcode, int(huisnummer), huisletter
+    )
+
+    if bag_data:
+        profiel = dict(profiel)  # niet de cache muteren
+        profiel["bag"] = bag_data
+        gebruiksdoelen = bag_data.get("gebruiksdoelen", [])
+        profiel["is_woonfunctie"] = (
+            len(gebruiksdoelen) == 1 and gebruiksdoelen[0] == "woonfunctie"
+        )
+        logger.info(
+            "BAG verrijking: gebruiksdoelen=%s, is_woonfunctie=%s",
+            gebruiksdoelen,
+            profiel["is_woonfunctie"],
+        )
+
+    return profiel
 
 
 # ---------------------------------------------------------------------------
@@ -205,7 +307,9 @@ async def list_tools() -> list[Tool]:
                 "Haal de bedrijfsgegevens op van de ingelogde gebruiker. "
                 "Retourneert het KvK-basisprofiel met naam, KvK-nummer, "
                 "rechtsvorm, SBI-activiteiten, vestigingsadres en aantal "
-                "werkzame personen. Geen parameters nodig — de gegevens "
+                "werkzame personen. Het profiel wordt automatisch verrijkt "
+                "met BAG-gegevens (gebruiksdoel pand en is_woonfunctie) "
+                "via het Kadaster. Geen parameters nodig — de gegevens "
                 "zijn gekoppeld aan de huidige sessie."
             ),
             inputSchema={
@@ -244,6 +348,8 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                     ),
                 )
             ]
+        # Verrijk met BAG-gegevens (gebruiksdoel pand / woonfunctie)
+        profiel = await _enrich_with_bag(profiel)
         _audit_log("mijn_bedrijf", {}, profiel)
         return [
             TextContent(

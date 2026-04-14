@@ -1,31 +1,38 @@
-# Digital Assistent MCP-laag
+# Digitale Assistent
 
-De Digitale Assistent met MCP-laag biedt ondernemers hulp met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) delen dezelfde MCP-tools.
+De Digitale Assistent biedt ondernemers hulp met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) raadplegen overheidsbronnen via twee transportmechanismen: MCP en CLI. Beide zijn API-wrappers die dezelfde externe API's aanspreken — het verschil zit in hoe ze worden aangeroepen (zie [PDR-005](decisions/PDR-005-cli-vs-mcp-transport.md)).
 
-Zie [Product Decisions Records](mcp/decisions) voor gemaakte keuzes in de opzet.
--  [PDR-001](decisions/PDR-001-dual-llm-backend.md) de achtergrond bij de dual-backend keuze.
+Zie [Product Decision Records](decisions/) voor gemaakte keuzes in de opzet.
+- [PDR-001](decisions/PDR-001-dual-llm-backend.md) — dual-backend keuze (VLAM + Claude)
+- [PDR-005](decisions/PDR-005-cli-vs-mcp-transport.md) — CLI vs MCP als transport
 
 ## Architectuur
 
 ```
-                     ┌──────────────────────────────────┐
-  moza-portaal ─────▶│  host (poort 8000)                │
-  /chat endpoint     │  VLAM (Mistral) of Claude         │
-                     │  + MCP-tools (indien beschikbaar)  │
-                     └──────┬───────┬───────┬───────┬────┘
+                     ┌──────────────────────────────────────────┐
+  moza-portaal ─────▶│  host (poort 8000)                       │
+  /chat endpoint     │  VLAM (Mistral) of Claude                │
+                     │  + tools via MCP of CLI (instelbaar)      │
+                     └──────┬───────┬───────┬───────┬───────────┘
+                            │       │       │       │
+                   MCP:  server   server  server  server  (Python, persistent)
+                   CLI:  kvk-cli koop-cli rr-cli  rvo-cli (Bash, on-demand)
                             │       │       │       │
                             ▼       ▼       ▼       ▼
-                          kvk    koop   regelrecht  rvo
+                          kvk.nl  koop    regelrecht rvo
+                         (API)   (API)    (API)    (API)
 ```
 
-| Server | MCP-type | Bron |
-|---|---|---|
-| kvk | Resource + Tool | Bedrijfsgegevens ingelogde gebruiker (KvK Test API, sessie-gebonden) |
-| koop | Resource + Tool | KOOP Regelingenbank (productie-API) |
-| regelrecht | Tool (non-muterend) | Beslislogica Informatieplicht (API via poc-machine-law) |
-| rvo | Tool (muterend) | RVO indienings-API (mock) |
+| Bron | MCP-server | CLI-tool | Type | Externe API |
+|---|---|---|---|---|
+| KvK | Resource + Tool | `kvk-cli` | Bedrijfsgegevens (sessie-gebonden) | KvK Test API |
+| KOOP | Resource + Tool | `koop-cli` | Regelingenbank | wetten.overheid.nl |
+| RegelRecht | Tool (non-muterend) | `regelrecht-cli` | Beslislogica verplichtingen | poc-machine-law API |
+| RVO | Tool (muterend) | `rvo-cli` | Subsidies en rapportages | RVO API (mock) |
 
-De host werkt ook zonder MCP-servers, de assistent antwoordt dan op basis van eigen kennis.
+De host werkt ook zonder MCP-servers of CLI-tools; de assistent antwoordt dan op basis van eigen kennis.
+
+> **MCP vs CLI:** MCP-servers draaien als permanente processen en ondersteunen zowel tools als resources. CLI-tools zijn Bash-scripts die on-demand worden aangeroepen en alleen tools ondersteunen (geen resources). Zie [PDR-005](decisions/PDR-005-cli-vs-mcp-transport.md) voor een uitgebreide vergelijking.
 
 > **KvK testomgeving:** De KvK-server haalt bedrijfsgegevens op via de KvK Test API (`api.kvk.nl/test/api/v1/basisprofielen`). Toegang is beperkt tot het bedrijf van de ingelogde gebruiker (demo: Test BV Donald, KvK 68750110). In productie wordt het KvK-nummer bepaald door de sessie-authenticatie.
 
@@ -266,29 +273,36 @@ Zonder VLAM-keys wordt alleen Claude beschikbaar.
 ## Mappenstructuur
 
 ```
-mcp/
+services/
   README.md
   docker-compose.yml
-  decisions/             Product Decision Records
+  decisions/               Product Decision Records (PDR-001 t/m PDR-005)
   host/
-    api.py               FastAPI REST-server
-    vlam_host.py         LLM-orchestrator (VLAM + Claude)
-    mcp_client.py        MCP-server verbindingen
-    config.py            Configuratie
-    prompts/             Modulaire systeemprompts
-      composer.py        Stelt blokken samen tot system prompt
+    api.py                 FastAPI REST-server
+    vlam_host.py           LLM-orchestrator (VLAM + Claude, MCP + CLI)
+    mcp_client.py          MCP-server verbindingen
+    cli_executor.py        CLI tool-aanroepen via subprocess
+    config.py              Configuratie
+    prompts/               Modulaire systeemprompts
+      composer.py          Stelt blokken samen tot system prompt
       blocks/
-        identity/        Per-model identiteit (vlam.md, claude.md)
-        shared/          Gedeelde blokken (tone, format, guardrails, ...)
-          domain/        Domeinkennis per onderwerp
-        model_specific/  Fijnsturing per model
-      examples/          Few-shot voorbeelden
+        identity/          Per-model identiteit (vlam.md, claude.md)
+        shared/            Gedeelde blokken (tone, format, guardrails, ...)
+          domain/          Domeinkennis per onderwerp
+        model_specific/    Fijnsturing per model
+      examples/            Few-shot voorbeelden
     requirements.txt
     Dockerfile
     .env.example
-  servers/
-    kvk/                 MCP Resource + Tool — Bedrijfsgegevens (KvK Test API, sessie-gebonden)
-    koop/                MCP Resource + Tool — Regelingenbank
-    regelrecht/          MCP Tool — beslislogica
-    rvo/                 MCP Tool — indienen rapportage
+  mcp/                     MCP-servers (Python, persistent)
+    kvk/                   Resource + Tool — Bedrijfsgegevens (KvK Test API)
+    koop/                  Resource + Tool — Regelingenbank
+    regelrecht/            Tool — beslislogica
+    rvo/                   Tool — subsidies en rapportages
+  cli/                     CLI-tools (Bash, on-demand)
+    kvk-cli                API-wrapper KvK
+    koop-cli               API-wrapper KOOP
+    regelrecht-cli         API-wrapper RegelRecht
+    rvo-cli                API-wrapper RVO
+    lib/                   Gedeelde modules (output, provenance, audit)
 ```

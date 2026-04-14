@@ -4,11 +4,22 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Pad-basis relatief aan dit bestand
 BASE_DIR = Path(__file__).resolve().parent
 SERVERS_DIR = BASE_DIR.parent / "mcp"
+PROJECT_ROOT = BASE_DIR.parent.parent
+
+# Zoek .env op meerdere plekken (eerste die bestaat wint)
+for _env_path in [
+    BASE_DIR / ".env",          # services/host/.env
+    BASE_DIR.parent / ".env",   # services/.env
+    PROJECT_ROOT / ".env",      # project root .env
+]:
+    if _env_path.is_file():
+        load_dotenv(_env_path)
+        break
+else:
+    load_dotenv()  # fallback: zoek in cwd
 
 # Claude API (Anthropic)
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
