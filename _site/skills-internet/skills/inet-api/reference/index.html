@@ -1,0 +1,422 @@
+<h1>Referentie: Internet.nl Batch API</h1>
+<p>Achtergrondkennis bij de <code>/inet-api</code> skill. Dit document bevat gedetailleerde
+API-schema's, rate limits en foutcodes.</p>
+<h2>API-versie</h2>
+<p>De huidige versie is <strong>v2</strong> van de batch API. De documentatie staat in de
+<a href="https://github.com/internetstandards/Internet.nl-API-docs">Internet.nl-API-docs</a> repository.</p>
+<pre><code class="language-bash"># Actuele API-documentatie ophalen
+gh api repos/internetstandards/Internet.nl-API-docs/contents/README.md \
+  --jq '.content' | base64 -d
+
+# Alle bestanden in de docs-repo
+gh api repos/internetstandards/Internet.nl-API-docs/git/trees/main?recursive=1 \
+  --jq '.tree[] | select(.type==&quot;blob&quot;) | .path'
+</code></pre>
+<h2>Authenticatie</h2>
+<p>De API gebruikt HTTP Basic Authentication.</p>
+<pre><code>Authorization: Basic base64(gebruikersnaam:wachtwoord)
+</code></pre>
+<p>Registratie voor API-toegang via <a href="https://internet.nl">internet.nl</a>.</p>
+<h2>Request-formaat</h2>
+<h3>Batch indienen</h3>
+<p><strong>Endpoint:</strong> <code>POST /api/batch/v2/requests</code></p>
+<p><strong>Headers:</strong></p>
+<ul>
+<li><code>Content-Type: application/json</code></li>
+<li><code>Authorization: Basic &lt;credentials&gt;</code></li>
+</ul>
+<p><strong>Body:</strong></p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Beschrijvende naam voor de scan&quot;,
+  &quot;type&quot;: &quot;web&quot;,
+  &quot;domains&quot;: [
+    &quot;domein1.nl&quot;,
+    &quot;domein2.nl&quot;
+  ]
+}
+</code></pre>
+<p><strong>Velden:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Type</th>
+<th>Verplicht</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Nee</td>
+<td>Naam van de batch, max 255 tekens (voor eigen administratie)</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Ja</td>
+<td>Testtype: <code>&quot;web&quot;</code> of <code>&quot;mail&quot;</code></td>
+</tr>
+<tr>
+<td><code>domains</code></td>
+<td>array[string]</td>
+<td>Ja</td>
+<td>Lijst van te testen domeinen</td>
+</tr>
+</tbody>
+</table>
+<h3>Beperkingen</h3>
+<table>
+<thead>
+<tr>
+<th>Beperking</th>
+<th>Waarde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maximaal domeinen per batch</td>
+<td>5.000</td>
+</tr>
+<tr>
+<td>Maximaal batch requests per week</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Verwerking per gebruiker</td>
+<td>Sequentieel (FIFO, 1 actieve batch tegelijk)</td>
+</tr>
+</tbody>
+</table>
+<p>Bron: <a href="https://github.com/internetstandards/Internet.nl-API-docs/blob/main/terms-of-use.md">Terms of Use</a></p>
+<h2>Response-formaat</h2>
+<h3>Batch submit response</h3>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;request_id&quot;: &quot;abcdef1234567890abcdef1234567890&quot;,
+    &quot;request_type&quot;: &quot;web&quot;,
+    &quot;name&quot;: &quot;Beschrijvende naam&quot;,
+    &quot;status&quot;: &quot;registering&quot;,
+    &quot;submission_date&quot;: &quot;2026-02-22T10:00:00Z&quot;,
+    &quot;finished_date&quot;: null,
+    &quot;num_domains&quot;: 3
+  }
+}
+</code></pre>
+<h3>Status response</h3>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;request_id&quot;: &quot;abcdef1234567890abcdef1234567890&quot;,
+    &quot;request_type&quot;: &quot;web&quot;,
+    &quot;name&quot;: &quot;Beschrijvende naam&quot;,
+    &quot;status&quot;: &quot;running&quot;,
+    &quot;submission_date&quot;: &quot;2026-02-22T10:00:00Z&quot;,
+    &quot;finished_date&quot;: null,
+    &quot;num_domains&quot;: 3,
+    &quot;progress&quot;: {
+      &quot;total&quot;: 3,
+      &quot;done&quot;: 1,
+      &quot;percentage&quot;: 33
+    }
+  }
+}
+</code></pre>
+<h3>Resultaten response (webtest)</h3>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;request_id&quot;: &quot;abcdef1234567890abcdef1234567890&quot;,
+    &quot;request_type&quot;: &quot;web&quot;,
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;finished_date&quot;: &quot;2026-02-22T10:30:00Z&quot;,
+    &quot;domains&quot;: {
+      &quot;example.nl&quot;: {
+        &quot;status&quot;: &quot;ok&quot;,
+        &quot;scoring&quot;: {
+          &quot;percentage&quot;: 92
+        },
+        &quot;results&quot;: {
+          &quot;categories&quot;: {
+            &quot;ipv6&quot;: {
+              &quot;verdict&quot;: &quot;passed&quot;,
+              &quot;tests&quot;: {
+                &quot;web_ipv6_ns_address&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_ipv6_ns_reach&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_ipv6_ws_address&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_ipv6_ws_reach&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_ipv6_ws_similar&quot;: {&quot;verdict&quot;: &quot;passed&quot;}
+              }
+            },
+            &quot;dnssec&quot;: {
+              &quot;verdict&quot;: &quot;passed&quot;,
+              &quot;tests&quot;: {
+                &quot;web_dnssec_exist&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_dnssec_valid&quot;: {&quot;verdict&quot;: &quot;passed&quot;}
+              }
+            },
+            &quot;tls&quot;: {
+              &quot;verdict&quot;: &quot;passed&quot;,
+              &quot;tests&quot;: {
+                &quot;web_tls_https_exists&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_https_forced&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_https_hsts&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_http_redirect&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_http_compress&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_http_available&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_cert_chain&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_cert_pubkey&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_cert_sig&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_cert_domain&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_dane_exist&quot;: {&quot;verdict&quot;: &quot;info&quot;},
+                &quot;web_tls_dane_valid&quot;: {&quot;verdict&quot;: &quot;info&quot;},
+                &quot;web_tls_version&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_ciphers&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_cipher_order&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_keyexchange&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_compress&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_secreneg&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_clientreneg&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_ocsp&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_zero_rtt&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_kex_hash_func&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_tls_cert_trusted&quot;: {&quot;verdict&quot;: &quot;passed&quot;}
+              }
+            },
+            &quot;appsecpriv&quot;: {
+              &quot;verdict&quot;: &quot;warning&quot;,
+              &quot;tests&quot;: {
+                &quot;web_appsecpriv_csp&quot;: {&quot;verdict&quot;: &quot;warning&quot;},
+                &quot;web_appsecpriv_referrer_policy&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_appsecpriv_x_content_type&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_appsecpriv_x_frame&quot;: {&quot;verdict&quot;: &quot;passed&quot;},
+                &quot;web_appsecpriv_securitytxt&quot;: {&quot;verdict&quot;: &quot;passed&quot;}
+              }
+            },
+            &quot;rpki&quot;: {
+              &quot;verdict&quot;: &quot;passed&quot;,
+              &quot;tests&quot;: {
+                &quot;web_rpki_exists&quot;: {&quot;verdict&quot;: &quot;passed&quot;}
+              }
+            }
+          }
+        },
+        &quot;report&quot;: {
+          &quot;url&quot;: &quot;https://internet.nl/site/example.nl/12345/&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Resultaten response (mailtest)</h3>
+<p>De mailtest bevat andere categorieen:</p>
+<pre><code class="language-json">{
+  &quot;categories&quot;: {
+    &quot;ipv6&quot;: {
+      &quot;tests&quot;: {
+        &quot;mail_ipv6_ns_address&quot;: {},
+        &quot;mail_ipv6_ns_reach&quot;: {},
+        &quot;mail_ipv6_mx_address&quot;: {},
+        &quot;mail_ipv6_mx_reach&quot;: {}
+      }
+    },
+    &quot;dnssec&quot;: {
+      &quot;tests&quot;: {
+        &quot;mail_dnssec_exist&quot;: {},
+        &quot;mail_dnssec_valid&quot;: {},
+        &quot;mail_dnssec_mx_exist&quot;: {},
+        &quot;mail_dnssec_mx_valid&quot;: {}
+      }
+    },
+    &quot;auth&quot;: {
+      &quot;tests&quot;: {
+        &quot;mail_auth_spf_exist&quot;: {},
+        &quot;mail_auth_spf_policy&quot;: {},
+        &quot;mail_auth_dkim_exist&quot;: {},
+        &quot;mail_auth_dmarc_exist&quot;: {},
+        &quot;mail_auth_dmarc_policy&quot;: {}
+      }
+    },
+    &quot;tls&quot;: {
+      &quot;tests&quot;: {
+        &quot;mail_tls_starttls_exist&quot;: {},
+        &quot;mail_tls_version&quot;: {},
+        &quot;mail_tls_ciphers&quot;: {},
+        &quot;mail_tls_cert_chain&quot;: {},
+        &quot;mail_tls_cert_pubkey&quot;: {},
+        &quot;mail_tls_cert_sig&quot;: {},
+        &quot;mail_tls_cert_domain&quot;: {},
+        &quot;mail_tls_dane_exist&quot;: {},
+        &quot;mail_tls_dane_valid&quot;: {},
+        &quot;mail_tls_dane_rollover&quot;: {}
+      }
+    },
+    &quot;rpki&quot;: {
+      &quot;tests&quot;: {
+        &quot;mail_rpki_exists&quot;: {}
+      }
+    }
+  }
+}
+</code></pre>
+<h2>Foutcodes</h2>
+<table>
+<thead>
+<tr>
+<th>HTTP-code</th>
+<th>Betekenis</th>
+<th>Actie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Succes</td>
+<td>Verwerk de response</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Ongeldige request</td>
+<td>Controleer JSON-formaat en verplichte velden</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Niet geautoriseerd</td>
+<td>Controleer credentials</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Geen toegang</td>
+<td>Neem contact op met internet.nl</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Batch niet gevonden</td>
+<td>Controleer het request-ID</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Rate limit bereikt</td>
+<td>Wacht en probeer later opnieuw</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Serverfout</td>
+<td>Probeer later opnieuw, meld bij aanhoudend probleem</td>
+</tr>
+</tbody>
+</table>
+<h2>Error response</h2>
+<pre><code class="language-json">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;invalid_domains&quot;,
+    &quot;message&quot;: &quot;One or more domains are invalid&quot;,
+    &quot;details&quot;: {
+      &quot;invalid_domains&quot;: [&quot;niet-bestaand..nl&quot;]
+    }
+  }
+}
+</code></pre>
+<h2>Geavanceerd Python-voorbeeld met foutafhandeling</h2>
+<pre><code class="language-python">&quot;&quot;&quot;Internet.nl batch API client met uitgebreide foutafhandeling.&quot;&quot;&quot;
+
+import json
+import logging
+import time
+from pathlib import Path
+
+import requests
+
+logger = logging.getLogger(__name__)
+
+
+class InternetNLClient:
+    &quot;&quot;&quot;Client voor de internet.nl batch API.&quot;&quot;&quot;
+
+    def __init__(self, api_url: str, username: str, password: str):
+        self.api_url = api_url.rstrip(&quot;/&quot;)
+        self.auth = (username, password)
+        self.session = requests.Session()
+        self.session.auth = self.auth
+
+    def submit_web(self, name: str, domains: list[str]) -&gt; str:
+        &quot;&quot;&quot;Dien een webtest batch in.&quot;&quot;&quot;
+        return self._submit(&quot;web&quot;, name, domains)
+
+    def submit_mail(self, name: str, domains: list[str]) -&gt; str:
+        &quot;&quot;&quot;Dien een mailtest batch in.&quot;&quot;&quot;
+        return self._submit(&quot;mail&quot;, name, domains)
+
+    def _submit(self, test_type: str, name: str, domains: list[str]) -&gt; str:
+        &quot;&quot;&quot;Generieke batch submit.&quot;&quot;&quot;
+        url = f&quot;{self.api_url}/api/batch/v2/requests&quot;
+        response = self.session.post(
+            url,
+            json={&quot;name&quot;: name, &quot;type&quot;: test_type, &quot;domains&quot;: domains},
+            timeout=30,
+        )
+        response.raise_for_status()
+        data = response.json()
+        if not data.get(&quot;success&quot;):
+            raise RuntimeError(f&quot;API fout: {data.get('error', {}).get('message', 'Onbekend')}&quot;)
+        return data[&quot;data&quot;][&quot;request_id&quot;]
+
+    def get_status(self, request_id: str) -&gt; dict:
+        &quot;&quot;&quot;Haal status op (eenmalig).&quot;&quot;&quot;
+        url = f&quot;{self.api_url}/api/batch/v2/requests/{request_id}&quot;
+        response = self.session.get(url, timeout=30)
+        response.raise_for_status()
+        return response.json()
+
+    def get_results(self, request_id: str) -&gt; dict:
+        &quot;&quot;&quot;Haal resultaten op (als status done is).&quot;&quot;&quot;
+        url = f&quot;{self.api_url}/api/batch/v2/requests/{request_id}/results&quot;
+        response = self.session.get(url, timeout=30)
+        response.raise_for_status()
+        return response.json()
+
+    def wait_for_results(
+        self,
+        request_id: str,
+        interval: int = 30,
+        max_wait: int = 3600,
+    ) -&gt; dict:
+        &quot;&quot;&quot;Poll tot resultaten beschikbaar zijn.&quot;&quot;&quot;
+        start = time.time()
+        while time.time() - start &lt; max_wait:
+            data = self.get_status(request_id)
+            status = data[&quot;data&quot;][&quot;status&quot;]
+            progress = data[&quot;data&quot;].get(&quot;progress&quot;, {})
+            logger.info(
+                &quot;Status: %s (%s%%)&quot;,
+                status,
+                progress.get(&quot;percentage&quot;, &quot;?&quot;),
+            )
+
+            if status == &quot;done&quot;:
+                return self.get_results(request_id)
+            if status in (&quot;error&quot;, &quot;cancelled&quot;):
+                raise RuntimeError(f&quot;Batch mislukt: {status}&quot;)
+
+            time.sleep(interval)
+
+        raise TimeoutError(f&quot;Resultaten niet beschikbaar na {max_wait}s&quot;)
+
+    def save_results(self, results: dict, output_path: str) -&gt; None:
+        &quot;&quot;&quot;Sla resultaten op als JSON.&quot;&quot;&quot;
+        Path(output_path).write_text(
+            json.dumps(results, indent=2, ensure_ascii=False),
+            encoding=&quot;utf-8&quot;,
+        )
+        logger.info(&quot;Resultaten opgeslagen in %s&quot;, output_path)
+</code></pre>
+<h2>Bronnen</h2>
+<ul>
+<li><a href="https://github.com/internetstandards/Internet.nl-API-docs">Internet.nl-API-docs</a> - Officieel API-documentatie</li>
+<li><a href="https://github.com/internetstandards/Internet.nl">Internet.nl</a> - Testsuite broncode</li>
+<li><a href="https://internet.nl">internet.nl</a> - Website en API-registratie</li>
+</ul>

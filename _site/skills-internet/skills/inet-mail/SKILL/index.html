@@ -1,0 +1,367 @@
+<blockquote>
+<p><strong>CONCEPT — Let op:</strong> Deze skill is geen officieel product van internet.nl. De beschrijvingen zijn informatieve samenvattingen — niet de officiële standaarden zelf. De testcriteria op <a href="https://internet.nl">internet.nl</a> en de definities op <a href="https://www.forumstandaardisatie.nl/open-standaarden">forumstandaardisatie.nl</a> zijn altijd leidend. Overheidsorganisaties die generatieve AI inzetten dienen te voldoen aan het <a href="https://open.overheid.nl/documenten/bc03ce31-0cf1-4946-9c94-e934a62ebe73/file">Overheidsbreed standpunt voor de inzet van generatieve AI</a>. Zie onze <a href="https://github.com/developer-overheid-nl/skills-marketplace/blob/main/docs/verantwoording.md">verantwoording</a> en <a href="../../DISCLAIMER.md">DISCLAIMER.md</a>.</p>
+</blockquote>
+<p><strong>Gebruik deze skill wanneer een gebruiker vraagt over mailstandaarden die internet.nl test,
+zoals SPF, DKIM, DMARC, STARTTLS of DANE. Genereer correcte DNS-records en diagnostische
+commando's. Verwijs naar <code>/inet-toolbox</code> voor stap-voor-stap implementatiegidsen.</strong></p>
+<h2>Overzicht</h2>
+<p><a href="https://internet.nl/test-mail/">Internet.nl</a> test e-maildomeinen op de volgende standaarden.
+Alle standaarden staan op de
+<a href="https://www.forumstandaardisatie.nl/open-standaarden">pas-toe-of-leg-uit-lijst</a>
+van Forum Standaardisatie.</p>
+<h2>De SPF + DKIM + DMARC keten</h2>
+<p>Deze drie standaarden werken samen om e-mailspoofing tegen te gaan:</p>
+<ol>
+<li><strong>SPF</strong> - Welke servers mogen mail versturen namens jouw domein?</li>
+<li><strong>DKIM</strong> - Is de e-mail onderweg niet gewijzigd? (digitale handtekening)</li>
+<li><strong>DMARC</strong> - Wat moet de ontvanger doen als SPF of DKIM faalt? (beleid + rapportage)</li>
+</ol>
+<pre><code>Afzender -&gt; SPF controle (IP-adres) ----+
+         -&gt; DKIM controle (handtekening) +-&gt; DMARC beleid -&gt; leveren / weigeren / quarantaine
+                                              |
+                                              +-&gt; Rapportage naar domeineigenaar
+</code></pre>
+<h2>Standaarden</h2>
+<h3>1. SPF (Sender Policy Framework)</h3>
+<p><strong>Wat:</strong> Een DNS TXT-record dat specificeert welke mailservers e-mail mogen versturen
+namens een domein.</p>
+<p><strong>Wat test internet.nl:</strong></p>
+<ul>
+<li>SPF-record aanwezig als DNS TXT-record</li>
+<li>Correcte syntax</li>
+<li>Maximaal 10 DNS-lookups (include, a, mx, redirect)</li>
+<li>Eindigt op <code>-all</code> (fail) of <code>~all</code> (softfail)</li>
+</ul>
+<p><strong>DNS-record formaat:</strong></p>
+<pre><code class="language-dns">example.nl. IN TXT &quot;v=spf1 mx a:mail.example.nl ip4:192.0.2.0/24 ip6:2001:db8::/32 include:_spf.google.com -all&quot;
+</code></pre>
+<p><strong>Mechanismen:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Mechanisme</th>
+<th>Betekenis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mx</code></td>
+<td>MX-records van het domein zijn geautoriseerd</td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>A/AAAA-record van het domein is geautoriseerd</td>
+</tr>
+<tr>
+<td><code>a:host</code></td>
+<td>A/AAAA van specifieke host</td>
+</tr>
+<tr>
+<td><code>ip4:range</code></td>
+<td>IPv4-adres of -bereik</td>
+</tr>
+<tr>
+<td><code>ip6:range</code></td>
+<td>IPv6-adres of -bereik</td>
+</tr>
+<tr>
+<td><code>include:domein</code></td>
+<td>Neem SPF-beleid van ander domein over</td>
+</tr>
+<tr>
+<td><code>redirect=domein</code></td>
+<td>Gebruik SPF-record van ander domein</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Qualifiers:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Qualifier</th>
+<th>Betekenis</th>
+<th>Aanbevolen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+</code> (default)</td>
+<td>Pass</td>
+<td>Impliciet; gebruik <code>-all</code> als eindregel</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>Fail (hard)</td>
+<td>Ja, als eindregel (<code>-all</code>)</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>Softfail</td>
+<td>Acceptabel</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>Neutral</td>
+<td>Nee</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Testen:</strong></p>
+<pre><code class="language-bash"># SPF-record opvragen
+dig TXT example.nl +short | grep &quot;v=spf1&quot;
+
+# SPF-validatie simuleren (aantal lookups tellen)
+dig TXT example.nl +short
+# Tel elke include, a, mx, redirect als 1 lookup (max 10)
+</code></pre>
+<h3>2. DKIM (DomainKeys Identified Mail)</h3>
+<p><strong>Wat:</strong> Een mechanisme dat e-mail voorziet van een cryptografische handtekening
+via een DNS-publicsleutel. De ontvangende mailserver verifieert de handtekening.</p>
+<p><strong>Wat test internet.nl:</strong></p>
+<ul>
+<li>Minimaal 1 geldige DKIM-handtekening op testmail</li>
+<li>Publieke sleutel beschikbaar via DNS</li>
+</ul>
+<blockquote>
+<p><strong>Let op:</strong> Internet.nl controleert alleen of een DKIM-record bestaat; de sleutellengte
+wordt niet getest. Best practice is minimaal 2048-bit RSA.</p>
+</blockquote>
+<p><strong>DNS-record formaat:</strong></p>
+<pre><code class="language-dns">selector._domainkey.example.nl. IN TXT &quot;v=DKIM1; k=rsa; p=MIIBIjANBgkqhki...&quot;
+</code></pre>
+<p><strong>Selector:</strong> Een naam die de verzendende server meestuurt in de DKIM-Signature header
+(bijv. <code>google</code>, <code>selector1</code>, <code>default</code>). Hiermee kan de ontvanger de juiste publieke
+sleutel vinden in DNS.</p>
+<p><strong>Sleutel genereren:</strong></p>
+<pre><code class="language-bash"># RSA 2048-bit sleutelpaar genereren
+openssl genrsa -out dkim_private.pem 2048
+openssl rsa -in dkim_private.pem -pubout -out dkim_public.pem
+
+# Publieke sleutel voor DNS (zonder headers, op 1 regel)
+openssl rsa -in dkim_private.pem -pubout -outform DER | base64 -w0
+</code></pre>
+<p><strong>Testen:</strong></p>
+<pre><code class="language-bash"># DKIM-sleutel opvragen (vervang 'selector' door de echte selector)
+dig TXT selector._domainkey.example.nl +short
+
+# Veelgebruikte selectors proberen
+for sel in google default selector1 selector2 dkim mail; do
+  echo &quot;=== $sel ===&quot;
+  dig TXT &quot;${sel}._domainkey.example.nl&quot; +short
+done
+</code></pre>
+<h3>3. DMARC (Domain-based Message Authentication, Reporting and Conformance)</h3>
+<p><strong>Wat:</strong> Een DNS TXT-record dat aangeeft wat ontvangers moeten doen als SPF en/of
+DKIM niet slagen, en waar rapportages naartoe moeten.</p>
+<p><strong>Wat test internet.nl:</strong></p>
+<ul>
+<li>DMARC-record aanwezig op <code>_dmarc.example.nl</code></li>
+<li>Beleid is <code>quarantine</code> of <code>reject</code> (niet <code>none</code> voor productie)</li>
+<li>Rapportage-adres geconfigureerd (rua)</li>
+</ul>
+<blockquote>
+<p><strong>Implementatiepad:</strong> Start met <code>p=none</code> om rapportages te verzamelen, schakel
+daarna over naar <code>quarantine</code> en uiteindelijk <code>reject</code>. Internet.nl scoort
+alleen <code>quarantine</code> of <code>reject</code> als voldoende.</p>
+</blockquote>
+<p><strong>DNS-record formaat:</strong></p>
+<pre><code class="language-dns">_dmarc.example.nl. IN TXT &quot;v=DMARC1; p=reject; rua=mailto:dmarc-reports@example.nl; ruf=mailto:dmarc-forensic@example.nl; adkim=s; aspf=s; pct=100&quot;
+</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Betekenis</th>
+<th>Waarden</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p</code></td>
+<td>Beleid</td>
+<td><code>none</code> / <code>quarantine</code> / <code>reject</code></td>
+</tr>
+<tr>
+<td><code>sp</code></td>
+<td>Beleid voor subdomeinen</td>
+<td><code>none</code> / <code>quarantine</code> / <code>reject</code></td>
+</tr>
+<tr>
+<td><code>rua</code></td>
+<td>Aggregaat rapportage-adres</td>
+<td><code>mailto:adres@example.nl</code></td>
+</tr>
+<tr>
+<td><code>ruf</code></td>
+<td>Forensisch rapportage-adres</td>
+<td><code>mailto:adres@example.nl</code></td>
+</tr>
+<tr>
+<td><code>adkim</code></td>
+<td>DKIM alignment</td>
+<td><code>r</code> (relaxed) / <code>s</code> (strict)</td>
+</tr>
+<tr>
+<td><code>aspf</code></td>
+<td>SPF alignment</td>
+<td><code>r</code> (relaxed) / <code>s</code> (strict)</td>
+</tr>
+<tr>
+<td><code>pct</code></td>
+<td>Percentage berichten waarop beleid wordt toegepast</td>
+<td>0-100</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gefaseerde uitrol:</strong></p>
+<pre><code class="language-dns">; Fase 1: Monitor (alleen rapportage, geen actie)
+_dmarc.example.nl. IN TXT &quot;v=DMARC1; p=none; rua=mailto:dmarc@example.nl&quot;
+
+; Fase 2: Quarantine op 10% (test impact)
+_dmarc.example.nl. IN TXT &quot;v=DMARC1; p=quarantine; pct=10; rua=mailto:dmarc@example.nl&quot;
+
+; Fase 3: Quarantine op 100%
+_dmarc.example.nl. IN TXT &quot;v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@example.nl&quot;
+
+; Fase 4: Reject (volledige bescherming)
+_dmarc.example.nl. IN TXT &quot;v=DMARC1; p=reject; rua=mailto:dmarc@example.nl; adkim=s; aspf=s&quot;
+</code></pre>
+<p><strong>Testen:</strong></p>
+<pre><code class="language-bash"># DMARC-record opvragen
+dig TXT _dmarc.example.nl +short
+</code></pre>
+<h3>4. STARTTLS</h3>
+<p><strong>Wat:</strong> STARTTLS versleutelt SMTP-verkeer tussen mailservers.</p>
+<p><strong>Wat test internet.nl:</strong></p>
+<ul>
+<li>MX-servers ondersteunen STARTTLS</li>
+<li>TLS 1.2 of hoger (TLS 1.0/1.1 geeft een phase-out waarschuwing; SSL 2.0/3.0 is een harde fout)</li>
+<li>Geldig certificaat</li>
+<li>Geen terugval naar onversleuteld verkeer</li>
+</ul>
+<p><strong>Testen:</strong></p>
+<pre><code class="language-bash"># MX-records opvragen
+dig MX example.nl +short
+
+# STARTTLS testen op MX-server
+openssl s_client -connect mx.example.nl:25 -starttls smtp &lt;/dev/null 2&gt;/dev/null | \
+  grep -E '(Protocol|Cipher|Verify)'
+</code></pre>
+<h3>5. DANE (DNS-based Authentication of Named Entities)</h3>
+<p><strong>Wat:</strong> DANE koppelt TLS-certificaten aan DNS via TLSA-records,
+beveiligd met DNSSEC. Hiermee wordt de vertrouwensketen versterkt:
+niet alleen CA's, maar ook DNS verifieert het certificaat.</p>
+<p><strong>Vereist:</strong> DNSSEC moet actief zijn op het domein.</p>
+<p><strong>Wat test internet.nl:</strong></p>
+<ul>
+<li>TLSA-records aanwezig voor MX-servers</li>
+<li>Correcte TLSA-parameters</li>
+<li>DNSSEC op het MX-domein</li>
+</ul>
+<p><strong>DNS-record formaat:</strong></p>
+<pre><code class="language-dns">_25._tcp.mx.example.nl. IN TLSA 3 1 1 &lt;sha256-hash-van-publieke-sleutel&gt;
+</code></pre>
+<p><strong>TLSA-parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Waarde</th>
+<th>Betekenis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Certificate Usage</td>
+<td><code>3</code></td>
+<td>DANE-EE (End Entity, aanbevolen voor mail)</td>
+</tr>
+<tr>
+<td>Selector</td>
+<td><code>1</code></td>
+<td>SubjectPublicKeyInfo (publieke sleutel)</td>
+</tr>
+<tr>
+<td>Matching Type</td>
+<td><code>1</code></td>
+<td>SHA-256 hash</td>
+</tr>
+</tbody>
+</table>
+<p><strong>TLSA-hash genereren:</strong></p>
+<pre><code class="language-bash"># Hash van het certificaat van de mailserver
+openssl s_client -connect mx.example.nl:25 -starttls smtp &lt;/dev/null 2&gt;/dev/null | \
+  openssl x509 -pubkey -noout | \
+  openssl pkey -pubin -outform DER | \
+  openssl dgst -sha256 -binary | xxd -p -c 32
+</code></pre>
+<p><strong>Testen:</strong></p>
+<pre><code class="language-bash"># TLSA-record opvragen
+dig TLSA _25._tcp.mx.example.nl +short
+
+# Controleer DNSSEC op MX-domein
+dig MX example.nl +dnssec +short
+</code></pre>
+<h2>Repositories</h2>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Beschrijving</th>
+<th>Licentie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/internetstandards/Internet.nl">Internet.nl</a></td>
+<td>Testsuite broncode</td>
+<td><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a> (code), <a href="https://creativecommons.org/licenses/by/4.0/legalcode.en">CC-BY-4.0</a> (vertalingen)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/internetstandards/toolbox-wiki">toolbox-wiki</a></td>
+<td>Implementatiegidsen</td>
+<td><a href="https://creativecommons.org/licenses/by/4.0/legalcode.en">CC-BY-4.0</a></td>
+</tr>
+</tbody>
+</table>
+<h2>Veelvoorkomende problemen</h2>
+<table>
+<thead>
+<tr>
+<th>Probleem</th>
+<th>Oorzaak</th>
+<th>Oplossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPF <code>permerror</code></td>
+<td>Meer dan 10 DNS-lookups</td>
+<td>Verminder <code>include</code>-verwijzingen, gebruik <code>ip4</code>/<code>ip6</code> direct</td>
+</tr>
+<tr>
+<td>DKIM-verificatie faalt</td>
+<td>Verkeerde selector of verlopen sleutel</td>
+<td>Controleer selector in e-mailheaders, vergelijk met DNS</td>
+</tr>
+<tr>
+<td>DMARC <code>p=none</code> is onvoldoende</td>
+<td>Fase 1 monitoring nog actief</td>
+<td>Verschuif naar <code>p=quarantine</code> of <code>p=reject</code></td>
+</tr>
+<tr>
+<td>STARTTLS niet aangeboden</td>
+<td>Mailserver niet geconfigureerd</td>
+<td>Schakel TLS in op de mailserver</td>
+</tr>
+<tr>
+<td>DANE TLSA mismatch</td>
+<td>Certificaat vernieuwd zonder TLSA-update</td>
+<td>Werk TLSA-record bij met hash van nieuw certificaat</td>
+</tr>
+</tbody>
+</table>
+<h2>Achtergrondinfo</h2>
+<p>Zie <a href="./reference.md">reference.md</a> voor server-specifieke configuratie (Postfix, Exchange),
+key rotation-procedures en DMARC-rapportage-analyse.</p>

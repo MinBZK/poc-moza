@@ -1,0 +1,70 @@
+<h1>Internet - Claude Code Plugin</h1>
+<p><a href="LICENSE"><img src="https://img.shields.io/badge/licentie-EUPL--1.2-blue.svg" alt="EUPL-1.2"></a>
+<a href="#skills"><img src="https://img.shields.io/badge/skills-5-green.svg" alt="skills"></a></p>
+<p><a href="https://docs.anthropic.com/en/docs/claude-code">Claude Code</a> plugin voor moderne internetstandaarden. Test en implementeer compliance met standaarden die getest worden via <a href="https://internet.nl">internet.nl</a>: webstandaarden, mailstandaarden, de batch API en implementatiegidsen.</p>
+<blockquote>
+<p><strong>CONCEPT</strong> — Deze plugin is in ontwikkeling en is geen officieel product van internet.nl. De officiële standaarden zijn altijd leidend. Zie de <a href="https://github.com/developer-overheid-nl/skills-marketplace/blob/main/docs/verantwoording.md">verantwoording</a> en <a href="https://github.com/developer-overheid-nl/skills-marketplace/blob/main/DISCLAIMER.md">disclaimer</a> voor meer informatie.</p>
+</blockquote>
+<h2>Installeren</h2>
+<pre><code class="language-bash"># Via de overheid-plugins marketplace (aanbevolen)
+claude plugin marketplace add developer-overheid-nl/skills-marketplace
+claude plugin install internet-nl@overheid-plugins
+
+# Per sessie
+git clone https://github.com/developer-overheid-nl/skills-internet.git
+claude --plugin-dir ./skills-internet
+</code></pre>
+<h2>Skills</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/inet</code></td>
+<td>Overzicht internetstandaarden, routing naar sub-skills</td>
+</tr>
+<tr>
+<td><code>/inet-web</code></td>
+<td>Webstandaarden: HTTPS, TLS, DNSSEC, IPv6, RPKI, security headers, security.txt</td>
+</tr>
+<tr>
+<td><code>/inet-mail</code></td>
+<td>Mailstandaarden: DMARC, DKIM, SPF, STARTTLS, DANE</td>
+</tr>
+<tr>
+<td><code>/inet-api</code></td>
+<td>Internet.nl batch API: authenticatie, bulk scans, resultaten</td>
+</tr>
+<tr>
+<td><code>/inet-toolbox</code></td>
+<td>Stap-voor-stap implementatiegidsen uit de toolbox-wiki</td>
+</tr>
+</tbody>
+</table>
+<h2>Voorbeeldvragen</h2>
+<ul>
+<li>&quot;Hoe test ik mijn website op internet.nl?&quot; -&gt; <code>/inet-web</code></li>
+<li>&quot;Hoe configureer ik DMARC voor mijn domein?&quot; -&gt; <code>/inet-mail</code></li>
+<li>&quot;Hoe scan ik 100 domeinen via de API?&quot; -&gt; <code>/inet-api</code></li>
+<li>&quot;Hoe stel ik DANE in voor mijn mailserver?&quot; -&gt; <code>/inet-toolbox</code></li>
+</ul>
+<h2>Bronnen</h2>
+<p>De skills zijn gebaseerd op:</p>
+<ul>
+<li><a href="https://github.com/internetstandards/Internet.nl">internetstandards/Internet.nl</a> — test suite</li>
+<li><a href="https://github.com/internetstandards/Internet.nl-API-docs">internetstandards/Internet.nl-API-docs</a> — batch API</li>
+<li><a href="https://github.com/internetstandards/toolbox-wiki">internetstandards/toolbox-wiki</a> — implementatiegidsen</li>
+<li><a href="https://internet.nl">internet.nl</a> — testcriteria per standaard</li>
+<li><a href="https://www.forumstandaardisatie.nl">Forum Standaardisatie</a> — status per standaard op de lijst</li>
+</ul>
+<h2>Onderdeel van</h2>
+<p>Deze plugin is onderdeel van de <a href="https://github.com/developer-overheid-nl/skills-marketplace">skills-marketplace</a> marketplace.</p>
+<h2>Disclaimer</h2>
+<p><strong>Deze plugin is geen officieel product van <a href="https://internet.nl">internet.nl</a>.</strong> Het is een experimenteel project van <a href="https://developer.overheid.nl">developer.overheid.nl</a>, gebaseerd op publiek beschikbare standaarden en documentatie. De skills zijn informatieve samenvattingen — <strong>niet</strong> de officiële standaarden zelf. De definities op <a href="https://www.forumstandaardisatie.nl/open-standaarden">Forum Standaardisatie</a> en <a href="https://internet.nl">internet.nl</a> zijn altijd leidend. Overheidsorganisaties die generatieve AI inzetten dienen te voldoen aan het <a href="https://open.overheid.nl/documenten/bc03ce31-0cf1-4946-9c94-e934a62ebe73/file">Overheidsbreed standpunt voor de inzet van generatieve AI</a>. Zie <a href="DISCLAIMER.md">DISCLAIMER.md</a> voor de volledige disclaimer.</p>
+<hr>
+<h2>Licentie</h2>
+<p><a href="LICENSE">EUPL-1.2</a> - European Union Public Licence</p>

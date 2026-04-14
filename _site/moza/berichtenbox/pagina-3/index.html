@@ -15,7 +15,7 @@
 
     
         <header>
-
+	<a class="skip-link btn-cta" href="#hoofd-inhoud">Ga naar hoofdinhoud</a>
 	<figure class="logo">
 		<a href="/">
 			<img src="/assets/images/beeldmerk-rijksoverheid.svg" alt="Naar de homepage van MijnOverheid Zakelijk">
@@ -234,7 +234,7 @@
 </aside>
 
 
-<article class="berichtenbox">
+<article id="hoofd-inhoud" class="berichtenbox">
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="/moza/">Home</a></li>
@@ -243,6 +243,22 @@
 	</nav>
 
 	<h1>Berichtenbox</h1>
+
+	<ul role="tablist">
+		<li role="presentation">
+			<a role="tab" href="#berichtenbox-inbox" id="tab-berichtenbox-inbox" aria-selected="true">Inbox</a>
+		</li>
+		<li role="presentation">
+			<a role="tab" href="#berichtenbox-archief" id="tab-berichtenbox-archief">Archief</a>
+		</li>
+		<li role="presentation">
+			<a role="tab" href="#berichtenbox-prullebak" id="tab-berichtenbox-prullebak">Prullebak</a>
+		</li>
+	</ul>
+
+	<section role="tabpanel" id="berichtenbox-inbox" aria-labelledby="tab-berichtenbox-inbox">Inbox</section>
+	<section role="tabpanel" id="berichtenbox-archief" aria-labelledby="tab-berichtenbox-archief" hidden>Archief</section>
+	<section role="tabpanel" id="berichtenbox-prullebak" aria-labelledby="tab-berichtenbox-prullebak" hidden>Prullebak</section>
 
 	<div class="berichtenbox-layout">
 		
@@ -303,8 +319,7 @@
 
 		<section class="berichtenbox-content">
 			<p class="berichtenbox-teller">
-				<span data-berichtenbox-teller-totaal>120</span> berichten ·
-				<span data-berichtenbox-teller-ongelezen>0</span> ongelezen
+				<span data-berichtenbox-teller-totaal>120</span> berichten · <span data-berichtenbox-teller-ongelezen>0</span> ongelezen
 				<span class="berichtenbox-bronnen">opgehaald uit <span data-berichtenbox-bronnen>400</span> bronnen</span>
 			</p>
 
@@ -329,8 +344,7 @@
 			<div class="visually-hidden" data-berichtenbox-live aria-live="polite"></div>
 
 			<ul class="berichtenbox-lijst" data-berichtenbox-lijst>
-				
-					
+				 
 <li class="berichtenbox-rij" data-bericht-id="msg-0052" data-afzender-id="kadaster">
 	<a href="/moza/berichtenbox/bericht/msg-0052/">
 		
@@ -341,9 +355,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0051" data-afzender-id="rdw">
 	<a href="/moza/berichtenbox/bericht/msg-0051/">
 		
@@ -354,9 +366,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0053" data-afzender-id="ap">
 	<a href="/moza/berichtenbox/bericht/msg-0053/">
 		
@@ -367,9 +377,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0055" data-afzender-id="gem-haarlem">
 	<a href="/moza/berichtenbox/bericht/msg-0055/">
 		
@@ -380,9 +388,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0054" data-afzender-id="cbs">
 	<a href="/moza/berichtenbox/bericht/msg-0054/">
 		
@@ -393,9 +399,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0056" data-afzender-id="gem-amersfoort">
 	<a href="/moza/berichtenbox/bericht/msg-0056/">
 		
@@ -406,9 +410,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0058" data-afzender-id="cbs">
 	<a href="/moza/berichtenbox/bericht/msg-0058/">
 		
@@ -419,9 +421,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0059" data-afzender-id="kadaster">
 	<a href="/moza/berichtenbox/bericht/msg-0059/">
 		
@@ -432,9 +432,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0057" data-afzender-id="gem-haarlem">
 	<a href="/moza/berichtenbox/bericht/msg-0057/">
 		
@@ -445,9 +443,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0060" data-afzender-id="gem-enschede">
 	<a href="/moza/berichtenbox/bericht/msg-0060/">
 		
@@ -458,9 +454,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0061" data-afzender-id="uwv">
 	<a href="/moza/berichtenbox/bericht/msg-0061/">
 		
@@ -471,9 +465,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0063" data-afzender-id="gem-almere">
 	<a href="/moza/berichtenbox/bericht/msg-0063/">
 		
@@ -484,9 +476,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0062" data-afzender-id="uwv">
 	<a href="/moza/berichtenbox/bericht/msg-0062/">
 		
@@ -497,9 +487,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0064" data-afzender-id="rdw">
 	<a href="/moza/berichtenbox/bericht/msg-0064/">
 		
@@ -510,9 +498,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0066" data-afzender-id="cbs">
 	<a href="/moza/berichtenbox/bericht/msg-0066/">
 		
@@ -523,9 +509,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0065" data-afzender-id="kvk">
 	<a href="/moza/berichtenbox/bericht/msg-0065/">
 		
@@ -536,9 +520,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0067" data-afzender-id="svb">
 	<a href="/moza/berichtenbox/bericht/msg-0067/">
 		
@@ -549,9 +531,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0068" data-afzender-id="gem-tilburg">
 	<a href="/moza/berichtenbox/bericht/msg-0068/">
 		
@@ -562,9 +542,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0069" data-afzender-id="kvk">
 	<a href="/moza/berichtenbox/bericht/msg-0069/">
 		
@@ -575,9 +553,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0072" data-afzender-id="gem-apeldoorn">
 	<a href="/moza/berichtenbox/bericht/msg-0072/">
 		
@@ -588,9 +564,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0071" data-afzender-id="gem-almere">
 	<a href="/moza/berichtenbox/bericht/msg-0071/">
 		
@@ -601,9 +575,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0070" data-afzender-id="gem-eindhoven">
 	<a href="/moza/berichtenbox/bericht/msg-0070/">
 		
@@ -614,9 +586,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0074" data-afzender-id="gem-nijmegen">
 	<a href="/moza/berichtenbox/bericht/msg-0074/">
 		
@@ -627,9 +597,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0073" data-afzender-id="rdw">
 	<a href="/moza/berichtenbox/bericht/msg-0073/">
 		
@@ -640,9 +608,7 @@
 		
 	</a>
 </li>
-
-				
-					
+  
 <li class="berichtenbox-rij" data-bericht-id="msg-0076" data-afzender-id="gem-almere">
 	<a href="/moza/berichtenbox/bericht/msg-0076/">
 		
@@ -653,53 +619,52 @@
 		
 	</a>
 </li>
-
-				
+ 
 			</ul>
 
-			<div class="berichtenbox-leeg" data-berichtenbox-leeg hidden>
-				Er zijn geen berichten die overeenkomen met uw zoekopdracht.
-			</div>
+			<div class="berichtenbox-leeg" data-berichtenbox-leeg hidden>Er zijn geen berichten die overeenkomen met uw zoekopdracht.</div>
 
 			
 			<nav class="pagination" aria-label="Paginering">
 				<ol>
 					
-					<li><a href="/moza/berichtenbox/pagina-2/" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a></li>
-					
-					
+					<li>
+						<a href="/moza/berichtenbox/pagina-2/" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a>
+					</li>
+					 
 					<li>
 						
-							<a href="/moza/berichtenbox/">1</a>
+						<a href="/moza/berichtenbox/">1</a>
 						
 					</li>
 					
 					<li>
 						
-							<a href="/moza/berichtenbox/pagina-2/">2</a>
+						<a href="/moza/berichtenbox/pagina-2/">2</a>
 						
 					</li>
 					
 					<li>
 						
-							<span aria-current="page">3</span>
+						<span aria-current="page">3</span>
 						
 					</li>
 					
 					<li>
 						
-							<a href="/moza/berichtenbox/pagina-4/">4</a>
+						<a href="/moza/berichtenbox/pagina-4/">4</a>
 						
 					</li>
 					
 					<li>
 						
-							<a href="/moza/berichtenbox/pagina-5/">5</a>
+						<a href="/moza/berichtenbox/pagina-5/">5</a>
 						
 					</li>
-					
-					
-					<li><a href="/moza/berichtenbox/pagina-4/" rel="next">Volgende<span class="visually-hidden"> pagina</span></a></li>
+					 
+					<li>
+						<a href="/moza/berichtenbox/pagina-4/" rel="next">Volgende<span class="visually-hidden"> pagina</span></a>
+					</li>
 					
 				</ol>
 			</nav>

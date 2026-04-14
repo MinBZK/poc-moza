@@ -1,0 +1,256 @@
+<h1>Referentie: Mailstandaarden</h1>
+<p>Achtergrondkennis bij de <code>/inet-mail</code> skill. Dit document bevat server-specifieke
+configuraties, key rotation-procedures en rapportage-analyse.</p>
+<h2>Postfix-configuratie</h2>
+<h3>STARTTLS inschakelen</h3>
+<pre><code class="language-conf"># /etc/postfix/main.cf
+
+# TLS voor inkomende verbindingen (server)
+smtpd_tls_cert_file = /etc/letsencrypt/live/mx.example.nl/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/mx.example.nl/privkey.pem
+smtpd_tls_security_level = may
+smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtpd_tls_mandatory_ciphers = medium
+smtpd_tls_loglevel = 1
+
+# TLS voor uitgaande verbindingen (client)
+smtp_tls_security_level = dane
+smtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtp_tls_loglevel = 1
+smtp_dns_support_level = dnssec
+</code></pre>
+<h3>DKIM met OpenDKIM</h3>
+<pre><code class="language-conf"># /etc/opendkim.conf
+Syslog          yes
+UMask           007
+Mode            sv
+SubDomains      no
+Canonicalization relaxed/simple
+KeyTable        /etc/opendkim/key.table
+SigningTable     refile:/etc/opendkim/signing.table
+ExternalIgnoreList refile:/etc/opendkim/trusted.hosts
+InternalHosts   refile:/etc/opendkim/trusted.hosts
+</code></pre>
+<pre><code class="language-conf"># /etc/opendkim/key.table
+default._domainkey.example.nl example.nl:default:/etc/opendkim/keys/example.nl/default.private
+
+# /etc/opendkim/signing.table
+*@example.nl default._domainkey.example.nl
+
+# /etc/opendkim/trusted.hosts
+127.0.0.1
+::1
+localhost
+example.nl
+</code></pre>
+<p><strong>Sleutelpaar genereren:</strong></p>
+<pre><code class="language-bash">mkdir -p /etc/opendkim/keys/example.nl
+opendkim-genkey -b 2048 -d example.nl -D /etc/opendkim/keys/example.nl -s default -v
+chown opendkim:opendkim /etc/opendkim/keys/example.nl/default.private
+</code></pre>
+<p><strong>Postfix koppelen aan OpenDKIM:</strong></p>
+<pre><code class="language-conf"># /etc/postfix/main.cf
+milter_default_action = accept
+milter_protocol = 6
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891
+</code></pre>
+<h3>Postfix en SPF-validatie</h3>
+<pre><code class="language-conf"># /etc/postfix/main.cf
+# Installeer pypolicyd-spf
+policyd-spf_time_limit = 3600
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination,
+    check_policy_service unix:private/policyd-spf
+</code></pre>
+<h2>Microsoft Exchange / Microsoft 365</h2>
+<h3>SPF voor Microsoft 365</h3>
+<pre><code class="language-dns">example.nl. IN TXT &quot;v=spf1 include:spf.protection.outlook.com -all&quot;
+</code></pre>
+<h3>DKIM voor Microsoft 365</h3>
+<p>DKIM wordt geconfigureerd via het Microsoft 365 Defender-portaal:</p>
+<ol>
+<li>Ga naar Email &amp; Collaboration &gt; Policies &gt; DKIM</li>
+<li>Selecteer het domein</li>
+<li>Klik op &quot;Enable&quot;</li>
+<li>Publiceer de CNAME-records die Microsoft aangeeft:</li>
+</ol>
+<pre><code class="language-dns">selector1._domainkey.example.nl. IN CNAME selector1-example-nl._domainkey.example.onmicrosoft.com.
+selector2._domainkey.example.nl. IN CNAME selector2-example-nl._domainkey.example.onmicrosoft.com.
+</code></pre>
+<h3>DMARC voor Microsoft 365</h3>
+<pre><code class="language-dns">_dmarc.example.nl. IN TXT &quot;v=DMARC1; p=reject; rua=mailto:dmarc@example.nl; fo=1&quot;
+</code></pre>
+<h2>Google Workspace</h2>
+<h3>SPF voor Google Workspace</h3>
+<pre><code class="language-dns">example.nl. IN TXT &quot;v=spf1 include:_spf.google.com -all&quot;
+</code></pre>
+<h3>DKIM voor Google Workspace</h3>
+<ol>
+<li>Ga naar Google Workspace Admin &gt; Apps &gt; Google Workspace &gt; Gmail &gt; Verificatie</li>
+<li>Klik op &quot;Genereer nieuw record&quot;</li>
+<li>Kies sleutellengte 2048-bit</li>
+<li>Publiceer het TXT-record in DNS</li>
+</ol>
+<pre><code class="language-dns">google._domainkey.example.nl. IN TXT &quot;v=DKIM1; k=rsa; p=MIIBIjANBgkqhki...&quot;
+</code></pre>
+<h2>DKIM key rotation</h2>
+<h3>Waarom roteren?</h3>
+<ul>
+<li>Beperkt de schade als een privesleutel wordt gecompromitteerd</li>
+<li>Aanbevolen: elke 6-12 maanden</li>
+<li>Gebruik een nieuwe selector bij elke rotatie</li>
+</ul>
+<h3>Rotatieprocedure</h3>
+<pre><code class="language-bash"># Stap 1: Genereer nieuwe sleutel met nieuwe selector
+opendkim-genkey -b 2048 -d example.nl -D /etc/opendkim/keys/example.nl -s selector202602 -v
+
+# Stap 2: Publiceer nieuwe DKIM-record in DNS
+# selector202602._domainkey.example.nl. IN TXT &quot;v=DKIM1; k=rsa; p=MIIBIjANBgkqhki...&quot;
+
+# Stap 3: Wacht tot DNS is gepropageerd (controleer TTL)
+dig TXT selector202602._domainkey.example.nl +short
+
+# Stap 4: Update OpenDKIM configuratie naar nieuwe selector
+# In /etc/opendkim/key.table:
+# selector202602._domainkey.example.nl example.nl:selector202602:/etc/opendkim/keys/example.nl/selector202602.private
+
+# Stap 5: Herstart OpenDKIM
+systemctl restart opendkim
+
+# Stap 6: Wacht 1-2 weken, verwijder dan het oude DNS-record
+</code></pre>
+<h2>DMARC-rapportage analyseren</h2>
+<h3>Aggregaat rapporten (rua)</h3>
+<p>DMARC-aggregaatrapporten worden dagelijks verstuurd als XML (vaak gzipped).
+Ze bevatten statistieken over alle e-mail die namens jouw domein is verstuurd.</p>
+<p><strong>Structuur van een rapport:</strong></p>
+<pre><code class="language-xml">&lt;feedback&gt;
+  &lt;report_metadata&gt;
+    &lt;org_name&gt;google.com&lt;/org_name&gt;
+    &lt;date_range&gt;&lt;begin&gt;1700000000&lt;/begin&gt;&lt;end&gt;1700086400&lt;/end&gt;&lt;/date_range&gt;
+  &lt;/report_metadata&gt;
+  &lt;policy_published&gt;
+    &lt;domain&gt;example.nl&lt;/domain&gt;
+    &lt;p&gt;reject&lt;/p&gt;
+  &lt;/policy_published&gt;
+  &lt;record&gt;
+    &lt;row&gt;
+      &lt;source_ip&gt;192.0.2.1&lt;/source_ip&gt;
+      &lt;count&gt;42&lt;/count&gt;
+      &lt;policy_evaluated&gt;
+        &lt;disposition&gt;none&lt;/disposition&gt;
+        &lt;dkim&gt;pass&lt;/dkim&gt;
+        &lt;spf&gt;pass&lt;/spf&gt;
+      &lt;/policy_evaluated&gt;
+    &lt;/row&gt;
+  &lt;/record&gt;
+&lt;/feedback&gt;
+</code></pre>
+<p><strong>Analyseren met commandline:</strong></p>
+<pre><code class="language-bash"># Rapport uitpakken en bekijken
+gunzip &lt; rapport.xml.gz | xmllint --format -
+
+# Alle IP-adressen met failed SPF/DKIM
+gunzip &lt; rapport.xml.gz | xmllint --xpath '//record/row[policy_evaluated/spf=&quot;fail&quot; or policy_evaluated/dkim=&quot;fail&quot;]' -
+</code></pre>
+<p><strong>Tooling voor DMARC-rapportage:</strong></p>
+<ul>
+<li>Open-source: parsedmarc (Python)</li>
+<li>Online diensten: dmarcian, Postmark, Report URI</li>
+</ul>
+<h3>Forensische rapporten (ruf)</h3>
+<p>Forensische rapporten bevatten individuele e-mailberichten die DMARC-verificatie
+niet doorstaan. Let op: niet alle mailproviders versturen ruf-rapporten.</p>
+<h2>DANE - TLSA record beheer</h2>
+<h3>TLSA-record aanmaken voor Postfix</h3>
+<pre><code class="language-bash"># Haal het certificaat op
+openssl s_client -connect mx.example.nl:25 -starttls smtp &lt;/dev/null 2&gt;/dev/null &gt; cert.pem
+
+# Genereer TLSA-hash (usage=3, selector=1, matching=1)
+openssl x509 -in cert.pem -pubkey -noout | \
+  openssl pkey -pubin -outform DER | \
+  openssl dgst -sha256 -binary | xxd -p -c 32
+
+# Resultaat: abc123...def456 (64 hex karakters)
+# DNS-record:
+# _25._tcp.mx.example.nl. IN TLSA 3 1 1 abc123...def456
+</code></pre>
+<h3>TLSA bijwerken bij certificaatvernieuwing</h3>
+<p>Bij gebruik van Let's Encrypt met automatische vernieuwing:</p>
+<ol>
+<li><strong>Pre-publish methode:</strong> Publiceer het TLSA-record van het nieuwe certificaat
+voordat het actief wordt</li>
+<li>Gebruik <code>DANE-EE (3) + SPKI (1)</code> zodat alleen de publieke sleutel telt, niet
+het volledige certificaat</li>
+<li>Als je dezelfde privesleutel hergebruikt bij vernieuwing, hoeft het TLSA-record
+niet te veranderen</li>
+</ol>
+<p><strong>Automatisering met certbot hook:</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+# /etc/letsencrypt/renewal-hooks/deploy/update-tlsa.sh
+DOMAIN=&quot;mx.example.nl&quot;
+HASH=$(openssl x509 -in /etc/letsencrypt/live/$DOMAIN/cert.pem -pubkey -noout | \
+  openssl pkey -pubin -outform DER | \
+  openssl dgst -sha256 -binary | xxd -p -c 32)
+echo &quot;Nieuw TLSA-record: _25._tcp.$DOMAIN. IN TLSA 3 1 1 $HASH&quot;
+# Hier: update via DNS API van je provider
+</code></pre>
+<h2>MTA-STS configuratie</h2>
+<blockquote>
+<p><strong>Let op:</strong> MTA-STS wordt niet getest door internet.nl. Het is een aanvullende
+best practice naast DANE.</p>
+</blockquote>
+<h3>Vereisten</h3>
+<ol>
+<li>DNS TXT-record: <code>_mta-sts.example.nl</code></li>
+<li>HTTPS-website op <code>mta-sts.example.nl</code> met geldig certificaat</li>
+<li>Beleidsbestand op <code>https://mta-sts.example.nl/.well-known/mta-sts.txt</code></li>
+</ol>
+<h3>Nginx-configuratie voor MTA-STS</h3>
+<pre><code class="language-nginx">server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name mta-sts.example.nl;
+
+    ssl_certificate /etc/letsencrypt/live/mta-sts.example.nl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mta-sts.example.nl/privkey.pem;
+
+    location /.well-known/mta-sts.txt {
+        root /var/www/mta-sts;
+        default_type text/plain;
+    }
+}
+</code></pre>
+<h3>SMTP TLS Reporting (TLSRPT)</h3>
+<p>Voeg een TLSRPT DNS-record toe om rapporten te ontvangen over TLS-fouten:</p>
+<pre><code class="language-dns">_smtp._tls.example.nl. IN TXT &quot;v=TLSRPTv1; rua=mailto:tls-reports@example.nl&quot;
+</code></pre>
+<h2>Relatie tussen mailstandaarden</h2>
+<pre><code>Verzendende server                    Ontvangende server
+     |                                      |
+     |-- DKIM ondertekening --&gt;             |
+     |-- SPF (IP check via DNS) --&gt;         |
+     |-- STARTTLS (versleuteling) --------&gt;  |
+     |      \-- DANE (cert verificatie) --&gt; |
+     |                                      |
+     |                              DMARC beleid toepassen
+     |                              (op basis van SPF+DKIM)
+     |                                      |
+     |  &lt;-- DMARC rapportage (rua/ruf) --   |
+     |  &lt;-- TLSRPT rapportage ----------    |
+</code></pre>
+<h2>Bronnen</h2>
+<ul>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/dmarc">Forum Standaardisatie - DMARC</a></li>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/spf">Forum Standaardisatie - SPF</a></li>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/dkim">Forum Standaardisatie - DKIM</a></li>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/starttls-en-dane">Forum Standaardisatie - STARTTLS</a></li>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/starttls-en-dane">Forum Standaardisatie - DANE</a></li>
+<li><a href="https://www.ncsc.nl/en/transport-layer-security-tls/it-security-guidelines-transport-layer-security-tls">NCSC - TLS-richtlijnen</a></li>
+<li><a href="https://github.com/internetstandards/toolbox-wiki">toolbox-wiki</a> - Implementatiegidsen</li>
+</ul>

@@ -1,0 +1,351 @@
+<h1>Referentie: Webstandaarden</h1>
+<p>Achtergrondkennis bij de <code>/inet-web</code> skill. Dit document bevat protocol-details,
+server-specifieke configuraties en bronverwijzingen.</p>
+<h2>TLS protocol-details</h2>
+<h3>Aanbevolen cipher suites (NCSC)</h3>
+<p>Het NCSC adviseert de volgende cipher suites voor TLS 1.2:</p>
+<p><strong>Goed (voorkeur):</strong></p>
+<ul>
+<li>TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</li>
+<li>TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384</li>
+<li>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</li>
+<li>TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</li>
+<li>TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256</li>
+<li>TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256</li>
+</ul>
+<p><strong>Voldoende:</strong></p>
+<ul>
+<li>TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256</li>
+<li>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</li>
+</ul>
+<p><strong>Niet toegestaan:</strong></p>
+<ul>
+<li>Alles met RC4, 3DES, NULL, EXPORT, DES, MD5</li>
+<li>TLS_RSA_* cipher suites (geen forward secrecy)</li>
+</ul>
+<p>Voor TLS 1.3 zijn alleen deze cipher suites beschikbaar (allemaal goed):</p>
+<ul>
+<li>TLS_AES_128_GCM_SHA256</li>
+<li>TLS_AES_256_GCM_SHA384</li>
+<li>TLS_CHACHA20_POLY1305_SHA256</li>
+</ul>
+<h3>Certificaatvereisten</h3>
+<ul>
+<li>Minimaal 2048-bit RSA of 256-bit ECDSA</li>
+<li>SHA-256 of hoger als hash-algoritme</li>
+<li>Geldige keten naar een vertrouwde root CA</li>
+<li>Hostnaam in Subject Alternative Name (SAN)
+Bronnen:</li>
+<li><a href="https://www.ncsc.nl/en/transport-layer-security-tls/it-security-guidelines-transport-layer-security-tls">NCSC - TLS-richtlijnen</a></li>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/tls">Forum Standaardisatie - TLS</a></li>
+</ul>
+<h2>DNSSEC protocol-details</h2>
+<h3>Sleuteltypen</h3>
+<ul>
+<li><strong>KSK (Key Signing Key):</strong> Ondertekent de DNSKEY RRset. Hash hiervan staat als DS
+bij de parent zone. Typisch RSA 2048-bit of ECDSA P-256.</li>
+<li><strong>ZSK (Zone Signing Key):</strong> Ondertekent alle andere RRsets in de zone. Kan kleiner
+zijn (RSA 1024-bit of ECDSA P-256) vanwege frequentere rollover.</li>
+</ul>
+<h3>Key rollover</h3>
+<p><strong>ZSK rollover (pre-publish methode):</strong></p>
+<ol>
+<li>Publiceer nieuwe ZSK in DNSKEY RRset (naast de oude)</li>
+<li>Wacht tot TTL verlopen is</li>
+<li>Onderteken zone met nieuwe ZSK</li>
+<li>Verwijder oude ZSK na TTL-periode</li>
+</ol>
+<p><strong>KSK rollover (double-DS methode):</strong></p>
+<ol>
+<li>Genereer nieuwe KSK</li>
+<li>Publiceer DS van nieuwe KSK bij registrar (naast oude DS)</li>
+<li>Wacht tot TTL verlopen is</li>
+<li>Onderteken DNSKEY RRset met nieuwe KSK</li>
+<li>Verwijder oude DS bij registrar</li>
+</ol>
+<h3>Diagnostische commando's</h3>
+<pre><code class="language-bash"># Alle DNSKEY records opvragen
+dig DNSKEY example.nl +multi
+
+# NSEC/NSEC3 chain controleren
+dig NSEC example.nl +dnssec
+
+# Validatie met specifieke resolver
+dig @9.9.9.9 example.nl +dnssec +cd  # cd = checking disabled
+dig @9.9.9.9 example.nl +dnssec      # validatie aan
+
+# DS-record vergelijken met DNSKEY
+dig DS example.nl +short
+dig DNSKEY example.nl +short | dnssec-dsfromkey -f - example.nl
+</code></pre>
+<p>Bronnen:</p>
+<ul>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/dnssec">Forum Standaardisatie - DNSSEC</a></li>
+<li><a href="https://www.sidn.nl/dnssec">SIDN - DNSSEC</a></li>
+</ul>
+<h2>IPv6 configuratie per platform</h2>
+<h3>Linux (netplan)</h3>
+<pre><code class="language-yaml"># /etc/netplan/01-netcfg.yaml
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses:
+        - 192.0.2.1/24
+        - 2001:db8::1/64
+      gateway4: 192.0.2.254
+      gateway6: 2001:db8::fffe
+      nameservers:
+        addresses: [2001:4860:4860::8888, 8.8.8.8]
+</code></pre>
+<h3>Nginx dual-stack</h3>
+<pre><code class="language-nginx">server {
+    listen 80;
+    listen [::]:80;       # IPv6
+    listen 443 ssl;
+    listen [::]:443 ssl;  # IPv6 met TLS
+    server_name example.nl;
+}
+</code></pre>
+<h3>Apache dual-stack</h3>
+<pre><code class="language-apache">Listen 80
+Listen [::]:80
+Listen 443
+Listen [::]:443
+
+&lt;VirtualHost *:443 [::]:443&gt;
+    ServerName example.nl
+    SSLEngine on
+&lt;/VirtualHost&gt;
+</code></pre>
+<h3>DNS-records</h3>
+<pre><code class="language-dns">; IPv4
+example.nl.    IN  A     192.0.2.1
+www.example.nl IN  A     192.0.2.1
+
+; IPv6
+example.nl.    IN  AAAA  2001:db8::1
+www.example.nl IN  AAAA  2001:db8::1
+
+; Nameservers moeten ook IPv6 hebben
+ns1.example.nl IN  A     192.0.2.10
+ns1.example.nl IN  AAAA  2001:db8::10
+</code></pre>
+<p>Bronnen:</p>
+<ul>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/ipv6">Forum Standaardisatie - IPv6</a></li>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/dnssec">Forum Standaardisatie - DNSSEC</a></li>
+</ul>
+<h2>HSTS-details</h2>
+<h3>Preload-lijst</h3>
+<p>HSTS preloading zorgt ervoor dat browsers je domein altijd via HTTPS benaderen,
+zelfs bij het eerste bezoek. Vereisten voor opname in de preload-lijst:</p>
+<ol>
+<li>Geldig TLS-certificaat</li>
+<li>Redirect van HTTP naar HTTPS op hetzelfde domein</li>
+<li>HSTS-header met:
+<ul>
+<li><code>max-age</code> minimaal 31536000 (1 jaar)</li>
+<li><code>includeSubDomains</code> directive</li>
+<li><code>preload</code> directive</li>
+</ul>
+</li>
+</ol>
+<pre><code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+</code></pre>
+<p>Aanmelden: https://hstspreload.org/</p>
+<p><strong>Let op:</strong> <code>preload</code> is onomkeerbaar op korte termijn. Zorg dat alle subdomeinen
+HTTPS ondersteunen voordat je dit inschakelt.</p>
+<h2>Security headers - details</h2>
+<h3>Content-Security-Policy (CSP)</h3>
+<p>CSP voorkomt cross-site scripting (XSS) en data-injectie door te specificeren
+welke bronnen de browser mag laden.</p>
+<p><strong>Gefaseerde aanpak:</strong></p>
+<ol>
+<li>Begin met <code>Content-Security-Policy-Report-Only</code> om impact te analyseren</li>
+<li>Configureer een report-uri om schendingen te monitoren</li>
+<li>Verscherp het beleid geleidelijk</li>
+<li>Schakel over naar afdwingend beleid</li>
+</ol>
+<p><strong>Veelgebruikte directives:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Directive</th>
+<th>Doel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default-src</code></td>
+<td>Fallback voor alle resource-types</td>
+</tr>
+<tr>
+<td><code>script-src</code></td>
+<td>JavaScript-bronnen</td>
+</tr>
+<tr>
+<td><code>style-src</code></td>
+<td>CSS-bronnen</td>
+</tr>
+<tr>
+<td><code>img-src</code></td>
+<td>Afbeeldingsbronnen</td>
+</tr>
+<tr>
+<td><code>font-src</code></td>
+<td>Lettertypebronnen</td>
+</tr>
+<tr>
+<td><code>connect-src</code></td>
+<td>XHR, WebSocket, fetch</td>
+</tr>
+<tr>
+<td><code>frame-ancestors</code></td>
+<td>Wie mag de pagina embedden (vervangt X-Frame-Options)</td>
+</tr>
+<tr>
+<td><code>base-uri</code></td>
+<td>Beperkt <code>&lt;base&gt;</code> element</td>
+</tr>
+<tr>
+<td><code>form-action</code></td>
+<td>Beperkt formulier-acties</td>
+</tr>
+</tbody>
+</table>
+<h3>Referrer-Policy waarden</h3>
+<table>
+<thead>
+<tr>
+<th>Waarde</th>
+<th>Gedrag</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>no-referrer</code></td>
+<td>Nooit een Referer header meesturen</td>
+</tr>
+<tr>
+<td><code>strict-origin</code></td>
+<td>Alleen origin meesturen, alleen bij HTTPS-&gt;HTTPS</td>
+</tr>
+<tr>
+<td><code>strict-origin-when-cross-origin</code></td>
+<td>Volledig pad bij same-origin, origin bij cross-origin (aanbevolen)</td>
+</tr>
+<tr>
+<td><code>same-origin</code></td>
+<td>Alleen bij same-origin requests</td>
+</tr>
+</tbody>
+</table>
+<h2>security.txt - RFC 9116</h2>
+<h3>Verplichte velden</h3>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Contact</code></td>
+<td>URL of e-mailadres voor melden van kwetsbaarheden (minimaal 1)</td>
+</tr>
+<tr>
+<td><code>Expires</code></td>
+<td>Vervaldatum in ISO 8601 formaat (maximaal 1 jaar vooruit)</td>
+</tr>
+</tbody>
+</table>
+<h3>Optionele velden</h3>
+<table>
+<thead>
+<tr>
+<th>Veld</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Encryption</code></td>
+<td>URL naar PGP-sleutel voor versleutelde communicatie</td>
+</tr>
+<tr>
+<td><code>Acknowledgments</code></td>
+<td>URL naar pagina met bedankingen voor melders</td>
+</tr>
+<tr>
+<td><code>Preferred-Languages</code></td>
+<td>Voorkeurstalen (bijv. <code>nl, en</code>)</td>
+</tr>
+<tr>
+<td><code>Canonical</code></td>
+<td>Canonieke URL van het security.txt bestand</td>
+</tr>
+<tr>
+<td><code>Policy</code></td>
+<td>URL naar het responsible disclosure beleid</td>
+</tr>
+<tr>
+<td><code>Hiring</code></td>
+<td>URL naar vacatures in het beveiligingsteam</td>
+</tr>
+</tbody>
+</table>
+<h3>PGP-ondertekening</h3>
+<pre><code class="language-bash"># security.txt ondertekenen
+gpg --clearsign --output security.txt.signed security.txt
+mv security.txt.signed .well-known/security.txt
+</code></pre>
+<p>Bronnen:</p>
+<ul>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/securitytxt">Forum Standaardisatie - security.txt</a></li>
+<li><a href="https://www.ncsc.nl/dienstverlening/kwetsbaarheid-melden-cvd">NCSC - Kwetsbaarheid melden (CVD)</a></li>
+</ul>
+<h2>RPKI - details</h2>
+<h3>Hoe RPKI werkt</h3>
+<ol>
+<li><strong>ROA (Route Origin Authorisation):</strong> Een digitaal ondertekende verklaring die
+een IP-prefix koppelt aan een AS-nummer (het netwerk dat de prefix mag aankondigen).</li>
+<li><strong>ROV (Route Origin Validation):</strong> Routers controleren BGP-aankondigingen tegen
+de gepubliceerde ROA's.</li>
+<li><strong>Validatiestatus:</strong>
+<ul>
+<li><code>Valid</code> - BGP-aankondiging komt overeen met een ROA</li>
+<li><code>Invalid</code> - BGP-aankondiging conflicteert met een ROA</li>
+<li><code>NotFound</code> - Geen ROA gevonden voor de prefix</li>
+</ul>
+</li>
+</ol>
+<h3>ROA aanmaken</h3>
+<p>ROA's worden aangemaakt in het RIPE NCC-portaal (voor Europese netwerken):</p>
+<ol>
+<li>Log in op https://my.ripe.net</li>
+<li>Ga naar RPKI Dashboard</li>
+<li>Maak een ROA aan voor je prefix en AS-nummer</li>
+</ol>
+<h3>RPKI-status controleren</h3>
+<pre><code class="language-bash"># Via RIPE Stat
+curl -s &quot;https://stat.ripe.net/data/rpki-validation/data.json?resource=AS1234&amp;prefix=192.0.2.0/24&quot;
+
+# Via Cloudflare RPKI checker
+curl -s &quot;https://rpki.cloudflare.com/api/v1/prefix/192.0.2.0/24&quot;
+</code></pre>
+<p>Bronnen:</p>
+<ul>
+<li><a href="https://www.forumstandaardisatie.nl/open-standaarden/rpki">Forum Standaardisatie - RPKI</a></li>
+<li><a href="https://www.ripe.net/manage-ips-and-asns/resource-management/rpki/">RIPE NCC - RPKI</a></li>
+</ul>
+<h2>Verkenning van de testsuite</h2>
+<pre><code class="language-bash"># Bekijk de testcategorieen in de Internet.nl broncode
+gh api repos/internetstandards/Internet.nl/git/trees/main?recursive=1 \
+  --jq '.tree[] | select(.path | startswith(&quot;checks/&quot;)) | .path'
+
+# Bekijk de scoring-logica
+gh api repos/internetstandards/Internet.nl/contents/checks \
+  --jq '.[].name'
+</code></pre>
