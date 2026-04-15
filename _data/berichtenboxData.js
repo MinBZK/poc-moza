@@ -1,5 +1,5 @@
 // Genereert de dataset voor de FBS Berichtenbox-mock.
-// 400 magazijnen (10 instanties + 390 gemeentes), 120 berichten, 2 voorgevulde mappen.
+// 10 instanties + echte gemeentes, 120 berichten, 2 voorgevulde mappen.
 // Vaste seed zodat dezelfde dataset ontstaat bij elke build (nodig voor reproduceerbare permalinks).
 
 const AANTAL_BERICHTEN = 120;
@@ -18,42 +18,10 @@ const INSTANTIES = [
 	{ id: "kadaster", naam: "Kadaster" },
 ];
 
-// Echte Nederlandse gemeentenamen; aangevuld tot 390 hieronder met fictieve varianten.
 const GEMEENTES = [
-	"Amsterdam", "Rotterdam", "'s-Gravenhage", "Utrecht", "Eindhoven", "Groningen",
-	"Tilburg", "Almere", "Breda", "Nijmegen", "Enschede", "Apeldoorn", "Haarlem",
-	"Arnhem", "Amersfoort", "Zaanstad", "'s-Hertogenbosch", "Haarlemmermeer", "Zwolle",
-	"Zoetermeer", "Leeuwarden", "Leiden", "Dordrecht", "Maastricht", "Emmen",
-	"Ede", "Westland", "Venlo", "Delft", "Deventer", "Alkmaar", "Helmond", "Sittard-Geleen",
-	"Alphen aan den Rijn", "Hilversum", "Heerlen", "Amstelveen", "Roosendaal",
-	"Purmerend", "Oss", "Schiedam", "Hoorn", "Spijkenisse", "Gouda", "Lelystad",
-	"Vlaardingen", "Almelo", "Assen", "Capelle aan den IJssel", "Veenendaal",
-	"Bergen op Zoom", "Nieuwegein", "Hengelo", "Zeist", "Katwijk", "Roermond",
-	"Hardenberg", "Tiel", "Zutphen", "Weert", "Middelburg", "Kerkrade",
-	"Papendrecht", "Rijswijk", "Brunssum", "Waalwijk", "Ridderkerk", "Barneveld",
-	"Culemborg", "IJsselstein", "Gorinchem", "Houten", "Woerden", "Terneuzen",
-	"Stichtse Vecht", "Wageningen", "Harderwijk", "Noordoostpolder", "Soest",
-	"Veldhoven", "Doetinchem", "Huizen", "De Bilt", "Etten-Leur", "Oosterhout",
-	"Smallingerland", "Goes", "Veere", "Kampen", "Meppel", "Epe", "Dronten", "Coevorden",
-	"Zandvoort", "Vlissingen", "Opsterland", "Sluis", "Stadskanaal", "Emmeloord",
-	"Ooststellingwerf", "Beverwijk", "Hof van Twente", "Teylingen", "Wijchen",
-	"Noordwijk", "Bloemendaal", "Weesp", "Nijkerk", "Montferland", "Medemblik",
-	"Heiloo", "Geldrop-Mierlo", "Waadhoeke", "Drechterland", "Bodegraven-Reeuwijk",
-	"Bunnik", "Oirschot", "Oude IJsselstreek", "Oudewater", "Pijnacker-Nootdorp",
-	"Raalte", "Renkum", "Rheden", "Rhenen", "Roerdalen", "Staphorst", "Steenbergen",
-	"Steenwijkerland", "Tynaarlo", "Tytsjerksteradiel", "Uden", "Uithoorn",
-	"Urk", "Valkenburg aan de Geul", "Valkenswaard", "Veldhoven", "Venray",
-	"Voerendaal", "Voorst", "Vught", "Waddinxveen", "Wassenaar", "Waterland",
-	"Westerveld", "Westervoort", "Westland", "Wierden", "Wijdemeren", "Winterswijk",
-	"Zevenaar", "Zoeterwoude", "Zuidplas", "Zundert", "Zwijndrecht", "Noardeast-Fryslân",
-	"Vijfheerenlanden", "Molenlanden", "Het Hogeland", "Westerkwartier", "Midden-Groningen",
-	"Dijk en Waard", "Maashorst", "Land van Cuijk", "Voorne aan Zee", "Altena",
-	"Nissewaard", "Gooise Meren", "Krimpenerwaard", "De Fryske Marren", "De Wolden",
-	"Dantumadiel", "Eemsdelta", "Meierijstad",
+	"'s-Gravenhage",
+	"Voorburg",
 ];
-while (GEMEENTES.length < 390) {
-	GEMEENTES.push(`Fictief ${GEMEENTES.length + 1}`);
-}
 
 function slugify(naam) {
 	return naam

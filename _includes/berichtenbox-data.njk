@@ -1,0 +1,8 @@
+<script>
+	window.berichtenboxData = {
+		berichten: {{ berichtenboxData.berichten | dump | safe }},
+		magazijnen: {{ berichtenboxData.magazijnen | dump | safe }},
+		mappen: {{ berichtenboxData.mappen | dump | safe }},
+		aantalMagazijnen: {{ berichtenboxData.aantalMagazijnen }}
+	};
+</script>

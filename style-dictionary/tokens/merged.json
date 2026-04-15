@@ -921,7 +921,7 @@
         },
         "emphasis": {
           "$type": "color",
-          "$value": "{color.groen.600}"
+          "$value": "{color.groen.500}"
         },
         "text": {
           "$type": "color",
@@ -947,7 +947,7 @@
         },
         "emphasis": {
           "$type": "color",
-          "$value": "{color.oranje.600}"
+          "$value": "{color.oranje.500}"
         },
         "text": {
           "$type": "color",
@@ -1230,6 +1230,14 @@
         "text": {
           "$type": "color",
           "$value": "{color.text.inverse}"
+        }
+      },
+      "text-input": {
+        "border": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.border.default}"
+          }
         }
       }
     },
@@ -2050,13 +2058,8 @@
   "transition": {
     "default": {
       "$type": "other",
-      "$value": "background .2s ease, border .2s ease, color .2s ease, translate .2s ease",
+      "$value": "background .2s ease, border .2s ease, color .2s ease",
       "$description": "Standaard transitie die toegepast wordt op alle CSS properties."
-    },
-    "slow": {
-      "$type": "other",
-      "$value": "opacity .8s ease, translate .8s ease",
-      "$description": "Transitie die toegepast wordt op elementen met een tragere animatie"
     },
     "transform": {
       "$type": "other",
@@ -2077,8 +2080,36 @@
           "$type": "border",
           "$value": {
             "color": "{color.hemelblauw.500}",
-            "width": "{border-width.2}",
+            "width": "{border-width.md}",
             "style": "solid"
+          }
+        }
+      },
+      "tabs": {
+        "tab": {
+          "inactive": {
+            "$type": "border",
+            "$value": {
+              "width": "{border-width.md}",
+              "style": "solid",
+              "color": "{color.border.subtle}"
+            }
+          },
+          "hover": {
+            "$type": "border",
+            "$value": {
+              "width": "{border-width.md}",
+              "style": "solid",
+              "color": "{color.interactive.hover.border}"
+            }
+          },
+          "selected": {
+            "$type": "border",
+            "$value": {
+              "color": "{color.interactive.selected.border}",
+              "width": "{border-width.md}",
+              "style": "solid"
+            }
           }
         }
       }
@@ -2086,7 +2117,7 @@
     "default": {
       "$type": "border",
       "$value": {
-        "width": "1px",
+        "width": "{border-width.xs}",
         "style": "solid",
         "color": "{color.grijs.200}"
       }

@@ -306,9 +306,20 @@
 			<p class="berichtenbox-teller">
 				<span data-berichtenbox-teller-totaal>0</span> verwijderde berichten
 			</p>
-			<ul class="berichtenbox-lijst" data-berichtenbox-lijst data-berichtenbox-view="prullenbak">
-				
-			</ul>
+			<table class="berichtenbox-lijst" data-berichtenbox-lijst data-berichtenbox-view="prullenbak">
+				<thead class="visually-hidden">
+					<tr>
+						<th scope="col">Afzender</th>
+						<th scope="col">Onderwerp</th>
+						<th scope="col">Datum</th>
+						<th scope="col">Bijlage</th>
+						<th scope="col">Map</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
 			<div class="berichtenbox-leeg" data-berichtenbox-leeg>
 				Uw prullenbak is leeg.
 			</div>
@@ -380,6 +391,7 @@
     <script src="/assets/javascript/account-switcher.js"></script>
     <script src="/assets/javascript/content-interactions.js"></script>
     <script src="/assets/javascript/feature-flags.js"></script>
+    <script src="/assets/javascript/tab-interface.js"></script>
     <script src="/assets/javascript/berichtenbox.js"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ pagination:
 permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagination.pageNumber + 1 }}/{% endif %}"
 ---
 
-{% include "side-nav-overheid.njk" %}
+{% include "berichtenbox-data.njk" %} {% include "side-nav-overheid.njk" %}
 
 <article id="hoofd-inhoud" class="berichtenbox">
 	<nav class="breadcrumb">
@@ -19,82 +19,70 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 
 	<h1>Berichtenbox</h1>
 
-	<ul role="tablist">
-		<li role="presentation">
-			<a role="tab" href="#berichtenbox-inbox" id="tab-berichtenbox-inbox" aria-selected="true">Inbox</a>
-		</li>
-		<li role="presentation">
-			<a role="tab" href="#berichtenbox-archief" id="tab-berichtenbox-archief">Archief</a>
-		</li>
-		<li role="presentation">
-			<a role="tab" href="#berichtenbox-prullebak" id="tab-berichtenbox-prullebak">Prullebak</a>
-		</li>
-	</ul>
+	<section class="card tabs">
+		{% include "berichtenbox-tabs.njk" %}
 
-	<section role="tabpanel" id="berichtenbox-inbox" aria-labelledby="tab-berichtenbox-inbox">Inbox</section>
-	<section role="tabpanel" id="berichtenbox-archief" aria-labelledby="tab-berichtenbox-archief" hidden>Archief</section>
-	<section role="tabpanel" id="berichtenbox-prullebak" aria-labelledby="tab-berichtenbox-prullebak" hidden>Prullebak</section>
+		<section role="tabpanel" id="berichtenbox-inbox" class="berichtenbox-layout" aria-labelledby="tab-berichtenbox-inbox">
+			<section class="berichtenbox-content">
+				<div data-berichtenbox-toolbar>
+					<p class="metadata"><span data-berichtenbox-counter-total>{{ berichtenboxData.berichten | length }}</span> berichten uit <span data-berichtenbox-sources>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen, <span data-berichtenbox-counter-unread>{{ berichtenboxData.berichten | selectattr("isOngelezen") | length }}</span> ongelezen berichten.</p>
 
-	<div class="berichtenbox-layout">
-		{% include "berichtenbox-side-nav.njk" %}
+					<label class="berichtenbox-search">
+						<label for="search-berichtenbox">Filter berichten</label>
+						<input type="search" id="search-berichtenbox" data-berichtenbox-search-input placeholder="Filter op afzender of onderwerp" />
+					</label>
+				</div>
 
-		<section class="berichtenbox-content">
-			<p class="berichtenbox-teller">
-				<span data-berichtenbox-teller-totaal>{{ berichtenboxData.berichten | length }}</span> berichten · <span data-berichtenbox-teller-ongelezen>0</span> ongelezen
-				<span class="berichtenbox-bronnen">opgehaald uit <span data-berichtenbox-bronnen>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</span>
-			</p>
+				<div class="berichtenbox-progress" data-berichtenbox-progress hidden role="status" aria-live="polite">
+					Berichten ophalen…
+					<span class="berichtenbox-progress-count"><span data-berichtenbox-progress-source>0</span> van <span data-berichtenbox-progress-total>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</span>
+					<span class="berichtenbox-progress-messages"><span data-berichtenbox-progress-found>0</span> berichten gevonden</span>
+					<div class="berichtenbox-progress-bar"><div class="berichtenbox-progress-bar-fill" data-berichtenbox-progress-bar></div></div>
+				</div>
 
-			<div class="berichtenbox-filters">
-				<label class="berichtenbox-zoek">
-					<span class="visually-hidden">Zoek in afzender of onderwerp</span>
-					<input type="search" data-berichtenbox-zoek placeholder="Zoek in afzender of onderwerp" />
-				</label>
-				<details class="berichtenbox-filter-afzender">
-					<summary>Afzender</summary>
-					<div class="berichtenbox-filter-afzender-paneel" data-berichtenbox-afzender-paneel></div>
-				</details>
-			</div>
+				<div class="visually-hidden" data-berichtenbox-live aria-live="polite"></div>
 
-			<div class="berichtenbox-voortgang" data-berichtenbox-voortgang hidden role="status" aria-live="polite">
-				Berichten ophalen…
-				<span class="berichtenbox-voortgang-telling"><span data-berichtenbox-voortgang-bron>0</span> van <span data-berichtenbox-voortgang-totaal>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</span>
-				<span class="berichtenbox-voortgang-berichten"><span data-berichtenbox-voortgang-gevonden>0</span> berichten gevonden</span>
-				<div class="berichtenbox-voortgang-balk"><div class="berichtenbox-voortgang-balk-vulling" data-berichtenbox-voortgang-balk></div></div>
-			</div>
+				<table class="data-overview" data-berichtenbox-list>
+					<thead>
+						<tr>
+							<th scope="col">Afzender</th>
+							<th scope="col">Onderwerp</th>
+							<th scope="col">Datum</th>
+							<th scope="col"><span class="visually-hidden">Bijlage</span></th>
+							<!-- <th scope="col">Map</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						{% for bericht in berichtenPagina %} {% include "berichtenbox-row.njk" %} {% endfor %}
+					</tbody>
+				</table>
 
-			<div class="visually-hidden" data-berichtenbox-live aria-live="polite"></div>
-
-			<ul class="berichtenbox-lijst" data-berichtenbox-lijst>
-				{% for bericht in berichtenPagina %} {% include "berichtenbox-row.njk" %} {% endfor %}
-			</ul>
-
-			<div class="berichtenbox-leeg" data-berichtenbox-leeg hidden>Er zijn geen berichten die overeenkomen met uw zoekopdracht.</div>
-
-			{% if pagination.pages.length > 1 %}
-			<nav class="pagination" aria-label="Paginering">
-				<ol>
-					{% if pagination.previousPageHref %}
-					<li>
-						<a href="{{ pagination.previousPageHref | url }}" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a>
-					</li>
-					{% endif %} {% for href in pagination.hrefs %}
-					<li>
-						{% if loop.index0 == pagination.pageNumber %}
-						<span aria-current="page">{{ loop.index }}</span>
-						{% else %}
-						<a href="{{ href | url }}">{{ loop.index }}</a>
+				{% if pagination.pages.length > 1 %}
+				<nav class="pagination" aria-label="Paginering">
+					<ol>
+						{% if pagination.previousPageHref %}
+						<li>
+							<a href="{{ pagination.previousPageHref | url }}" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a>
+						</li>
+						{% endif %} {% for href in pagination.hrefs %}
+						<li>
+							{% if loop.index0 == pagination.pageNumber %}
+							<span aria-current="page">{{ loop.index }}</span>
+							{% else %}
+							<a href="{{ href | url }}">{{ loop.index }}</a>
+							{% endif %}
+						</li>
+						{% endfor %} {% if pagination.nextPageHref %}
+						<li>
+							<a href="{{ pagination.nextPageHref | url }}" rel="next">Volgende<span class="visually-hidden"> pagina</span></a>
+						</li>
 						{% endif %}
-					</li>
-					{% endfor %} {% if pagination.nextPageHref %}
-					<li>
-						<a href="{{ pagination.nextPageHref | url }}" rel="next">Volgende<span class="visually-hidden"> pagina</span></a>
-					</li>
-					{% endif %}
-				</ol>
-			</nav>
-			{% endif %}
+					</ol>
+				</nav>
+				{% endif %}
+			</section>
 		</section>
-	</div>
-
-	{% include "berichtenbox-footer-link.njk" ignore missing %}
+		<section role="tabpanel" id="berichtenbox-archief" aria-labelledby="tab-berichtenbox-archief" hidden>Archief</section>
+		<section role="tabpanel" id="berichtenbox-prullebak" aria-labelledby="tab-berichtenbox-prullebak" hidden>Prullebak</section>
+	</section>
 </article>

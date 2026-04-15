@@ -30,7 +30,7 @@
 		return PATH_PREFIX.replace(/\/$/, '') + absPath;
 	}
 	const POLL_MIN_SEC = 5;
-	const NIEUWE_BERICHTEN_LIMIET = 50;
+	const NIEUWE_BERICHTEN_LIMIET = 5;
 
 	const LS_KEY = "berichtenbox";
 
@@ -100,12 +100,12 @@
 	}
 
 	function huidigeView() {
-		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const lijst = document.querySelector('[data-berichtenbox-list]');
 		const attr = lijst ? lijst.dataset.berichtenboxView : null;
 		if (attr) return attr;
 		const path = location.pathname;
-		if (path.includes('/archief/')) return 'archief';
-		if (path.includes('/prullenbak/')) return 'prullenbak';
+		if (path.includes('/berichtenbox-archief/')) return 'archief';
+		if (path.includes('/berichtenbox-prullenbak/')) return 'prullenbak';
 		return 'inbox';
 	}
 
@@ -124,15 +124,15 @@
 	// Op andere views dan inbox worden statische rijen altijd verborgen; die views worden volledig door JS gevuld.
 	function pasStateToeOpRijen() {
 		const view = huidigeView();
-		const rijen = document.querySelectorAll('.berichtenbox-rij');
+		const rijen = document.querySelectorAll('.berichtenbox-row');
 		rijen.forEach((rij) => {
 			const id = rij.dataset.berichtId;
 			const status = statusVan(id);
 			if (view === 'inbox') {
 				rij.hidden = status !== 'inbox';
-				const origineel = rij.classList.contains('is-ongelezen');
+				const origineel = rij.classList.contains('is-unread');
 				const nu = isOngelezen(id, origineel);
-				rij.classList.toggle('is-ongelezen', nu);
+				rij.classList.toggle('is-unread', nu);
 			} else {
 				rij.hidden = true;
 			}
@@ -140,7 +140,7 @@
 	}
 
 	function render(view) {
-		const tellerTotaal = document.querySelector('[data-berichtenbox-teller-totaal]');
+		const tellerTotaal = document.querySelector('[data-berichtenbox-counter-total]');
 		let getoond = 0;
 		if (view === 'inbox') {
 			getoond = data.berichten.filter((b) => statusVan(b.id) === 'inbox').length;
@@ -151,7 +151,7 @@
 		}
 		if (tellerTotaal) tellerTotaal.textContent = getoond;
 
-		const tellerOngelezen = document.querySelector('[data-berichtenbox-teller-ongelezen]');
+		const tellerOngelezen = document.querySelector('[data-berichtenbox-counter-unread]');
 		if (tellerOngelezen) {
 			const n = data.berichten.filter((b) =>
 				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
@@ -161,7 +161,16 @@
 
 		const navInbox = document.querySelector('[data-berichtenbox-count="inbox"]');
 		if (navInbox) {
-			navInbox.textContent = data.berichten.filter((b) => statusVan(b.id) === 'inbox').length;
+			navInbox.textContent = data.berichten.filter((b) =>
+				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
+			).length;
+		}
+		const navOngelezen = document.querySelector('[data-berichtenbox-count="ongelezen"]');
+		if (navOngelezen) {
+			const n = data.berichten.filter((b) =>
+				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
+			).length;
+			navOngelezen.textContent = n;
 		}
 		const navArchief = document.querySelector('[data-berichtenbox-count="archief"]');
 		if (navArchief) navArchief.textContent = Object.keys(state.gearchiveerd).length;
@@ -217,38 +226,46 @@
 		];
 
 		const paneel = document.createElement('div');
-		paneel.className = 'berichtenbox-verplaats-paneel';
+		paneel.className = 'berichtenbox-move-panel';
 		paneel.setAttribute('role', 'group');
 		paneel.setAttribute('aria-label', 'Verplaats bericht naar map');
 
 		const kiesP = document.createElement('p');
-		kiesP.textContent = 'Kies een map:';
+		kiesP.textContent = 'Verplaats naar map:';
 		paneel.appendChild(kiesP);
 
 		const ul = document.createElement('ul');
 		paneel.appendChild(ul);
 
-		const nieuweMapP = document.createElement('p');
+		const nieuweMapFieldset = document.createElement('div');
 		const nieuweMapLabel = document.createElement('label');
-		nieuweMapLabel.textContent = 'Nieuwe map: ';
+		nieuweMapLabel.textContent = 'Maak een nieuwe map aan:';
 		const nieuweMapInput = document.createElement('input');
 		nieuweMapInput.type = 'text';
-		nieuweMapLabel.appendChild(nieuweMapInput);
+		nieuweMapLabel.setAttribute('for', 'nieuwe-map-naam');
+		nieuweMapInput.id = 'nieuwe-map-naam';
 		const nieuweMapBevestig = document.createElement('button');
 		nieuweMapBevestig.type = 'button';
-		nieuweMapBevestig.className = 'link-button';
-		nieuweMapBevestig.textContent = 'Aanmaken';
-		nieuweMapP.appendChild(nieuweMapLabel);
-		nieuweMapP.appendChild(document.createTextNode(' '));
-		nieuweMapP.appendChild(nieuweMapBevestig);
-		paneel.appendChild(nieuweMapP);
+		nieuweMapBevestig.className = 'button';
+		nieuweMapBevestig.textContent = 'Nieuwe map aanmaken';
+		const nieuweMapActions = document.createElement('div');
+		nieuweMapActions.className = 'action-group';
+		nieuweMapActions.appendChild(nieuweMapBevestig);
+		nieuweMapFieldset.appendChild(nieuweMapLabel);
+		nieuweMapFieldset.appendChild(nieuweMapInput);
+		nieuweMapFieldset.appendChild(nieuweMapActions);
+		paneel.appendChild(nieuweMapFieldset);
 
+		const mapIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M58 15H29v-2c0-1.1-.9-2-2-2H12c-1.1 0-2 .9-2 2v4.69c7.13.47 40.09 2.62 40.59 2.75.28.07.38.21.4.34 0 .04.02.23-.01.23H4.53c-1.29 0-2.24 1.2-1.95 2.46l7.06 30c.27 1.16 1.18 1.54 2.36 1.54h46a2 2 0 0 0 2-2V17c0-1.1-.9-2-2-2" /></svg>';
+
+		const huidigeMap = state.mapOverride[berichtId];
 		alleMappen.forEach((m) => {
 			const li = document.createElement('li');
 			const btn = document.createElement('button');
 			btn.type = 'button';
-			btn.className = 'link-button';
-			btn.textContent = m.naam;
+			btn.className = 'icon-button';
+			btn.innerHTML = mapIconSvg;
+			btn.appendChild(document.createTextNode(m.naam));
 			btn.addEventListener('click', () => {
 				state.mapOverride[berichtId] = m.slug;
 				opslaan();
@@ -257,24 +274,22 @@
 				updateMapLabelDetail(m.slug);
 			});
 			li.appendChild(btn);
+			if (huidigeMap === m.slug) {
+				const uitBtn = document.createElement('button');
+				uitBtn.type = 'button';
+				uitBtn.className = 'icon-button';
+				uitBtn.textContent = 'Verwijder uit map';
+				uitBtn.addEventListener('click', () => {
+					state.mapOverride[berichtId] = null;
+					opslaan();
+					sluitVerplaatsPaneel();
+					render(huidigeView());
+					updateMapLabelDetail(null);
+				});
+				li.appendChild(uitBtn);
+			}
 			ul.appendChild(li);
 		});
-		if (state.mapOverride[berichtId]) {
-			const li = document.createElement('li');
-			const btn = document.createElement('button');
-			btn.type = 'button';
-			btn.className = 'link-button';
-			btn.textContent = 'Uit map halen';
-			btn.addEventListener('click', () => {
-				state.mapOverride[berichtId] = null;
-				opslaan();
-				sluitVerplaatsPaneel();
-				render(huidigeView());
-				updateMapLabelDetail(null);
-			});
-			li.appendChild(btn);
-			ul.appendChild(li);
-		}
 		nieuweMapBevestig.addEventListener('click', () => {
 			const naam = nieuweMapInput.value.trim();
 			if (!naam) return;
@@ -290,7 +305,12 @@
 			updateMapLabelDetail(slug);
 			voegMapToeAanZijbalk({ slug, naam });
 		});
-		knop.parentNode.insertBefore(paneel, knop.nextSibling);
+		const actionGroup = knop.closest('.action-group') || knop.closest('.berichtenbox-detail-actions');
+		if (actionGroup) {
+			actionGroup.parentNode.insertBefore(paneel, actionGroup.nextSibling);
+		} else {
+			knop.parentNode.insertBefore(paneel, knop.nextSibling);
+		}
 		knop.setAttribute('aria-expanded', 'true');
 		actiefVerplaatsPaneel = paneel;
 		actieveVerplaatsKnop = knop;
@@ -316,7 +336,7 @@
 	}
 
 	function voegMapToeAanZijbalk(map) {
-		const lijst = document.querySelector('[data-berichtenbox-mappen]');
+		const lijst = document.querySelector('[data-berichtenbox-folders]');
 		if (!lijst) return;
 		if (lijst.querySelector('[data-map-slug="' + map.slug + '"]')) return;
 		const li = document.createElement('li');
@@ -333,73 +353,83 @@
 		lijst.appendChild(li);
 	}
 
-	// Dynamische polling-berichten (id start met 'msg-live-') krijgen een <div>-wrapper
-	// i.p.v. <a>, omdat er geen statische detailpagina voor bestaat.
 	function createRij(bericht) {
 		const ongelezen = isOngelezen(bericht.id, bericht.isOngelezen);
 		const effMap = mapVan(bericht.id, bericht.map);
 		const dynamisch = bericht.id.startsWith('msg-live-');
 
-		const li = document.createElement('li');
-		li.className = 'berichtenbox-rij' + (ongelezen ? ' is-ongelezen' : '') + (dynamisch ? ' is-dynamisch' : '');
-		li.dataset.berichtId = bericht.id;
-		li.dataset.afzenderId = bericht.magazijnId;
-		if (effMap) li.dataset.map = effMap;
+		const tr = document.createElement('tr');
+		tr.className = 'berichtenbox-row' + (ongelezen ? ' is-unread' : '') + (dynamisch ? ' is-dynamic' : '');
+		tr.dataset.berichtId = bericht.id;
+		tr.dataset.afzenderId = bericht.magazijnId;
+		if (effMap) tr.dataset.map = effMap;
 
-		const inner = document.createElement(dynamisch ? 'div' : 'a');
-		if (!dynamisch) inner.href = url('/moza/berichtenbox/bericht/' + bericht.id + '/');
-
+		const tdAfz = document.createElement('td');
+		tdAfz.className = 'berichtenbox-row-sender';
 		if (ongelezen) {
 			const vh = document.createElement('span');
 			vh.className = 'visually-hidden';
 			vh.textContent = 'Ongelezen. ';
-			inner.appendChild(vh);
+			tdAfz.appendChild(vh);
 		}
+		tdAfz.appendChild(document.createTextNode(bericht.afzender));
+		tr.appendChild(tdAfz);
 
-		const spanAfz = document.createElement('span');
-		spanAfz.className = 'berichtenbox-rij-afzender';
-		spanAfz.textContent = bericht.afzender;
-		inner.appendChild(spanAfz);
+		const tdOnd = document.createElement('td');
+		tdOnd.className = 'berichtenbox-row-subject';
+		if (dynamisch) {
+			const a = document.createElement('a');
+			a.href = url('/moza/berichtenbox/bericht-demo/?id=' + encodeURIComponent(bericht.id));
+			a.textContent = bericht.onderwerp;
+			tdOnd.appendChild(a);
+		} else {
+			const a = document.createElement('a');
+			a.href = url('/moza/berichtenbox/bericht/' + bericht.id + '/');
+			a.textContent = bericht.onderwerp;
+			tdOnd.appendChild(a);
+		}
+		tr.appendChild(tdOnd);
 
-		const spanOnd = document.createElement('span');
-		spanOnd.className = 'berichtenbox-rij-onderwerp';
-		spanOnd.textContent = bericht.onderwerp + (dynamisch ? ' (demo)' : '');
-		inner.appendChild(spanOnd);
+		const tdDat = document.createElement('td');
+		tdDat.className = 'berichtenbox-row-date';
+		tdDat.textContent = datumNL(bericht.datum);
+		tr.appendChild(tdDat);
 
-		const spanDat = document.createElement('span');
-		spanDat.className = 'berichtenbox-rij-datum';
-		spanDat.textContent = datumNL(bericht.datum);
-		inner.appendChild(spanDat);
-
+		const tdBij = document.createElement('td');
+		tdBij.className = 'berichtenbox-row-attachment';
 		if (bericht.heeftBijlage) {
-			// aria-label op <span> wordt door sommige screenreaders genegeerd;
-			// daarom aria-hidden op het emoji + visueel-verborgen tekst.
-			const spanBij = document.createElement('span');
-			spanBij.className = 'berichtenbox-rij-bijlage';
-			spanBij.setAttribute('aria-hidden', 'true');
-			spanBij.textContent = '📎';
-			inner.appendChild(spanBij);
+			const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			icon.setAttribute('viewBox', '0 0 64 64');
+			icon.setAttribute('aria-hidden', 'true');
+			icon.setAttribute('class', 'icon-md');
+			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+			path.setAttribute('fill', 'currentColor');
+			path.setAttribute('d', 'M48.5 16.1 24.6 40c-2.7 2.7-7.1 2.7-9.8 0-2.7-2.7-2.7-7.1 0-9.8L36.2 8.8c1.8-1.8 4.7-1.8 6.5 0s1.8 4.7 0 6.5L22.4 35.6c-.9.9-2.4.9-3.3 0-.9-.9-.9-2.4 0-3.3l17.1-17.1-2.8-2.8L16.3 29.5c-2.5 2.5-2.5 6.4 0 8.9 2.5 2.5 6.4 2.5 8.9 0L45.5 18c3.3-3.3 3.3-8.8 0-12.1s-8.8-3.3-12.1 0L11.9 27.4c-4.3 4.3-4.3 11.2 0 15.4 4.3 4.3 11.2 4.3 15.4 0L51.3 18.9l-2.8-2.8z');
+			icon.appendChild(path);
+			tdBij.appendChild(icon);
 			const bijVh = document.createElement('span');
 			bijVh.className = 'visually-hidden';
-			bijVh.textContent = 'Heeft bijlage. ';
-			inner.appendChild(bijVh);
+			bijVh.textContent = 'Heeft bijlage';
+			tdBij.appendChild(bijVh);
 		}
+		tr.appendChild(tdBij);
 
+		const tdMap = document.createElement('td');
+		tdMap.className = 'berichtenbox-row-folder-label';
 		if (effMap) {
 			const spanMap = document.createElement('span');
-			spanMap.className = 'berichtenbox-rij-maplabel';
 			spanMap.dataset.maplabel = '';
 			spanMap.textContent = effMap;
-			inner.appendChild(spanMap);
+			tdMap.appendChild(spanMap);
 		}
+		tr.appendChild(tdMap);
 
-		li.appendChild(inner);
-		return li;
+		return tr;
 	}
 
 	function renderLijstVoorView(view) {
-		const lijst = document.querySelector('[data-berichtenbox-lijst]');
-		const leeg = document.querySelector('[data-berichtenbox-leeg]');
+		const lijst = document.querySelector('[data-berichtenbox-list]');
+		const leeg = document.querySelector('[data-berichtenbox-empty]');
 		if (!lijst) return;
 		let items = [];
 		if (view === 'archief') {
@@ -408,19 +438,21 @@
 			items = data.berichten.filter((b) => state.verwijderd[b.id]);
 		}
 		if (view === 'archief' || view === 'prullenbak') {
-			while (lijst.firstChild) lijst.removeChild(lijst.firstChild);
-			items.forEach((b) => lijst.appendChild(createRij(b)));
+			const tbody = lijst.querySelector('tbody') || lijst;
+			while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+			items.forEach((b) => tbody.appendChild(createRij(b)));
+			lijst.hidden = items.length === 0;
 			if (leeg) leeg.hidden = items.length > 0;
 		}
 	}
 
 	function bindInboxFilters() {
 		if (huidigeView() !== 'inbox') return;
-		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const lijst = document.querySelector('[data-berichtenbox-list]');
 		if (!lijst) return;
 
-		const zoekInput = document.querySelector('[data-berichtenbox-zoek]');
-		const afzenderPaneel = document.querySelector('[data-berichtenbox-afzender-paneel]');
+		const zoekInput = document.querySelector('[data-berichtenbox-search-input]');
+		const afzenderPaneel = document.querySelector('[data-berichtenbox-sender-panel]');
 
 		if (afzenderPaneel) {
 			while (afzenderPaneel.firstChild) afzenderPaneel.removeChild(afzenderPaneel.firstChild);
@@ -456,8 +488,9 @@
 				const effMap = (b.id in state.mapOverride) ? state.mapOverride[b.id] : b.map;
 				return effMap === mapFilterAanvankelijk;
 			});
-			while (lijst.firstChild) lijst.removeChild(lijst.firstChild);
-			berichtenInMap.forEach((b) => lijst.appendChild(createRij(b)));
+			const tbody = lijst.querySelector('tbody') || lijst;
+			while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+			berichtenInMap.forEach((b) => tbody.appendChild(createRij(b)));
 			if (paginering) paginering.hidden = true;
 		}
 
@@ -468,15 +501,15 @@
 			);
 			const mapFilter = mapUitUrl();
 			let zichtbaar = 0;
-			document.querySelectorAll('.berichtenbox-rij').forEach((rij) => {
+			document.querySelectorAll('.berichtenbox-row').forEach((rij) => {
 				if (statusVan(rij.dataset.berichtId) !== 'inbox') {
 					rij.hidden = true;
 					return;
 				}
 				let match = true;
 				if (zoek) {
-					const afzEl = rij.querySelector('.berichtenbox-rij-afzender');
-					const ondEl = rij.querySelector('.berichtenbox-rij-onderwerp');
+					const afzEl = rij.querySelector('.berichtenbox-row-sender');
+					const ondEl = rij.querySelector('.berichtenbox-row-subject');
 					const tekst = ((afzEl ? afzEl.textContent : '') + ' ' + (ondEl ? ondEl.textContent : '')).toLowerCase();
 					if (!tekst.includes(zoek)) match = false;
 				}
@@ -492,7 +525,7 @@
 				rij.hidden = !match;
 				if (match) zichtbaar++;
 			});
-			const leeg = document.querySelector('[data-berichtenbox-leeg]');
+			const leeg = document.querySelector('[data-berichtenbox-empty]');
 			if (leeg) leeg.hidden = zichtbaar > 0;
 		}
 
@@ -501,11 +534,21 @@
 
 		const mapFilter = mapUitUrl();
 		if (mapFilter) {
-			const mapObj = [...data.mappen, ...state.eigenMappen].find((m) => m.slug === mapFilter);
-			if (mapObj) {
-				const kop = document.querySelector('.berichtenbox h1');
-				if (kop) kop.textContent = 'Berichtenbox — ' + mapObj.naam;
+			const mapTab = document.querySelector('[data-map-slug="' + mapFilter + '"] a');
+			if (mapTab) {
+				mapTab.setAttribute('aria-current', 'page');
+				mapTab.setAttribute('aria-selected', 'true');
 			}
+			const inboxTab = document.querySelector('[data-berichtenbox-count="inbox"]');
+			if (inboxTab) {
+				const inboxLink = inboxTab.closest('a');
+				if (inboxLink) {
+					inboxLink.removeAttribute('aria-current');
+					inboxLink.removeAttribute('aria-selected');
+				}
+			}
+			const counterP = document.querySelector('[data-berichtenbox-toolbar] > p');
+			if (counterP) counterP.textContent = 'Deze map heeft u aangemaakt op 7 april 2026.';
 		}
 		pasFilterToe();
 	}
@@ -547,10 +590,10 @@
 	}
 
 	function laadBijlagen() {
-		const bijlSec = document.querySelector('[data-berichtenbox-bijlagen]');
+		const bijlSec = document.querySelector('[data-berichtenbox-attachments]');
 		if (!bijlSec) return;
-		const laden = bijlSec.querySelector('[data-berichtenbox-bijlagen-laden]');
-		const lijst = bijlSec.querySelector('[data-berichtenbox-bijlagen-lijst]');
+		const laden = bijlSec.querySelector('[data-berichtenbox-attachments-loading]');
+		const lijst = bijlSec.querySelector('[data-berichtenbox-attachments-list]');
 		if (!laden || !lijst) {
 			console.warn('[Berichtenbox] Bijlage-sectie onvolledig: template-drift?');
 			return;
@@ -584,31 +627,101 @@
 		}, 1500);
 	}
 
+	// Vul de generieke demo-detailpagina met berichtdata uit state.
+	function vulDemoDetailPagina() {
+		const detail = document.querySelector('[data-demo-detail]');
+		if (!detail) return;
+
+		const params = new URLSearchParams(location.search);
+		const id = params.get('id');
+		if (!id) {
+			detail.hidden = true;
+			const melding = document.querySelector('[data-demo-niet-gevonden]');
+			if (melding) melding.hidden = false;
+			return;
+		}
+
+		const bericht = data.berichten.find((b) => b.id === id);
+		if (!bericht) {
+			detail.hidden = true;
+			const melding = document.querySelector('[data-demo-niet-gevonden]');
+			if (melding) melding.hidden = false;
+			return;
+		}
+
+		// Vul data-attributen zodat bindDetailPaginaActies() werkt.
+		detail.dataset.berichtId = bericht.id;
+		detail.dataset.afzenderId = bericht.magazijnId;
+		detail.dataset.afzenderNaam = bericht.afzender;
+		if (bericht.heeftBijlage) detail.dataset.heeftBijlage = 'true';
+
+		const onderwerpEl = detail.querySelector('[data-demo-onderwerp]');
+		if (onderwerpEl) onderwerpEl.textContent = bericht.onderwerp;
+
+		const breadcrumb = document.querySelector('[data-demo-breadcrumb]');
+		if (breadcrumb) breadcrumb.textContent = bericht.onderwerp;
+
+		document.title = 'MijnOverheid Zakelijk: ' + bericht.onderwerp;
+
+		const effMap = mapVan(bericht.id, bericht.map);
+		const metaEl = detail.querySelector('[data-demo-meta]');
+		if (metaEl) {
+			metaEl.textContent = bericht.afzender + ' \u00b7 ' + datumNL(bericht.datum);
+			if (effMap) {
+				const span = document.createElement('span');
+				span.dataset.maplabel = '';
+				span.textContent = effMap;
+				metaEl.appendChild(document.createTextNode(' \u00b7 '));
+				metaEl.appendChild(span);
+			}
+		}
+
+		const bodyEl = detail.querySelector('[data-demo-body]');
+		if (bodyEl) {
+			bericht.inhoud.split('\n\n').forEach((alinea) => {
+				const p = document.createElement('p');
+				p.textContent = alinea;
+				bodyEl.appendChild(p);
+			});
+		}
+
+		if (bericht.heeftBijlage) {
+			const bijlSec = detail.querySelector('[data-berichtenbox-attachments]');
+			if (bijlSec) {
+				bijlSec.hidden = false;
+				const laden = bijlSec.querySelector('[data-berichtenbox-attachments-loading]');
+				if (laden) laden.textContent = 'Bijlagen ophalen bij ' + bericht.afzender + '\u2026';
+			}
+		}
+	}
+
 	function toonMappenZijbalk() {
-		const kop = document.querySelector('[data-berichtenbox-mappen-kop]');
-		const lijst = document.querySelector('[data-berichtenbox-mappen]');
+		const kop = document.querySelector('[data-berichtenbox-folders-heading]');
+		const lijst = document.querySelector('[data-berichtenbox-folders]');
 		if (kop) kop.hidden = false;
 		if (lijst) lijst.hidden = false;
 		state.eigenMappen.forEach(voegMapToeAanZijbalk);
 	}
 
 	function voortgangsAnimatie(opKlaar) {
-		const wrap = document.querySelector('[data-berichtenbox-voortgang]');
-		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const wrap = document.querySelector('[data-berichtenbox-progress]');
+		const lijst = document.querySelector('[data-berichtenbox-list]');
 		const pagnav = document.querySelector('.berichtenbox-content .pagination');
+		const toolbar = document.querySelector('[data-berichtenbox-toolbar]');
 		if (!wrap || !lijst) { opKlaar(); return; }
 
 		lijst.hidden = true;
 		if (pagnav) pagnav.hidden = true;
+		if (toolbar) toolbar.hidden = true;
 		wrap.hidden = false;
 
 		const totaalBronnen = data.aantalMagazijnen;
 		const totaalBerichten = data.berichten.filter((b) => statusVan(b.id) === 'inbox').length;
 
-		const bronEl = document.querySelector('[data-berichtenbox-voortgang-bron]');
-		const totaalEl = document.querySelector('[data-berichtenbox-voortgang-totaal]');
-		const gevondenEl = document.querySelector('[data-berichtenbox-voortgang-gevonden]');
-		const balk = document.querySelector('[data-berichtenbox-voortgang-balk]');
+		const bronEl = document.querySelector('[data-berichtenbox-progress-source]');
+		const totaalEl = document.querySelector('[data-berichtenbox-progress-total]');
+		const gevondenEl = document.querySelector('[data-berichtenbox-progress-found]');
+		const balk = document.querySelector('[data-berichtenbox-progress-bar]');
 		if (totaalEl) totaalEl.textContent = totaalBronnen;
 
 		// Simuleer SSE-gedrag: elke bron arriveert op eigen moment. Trekken uit een
@@ -628,7 +741,7 @@
 		}
 		berichtTijden.sort((a, b) => a - b);
 
-		const duur = 7000;
+		const duur = 4000;
 		const start = performance.now();
 
 		function aantalVoor(tijden, t) {
@@ -654,6 +767,7 @@
 				wrap.hidden = true;
 				lijst.hidden = false;
 				if (pagnav) pagnav.hidden = false;
+				if (toolbar) toolbar.hidden = false;
 				opKlaar();
 			}
 		}
@@ -665,6 +779,7 @@
 	function voegNieuwBerichtToe() {
 		if (huidigeView() !== 'inbox') return;
 		if (!data.magazijnen.length) return;
+		if (state.nieuweBerichten.length >= NIEUWE_BERICHTEN_LIMIET) return;
 		nieuwBerichtTeller++;
 		const mag = data.magazijnen[Math.floor(Math.random() * data.magazijnen.length)];
 		const nu = new Date().toISOString().slice(0, 10);
@@ -692,11 +807,18 @@
 		// Synchroniseer window-data zodat render/filter het nieuwe bericht meenemen.
 		data.berichten.unshift(bericht);
 
-		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const lijst = document.querySelector('[data-berichtenbox-list]');
 		if (lijst) {
-			const li = createRij(bericht);
-			li.classList.add('is-nieuw-binnen');
-			lijst.prepend(li);
+			const tbody = lijst.querySelector('tbody') || lijst;
+			const tr = createRij(bericht);
+			tr.classList.add('is-new');
+			tbody.prepend(tr);
+
+			// Houd paginagrootte aan: verwijder de onderste rij als er meer dan 25 zichtbaar zijn.
+			const zichtbaar = Array.from(tbody.querySelectorAll('.berichtenbox-row:not([hidden])'));
+			if (zichtbaar.length > 25) {
+				zichtbaar[zichtbaar.length - 1].remove();
+			}
 		}
 		render('inbox');
 
@@ -709,7 +831,7 @@
 		// Alleen op pagina 1 — nieuwe berichten landen bovenaan, op pagina 2+ zouden ze onzichtbaar zijn.
 		if (/\/pagina-\d+\/$/.test(location.pathname)) return;
 		// Niet op detail-pagina's (geen inbox-lijst om aan te prepender).
-		if (!document.querySelector('[data-berichtenbox-lijst]')) return;
+		if (!document.querySelector('[data-berichtenbox-list]')) return;
 		const params = new URLSearchParams(location.search);
 		const pollParam = parseInt(params.get('poll'), 10);
 		let intervalSec = Number.isFinite(pollParam) && pollParam > 0 ? pollParam : 60;
@@ -732,11 +854,12 @@
 				data.berichten.unshift(b);
 			}
 		});
-		const lijst = document.querySelector('[data-berichtenbox-lijst]');
+		const lijst = document.querySelector('[data-berichtenbox-list]');
 		if (lijst && huidigeView() === 'inbox' && !(/\/pagina-\d+\/$/.test(location.pathname))) {
+			const tbody = lijst.querySelector('tbody') || lijst;
 			state.nieuweBerichten.forEach((b) => {
 				if (lijst.querySelector('[data-bericht-id="' + b.id + '"]')) return;
-				lijst.prepend(createRij(b));
+				tbody.prepend(createRij(b));
 			});
 		}
 	}
@@ -756,6 +879,7 @@
 	pasStateToeOpRijen();
 	renderLijstVoorView(huidigeView());
 	render(huidigeView());
+	vulDemoDetailPagina();
 	bindDetailPaginaActies();
 
 	const isEerstePagina = !/\/pagina-\d+\/$/.test(location.pathname);
