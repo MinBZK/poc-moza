@@ -2,10 +2,32 @@
 
 | Veld           | Waarde                          |
 |----------------|---------------------------------|
-| Status         | Geaccepteerd                    |
+| Status         | **Ongeldig** (zie onder)        |
 | Datum          | 2026-03-19                      |
+| Ongeldig sinds | 2026-04-15                      |
 | Beslisser(s)   | Projectteam poc-moza            |
-| Gerelateerd    | PDR-001                         |
+| Gerelateerd    | PDR-001, PDR-003                |
+
+> ## ⚠️ Ongeldig verklaard — 2026-04-15
+>
+> Hertesten met het huidige VLAM/UbiOps-endpoint laat zien dat native OpenAI
+> tool-calling inmiddels **stabiel** werkt. De drempels die deze PDR
+> beschreef (500-fouten bij 3 tools, 20-60s latency) zijn niet langer
+> reproduceerbaar: een multi-step chain met 4 tools en een complex schema
+> voltooit binnen ~12s zonder fouten. Zie `services/host/test_vlam_toolcalling_chain.py`.
+>
+> Gevolg: de retry-zonder-tools fallback (`_chat_vlam_no_tools`,
+> `_vlam_no_tools_blocking`) is verwijderd uit `vlam_host.py`. Bij een
+> timeout of serverfout krijgt de gebruiker nu een gewone foutmelding
+> (zoals Claude dat al deed) in plaats van een antwoord op "eigen kennis"
+> zonder bronverwijzing. De disclaimer was een functioneel compromis dat
+> we niet langer nodig hebben.
+>
+> `VLAM_TIMEOUT` (30s) en `CLAUDE_TIMEOUT` (60s) blijven bestaan; alleen
+> de fallback-logica bij die timeouts is geschrapt.
+>
+> **Dit document blijft bewaard voor context en audit-trail. De beslissing
+> is niet meer van toepassing op de huidige codebase.**
 
 ## Context
 

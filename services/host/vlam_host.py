@@ -12,8 +12,6 @@ from collections.abc import AsyncGenerator
 import anthropic
 import openai
 
-import re
-
 from config import (
     ANTHROPIC_API_KEY,
     CLAUDE_MODEL,
@@ -22,7 +20,6 @@ from config import (
     VLAM_API_KEY,
     VLAM_BASE_URL,
     VLAM_MODEL_ID,
-    VLAM_ORCHESTRATED,
     VLAM_TIMEOUT,
     get_system_prompt,
 )
@@ -139,10 +136,6 @@ CLI_TOOL_DEFINITIONS_OPENAI = [
     {"type": "function", "function": {"name": t["name"], "description": t["description"], "parameters": t["input_schema"]}}
     for t in CLI_TOOL_DEFINITIONS_ANTHROPIC
 ]
-
-CLI_TOOL_CATALOG = "\n".join(
-    f"- **{t['name']}**: {t['description']}" for t in CLI_TOOL_DEFINITIONS_ANTHROPIC
-)
 
 
 class VLAMHost:
@@ -306,8 +299,6 @@ class VLAMHost:
                 return
             if use_cli:
                 gen = self._chat_vlam_cli_stream(messages)
-            elif VLAM_ORCHESTRATED and self.has_tools:
-                gen = self._chat_vlam_orchestrated_stream(messages)
             else:
                 gen = self._chat_vlam_stream(messages)
         elif llm == "claude":
@@ -400,11 +391,7 @@ class VLAMHost:
     async def _chat_vlam_stream(
         self, messages: list[dict]
     ) -> AsyncGenerator[dict, None]:
-        """VLAM agentic loop die status-events yieldt.
-
-        Bij een timeout of serverfout wordt automatisch opnieuw geprobeerd
-        zonder tools, zodat de gebruiker alsnog een antwoord krijgt.
-        """
+        """VLAM agentic loop (native OpenAI tool-calling) die status-events yieldt."""
         tools_openai = self.registry.get_openai_tools()
         system_prompt = get_system_prompt("vlam", self.has_tools)
         openai_messages = self._to_openai_messages(messages, system_prompt)
@@ -426,13 +413,14 @@ class VLAMHost:
                 )
                 _log_tokens("vlam", response)
             except (TimeoutError, openai.APIStatusError) as e:
-                logger.warning("VLAM-call mislukt (%s), retry zonder tools", e)
+                logger.error("VLAM-call mislukt: %s", e)
                 yield {
-                    "type": "status",
-                    "message": "Bronnen niet bereikbaar, antwoord op eigen kennis...",
+                    "type": "answer",
+                    "message": (
+                        "De assistent is op dit moment niet bereikbaar. "
+                        "Probeer het later opnieuw."
+                    ),
                 }
-                async for event in self._chat_vlam_no_tools(messages, system_prompt):
-                    yield event
                 return
 
             choice = response.choices[0]
@@ -478,186 +466,6 @@ class VLAMHost:
             "type": "answer",
             "message": "Het antwoord kon niet worden voltooid (te veel stappen).",
         }
-
-    # ------------------------------------------------------------------
-    # VLAM orchestratie-modus — host stuurt tools aan, geen tool-calling
-    # ------------------------------------------------------------------
-
-    def _build_tool_catalog(self) -> str:
-        """Genereer een compacte tool-catalogus voor de VLAM-systeemprompt."""
-        lines = []
-        for tool_key, (_, tool) in self.registry.tool_map.items():
-            params = tool.inputSchema.get("properties", {})
-            required = tool.inputSchema.get("required", [])
-            param_parts = []
-            for pname, pschema in params.items():
-                req = " (verplicht)" if pname in required else ""
-                param_parts.append(f"    - {pname}: {pschema.get('type', '?')}{req}")
-            param_str = (
-                "\n".join(param_parts) if param_parts else "    (geen parameters)"
-            )
-            lines.append(f"- {tool_key}: {tool.description or ''}\n{param_str}")
-        return "\n".join(lines)
-
-    _ORCHESTRATION_PROMPT = """Je bent een Rijksbrede digitale assistent. Je kunt GEEN tools zelf aanroepen.
-Als je een bron nodig hebt, antwoord dan ALLEEN met een JSON-blok in dit formaat:
-
-```json
-{{"tool": "<tool_naam>", "arguments": {{...}}}}
-```
-
-Beschikbare tools:
-{tool_catalog}
-
-REGELS:
-- Vraag per keer MAXIMAAL één tool aan.
-- Als je GEEN tool nodig hebt, antwoord dan direct aan de gebruiker (zonder JSON-blok).
-- Als je nog informatie mist om een tool aan te roepen, vraag dan ALLE ontbrekende gegevens in EEN keer op. Stel NIET meerdere losse vragen achter elkaar.
-- Als je eerder al een tool-resultaat hebt ontvangen, gebruik dat om te antwoorden.
-- Bij rvo__indienen: roep de tool NIET direct aan. Toon EERST een volledig voorbeeldrapport aan de gebruiker (bedrijfsnaam, KvK-nummer, regeling, maatregelen) en vraag expliciet om akkoord. Pas NA akkoord van de gebruiker vraag je de tool aan."""
-
-    async def _vlam_call(self, openai_messages: list[dict]) -> str:
-        """Eén VLAM-call zonder tools, met timeout."""
-        response = await asyncio.wait_for(
-            self.vlam_client.chat.completions.create(
-                model=VLAM_MODEL_ID,
-                max_tokens=4096,
-                messages=openai_messages,
-            ),
-            timeout=VLAM_TIMEOUT,
-        )
-        _log_tokens("vlam", response)
-        return response.choices[0].message.content or ""
-
-    @staticmethod
-    def _extract_tool_request(text: str) -> dict | None:
-        """Probeer een JSON tool-request te extraheren uit VLAM's antwoord."""
-        # Zoek naar ```json ... ``` blokken
-        match = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
-        if match:
-            try:
-                parsed = json.loads(match.group(1))
-                if "tool" in parsed:
-                    return parsed
-            except json.JSONDecodeError:
-                pass
-        # Fallback: zoek naar een los JSON-object met "tool" key
-        match = re.search(r'\{"tool"\s*:.*?\}', text, re.DOTALL)
-        if match:
-            try:
-                parsed = json.loads(match.group(0))
-                if "tool" in parsed:
-                    return parsed
-            except json.JSONDecodeError:
-                pass
-        return None
-
-    async def _chat_vlam_orchestrated_stream(
-        self, messages: list[dict]
-    ) -> AsyncGenerator[dict, None]:
-        """VLAM multi-step orchestratie: VLAM plant, host voert uit.
-
-        Stap 1: VLAM leest de vraag en zegt welke tool nodig is (of antwoordt direct)
-        Stap 2: Host voert de tool uit
-        Stap 3: VLAM formuleert het antwoord met het tool-resultaat
-        Herhaal stappen 1-3 bij afhankelijke tools (max 5 rondes).
-        """
-        tool_catalog = self._build_tool_catalog()
-        system_prompt = get_system_prompt("vlam", self.has_tools)
-        orchestration_addendum = self._ORCHESTRATION_PROMPT.format(
-            tool_catalog=tool_catalog
-        )
-        full_system = system_prompt + "\n\n---\n\n" + orchestration_addendum
-
-        openai_messages = self._to_openai_messages(messages, full_system)
-
-        max_rounds = 5
-        for round_num in range(max_rounds):
-            try:
-                vlam_response = await self._vlam_call(openai_messages)
-            except (TimeoutError, openai.APIStatusError) as e:
-                logger.error("VLAM orchestratie-call mislukt: %s", e)
-                yield {
-                    "type": "answer",
-                    "message": (
-                        "De assistent is op dit moment niet bereikbaar. "
-                        "Probeer het later opnieuw."
-                    ),
-                }
-                return
-
-            logger.info(
-                "VLAM orchestratie ronde %d: %s", round_num + 1, vlam_response
-            )
-
-            # Kijk of VLAM een tool wil aanroepen
-            tool_request = self._extract_tool_request(vlam_response)
-
-            if not tool_request:
-                # VLAM antwoordt direct — geen tool nodig
-                messages.append({"role": "assistant", "content": vlam_response})
-                yield {"type": "answer", "message": vlam_response}
-                return
-
-            # VLAM wil een tool aanroepen
-            tool_key = tool_request.get("tool", "")
-            arguments = tool_request.get("arguments", {})
-
-            if tool_key not in self.registry.tool_map:
-                # Onbekende tool — laat VLAM opnieuw proberen
-                openai_messages.append({"role": "assistant", "content": vlam_response})
-                openai_messages.append(
-                    {
-                        "role": "user",
-                        "content": f"Onbekende tool: '{tool_key}'. Beschikbare tools: {', '.join(self.registry.tool_map.keys())}. Probeer opnieuw of antwoord direct.",
-                    }
-                )
-                continue
-
-            yield {
-                "type": "tool",
-                "message": _tool_label(tool_key),
-                "tool": tool_key,
-            }
-
-            logger.info("Tool-aanroep [vlam-orchestratie]: %s(%s)", tool_key, arguments)
-            try:
-                result = await self.registry.call_tool(tool_key, arguments)
-            except Exception as e:
-                result = f"Fout bij tool '{tool_key}': {e}"
-                logger.error(result)
-
-            zaak = _extract_lopende_zaak(tool_key, result)
-            if zaak:
-                yield {"type": "case", "data": zaak}
-
-            # Voeg VLAM's plan en het tool-resultaat toe aan de conversatie
-            openai_messages.append({"role": "assistant", "content": vlam_response})
-            openai_messages.append(
-                {
-                    "role": "user",
-                    "content": f"Resultaat van {tool_key}:\n\n{result}\n\nGebruik dit resultaat om de vraag van de gebruiker te beantwoorden. Als je nog een andere tool nodig hebt, vraag die aan met een JSON-blok.",
-                }
-            )
-
-            yield {"type": "status", "message": "Antwoord opstellen..."}
-
-        # Max rondes bereikt — probeer een direct antwoord
-        try:
-            openai_messages.append(
-                {
-                    "role": "user",
-                    "content": "Formuleer nu een antwoord op basis van de beschikbare informatie, zonder extra tools.",
-                }
-            )
-            final = await self._vlam_call(openai_messages)
-            messages.append({"role": "assistant", "content": final})
-            yield {"type": "answer", "message": final}
-        except (TimeoutError, openai.APIStatusError):
-            yield {
-                "type": "answer",
-                "message": "Het antwoord kon niet worden voltooid.",
-            }
 
     # ------------------------------------------------------------------
     # CLI-modus — zelfde LLM (Claude), maar tools via CLI i.p.v. MCP
@@ -745,28 +553,32 @@ REGELS:
         }
 
     # ------------------------------------------------------------------
-    # VLAM + CLI — orchestratie met CLI-tools i.p.v. MCP
+    # VLAM + CLI — native tool-calling met CLI-tools i.p.v. MCP
     # ------------------------------------------------------------------
 
     async def _chat_vlam_cli_stream(
         self, messages: list[dict]
     ) -> AsyncGenerator[dict, None]:
-        """VLAM orchestratie die CLI-tools aanroept i.p.v. MCP-servers."""
-        tool_catalog = CLI_TOOL_CATALOG if not self.has_tools else self._build_tool_catalog()
+        """VLAM agentic loop (native tool-calling) met CLI-tools i.p.v. MCP."""
+        tools_openai = CLI_TOOL_DEFINITIONS_OPENAI
         system_prompt = get_system_prompt("vlam", True)
-        orchestration_addendum = self._ORCHESTRATION_PROMPT.format(
-            tool_catalog=tool_catalog
-        )
-        full_system = system_prompt + "\n\n---\n\n" + orchestration_addendum
+        openai_messages = self._to_openai_messages(messages, system_prompt)
 
-        openai_messages = self._to_openai_messages(messages, full_system)
-
-        max_rounds = 5
-        for round_num in range(max_rounds):
+        max_iterations = 10
+        for _ in range(max_iterations):
             try:
-                vlam_response = await self._vlam_call(openai_messages)
+                response = await asyncio.wait_for(
+                    self.vlam_client.chat.completions.create(
+                        model=VLAM_MODEL_ID,
+                        max_tokens=4096,
+                        messages=openai_messages,
+                        tools=tools_openai,
+                    ),
+                    timeout=VLAM_TIMEOUT,
+                )
+                _log_tokens("vlam", response)
             except (TimeoutError, openai.APIStatusError) as e:
-                logger.error("VLAM CLI-orchestratie mislukt: %s", e)
+                logger.error("VLAM CLI-call mislukt: %s", e)
                 yield {
                     "type": "answer",
                     "message": (
@@ -776,107 +588,47 @@ REGELS:
                 }
                 return
 
-            logger.info(
-                "VLAM CLI-orchestratie ronde %d: %s",
-                round_num + 1,
-                vlam_response,
+            assistant_msg = response.choices[0].message
+            openai_messages.append(assistant_msg.model_dump(exclude_none=True))
+            messages.append(
+                {"role": "assistant", "content": assistant_msg.content or ""}
             )
 
-            tool_request = self._extract_tool_request(vlam_response)
-
-            if not tool_request:
-                messages.append({"role": "assistant", "content": vlam_response})
-                yield {"type": "answer", "message": vlam_response}
+            tool_calls = assistant_msg.tool_calls
+            if not tool_calls:
+                yield {"type": "answer", "message": assistant_msg.content or ""}
                 return
 
-            tool_key = tool_request.get("tool", "")
-            arguments = tool_request.get("arguments", {})
-
-            valid_cli_tools = {t["name"] for t in CLI_TOOL_DEFINITIONS_ANTHROPIC}
-            if tool_key not in valid_cli_tools:
-                openai_messages.append({"role": "assistant", "content": vlam_response})
-                openai_messages.append(
-                    {
-                        "role": "user",
-                        "content": f"Onbekende tool: '{tool_key}'. Beschikbare tools: {', '.join(valid_cli_tools)}. Probeer opnieuw of antwoord direct.",
-                    }
-                )
-                continue
-
-            yield {
-                "type": "tool",
-                "message": f"CLI: {_tool_label(tool_key)}",
-                "tool": tool_key,
-            }
-
-            logger.info("CLI tool-aanroep [vlam]: %s(%s)", tool_key, arguments)
-            try:
-                result = await execute_cli_tool(tool_key, arguments)
-            except Exception as e:
-                result = f"Fout bij CLI tool '{tool_key}': {e}"
-                logger.error(result)
-
-            zaak = _extract_lopende_zaak(tool_key, result)
-            if zaak:
-                yield {"type": "case", "data": zaak}
-
-            openai_messages.append({"role": "assistant", "content": vlam_response})
-            openai_messages.append(
-                {
-                    "role": "user",
-                    "content": f"Resultaat van {tool_key}:\n\n{result}\n\nGebruik dit resultaat om de vraag van de gebruiker te beantwoorden. Als je nog een andere tool nodig hebt, vraag die aan met een JSON-blok.",
+            for tc in tool_calls:
+                tool_key = tc.function.name
+                yield {
+                    "type": "tool",
+                    "message": f"CLI: {_tool_label(tool_key)}",
+                    "tool": tool_key,
                 }
-            )
+
+                arguments = json.loads(tc.function.arguments or "{}")
+                logger.info("CLI tool-aanroep [vlam]: %s(%s)", tool_key, arguments)
+                try:
+                    result = await execute_cli_tool(tool_key, arguments)
+                except Exception as e:
+                    result = f"Fout bij CLI tool '{tool_key}': {e}"
+                    logger.error(result)
+
+                zaak = _extract_lopende_zaak(tool_key, result)
+                if zaak:
+                    yield {"type": "case", "data": zaak}
+
+                openai_messages.append(
+                    {"role": "tool", "tool_call_id": tc.id, "content": result}
+                )
 
             yield {"type": "status", "message": "Antwoord opstellen..."}
 
-        try:
-            openai_messages.append(
-                {
-                    "role": "user",
-                    "content": "Formuleer nu een antwoord op basis van de beschikbare informatie, zonder extra tools.",
-                }
-            )
-            final = await self._vlam_call(openai_messages)
-            messages.append({"role": "assistant", "content": final})
-            yield {"type": "answer", "message": final}
-        except (TimeoutError, openai.APIStatusError):
-            yield {
-                "type": "answer",
-                "message": "Het antwoord kon niet worden voltooid.",
-            }
-
-    async def _chat_vlam_no_tools(
-        self, messages: list[dict], system_prompt: str
-    ) -> AsyncGenerator[dict, None]:
-        """VLAM fallback zonder tools — snelle call op eigen kennis."""
-        openai_messages = self._to_openai_messages(messages, system_prompt)
-        try:
-            response = await asyncio.wait_for(
-                self.vlam_client.chat.completions.create(
-                    model=VLAM_MODEL_ID,
-                    max_tokens=4096,
-                    messages=openai_messages,
-                ),
-                timeout=VLAM_TIMEOUT,
-            )
-            _log_tokens("vlam", response)
-            content = response.choices[0].message.content or ""
-            disclaimer = (
-                "\n\n*Let op: dit antwoord is gebaseerd op eigen kennis. "
-                "Er is geen actuele bron geraadpleegd.*"
-            )
-            messages.append({"role": "assistant", "content": content + disclaimer})
-            yield {"type": "answer", "message": content + disclaimer}
-        except (TimeoutError, openai.APIStatusError) as e:
-            logger.error("VLAM ook zonder tools niet bereikbaar: %s", e)
-            yield {
-                "type": "answer",
-                "message": (
-                    "De assistent is op dit moment niet bereikbaar. "
-                    "Probeer het later opnieuw."
-                ),
-            }
+        yield {
+            "type": "answer",
+            "message": "Het antwoord kon niet worden voltooid (te veel stappen).",
+        }
 
     # ------------------------------------------------------------------
     # Claude (Anthropic API) — blocking (non-streaming, backwards-compatibel)
@@ -950,8 +702,11 @@ REGELS:
                 )
                 _log_tokens("vlam", response)
             except (TimeoutError, openai.APIStatusError) as e:
-                logger.warning("VLAM-call mislukt (%s), retry zonder tools", e)
-                return await self._vlam_no_tools_blocking(messages, system_prompt)
+                logger.error("VLAM-call mislukt: %s", e)
+                return (
+                    "De assistent is op dit moment niet bereikbaar. "
+                    "Probeer het later opnieuw."
+                )
 
             choice = response.choices[0]
             assistant_msg = choice.message
@@ -987,35 +742,6 @@ REGELS:
                 )
 
         return "Het antwoord kon niet worden voltooid (te veel stappen)."
-
-    async def _vlam_no_tools_blocking(
-        self, messages: list[dict], system_prompt: str
-    ) -> str:
-        """VLAM fallback zonder tools (blocking variant)."""
-        openai_messages = self._to_openai_messages(messages, system_prompt)
-        try:
-            response = await asyncio.wait_for(
-                self.vlam_client.chat.completions.create(
-                    model=VLAM_MODEL_ID,
-                    max_tokens=4096,
-                    messages=openai_messages,
-                ),
-                timeout=VLAM_TIMEOUT,
-            )
-            _log_tokens("vlam", response)
-            content = response.choices[0].message.content or ""
-            disclaimer = (
-                "\n\n*Let op: dit antwoord is gebaseerd op eigen kennis. "
-                "Er is geen actuele bron geraadpleegd.*"
-            )
-            messages.append({"role": "assistant", "content": content + disclaimer})
-            return content + disclaimer
-        except (TimeoutError, openai.APIStatusError) as e:
-            logger.error("VLAM ook zonder tools niet bereikbaar: %s", e)
-            return (
-                "De assistent is op dit moment niet bereikbaar. "
-                "Probeer het later opnieuw."
-            )
 
     # ------------------------------------------------------------------
     # Helpers

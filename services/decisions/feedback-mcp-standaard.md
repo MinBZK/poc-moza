@@ -280,7 +280,7 @@ De standaard beschrijft een foutpatroon (&sect;5.3) maar niet hoe de host moet o
 
 ### 12.3 Cross-server orchestratie door de host
 
-De standaard (&sect;5.4, &sect;7.1) stelt terecht dat de host alle cross-server interacties orkestreert. In de praktijk (PDR-003) bleek dat sommige LLM-platformen (VLAM/UbiOps) niet betrouwbaar tool-calling ondersteunen, waardoor de host een eigen orchestratielaag moet bouwen. De standaard zou kunnen erkennen dat de host niet altijd een LLM met native tool-calling is, en dat orchestratie ook via tekst-gebaseerde interactie kan verlopen.
+De standaard (&sect;5.4, &sect;7.1) stelt terecht dat de host alle cross-server interacties orkestreert. Tijdens ontwikkeling bouwden wij een tekst-gebaseerde orchestratielaag (PDR-003) omdat VLAM/UbiOps tool-calling destijds instabiel leek; hertesten (april 2026) wees uit dat native tool-calling inmiddels stabiel werkt en PDR-002/003 zijn ongeldig verklaard. Het bredere punt blijft relevant voor de standaard: niet elk platform heeft native tool-calling, en orchestratie via tekst-interactie kan in bepaalde omgevingen nog steeds nodig zijn.
 
 ---
 

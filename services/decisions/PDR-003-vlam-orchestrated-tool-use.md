@@ -2,10 +2,39 @@
 
 | Veld           | Waarde                          |
 |----------------|---------------------------------|
-| Status         | Geaccepteerd                    |
+| Status         | **Ongeldig** (zie onder)        |
 | Datum          | 2026-03-19                      |
+| Ongeldig sinds | 2026-04-15                      |
 | Beslisser(s)   | Projectteam poc-moza            |
 | Gerelateerd    | PDR-001, PDR-002                |
+
+> ## ⚠️ Ongeldig verklaard — 2026-04-15
+>
+> De aanname onder deze PDR — dat VLAM/UbiOps instabiel is bij
+> OpenAI-tool-calling — geldt niet meer. Gecontroleerde tests op het
+> huidige endpoint (`ubiops-deployment/bzk-dig-mistralmedium-flexibel`)
+> laten een schone 3-rondes tool-calling chain zien met 4 tools,
+> parallelle tool-calls en complexe schemas, in ~12s totaal zonder
+> 500-fouten. Zie `services/host/test_vlam_toolcalling.py` (simpel) en
+> `services/host/test_vlam_toolcalling_chain.py` (realistisch).
+>
+> De host-gestuurde regex-JSON-parsing is daardoor overbodig geworden.
+> Uit `vlam_host.py` zijn verwijderd:
+>
+> - `VLAM_ORCHESTRATED` env-flag (`config.py`)
+> - `_chat_vlam_orchestrated_stream`
+> - `_build_tool_catalog`
+> - `_extract_tool_request`
+> - `_vlam_call` (helper zonder tools)
+> - `_ORCHESTRATION_PROMPT`
+> - `CLI_TOOL_CATALOG` (was alleen nodig voor orchestratie)
+>
+> Het VLAM+CLI-pad (`_chat_vlam_cli_stream`) is omgebouwd naar dezelfde
+> native tool-calling als het VLAM+MCP-pad, zodat er één agentic-loop-patroon
+> is voor alle VLAM-modi.
+>
+> **Dit document blijft bewaard voor context en audit-trail. De beslissing
+> is niet meer van toepassing op de huidige codebase.**
 
 ## Context
 
