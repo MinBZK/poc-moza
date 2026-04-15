@@ -56,10 +56,27 @@ VLAM_PORT = int(os.getenv("VLAM_PORT", "8000"))
 VLAM_TIMEOUT = int(os.getenv("VLAM_TIMEOUT", "30"))
 CLAUDE_TIMEOUT = int(os.getenv("CLAUDE_TIMEOUT", "60"))
 
+# Security: CORS-origins en API-key overrides
+# ALLOWED_ORIGINS: komma-gescheiden lijst, leeg = "*" (dev-default).
+#   Voorbeeld prod: "https://moza.overheid.nl,https://moza-test.overheid.nl"
+_origins_raw = os.getenv("ALLOWED_ORIGINS", "").strip()
+ALLOWED_ORIGINS: list[str] = (
+    [o.strip() for o in _origins_raw.split(",") if o.strip()] if _origins_raw else ["*"]
+)
+# ALLOW_API_KEY_OVERRIDE: als false (default), worden x-vlam-api-key en
+# x-claude-api-key headers genegeerd en alleen server-env keys gebruikt.
+ALLOW_API_KEY_OVERRIDE: bool = os.getenv("ALLOW_API_KEY_OVERRIDE", "false").lower() in (
+    "true",
+    "1",
+    "yes",
+)
+
 # System prompt — assembled from modular blocks
 from prompts.composer import compose_system_prompt as get_system_prompt  # noqa: E402
 
 __all__ = [
+    "ALLOW_API_KEY_OVERRIDE",
+    "ALLOWED_ORIGINS",
     "ANTHROPIC_API_KEY",
     "CLAUDE_MODEL",
     "MCP_SERVERS",

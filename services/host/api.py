@@ -17,7 +17,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from config import VLAM_HOST, VLAM_PORT
+from config import ALLOW_API_KEY_OVERRIDE, ALLOWED_ORIGINS, VLAM_HOST, VLAM_PORT
 from vlam_host import VLAMHost
 
 logging.basicConfig(
@@ -45,9 +45,13 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In productie: beperken tot moza-portaal domein
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+logging.getLogger("vlam.api").info(
+    "CORS allow_origins=%s | api_key_override=%s",
+    ALLOWED_ORIGINS, ALLOW_API_KEY_OVERRIDE,
 )
 
 
@@ -83,7 +87,13 @@ class ToolInfo(BaseModel):
 
 
 def _extract_api_keys(request: Request) -> dict:
-    """Lees optionele API key overrides uit request headers."""
+    """Lees optionele API key overrides uit request headers.
+
+    Alleen actief als ALLOW_API_KEY_OVERRIDE=true in de omgeving.
+    Anders worden de headers genegeerd en gebruikt de host de server-env keys.
+    """
+    if not ALLOW_API_KEY_OVERRIDE:
+        return {"vlam_api_key_override": "", "claude_api_key_override": ""}
     return {
         "vlam_api_key_override": request.headers.get("x-vlam-api-key", "").strip(),
         "claude_api_key_override": request.headers.get("x-claude-api-key", "").strip(),
