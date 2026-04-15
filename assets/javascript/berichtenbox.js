@@ -165,6 +165,13 @@
 				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
 			).length;
 		}
+		const navOngelezen = document.querySelector('[data-berichtenbox-count="ongelezen"]');
+		if (navOngelezen) {
+			const n = data.berichten.filter((b) =>
+				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
+			).length;
+			navOngelezen.textContent = n;
+		}
 		const navArchief = document.querySelector('[data-berichtenbox-count="archief"]');
 		if (navArchief) navArchief.textContent = Object.keys(state.gearchiveerd).length;
 		const navPrullenbak = document.querySelector('[data-berichtenbox-count="prullenbak"]');
@@ -224,33 +231,41 @@
 		paneel.setAttribute('aria-label', 'Verplaats bericht naar map');
 
 		const kiesP = document.createElement('p');
-		kiesP.textContent = 'Kies een map:';
+		kiesP.textContent = 'Verplaats naar map:';
 		paneel.appendChild(kiesP);
 
 		const ul = document.createElement('ul');
 		paneel.appendChild(ul);
 
-		const nieuweMapP = document.createElement('p');
+		const nieuweMapFieldset = document.createElement('div');
 		const nieuweMapLabel = document.createElement('label');
-		nieuweMapLabel.textContent = 'Nieuwe map: ';
+		nieuweMapLabel.textContent = 'Maak een nieuwe map aan:';
 		const nieuweMapInput = document.createElement('input');
 		nieuweMapInput.type = 'text';
-		nieuweMapLabel.appendChild(nieuweMapInput);
+		nieuweMapLabel.setAttribute('for', 'nieuwe-map-naam');
+		nieuweMapInput.id = 'nieuwe-map-naam';
 		const nieuweMapBevestig = document.createElement('button');
 		nieuweMapBevestig.type = 'button';
-		nieuweMapBevestig.className = 'link-button';
-		nieuweMapBevestig.textContent = 'Aanmaken';
-		nieuweMapP.appendChild(nieuweMapLabel);
-		nieuweMapP.appendChild(document.createTextNode(' '));
-		nieuweMapP.appendChild(nieuweMapBevestig);
-		paneel.appendChild(nieuweMapP);
+		nieuweMapBevestig.className = 'button';
+		nieuweMapBevestig.textContent = 'Nieuwe map aanmaken';
+		const nieuweMapActions = document.createElement('div');
+		nieuweMapActions.className = 'action-group';
+		nieuweMapActions.appendChild(nieuweMapBevestig);
+		nieuweMapFieldset.appendChild(nieuweMapLabel);
+		nieuweMapFieldset.appendChild(nieuweMapInput);
+		nieuweMapFieldset.appendChild(nieuweMapActions);
+		paneel.appendChild(nieuweMapFieldset);
 
+		const mapIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M58 15H29v-2c0-1.1-.9-2-2-2H12c-1.1 0-2 .9-2 2v4.69c7.13.47 40.09 2.62 40.59 2.75.28.07.38.21.4.34 0 .04.02.23-.01.23H4.53c-1.29 0-2.24 1.2-1.95 2.46l7.06 30c.27 1.16 1.18 1.54 2.36 1.54h46a2 2 0 0 0 2-2V17c0-1.1-.9-2-2-2" /></svg>';
+
+		const huidigeMap = state.mapOverride[berichtId];
 		alleMappen.forEach((m) => {
 			const li = document.createElement('li');
 			const btn = document.createElement('button');
 			btn.type = 'button';
-			btn.className = 'link-button';
-			btn.textContent = m.naam;
+			btn.className = 'icon-button';
+			btn.innerHTML = mapIconSvg;
+			btn.appendChild(document.createTextNode(m.naam));
 			btn.addEventListener('click', () => {
 				state.mapOverride[berichtId] = m.slug;
 				opslaan();
@@ -259,24 +274,22 @@
 				updateMapLabelDetail(m.slug);
 			});
 			li.appendChild(btn);
+			if (huidigeMap === m.slug) {
+				const uitBtn = document.createElement('button');
+				uitBtn.type = 'button';
+				uitBtn.className = 'icon-button';
+				uitBtn.textContent = 'Verwijder uit map';
+				uitBtn.addEventListener('click', () => {
+					state.mapOverride[berichtId] = null;
+					opslaan();
+					sluitVerplaatsPaneel();
+					render(huidigeView());
+					updateMapLabelDetail(null);
+				});
+				li.appendChild(uitBtn);
+			}
 			ul.appendChild(li);
 		});
-		if (state.mapOverride[berichtId]) {
-			const li = document.createElement('li');
-			const btn = document.createElement('button');
-			btn.type = 'button';
-			btn.className = 'link-button';
-			btn.textContent = 'Uit map halen';
-			btn.addEventListener('click', () => {
-				state.mapOverride[berichtId] = null;
-				opslaan();
-				sluitVerplaatsPaneel();
-				render(huidigeView());
-				updateMapLabelDetail(null);
-			});
-			li.appendChild(btn);
-			ul.appendChild(li);
-		}
 		nieuweMapBevestig.addEventListener('click', () => {
 			const naam = nieuweMapInput.value.trim();
 			if (!naam) return;
@@ -292,7 +305,12 @@
 			updateMapLabelDetail(slug);
 			voegMapToeAanZijbalk({ slug, naam });
 		});
-		knop.parentNode.insertBefore(paneel, knop.nextSibling);
+		const actionGroup = knop.closest('.action-group') || knop.closest('.berichtenbox-detail-actions');
+		if (actionGroup) {
+			actionGroup.parentNode.insertBefore(paneel, actionGroup.nextSibling);
+		} else {
+			knop.parentNode.insertBefore(paneel, knop.nextSibling);
+		}
 		knop.setAttribute('aria-expanded', 'true');
 		actiefVerplaatsPaneel = paneel;
 		actieveVerplaatsKnop = knop;
@@ -380,10 +398,15 @@
 		const tdBij = document.createElement('td');
 		tdBij.className = 'berichtenbox-row-attachment';
 		if (bericht.heeftBijlage) {
-			const emoji = document.createElement('span');
-			emoji.setAttribute('aria-hidden', 'true');
-			emoji.textContent = '📎';
-			tdBij.appendChild(emoji);
+			const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			icon.setAttribute('viewBox', '0 0 64 64');
+			icon.setAttribute('aria-hidden', 'true');
+			icon.setAttribute('class', 'icon-md');
+			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+			path.setAttribute('fill', 'currentColor');
+			path.setAttribute('d', 'M48.5 16.1 24.6 40c-2.7 2.7-7.1 2.7-9.8 0-2.7-2.7-2.7-7.1 0-9.8L36.2 8.8c1.8-1.8 4.7-1.8 6.5 0s1.8 4.7 0 6.5L22.4 35.6c-.9.9-2.4.9-3.3 0-.9-.9-.9-2.4 0-3.3l17.1-17.1-2.8-2.8L16.3 29.5c-2.5 2.5-2.5 6.4 0 8.9 2.5 2.5 6.4 2.5 8.9 0L45.5 18c3.3-3.3 3.3-8.8 0-12.1s-8.8-3.3-12.1 0L11.9 27.4c-4.3 4.3-4.3 11.2 0 15.4 4.3 4.3 11.2 4.3 15.4 0L51.3 18.9l-2.8-2.8z');
+			icon.appendChild(path);
+			tdBij.appendChild(icon);
 			const bijVh = document.createElement('span');
 			bijVh.className = 'visually-hidden';
 			bijVh.textContent = 'Heeft bijlage';
@@ -718,7 +741,7 @@
 		}
 		berichtTijden.sort((a, b) => a - b);
 
-		const duur = 3000;
+		const duur = 4000;
 		const start = performance.now();
 
 		function aantalVoor(tijden, t) {

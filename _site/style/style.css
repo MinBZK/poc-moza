@@ -306,7 +306,10 @@ pre {
 }
 
 /* Iconografie */
-.icon-xs {
+.icon-xs,
+.icon-md,
+.icon-lg,
+.icon-xl {
 	inline-size: var(--toepassing-size-icon-xs);
 }
 .icon-sm {
@@ -505,7 +508,6 @@ label {
 	display: flex;
 	flex-direction: column;
 	gap: var(--toepassing-space-layout-xs);
-	margin-block-start: var(--toepassing-space-margin-sm);
 	button,
 	a.btn-cta {
 		inline-size: 100%;
@@ -590,6 +592,7 @@ a.btn-cta {
 	border: none;
 	color: var(--toepassing-color-interactive-default-text);
 	cursor: pointer;
+	display: flex;
 	min-block-size: unset;
 	min-inline-size: unset;
 	padding: 0;
@@ -599,6 +602,10 @@ a.btn-cta {
 	&:active {
 		background: inherit !important;
 		color: inherit !important;
+	}
+	svg {
+		inline-size: var(--toepassing-size-icon-sm);
+		margin-inline-end: var(--toepassing-space-margin-2xs);
 	}
 }
 .btn-close {
@@ -1623,6 +1630,13 @@ button {
 	td {
 		padding: var(--toepassing-space-padding-sm);
 	}
+	.metadata {
+		font-size: var(--rijkshuisstijl-text-font-size-sm);
+	}
+	.action-group {
+		font-size: var(--rijkshuisstijl-text-font-size-sm);
+		margin-block-end: var(--toepassing-space-margin-md);
+	}
 }
 .berichtenbox-row-sender {
 	inline-size: 25%;
@@ -1635,6 +1649,9 @@ button {
 	font-size: var(--toepassing-text-size-body-sm);
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
+}
+.berichtenbox-row-attachment {
+	color: var(--toepassing-color-icon-default);
 }
 .berichtenbox-row-folder-label {
 	display: none; /* Tijdelijke de Map kolom verbergen */
@@ -1731,11 +1748,22 @@ button {
 	border-radius: var(--toepassing-border-radius-md);
 	margin-block: var(--toepassing-space-md);
 	padding: var(--toepassing-space-md);
-}
-.berichtenbox-move-panel ul {
-	list-style: none;
-	margin-block: var(--toepassing-space-xs);
-	padding-inline-start: 0;
+	ul {
+		list-style: none;
+		margin-block: var(--toepassing-space-margin-2xs) var(--toepassing-space-margin-sm);
+		padding-inline-start: 0;
+	}
+	div {
+		> * {
+			display: block;
+		}
+		> * + * {
+			margin-block-start: var(--toepassing-space-layout-2xs);
+		}
+	}
+	[type="text"] {
+		inline-size: 40%;
+	}
 }
 
 /* Feature flags toggle-paneel */
