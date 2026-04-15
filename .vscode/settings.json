@@ -4,5 +4,13 @@
 	},
 	"emmet.includeLanguages": {
 		"nunjucks": "html"
-	}
+	},
+	"[css]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.stylelint": "explicit"
+	},
+	"stylelint.validate": ["css"]
 }

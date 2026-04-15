@@ -1,0 +1,55 @@
+---
+title: "MijnOverheid Zakelijk: Bericht"
+---
+
+<script>
+	window.berichtenboxData = {
+		berichten: {{ berichtenboxData.berichten | dump | safe }},
+		magazijnen: {{ berichtenboxData.magazijnen | dump | safe }},
+		mappen: {{ berichtenboxData.mappen | dump | safe }},
+		aantalMagazijnen: {{ berichtenboxData.aantalMagazijnen }}
+	};
+</script>
+
+{% include "side-nav-overheid.njk" %}
+
+<article id="hoofd-inhoud" class="berichtenbox">
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li><a href="{{ '/moza/berichtenbox/' | url }}">Berichtenbox</a></li>
+			<li aria-current="page" data-demo-breadcrumb>Bericht</li>
+		</ol>
+	</nav>
+
+	<section class="card">
+		{% include "berichtenbox-tabs.njk" %}
+
+		<section class="berichtenbox-content" data-demo-detail>
+			<h1 data-demo-onderwerp></h1>
+
+			<p class="berichtenbox-detail-meta" data-demo-meta></p>
+
+			<div class="berichtenbox-detail-actions">
+				<button type="button" class="button" data-actie="archiveren">Archiveren</button>
+				<button type="button" class="button button-secondary" data-actie="verplaatsen">Verplaatsen naar map…</button>
+				<button type="button" class="link-button" data-actie="markeer-ongelezen">Markeer als ongelezen</button>
+				<button type="button" class="link-button" data-actie="verwijderen">Verwijderen</button>
+			</div>
+
+			<div class="berichtenbox-detail-body" data-demo-body></div>
+
+			<section class="berichtenbox-attachments" data-berichtenbox-attachments hidden>
+				<h2>Bijlagen</h2>
+				<p class="berichtenbox-attachments-loading" data-berichtenbox-attachments-loading></p>
+				<ul class="berichtenbox-attachments-list" data-berichtenbox-attachments-list hidden></ul>
+			</section>
+		</section>
+
+		<div class="berichtenbox-empty" data-demo-niet-gevonden hidden>
+			<p>Dit bericht kon niet worden gevonden. Mogelijk is het verwijderd.</p>
+			<p><a href="{{ '/moza/berichtenbox/' | url }}">Terug naar Berichtenbox</a></p>
+		</div>
+	</section>
+
+</article>

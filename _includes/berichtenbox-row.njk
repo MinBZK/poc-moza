@@ -1,11 +1,8 @@
 {# Verwacht: bericht (object uit berichtenboxData.berichten) #}
-<li class="berichtenbox-rij{% if bericht.isOngelezen %} is-ongelezen{% endif %}" data-bericht-id="{{ bericht.id }}" data-afzender-id="{{ bericht.magazijnId }}"{% if bericht.map %} data-map="{{ bericht.map }}"{% endif %}>
-	<a href="{{ '/moza/berichtenbox/bericht/' | url }}{{ bericht.id }}/">
-		{% if bericht.isOngelezen %}<span class="visually-hidden">Ongelezen. </span>{% endif %}
-		<span class="berichtenbox-rij-afzender">{{ bericht.afzender }}</span>
-		<span class="berichtenbox-rij-onderwerp">{{ bericht.onderwerp }}</span>
-		<span class="berichtenbox-rij-datum">{{ bericht.datum | datumNL }}</span>
-		{% if bericht.heeftBijlage %}<span class="berichtenbox-rij-bijlage" aria-hidden="true">📎</span><span class="visually-hidden">Heeft bijlage. </span>{% endif %}
-		{% if bericht.map %}<span class="berichtenbox-rij-maplabel" data-maplabel>{{ bericht.map }}</span>{% endif %}
-	</a>
-</li>
+<tr class="{% if bericht.isOngelezen %} is-unread{% endif %}" data-bericht-id="{{ bericht.id }}" data-afzender-id="{{ bericht.magazijnId }}"{% if bericht.map %} data-map="{{ bericht.map }}"{% endif %}>
+	<td class="berichtenbox-row-sender">{% if bericht.isOngelezen %}<span class="visually-hidden">Ongelezen. </span>{% endif %}{{ bericht.afzender }}</td>
+	<td class="berichtenbox-row-subject"><a href="{{ '/moza/berichtenbox/bericht/' | url }}{{ bericht.id }}/">{{ bericht.onderwerp }}</a></td>
+	<td class="berichtenbox-row-date">{{ bericht.datum | datumNL }}</td>
+	<td class="berichtenbox-row-attachment">{% if bericht.heeftBijlage %}<span aria-hidden="true">📎</span><span class="visually-hidden">Heeft bijlage</span>{% endif %}</td>
+	<td class="berichtenbox-row-folder-label">{% if bericht.map %}<span data-maplabel>{{ bericht.map }}</span>{% endif %}</td>
+</tr>

@@ -2,34 +2,49 @@
 title: "MijnOverheid Zakelijk: Berichtenbox — Prullenbak"
 ---
 
+<script>
+	window.berichtenboxData = {
+		berichten: {{ berichtenboxData.berichten | dump | safe }},
+		magazijnen: {{ berichtenboxData.magazijnen | dump | safe }},
+		mappen: {{ berichtenboxData.mappen | dump | safe }},
+		aantalMagazijnen: {{ berichtenboxData.aantalMagazijnen }}
+	};
+</script>
+
 {% include "side-nav-overheid.njk" %}
 
 <article id="hoofd-inhoud" class="berichtenbox">
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
-			<li><a href="{{ '/moza/berichtenbox/' | url }}">Berichtenbox</a></li>
-			<li aria-current="page">Prullenbak</li>
+			<li aria-current="page">Berichtenbox</li>
 		</ol>
 	</nav>
 
-	<h1>Prullenbak</h1>
+	<h1>Berichtenbox</h1>
 
-	<div class="berichtenbox-layout">
-		{% include "berichtenbox-side-nav.njk" %}
+	<section class="card tabs">
+		{% include "berichtenbox-tabs.njk" %}
 
-		<section class="berichtenbox-content">
-			<p class="berichtenbox-teller">
-				<span data-berichtenbox-teller-totaal>0</span> verwijderde berichten
-			</p>
-			<ul class="berichtenbox-lijst" data-berichtenbox-lijst data-berichtenbox-view="prullenbak">
-				{# Wordt gevuld door JS op basis van localStorage #}
-			</ul>
-			<div class="berichtenbox-leeg" data-berichtenbox-leeg>
-				Uw prullenbak is leeg.
-			</div>
+		<section role="tabpanel" id="berichtenbox-prullebak" aria-labelledby="tab-berichtenbox-prullebak">
+			<section class="berichtenbox-content">
+				<p class="berichtenbox-counter"><span data-berichtenbox-counter-total>0</span> verwijderde berichten</p>
+				<table class="berichtenbox-list" data-berichtenbox-list data-berichtenbox-view="prullenbak">
+					<thead class="visually-hidden">
+						<tr>
+							<th scope="col">Afzender</th>
+							<th scope="col">Onderwerp</th>
+							<th scope="col">Datum</th>
+							<th scope="col">Bijlage</th>
+							<th scope="col">Map</th>
+						</tr>
+					</thead>
+					<tbody>
+						{# Wordt gevuld door JS op basis van localStorage #}
+					</tbody>
+				</table>
+				<div class="berichtenbox-empty" data-berichtenbox-empty>Uw prullenbak is leeg.</div>
+			</section>
 		</section>
-	</div>
-
-	{% include "berichtenbox-footer-link.njk" ignore missing %}
+	</section>
 </article>

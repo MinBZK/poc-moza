@@ -1,0 +1,40 @@
+{% set box = berichtenboxData %}
+{% set path = page.url %}
+{% set isArchief = '/berichtenbox-archief/' in path %}
+{% set isPrullenbak = '/berichtenbox-prullenbak/' in path %}
+{# Inbox is current voor alle berichtenbox-pagina's die niet archief/prullenbak zijn (ook detail en paginering). #}
+{% set isInbox = '/moza/berichtenbox' in path and not isArchief and not isPrullenbak %}
+
+<nav class="berichtenbox-nav" aria-label="Berichtenbox">
+	<ul role="tablist">
+		<li role="presentation">
+			<a role="tab" href="{{ '/moza/berichtenbox/' | url }}"{% if isInbox %} aria-current="page" aria-selected="true"{% endif %}>
+				Inbox
+				<span class="badge" data-berichtenbox-count="inbox">{{ box.berichten | selectattr("isOngelezen") | length }}</span>
+			</a>
+		</li>
+		<li role="presentation">
+			<a role="tab" href="{{ '/moza/berichtenbox/berichtenbox-archief/' | url }}"{% if isArchief %} aria-current="page" aria-selected="true"{% endif %}>
+				Archief
+				<!-- <span class="badge" data-berichtenbox-count="archief">0</span> -->
+			</a>
+		</li>
+		<li role="presentation">
+			<a role="tab" href="{{ '/moza/berichtenbox/berichtenbox-prullenbak/' | url }}"{% if isPrullenbak %} aria-current="page" aria-selected="true"{% endif %}>
+				Prullenbak
+				<!-- <span class="badge" data-berichtenbox-count="prullenbak">0</span> -->
+			</a>
+		</li>
+		{% for map in box.mappen %}
+			<li data-map-slug="{{ map.slug }}" role="presentation">
+				<a href="{{ '/moza/berichtenbox/' | url }}?map={{ map.slug }}">
+					<!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+						<path fill="currentColor" d="M58 15H29v-2c0-1.1-.9-2-2-2H12c-1.1 0-2 .9-2 2v4.69c7.13.47 40.09 2.62 40.59 2.75.28.07.38.21.4.34 0 .04.02.23-.01.23H4.53c-1.29 0-2.24 1.2-1.95 2.46l7.06 30c.27 1.16 1.18 1.54 2.36 1.54h46a2 2 0 0 0 2-2V17c0-1.1-.9-2-2-2" />
+					</svg> -->
+					{{ map.naam }}
+					<!-- <span class="badge" data-berichtenbox-count="map:{{ map.slug }}">0</span> -->
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+</nav>
