@@ -290,6 +290,10 @@ pre {
 .text-muted {
 	color: var(--toepassing-color-text-subtle-1);
 }
+.metadata {
+	color: var(--toepassing-color-text-subtle-2);
+	font-size: var(--rijkshuisstijl-text-font-size-sm);
+}
 
 /* Visueel verborgen maar toegankelijk voor screenreaders */
 .visually-hidden {
@@ -299,6 +303,23 @@ pre {
 	overflow: hidden;
 	position: absolute;
 	white-space: nowrap;
+}
+
+/* Iconografie */
+.icon-xs {
+	inline-size: var(--toepassing-size-icon-xs);
+}
+.icon-sm {
+	inline-size: var(--toepassing-size-icon-sm);
+}
+.icon-md {
+	inline-size: var(--toepassing-size-icon-md);
+}
+.icon-lg {
+	inline-size: var(--toepassing-size-icon-lg);
+}
+.icon-xl {
+	inline-size: var(--toepassing-size-icon-xl);
 }
 
 /* Interactie */
@@ -409,6 +430,21 @@ textarea,
 	margin-inline-start: var(--toepassing-space-margin-2xs);
 	mask: url("../assets/icons/icon-link-intern.svg") no-repeat center / contain;
 	vertical-align: middle;
+}
+[type="date"],
+[type="datetime-local"],
+[type="email"],
+[type="month"],
+[type="number"],
+[type="password"],
+[type="search"],
+[type="tel"],
+[type="text"],
+[type="time"],
+[type="url"],
+[type="week"],
+textarea {
+	border: var(--toepassing-border-width-xs) solid var(--toepassing-color-component-text-input-border-default);
 }
 
 /* Formulieren: verificatiecode (6-cijferige code-invoer) */
@@ -936,11 +972,17 @@ ol {
 li li {
 	margin-block-start: var(--toepassing-space-layout-xs);
 }
+.list-separation {
+	inline-size: var(--toepassing-size-3xs);
+}
 
 /* Tabellen */
 
 table {
 	inline-size: 100%;
+}
+thead {
+	color: var(--toepassing-color-text-subtle-1);
 }
 tr {
 	vertical-align: top;
@@ -1137,6 +1179,10 @@ summary {
 			background: var(--toepassing-color-interactive-alternate-hover-background) !important;
 			border-block-end: var(--toepassing-border-component-tabs-tab-hover);
 		}
+		svg {
+			margin-inline-end: var(--toepassing-space-margin-3xs);
+			vertical-align: text-top;
+		}
 	}
 	[aria-selected="true"] {
 		background: var(--toepassing-color-interactive-alternate-selected-background);
@@ -1197,6 +1243,10 @@ summary {
 	display: inline-flex;
 	font: var(--toepassing-text-smalltext);
 	position: relative; /* Boven de card-link overlay */
+	&:has(input:focus-visible) {
+		outline: var(--toepassing-focus-outline);
+		outline-offset: var(--toepassing-focus-outline-offset);
+	}
 	input {
 		appearance: none;
 		background-color: currentcolor;
@@ -1211,10 +1261,6 @@ summary {
 		padding: 0;
 		transition: var(--toepassing-transition-default);
 		vertical-align: middle;
-		&:focus-visible {
-			outline: var(--toepassing-focus-outline);
-			outline-offset: var(--toepassing-focus-outline-offset);
-		}
 		&:hover {
 			background-color: var(--toepassing-color-feedback-favorite-hover);
 			color: var(--toepassing-color-feedback-favorite-hover);
@@ -1561,9 +1607,16 @@ button {
 			inset: 0;
 			position: absolute;
 		}
-		&:hover {
-			background: var(--toepassing-color-interactive-alternate-hover-background);
-			transition: var(--toepassing-transition-default);
+		&:hover a {
+			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+		}
+	}
+	tbody {
+		tr {
+			&:hover {
+				background: var(--toepassing-color-interactive-alternate-hover-background);
+				transition: var(--toepassing-transition-default);
+			}
 		}
 	}
 	th,
@@ -1582,6 +1635,9 @@ button {
 	font-size: var(--toepassing-text-size-body-sm);
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
+}
+.berichtenbox-row-folder-label {
+	display: none; /* Tijdelijke de Map kolom verbergen */
 }
 
 /* Berichtenbox laadindicator */
@@ -1637,11 +1693,13 @@ button {
 	}
 }
 
-/* Berichtenbox lege staat */
-.berichtenbox-empty {
-	color: var(--toepassing-color-text-subtle-1);
-	padding: var(--toepassing-space-2xl);
-	text-align: center;
+.berichtenbox-folder-user {
+	a {
+		color: var(--toepassing-color-text-subtle-2);
+	}
+	[aria-selected="true"] {
+		color: var(--toepassing-color-interactive-default-text);
+	}
 }
 
 /* Berichtenbox: bericht-pagina */

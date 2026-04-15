@@ -7,16 +7,7 @@ pagination:
 permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagination.pageNumber + 1 }}/{% endif %}"
 ---
 
-<script>
-	window.berichtenboxData = {
-		berichten: {{ berichtenboxData.berichten | dump | safe }},
-		magazijnen: {{ berichtenboxData.magazijnen | dump | safe }},
-		mappen: {{ berichtenboxData.mappen | dump | safe }},
-		aantalMagazijnen: {{ berichtenboxData.aantalMagazijnen }}
-	};
-</script>
-
-{% include "side-nav-overheid.njk" %}
+{% include "berichtenbox-data.njk" %} {% include "side-nav-overheid.njk" %}
 
 <article id="hoofd-inhoud" class="berichtenbox">
 	<nav class="breadcrumb">
@@ -34,17 +25,12 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 		<section role="tabpanel" id="berichtenbox-inbox" class="berichtenbox-layout" aria-labelledby="tab-berichtenbox-inbox">
 			<section class="berichtenbox-content">
 				<div data-berichtenbox-toolbar>
-					<p><span data-berichtenbox-counter-total>{{ berichtenboxData.berichten | length }}</span> berichten · <span data-berichtenbox-counter-unread>0</span> ongelezen opgehaald uit <span data-berichtenbox-sources>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</p>
+					<p class="metadata"><span data-berichtenbox-counter-total>{{ berichtenboxData.berichten | length }}</span> berichten uit <span data-berichtenbox-sources>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen, <span data-berichtenbox-counter-unread>{{ berichtenboxData.berichten | selectattr("isOngelezen") | length }}</span> ongelezen berichten.</p>
 
 					<label class="berichtenbox-search">
 						<label for="search-berichtenbox">Filter berichten</label>
 						<input type="search" id="search-berichtenbox" data-berichtenbox-search-input placeholder="Filter op afzender of onderwerp" />
 					</label>
-
-					<details>
-						<summary>Afzender</summary>
-						<div class="berichtenbox-filter-sender-panel" data-berichtenbox-sender-panel></div>
-					</details>
 				</div>
 
 				<div class="berichtenbox-progress" data-berichtenbox-progress hidden role="status" aria-live="polite">
@@ -63,15 +49,13 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 							<th scope="col">Onderwerp</th>
 							<th scope="col">Datum</th>
 							<th scope="col"><span class="visually-hidden">Bijlage</span></th>
-							<th scope="col">Map</th>
+							<!-- <th scope="col">Map</th> -->
 						</tr>
 					</thead>
 					<tbody>
 						{% for bericht in berichtenPagina %} {% include "berichtenbox-row.njk" %} {% endfor %}
 					</tbody>
 				</table>
-
-				<div class="berichtenbox-empty" data-berichtenbox-empty hidden>Er zijn geen berichten die overeenkomen met uw zoekopdracht.</div>
 
 				{% if pagination.pages.length > 1 %}
 				<nav class="pagination" aria-label="Paginering">

@@ -1770,7 +1770,7 @@ Aan de bericht-rij voor dynamisch toegevoegde berichten: in `rijHTML`, voeg een 
 			<${innerTag}${innerAttr}>
 				${ongelezen ? '<span class="visually-hidden">Ongelezen. </span>' : ''}
 				<span class="berichtenbox-rij-afzender">${bericht.afzender}</span>
-				<span class="berichtenbox-rij-onderwerp">${bericht.onderwerp}${dynamisch ? ' (demo)' : ''}</span>
+				<span class="berichtenbox-rij-onderwerp">${bericht.onderwerp}${dynamisch ? : ''}</span>
 				<span class="berichtenbox-rij-datum">${NL}</span>
 				${bericht.heeftBijlage ? '<span class="berichtenbox-rij-bijlage" aria-label="heeft bijlage">📎</span>' : ''}
 				${map ? `<span class="berichtenbox-rij-maplabel" data-maplabel>${map}</span>` : ''}

@@ -30,7 +30,7 @@
 		return PATH_PREFIX.replace(/\/$/, '') + absPath;
 	}
 	const POLL_MIN_SEC = 5;
-	const NIEUWE_BERICHTEN_LIMIET = 50;
+	const NIEUWE_BERICHTEN_LIMIET = 5;
 
 	const LS_KEY = "berichtenbox";
 
@@ -362,7 +362,7 @@
 		if (dynamisch) {
 			const a = document.createElement('a');
 			a.href = url('/moza/berichtenbox/bericht-demo/?id=' + encodeURIComponent(bericht.id));
-			a.textContent = bericht.onderwerp + ' (demo)';
+			a.textContent = bericht.onderwerp;
 			tdOnd.appendChild(a);
 		} else {
 			const a = document.createElement('a');
@@ -418,6 +418,7 @@
 			const tbody = lijst.querySelector('tbody') || lijst;
 			while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
 			items.forEach((b) => tbody.appendChild(createRij(b)));
+			lijst.hidden = items.length === 0;
 			if (leeg) leeg.hidden = items.length > 0;
 		}
 	}
@@ -510,11 +511,21 @@
 
 		const mapFilter = mapUitUrl();
 		if (mapFilter) {
-			const mapObj = [...data.mappen, ...state.eigenMappen].find((m) => m.slug === mapFilter);
-			if (mapObj) {
-				const kop = document.querySelector('.berichtenbox h1');
-				if (kop) kop.textContent = 'Berichtenbox — ' + mapObj.naam;
+			const mapTab = document.querySelector('[data-map-slug="' + mapFilter + '"] a');
+			if (mapTab) {
+				mapTab.setAttribute('aria-current', 'page');
+				mapTab.setAttribute('aria-selected', 'true');
 			}
+			const inboxTab = document.querySelector('[data-berichtenbox-count="inbox"]');
+			if (inboxTab) {
+				const inboxLink = inboxTab.closest('a');
+				if (inboxLink) {
+					inboxLink.removeAttribute('aria-current');
+					inboxLink.removeAttribute('aria-selected');
+				}
+			}
+			const counterP = document.querySelector('[data-berichtenbox-toolbar] > p');
+			if (counterP) counterP.textContent = 'Deze map heeft u aangemaakt op 7 april 2026.';
 		}
 		pasFilterToe();
 	}
@@ -707,7 +718,7 @@
 		}
 		berichtTijden.sort((a, b) => a - b);
 
-		const duur = 7000;
+		const duur = 3000;
 		const start = performance.now();
 
 		function aantalVoor(tijden, t) {
@@ -745,6 +756,7 @@
 	function voegNieuwBerichtToe() {
 		if (huidigeView() !== 'inbox') return;
 		if (!data.magazijnen.length) return;
+		if (state.nieuweBerichten.length >= NIEUWE_BERICHTEN_LIMIET) return;
 		nieuwBerichtTeller++;
 		const mag = data.magazijnen[Math.floor(Math.random() * data.magazijnen.length)];
 		const nu = new Date().toISOString().slice(0, 10);
@@ -778,6 +790,12 @@
 			const tr = createRij(bericht);
 			tr.classList.add('is-new');
 			tbody.prepend(tr);
+
+			// Houd paginagrootte aan: verwijder de onderste rij als er meer dan 25 zichtbaar zijn.
+			const zichtbaar = Array.from(tbody.querySelectorAll('.berichtenbox-row:not([hidden])'));
+			if (zichtbaar.length > 25) {
+				zichtbaar[zichtbaar.length - 1].remove();
+			}
 		}
 		render('inbox');
 

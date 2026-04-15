@@ -8,14 +8,7 @@ eleventyComputed:
   title: "MijnOverheid Zakelijk: {{ bericht.onderwerp }}"
 ---
 
-<script>
-	window.berichtenboxData = {
-		berichten: {{ berichtenboxData.berichten | dump | safe }},
-		magazijnen: {{ berichtenboxData.magazijnen | dump | safe }},
-		mappen: {{ berichtenboxData.mappen | dump | safe }},
-		aantalMagazijnen: {{ berichtenboxData.aantalMagazijnen }}
-	};
-</script>
+{% include "berichtenbox-data.njk" %}
 
 {% include "side-nav-overheid.njk" %}
 
