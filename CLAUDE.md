@@ -16,8 +16,8 @@ MijnOverheid Zakelijk (MOZa) — een HTML/CSS/JS prototype gebouwd met Eleventy 
 
 ## Ontwerp-principes (kernregels)
 
-1. **Semantische HTML eerst** — gebruik de juiste elementen (`<button>`, `<nav>`, `<fieldset>`, `<h1>`–`<h6>`). ARIA alleen waar HTML niet volstaat.
-2. **Toegankelijkheid altijd** — toetsenbordnavigatie, `:focus-visible`, `aria-current`, `aria-disabled` (niet `disabled`). Test met diverse invoer- (toetsenbord, spraak) en uitvoermethoden (screenreader, braille).
+1. **Semantische HTML eerst** — gebruik de juiste elementen (`<button>`, `<nav>`, `<fieldset>`, `<h1>`–`<h6>`). ARIA alleen waar HTML niet volstaat. Gebruik `<dl>`/`<dt>`/`<dd>` voor sleutel-waardeparen (gegevensoverzichten), niet `<table>`.
+2. **Toegankelijkheid altijd** — toetsenbordnavigatie, `:focus-visible`, `aria-current`, `aria-disabled` (niet `disabled`). Labels boven invoervelden, niet ernaast (WCAG 1.4.10 Reflow). Test met diverse invoer- (toetsenbord, spraak) en uitvoermethoden (screenreader, braille).
 3. **CSS logical properties** — gebruik `inline-size`, `block-size`, `margin-block-start`, `padding-inline` etc. Nooit `width`, `height`, `margin-top`, `padding-left`.
 4. **Design tokens** — gebruik altijd `--toepassing-*` variabelen, nooit `--rijkshuisstijl-*` of hardcoded waarden.
 5. **Eenvoudigst mogelijke oplossing** — HTML en CSS waar het kan, JavaScript waar het moet. Platform boven framework.

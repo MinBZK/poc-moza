@@ -24,101 +24,42 @@ subNavActive: "/moza/contactvoorkeuren/"
 		<p>Kies per berichttype uw voorkeurskanaal.</p>
 
 		<form action="{{ '/moza/contactvoorkeuren/' | url }}">
-			<table class="data-overview">
-				<tr>
-					<th scope="row">Ontvangstbevestiging</th>
-					<td>
-						<ul class="list-plain">
-							<li>
-								<input
-									type="checkbox"
-									id="contact-message-receiptconfirmation-email"
-									checked
-								/><label for="contact-message-receiptconfirmation-email"
-									>E-mail</label
-								>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="contact-message-receiptconfirmation-post"
-									checked
-								/><label for="contact-message-receiptconfirmation-post"
-									>Post</label
-								>
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">Statuswijzigingen</th>
-					<td>
-						<ul class="list-plain">
-							<li>
-								<input
-									type="checkbox"
-									id="contact-message-statuschange-email"
-									checked
-								/><label for="contact-message-statuschange-email">E-mail</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="contact-message-statuschange-post"
-								/><label for="contact-message-statuschange-post">Post</label>
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">Besluiten</th>
-					<td>
-						<ul class="list-plain">
-							<li>
-								<input
-									type="checkbox"
-									id="contact-message-decision-email"
-									checked
-								/><label for="contact-message-decision-email">E-mail</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="contact-message-decision-post"
-								/><label for="contact-message-decision-post">Post</label>
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">Taken</th>
-					<td>
-						<div class="feedback feedback-error">
-							{% include "icon-feedback.njk" %}
-							<div>
-								<p>
-									U dient minimaal één optie voor berichtgeving over taken te
-									selecteren.
-								</p>
-							</div>
+			<dl class="data-overview">
+				<dt>Ontvangstbevestiging</dt>
+				<dd>
+					<ul class="list-plain">
+						<li><input type="checkbox" id="contact-message-receiptconfirmation-email" checked /><label for="contact-message-receiptconfirmation-email">E-mail</label></li>
+						<li><input type="checkbox" id="contact-message-receiptconfirmation-post" checked /><label for="contact-message-receiptconfirmation-post">Post</label></li>
+					</ul>
+				</dd>
+				<dt>Statuswijzigingen</dt>
+				<dd>
+					<ul class="list-plain">
+						<li><input type="checkbox" id="contact-message-statuschange-email" checked /><label for="contact-message-statuschange-email">E-mail</label></li>
+						<li><input type="checkbox" id="contact-message-statuschange-post" /><label for="contact-message-statuschange-post">Post</label></li>
+					</ul>
+				</dd>
+				<dt>Besluiten</dt>
+				<dd>
+					<ul class="list-plain">
+						<li><input type="checkbox" id="contact-message-decision-email" checked /><label for="contact-message-decision-email">E-mail</label></li>
+						<li><input type="checkbox" id="contact-message-decision-post" /><label for="contact-message-decision-post">Post</label></li>
+					</ul>
+				</dd>
+				<dt>Taken</dt>
+				<dd>
+					<div class="feedback feedback-error">
+						{% include "icon-feedback.njk" %}
+						<div>
+							<p>U dient minimaal één optie voor berichtgeving over taken te selecteren.</p>
 						</div>
-						<ul class="list-plain">
-							<li>
-								<input type="checkbox" id="contact-message-task-email" /><label
-									for="contact-message-task-email"
-									>E-mail</label
-								>
-							</li>
-							<li>
-								<input type="checkbox" id="contact-message-task-post" /><label
-									for="contact-message-task-post"
-									>Post</label
-								>
-							</li>
-						</ul>
-					</td>
-				</tr>
-			</table>
+					</div>
+					<ul class="list-plain">
+						<li><input type="checkbox" id="contact-message-task-email" /><label for="contact-message-task-email">E-mail</label></li>
+						<li><input type="checkbox" id="contact-message-task-post" /><label for="contact-message-task-post">Post</label></li>
+					</ul>
+				</dd>
+			</dl>
 
 			<div class="action-group">
 				<button type="submit">Opslaan</button>

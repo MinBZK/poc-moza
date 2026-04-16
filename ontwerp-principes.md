@@ -46,6 +46,7 @@ Toegankelijkheid is geen toevoeging achteraf maar een ontwerpuitgangspunt. Elk c
 - **Semantische HTML eerst** — het ontwerp maakt gebruik van de juiste HTML-elementen voor de juiste functie. Een knop is een `<button>`, navigatie een `<li>` binnen een `<nav>`, een kop een `<h1>`–`<h6>`.
 - **ARIA waar nodig, niet als vervanging** — ARIA-attributen zoals `aria-current="page"`, `aria-disabled` en `aria-invalid` geven staten en relaties aan die niet met HTML alleen uitgedrukt kunnen worden. `aria-disabled` heeft bijvoorbeeld de voorkeur boven het `disabled`-attribuut, omdat het element hiermee bereikbaar blijft voor hulptechnologie.
 - **Toetsenbordbediening** — alle interactieve elementen zijn bereikbaar en bedienbaar met het toetsenbord. Focusindicatoren worden getoond via `:focus-visible`, zodat ze zichtbaar zijn bij toetsenbordnavigatie maar niet bij muisinteractie.
+- **Verticale layout voor formulieren en gegevens** — labels staan boven invoervelden, niet ernaast. Dit voorkomt dat labels en velden overlappen of afgekapt worden wanneer gebruikers het scherm vergroten (WCAG 1.4.10 Reflow). Dezelfde aanpak geldt voor gegevensoverzichten: sleutel-waardeparen zoals contactgegevens worden weergegeven als `<dl>` met `<dt>` (label) en `<dd>` (waarde) in plaats van als `<table>`. Een description list is semantisch correct voor term-beschrijvingsparen, stapelt natuurlijk verticaal, en is eenvoudiger dan tabelmarkup.
 
 ### 2. Rijkshuisstijl als visuele basis
 

@@ -63,21 +63,81 @@ Op detailpagina's wordt het laden van bijlagen gesimuleerd met een vertraging va
 
 ## Technische opbouw
 
-| Bestand | Rol |
-|---|---|
-| `_data/berichtenboxData.js` | Genereert de dataset: magazijnen, berichten, mappen |
-| `_includes/berichtenbox-data.njk` | Include met `window.berichtenboxData` voor alle berichtenbox-pagina's |
-| `_includes/berichtenbox-row.njk` | Tabelrij-template voor statisch gerenderde berichten |
-| `_includes/berichtenbox-tabs.njk` | Tab-navigatie (inbox, archief, prullenbak, mappen) |
-| `assets/javascript/berichtenbox.js` | Client-side logica: state, polling, filtering, acties |
-| `moza/berichtenbox.html` | Inbox-pagina (gepagineerd, 25 per pagina) |
-| `moza/berichtenbox/bericht.njk` | Detailpagina (1 per statisch bericht via Eleventy-paginering) |
-| `moza/berichtenbox/bericht-demo.html` | Generieke detailpagina voor demo-berichten |
-| `moza/berichtenbox/berichtenbox-archief.html` | Archief-pagina |
-| `moza/berichtenbox/berichtenbox-prullenbak.html` | Prullenbak-pagina |
+<table>
+	<thead>
+		<tr>
+			<th>Bestand</th>
+			<th>Rol</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<code>_data/berichtenboxData.js</code>
+			</td>
+			<td>Genereert de dataset: magazijnen, berichten, mappen</td>
+		</tr>
+		<tr>
+			<td>
+				<code>_includes/berichtenbox-data.njk</code>
+			</td>
+			<td>
+				Include met <code>window.berichtenboxData</code> voor alle berichtenbox-pagina's
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<code>_includes/berichtenbox-row.njk</code>
+			</td>
+			<td>Tabelrij-template voor statisch gerenderde berichten</td>
+		</tr>
+		<tr>
+			<td>
+				<code>_includes/berichtenbox-tabs.njk</code>
+			</td>
+			<td>Tab-navigatie (inbox, archief, prullenbak, mappen)</td>
+		</tr>
+		<tr>
+			<td>
+				<code>assets/javascript/berichtenbox.js</code>
+			</td>
+			<td>Client-side logica: state, polling, filtering, acties</td>
+		</tr>
+		<tr>
+			<td>
+				<code>moza/berichtenbox.html</code>
+			</td>
+			<td>Inbox-pagina (gepagineerd, 25 per pagina)</td>
+		</tr>
+		<tr>
+			<td>
+				<code>moza/berichtenbox/bericht.njk</code>
+			</td>
+			<td>Detailpagina (1 per statisch bericht via Eleventy-paginering)</td>
+		</tr>
+		<tr>
+			<td>
+				<code>moza/berichtenbox/bericht-demo.html</code>
+			</td>
+			<td>Generieke detailpagina voor demo-berichten</td>
+		</tr>
+		<tr>
+			<td>
+				<code>moza/berichtenbox/berichtenbox-archief.html</code>
+			</td>
+			<td>Archief-pagina</td>
+		</tr>
+		<tr>
+			<td>
+				<code>moza/berichtenbox/berichtenbox-prullenbak.html</code>
+			</td>
+			<td>Prullenbak-pagina</td>
+		</tr>
+	</tbody>
+</table>
 
 ## State en localStorage
 
-Alle berichtenbox-state wordt opgeslagen onder de localStorage-sleutel `berichtenbox` als JSON-object. De state bevat: gelezen berichten, gearchiveerde en verwijderde berichten, map-toewijzingen, eigen mappen, demo-berichten en het actuele aantal ongelezen berichten (zodat de side-nav badge ook op andere pagina's correct is).
+Alle berichtenbox staten worden opgeslagen onder de localStorage-sleutel `berichtenbox` als JSON-object. Deze bevat: gelezen berichten, gearchiveerde en verwijderde berichten, map-toewijzingen, eigen mappen, demo-berichten en het actuele aantal ongelezen berichten (zodat de side-nav badge ook op andere pagina's correct is).
 
-Resetten kan via de resetlink op de pagina of handmatig via `localStorage.removeItem("berichtenbox")`.
+Resetten kan via de **localStorage wissen** functionaliteit onder **Flags** (rechts-onder) op de pagina of handmatig via `localStorage.removeItem("berichtenbox")` in DevTools van de browser.

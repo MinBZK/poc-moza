@@ -33,27 +33,16 @@ subNavActive: "/moza/contactvoorkeuren/"
 
 		<div aria-live="polite" id="form-status" hidden></div>
 		<form id="contact-form" action="{{ '/moza/contactvoorkeuren/' | url }}" novalidate>
-			<table>
-				<tr>
-					<th scope="row">
-						<label for="contact-change-email">E-mailadres</label>
-					</th>
-					<td>
-						<input type="email" id="contact-change-email" value="info@bloombv.nl" autocomplete="email" spellcheck="false" aria-required="true" aria-describedby="contact-change-email-feedback" />
-						<div id="contact-change-email-feedback" hidden></div>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">
-						<label for="contact-change-phonenumber">Telefoonnummer</label>
-					</th>
-					<td>
-						<input type="tel" id="contact-change-phonenumber" value="06 12 34 56 78" autocomplete="tel" aria-required="true" aria-describedby="contact-change-phonenumber-error" />
-						<p class="form-field-error" id="contact-change-phonenumber-error" hidden></p>
-					</td>
-				</tr>
-			</table>
-
+			<div>
+				<label for="contact-change-email">E-mailadres</label>
+				<input type="email" id="contact-change-email" value="info@bloombv.nl" autocomplete="email" spellcheck="false" aria-required="true" aria-describedby="contact-change-email-feedback" />
+				<div id="contact-change-email-feedback" hidden></div>
+			</div>
+			<div>
+				<label for="contact-change-phonenumber">Telefoonnummer</label>
+				<input type="tel" id="contact-change-phonenumber" value="06 12 34 56 78" autocomplete="tel" aria-required="true" aria-describedby="contact-change-phonenumber-error" />
+				<p class="form-field-error" id="contact-change-phonenumber-error" hidden></p>
+			</div>
 			<div class="action-group">
 				<button type="submit">Opslaan</button>
 				<a class="btn secondary" href="{{ '/moza/contactvoorkeuren/' | url }}">Annuleren</a>
@@ -133,41 +122,36 @@ subNavActive: "/moza/contactvoorkeuren/"
 		}
 
 		const newEmail = emailInput.value;
-		const table = form.querySelector("table");
-		const emailRow = emailInput.closest("tr");
+		const emailGroup = emailInput.closest("div");
 		const actions = form.querySelector(".action-group");
 
 		// E-mailveld readonly maken
 		emailInput.readOnly = true;
 
-		// Verificatierij toevoegen aan de tabel, na het e-mailveld
-		const verifyRow = document.createElement("tr");
-		verifyRow.id = "verify-row";
-		verifyRow.innerHTML = `
-			<th scope="row">
-				<label for="verify-code-1">Verificatiecode</label>
-			</th>
-			<td>
-				<div class="code-input" role="group" aria-labelledby="verify-code-label">
-					<input type="text" id="verify-code-1" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-required="true" aria-describedby="verify-code-feedback" />
-					<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 2" />
-					<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 3" />
-					<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 4" />
-					<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 5" />
-					<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 6" />
-				</div>
-				<div id="verify-code-feedback">
-					<div class="feedback feedback-info">
-						${icons.info}
-						<div>
-							<p>Vul de verificatiecode in die is verzonden naar <strong>${newEmail}</strong> om uw e-mailadres te verifiëren.</p>
-							<p class="text-muted">Geen e-mail ontvangen? Controleer uw spam-folder of <a href="#">gebruik deze link om een nieuwe code aan te vragen</a>.</p>
-						</div>
+		// Verificatieblok toevoegen na het e-mailveld
+		const verifyBlock = document.createElement("div");
+		verifyBlock.id = "verify-row";
+		verifyBlock.innerHTML = `
+			<label for="verify-code-1">Verificatiecode</label>
+			<div class="code-input" role="group">
+				<input type="text" id="verify-code-1" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-required="true" aria-describedby="verify-code-feedback" />
+				<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 2" />
+				<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 3" />
+				<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 4" />
+				<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 5" />
+				<input type="text" class="verify-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Cijfer 6" />
+			</div>
+			<div id="verify-code-feedback">
+				<div class="feedback feedback-info">
+					${icons.info}
+					<div>
+						<p>Vul de verificatiecode in die is verzonden naar <strong>${newEmail}</strong> om uw e-mailadres te verifiëren.</p>
+						<p class="text-muted">Geen e-mail ontvangen? Controleer uw spam-folder of <button type="button" class="link-button" id="verify-resend">vraag een nieuwe code aan</button>.</p>
 					</div>
 				</div>
-			</td>
+			</div>
 		`;
-		emailRow.after(verifyRow);
+		emailGroup.after(verifyBlock);
 
 		// Actieknoppen wisselen
 		actions.innerHTML = `
@@ -175,7 +159,7 @@ subNavActive: "/moza/contactvoorkeuren/"
 			<button type="button" class="secondary" id="verify-cancel">Annuleren</button>
 		`;
 
-		const digits = verifyRow.querySelectorAll(".verify-digit");
+		const digits = verifyBlock.querySelectorAll(".verify-digit");
 		const verifyFeedback = document.getElementById("verify-code-feedback");
 		digits[0].focus();
 
@@ -231,7 +215,7 @@ subNavActive: "/moza/contactvoorkeuren/"
 		});
 
 		document.getElementById("verify-cancel").addEventListener("click", () => {
-			verifyRow.remove();
+			verifyBlock.remove();
 			emailInput.readOnly = false;
 			emailInput.value = originalEmail;
 			formStatus.innerHTML = "";
@@ -244,10 +228,17 @@ subNavActive: "/moza/contactvoorkeuren/"
 			form.addEventListener("submit", handleSubmit);
 		});
 
-		document.getElementById("verify-resend").addEventListener("click", (ev) => {
-			ev.target.textContent = "Nieuwe verificatiemail verstuurd";
+		document.getElementById("verify-resend").addEventListener("click", () => {
+			const feedbackDiv = verifyBlock.querySelector("#verify-code-feedback .feedback-info > div");
+			let resendMsg = feedbackDiv.querySelector(".resend-confirmation");
+			if (!resendMsg) {
+				resendMsg = document.createElement("p");
+				resendMsg.className = "resend-confirmation";
+				feedbackDiv.appendChild(resendMsg);
+			}
+			resendMsg.textContent = "Nieuwe verificatiemail verstuurd!";
 			setTimeout(() => {
-				ev.target.textContent = "Verificatiemail opnieuw versturen";
+				resendMsg.remove();
 			}, 3000);
 		});
 	}

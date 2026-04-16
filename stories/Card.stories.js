@@ -96,7 +96,7 @@ export const MetContentLinks = {
 	<p>Berichten die betrekking hebben op de omgeving van uw bedrijfsadres.</p>
 	<ul class="list-content-links">
 		<li>
-			<a href="#" class="content-link status-unread">
+			<a href="#" class="content-link is-unread">
 				<h3>Wegafsluiting Stationsweg vanaf 10 maart</h3>
 				<span class="card-link"></span>
 			</a>

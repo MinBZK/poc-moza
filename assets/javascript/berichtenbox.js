@@ -415,10 +415,10 @@
 			const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 			icon.setAttribute('viewBox', '0 0 64 64');
 			icon.setAttribute('aria-hidden', 'true');
-			icon.setAttribute('class', 'icon-md');
+			icon.setAttribute('class', 'icon-sm');
 			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 			path.setAttribute('fill', 'currentColor');
-			path.setAttribute('d', 'M48.5 16.1 24.6 40c-2.7 2.7-7.1 2.7-9.8 0-2.7-2.7-2.7-7.1 0-9.8L36.2 8.8c1.8-1.8 4.7-1.8 6.5 0s1.8 4.7 0 6.5L22.4 35.6c-.9.9-2.4.9-3.3 0-.9-.9-.9-2.4 0-3.3l17.1-17.1-2.8-2.8L16.3 29.5c-2.5 2.5-2.5 6.4 0 8.9 2.5 2.5 6.4 2.5 8.9 0L45.5 18c3.3-3.3 3.3-8.8 0-12.1s-8.8-3.3-12.1 0L11.9 27.4c-4.3 4.3-4.3 11.2 0 15.4 4.3 4.3 11.2 4.3 15.4 0L51.3 18.9l-2.8-2.8z');
+			path.setAttribute('d', 'M40 4H16a4 4 0 0 0-4 4v48a4 4 0 0 0 4 4h32a4 4 0 0 0 4-4V16L40 4Zm6 50H18V10h18v10h10v34Z');
 			icon.appendChild(path);
 			tdBij.appendChild(icon);
 			const bijVh = document.createElement('span');
