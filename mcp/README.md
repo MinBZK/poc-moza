@@ -1,4 +1,4 @@
-# MCP — Digitale Assistent met dual LLM-backend
+# MCP — Digitale assistent met dual LLM-backend
 
 MCP-laag van poc-moza. Biedt een digitale assistent die ondernemers helpt met regelgeving, subsidies en bedrijfsregistratie. Twee LLM-backends (VLAM en Claude) delen dezelfde MCP-tools.
 
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 python api.py               # Start host op poort 8000
 ```
 
-Start daarna het moza-portaal (`npm run dev` in de root) en open de Digitale Assistent-pagina.
+Start daarna het moza-portaal (`npm run dev` in de root) en open de Digitale assistent-pagina.
 
 ### Met MCP-servers (Docker)
 

@@ -39,10 +39,10 @@
 			"icon": "/assets/icons/icon-favoriet.svg"
 		},
 		{
-			"label": "Digitale Assistent",
+			"label": "Digitale assistent",
 			"url": "/moza/digitale-assistent/",
 			"icon": "/assets/icons/icon-assistent.svg",
-			"feature": "Digitale Assistent"
+			"feature": "Digitale assistent"
 		},
 		{
 			"label": "Belastingen",
