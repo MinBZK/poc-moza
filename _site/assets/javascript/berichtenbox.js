@@ -11,6 +11,17 @@
 (function() {
 	"use strict";
 
+	// Werk de side-nav badge bij op alle pagina's vanuit localStorage.
+	try {
+		const navBadge = document.querySelector('[data-berichtenbox-count="ongelezen"]');
+		if (navBadge) {
+			const opgeslagen = JSON.parse(localStorage.getItem('berichtenbox') || '{}');
+			if (typeof opgeslagen.aantalOngelezen === 'number') {
+				navBadge.textContent = opgeslagen.aantalOngelezen;
+			}
+		}
+	} catch (e) { /* localStorage niet toegankelijk */ }
+
 	const wrapper = document.querySelector('.berichtenbox');
 	if (!wrapper) return;
 
@@ -169,13 +180,12 @@
 				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
 			).length;
 		}
+		const ongelezenAantal = data.berichten.filter((b) =>
+			statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
+		).length;
 		const navOngelezen = document.querySelector('[data-berichtenbox-count="ongelezen"]');
-		if (navOngelezen) {
-			const n = data.berichten.filter((b) =>
-				statusVan(b.id) === 'inbox' && isOngelezen(b.id, b.isOngelezen)
-			).length;
-			navOngelezen.textContent = n;
-		}
+		if (navOngelezen) navOngelezen.textContent = ongelezenAantal;
+		state.aantalOngelezen = ongelezenAantal;
 		const navArchief = document.querySelector('[data-berichtenbox-count="archief"]');
 		if (navArchief) navArchief.textContent = Object.keys(state.gearchiveerd).length;
 		const navPrullenbak = document.querySelector('[data-berichtenbox-count="prullenbak"]');

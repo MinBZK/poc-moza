@@ -158,4 +158,5 @@ module.exports = {
 	berichten,
 	mappen,
 	aantalMagazijnen: magazijnen.length,
+	aantalOngelezen: berichten.filter((b) => b.isOngelezen).length,
 };

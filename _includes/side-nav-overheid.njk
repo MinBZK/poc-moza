@@ -8,7 +8,7 @@
 					{% if item.icon %}{% icon item.icon %}{% endif %}
 					{{ item.label }}
 					{% if item.badge %}<span class="badge">{{ item.badge }}</span>{% endif %}
-					{% if item.label == "Berichtenbox" %}<span class="badge" data-berichtenbox-count="ongelezen">0</span>{% endif %}
+					{% if item.label == "Berichtenbox" %}<span class="badge" data-berichtenbox-count="ongelezen">{{ berichtenboxData.aantalOngelezen or 0 }}</span>{% endif %}
 				</a>
 			</li>
 			{% endfor %}
