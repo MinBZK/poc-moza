@@ -41,7 +41,8 @@
 		{
 			"label": "Digitale Assistent",
 			"url": "/moza/digitale-assistent/",
-			"icon": "/assets/icons/icon-assistent.svg"
+			"icon": "/assets/icons/icon-assistent.svg",
+			"feature": "Digitale Assistent"
 		},
 		{
 			"label": "Belastingen",
