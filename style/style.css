@@ -1690,7 +1690,7 @@ button {
 /* Berichtenbox ongelezen status */
 .berichtenbox-row.is-unread .berichtenbox-row-sender,
 .berichtenbox-row.is-unread .berichtenbox-row-subject {
-	font-weight: var(--toepassing-text-font-weight-bold);
+	font-weight: var(--toepassing-text-font-weight-semi-bold);
 }
 
 /* Berichtenbox animatie bij nieuw bericht */
