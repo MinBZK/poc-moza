@@ -1123,7 +1123,7 @@ summary {
 			padding-inline-start: var(--toepassing-space-padding-sm);
 		}
 		.status-unread h3 {
-			font-weight: var(--toepassing-text-font-weight-bold);
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
 		}
 		> * + * {
 			margin-block-start: var(--toepassing-space-layout-xs);

@@ -52,7 +52,7 @@ Toegankelijkheid is geen toevoeging achteraf maar een ontwerpuitgangspunt. Elk c
 Het ontwerp volgt de Rijkshuisstijl: de visuele identiteit van de Rijksoverheid. Dit zorgt voor herkenbaarheid en vertrouwen.
 
 - **Rijkslettertype** — alle tekst wordt weergegeven in het lettertype RijksSansVF.
-- **Kleurenpalet** — alle kleuren komen uit het Rijkshuisstijl-palet en worden niet ad hoc gekozen. Het kleurcontrast voldoet aan de WCAG-richtlijnen.
+- **Kleurenpalet** — alle kleuren komen uit het Rijkshuisstijl-palet en worden niet ad hoc gekozen. Het kleurcontrast voldoet aan de WCAG-richtlijnen. Feedbackkleuren hebben een specifieke semantiek: `error` voor fouten, `success` voor bevestigingen, `attention` voor elementen die de aandacht van de gebruiker moeten trekken (zoals badges met ongelezen berichten).
 - **Herkenbare patronen** — de componenten sluiten aan bij wat gebruikers verwachten van een overheidswebsite: duidelijke navigatie, voorspelbare interactie en een professionele uitstraling.
 
 ### 3. Design tokens als gedeelde taal
