@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json.
- * Gegenereerd op 15-4-2026, 15:55:14
+ * Gegenereerd op 16-4-2026, 08:25:49
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _toepassing.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _toepassing.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -33,6 +33,7 @@
   --toepassing-color-component-badge-background: var(--toepassing-color-feedback-info-emphasis);
   --toepassing-color-component-badge-text: var(--toepassing-color-text-inverse);
   --toepassing-color-component-footer-background: var(--rijkshuisstijl-color-grijs-700);
+  --toepassing-color-component-side-nav-background-hover: var(--rijkshuisstijl-color-grijs-200);
   --toepassing-color-component-text-input-border-default: var(--toepassing-color-border-default);
   --toepassing-color-feedback-error-border: var(--toepassing-color-feedback-error-default);
   --toepassing-color-feedback-error-default: var(--rijkshuisstijl-color-rood-500);
@@ -72,13 +73,13 @@
   --toepassing-color-interactive-active-border: var(--toepassing-color-interactive-hover-border); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-active-icon: var(--toepassing-color-interactive-hover-icon); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-active-text: var(--toepassing-color-interactive-hover-text); /** Staat terwijl element ingedrukt is */
-  --toepassing-color-interactive-alternate-active-background: var(--rijkshuisstijl-color-grijs-400); /** Staat terwijl element ingedrukt is */
+  --toepassing-color-interactive-alternate-active-background: var(--rijkshuisstijl-color-grijs-300); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-alternate-active-icon: var(--toepassing-color-interactive-alternate-active-text); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-alternate-active-text: var(--toepassing-color-interactive-alternate-default-text); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-alternate-default-background: var(--rijkshuisstijl-color-neutraal-transparent); /** Ruststaat van klikbaar/tikbaar element */
   --toepassing-color-interactive-alternate-default-icon: var(--toepassing-color-interactive-alternate-default-text); /** Ruststaat van klikbaar/tikbaar element */
   --toepassing-color-interactive-alternate-default-text: var(--toepassing-color-text-default); /** Ruststaat van klikbaar/tikbaar element */
-  --toepassing-color-interactive-alternate-hover-background: var(--rijkshuisstijl-color-grijs-200); /** Staat bij aanwijzen met de muis */
+  --toepassing-color-interactive-alternate-hover-background: var(--rijkshuisstijl-color-grijs-100); /** Staat bij aanwijzen met de muis */
   --toepassing-color-interactive-alternate-hover-icon: var(--toepassing-color-interactive-alternate-hover-text); /** Staat bij aanwijzen met de muis */
   --toepassing-color-interactive-alternate-hover-text: var(--toepassing-color-interactive-alternate-default-text); /** Staat bij aanwijzen met de muis */
   --toepassing-color-interactive-alternate-selected-background: var(--rijkshuisstijl-color-hemelblauw-50); /** Ingeschakeld, aangevinkt, actief element */

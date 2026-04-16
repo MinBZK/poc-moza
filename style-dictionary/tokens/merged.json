@@ -1166,7 +1166,7 @@
       "hover": {
         "background": {
           "$type": "color",
-          "$value": "{color.grijs.200}",
+          "$value": "{color.grijs.100}",
           "$description": "Staat bij aanwijzen met de muis"
         },
         "text": {
@@ -1183,7 +1183,7 @@
       "active": {
         "background": {
           "$type": "color",
-          "$value": "{color.grijs.400}",
+          "$value": "{color.grijs.300}",
           "$description": "Staat terwijl element ingedrukt is"
         },
         "text": {
@@ -1237,6 +1237,14 @@
           "default": {
             "$type": "color",
             "$value": "{color.border.default}"
+          }
+        }
+      },
+      "side-nav": {
+        "background": {
+          "hover": {
+            "$type": "color",
+            "$value": "{color.grijs.200}"
           }
         }
       }

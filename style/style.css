@@ -848,7 +848,7 @@ button.side-nav-toggle {
 			text-decoration: none;
 			&:hover,
 			&:focus {
-				background: var(--toepassing-color-interactive-alternate-hover-background);
+				background: var(--toepassing-color-component-side-nav-background-hover);
 				color: var(--toepassing-color-interactive-alternate-default-text);
 			}
 			&:active {
