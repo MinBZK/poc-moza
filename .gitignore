@@ -9,4 +9,8 @@ mcp/host/.env
 __pycache__/
 .claude/*
 _site/
+_test_build/
+.astro/
+MOx.git/
+build-storybook.log
 agent-os/standards/index.yml
