@@ -1,0 +1,269 @@
+---
+title: "MijnOverheid Zakelijk: Digitale Assistent"
+---
+
+{% include "side-nav-overheid.njk" %}
+
+<article>
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li aria-current="page">Digitale Assistent</li>
+		</ol>
+	</nav>
+
+	<h1>Digitale Assistent</h1>
+
+	<section class="card chat-container">
+		<div class="chat-header">
+			<p>Stel een vraag over regelgeving, vergunningen, subsidies of uw bedrijfsregistratie.</p>
+			<fieldset class="mode-switch" role="radiogroup" aria-label="Kies assistent">
+				<legend class="visually-hidden">Assistent-modus</legend>
+				<label class="mode-option">
+					<input type="radio" name="chat-mode" value="vlam" checked>
+					<span>VLAM</span>
+				</label>
+				<label class="mode-option">
+					<input type="radio" name="chat-mode" value="claude">
+					<span>Claude</span>
+				</label>
+			</fieldset>
+		</div>
+
+		<div class="chat-status" id="chat-status" aria-live="polite"></div>
+
+		<div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+			<div class="chat-message chat-message-assistant">
+				<p>Welkom! Ik ben de digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?</p>
+			</div>
+		</div>
+
+		<form class="chat-input-form" id="chat-form">
+			<label for="chat-input" class="visually-hidden">Uw vraag</label>
+			<textarea id="chat-input" name="message" rows="1" placeholder="Stel uw vraag..." required></textarea>
+			<button type="submit">Verstuur</button>
+		</form>
+	</section>
+
+	<section class="card card-faq">
+		<h3>Veelgestelde vragen</h3>
+
+		<details name="faq">
+			<summary>
+				<h4>Wat kan de digitale assistent voor mij doen?</h4>
+			</summary>
+			<section>
+				<p>De digitale assistent kan u helpen met vragen over regelgeving, subsidies, vergunningen en uw bedrijfsregistratie. De assistent raadpleegt actuele bronnen zoals het Handelsregister (KvK), de Regelingenbank (KOOP) en RVO.</p>
+			</section>
+		</details>
+
+		<details name="faq">
+			<summary>
+				<h4>Hoe betrouwbaar zijn de antwoorden?</h4>
+			</summary>
+			<section>
+				<p>De assistent verwijst waar mogelijk naar officiële bronnen. Controleer belangrijke informatie altijd bij de betreffende overheidsinstantie. De assistent is een hulpmiddel, geen juridisch advies.</p>
+			</section>
+		</details>
+
+		<details name="faq">
+			<summary>
+				<h4>Worden mijn gegevens opgeslagen?</h4>
+			</summary>
+			<section>
+				<p>Uw gesprek wordt alleen voor de duur van uw sessie bewaard en daarna verwijderd. Er worden geen persoonsgegevens opgeslagen zonder uw toestemming.</p>
+			</section>
+		</details>
+	</section>
+</article>
+
+<script>
+(function () {
+	var API_BASE = "http://localhost:8000";
+	var form = document.getElementById("chat-form");
+	var input = document.getElementById("chat-input");
+	var messages = document.getElementById("chat-messages");
+	var statusEl = document.getElementById("chat-status");
+	var modeInputs = document.querySelectorAll('input[name="chat-mode"]');
+	var sessions = { vlam: null, claude: null };
+	var chatHistory = { vlam: null, claude: null };
+	var serverStatus = null;
+
+	var SERVER_LABELS = {
+		kvk: "KvK Handelsregister",
+		koop: "KOOP Regelingenbank",
+		regelrecht: "RegelRecht",
+		rvo: "RVO",
+	};
+
+	function getMode() {
+		return document.querySelector('input[name="chat-mode"]:checked').value;
+	}
+
+	function parseMarkdown(text) {
+		var lines = text.split("\n");
+		var html = [];
+		var inList = false;
+
+		for (var i = 0; i < lines.length; i++) {
+			var line = lines[i]
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;");
+
+			// Headers
+			if (/^#### (.+)$/.test(line)) { line = "<strong>" + line.replace(/^#### /, "") + "</strong>"; }
+			else if (/^### (.+)$/.test(line)) { line = "<strong>" + line.replace(/^### /, "") + "</strong>"; }
+			else if (/^## (.+)$/.test(line)) { line = "<strong>" + line.replace(/^## /, "") + "</strong>"; }
+			else if (/^# (.+)$/.test(line)) { line = "<strong>" + line.replace(/^# /, "") + "</strong>"; }
+
+			// List items
+			if (/^[-*] (.+)$/.test(line)) {
+				if (!inList) { html.push("<ul>"); inList = true; }
+				line = "<li>" + line.replace(/^[-*] /, "") + "</li>";
+			} else if (inList) {
+				html.push("</ul>");
+				inList = false;
+			}
+
+			// Inline formatting
+			line = line
+				.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+				.replace(/\*(.+?)\*/g, "<em>$1</em>")
+				.replace(/`(.+?)`/g, "<code>$1</code>")
+				.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+			html.push(line);
+		}
+
+		if (inList) html.push("</ul>");
+		return html.join("<br>").replace(/<br><ul>/g, "<ul>").replace(/<\/ul><br>/g, "</ul>").replace(/<br><li>/g, "<li>").replace(/<\/li><br><li>/g, "</li><li>");
+	}
+
+	function addMessage(text, role) {
+		var div = document.createElement("div");
+		div.className = "chat-message chat-message-" + role;
+		var p = document.createElement("p");
+		if (role === "assistant") {
+			p.innerHTML = parseMarkdown(text);
+		} else {
+			p.textContent = text;
+		}
+		div.appendChild(p);
+		messages.appendChild(div);
+		messages.scrollTop = messages.scrollHeight;
+	}
+
+	function setLoading(loading) {
+		var btn = form.querySelector("button");
+		if (loading) {
+			btn.setAttribute("aria-disabled", "true");
+			addMessage("Een moment geduld...", "loading");
+		} else {
+			btn.removeAttribute("aria-disabled");
+			var loader = messages.querySelector(".chat-message-loading");
+			if (loader) loader.remove();
+		}
+	}
+
+	function renderStatus(data) {
+		serverStatus = data;
+		var servers = data.servers || {};
+		var keys = Object.keys(servers);
+		if (keys.length === 0 && data.tools === 0) {
+			statusEl.innerHTML =
+				'<p class="chat-status-warning">Geen MCP-bronnen verbonden — de assistent antwoordt op basis van eigen kennis.</p>';
+			return;
+		}
+		var items = keys.map(function (key) {
+			var connected = servers[key] === "verbonden";
+			var label = SERVER_LABELS[key] || key;
+			var dot = connected ? "connected" : "disconnected";
+			return '<li class="chat-status-' + dot + '">' + label + "</li>";
+		});
+		statusEl.innerHTML =
+			"<p>Verbonden bronnen:</p><ul>" + items.join("") + "</ul>";
+	}
+
+	function renderStatusOffline() {
+		statusEl.innerHTML =
+			'<p class="chat-status-warning">Host niet bereikbaar — de assistent kan geen vragen beantwoorden.</p>';
+	}
+
+	// Haal status op bij laden
+	fetch(API_BASE + "/health")
+		.then(function (r) { return r.json(); })
+		.then(renderStatus)
+		.catch(renderStatusOffline);
+
+	// Bewaar en herstel gesprek bij wisselen van modus
+	modeInputs.forEach(function (radio) {
+		radio.addEventListener("change", function () {
+			var prev = this.value === "vlam" ? "claude" : "vlam";
+			// Sla huidige chat op
+			chatHistory[prev] = messages.innerHTML;
+
+			// Herstel of start nieuw gesprek
+			var mode = getMode();
+			if (chatHistory[mode]) {
+				messages.innerHTML = chatHistory[mode];
+			} else {
+				messages.innerHTML = "";
+				var welkom = mode === "vlam"
+					? "Welkom! Ik ben VLAM, de digitale assistent van de Rijksoverheid. Waarmee kan ik u helpen?"
+					: "Welkom! Ik ben Claude, digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?";
+				addMessage(welkom, "assistant");
+			}
+			messages.scrollTop = messages.scrollHeight;
+		});
+	});
+
+	input.addEventListener("input", function () {
+		this.style.blockSize = "auto";
+		this.style.blockSize = this.scrollHeight + "px";
+	});
+
+	input.addEventListener("keydown", function (e) {
+		if (e.key === "Enter" && !e.shiftKey) {
+			e.preventDefault();
+			form.requestSubmit();
+		}
+	});
+
+	form.addEventListener("submit", async function (e) {
+		e.preventDefault();
+		var message = input.value.trim();
+		if (!message) return;
+
+		addMessage(message, "user");
+		input.value = "";
+		input.style.blockSize = "auto";
+		setLoading(true);
+
+		try {
+			var response = await fetch(API_BASE + "/chat", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					message: message,
+					session_id: sessions[getMode()],
+					mode: getMode(),
+				}),
+			});
+
+			if (!response.ok) throw new Error("Server niet bereikbaar");
+
+			var data = await response.json();
+			sessions[getMode()] = data.session_id;
+			setLoading(false);
+			addMessage(data.reply, "assistant");
+		} catch (err) {
+			setLoading(false);
+			addMessage(
+				"Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.",
+				"error"
+			);
+		}
+	});
+})();
+</script>

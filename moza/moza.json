@@ -39,6 +39,11 @@
 			"icon": "/assets/icons/icon-favoriet.svg"
 		},
 		{
+			"label": "Digitale Assistent",
+			"url": "/moza/digitale-assistent/",
+			"icon": "/assets/icons/icon-assistent.svg"
+		},
+		{
 			"label": "Belastingen",
 			"url": "/moza/belastingen/",
 			"icon": "/assets/icons/icon-financieen.svg",
