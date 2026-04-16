@@ -57,6 +57,10 @@
 			const merged = { ...defaultState, ...parsed };
 			// Normaliseer types zodat writeState/render niet kunnen crashen op corrupte keys.
 			if (!Array.isArray(merged.nieuweBerichten)) merged.nieuweBerichten = [];
+			const bekendeMagazijnen = new Set(data.magazijnen.map((m) => m.id));
+			merged.nieuweBerichten = merged.nieuweBerichten
+				.filter((b) => bekendeMagazijnen.has(b.magazijnId))
+				.slice(-NIEUWE_BERICHTEN_LIMIET);
 			if (!Array.isArray(merged.eigenMappen)) merged.eigenMappen = [];
 			['gelezen','ongelezenToegevoegd','gearchiveerd','verwijderd','mapOverride'].forEach((k) => {
 				if (!merged[k] || typeof merged[k] !== 'object' || Array.isArray(merged[k])) merged[k] = {};
