@@ -11,7 +11,7 @@ export const Citaat = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Dit is een citaat. De beste manier om de toekomst te voorspellen is om deze zelf te creëren." },
 	render: ({ tekst }) => `
 <blockquote>
@@ -28,7 +28,7 @@ export const VoorgeformatteerdeTekst = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Dit is voorgeformatteerde tekst.\n            Spaties en regelovergangen\n            worden behouden." },
 	render: ({ tekst }) => `<pre>${tekst}</pre>`,
 };
@@ -41,7 +41,7 @@ export const Codeblok = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "// Dit is een codeblok\nfunction groet(naam) {\n    return `Hallo, ${naam}!`;\n}" },
 	render: ({ tekst }) => `<pre><code>${tekst}</code></pre>`,
 };

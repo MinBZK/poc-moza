@@ -41,7 +41,7 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		icoon: { control: "select", options: iconNames },
+		icoon: { control: "select", options: iconNames, name: "Icoon" },
 		grootte: { control: "select", options: iconSizes, name: "Grootte" },
 		kleur: { control: "select", options: Object.keys(iconColors), name: "Kleur" },
 	},
@@ -77,7 +77,7 @@ export const AlleGroottes = {
 		},
 	},
 	argTypes: {
-		icoon: { control: "select", options: iconNames },
+		icoon: { control: "select", options: iconNames, name: "Icoon" },
 	},
 	args: {
 		icoon: "home",

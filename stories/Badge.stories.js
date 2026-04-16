@@ -12,7 +12,7 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		waarde: { control: "text" },
+		waarde: { control: "text", name: "Waarde" },
 	},
 	args: {
 		waarde: "3",
@@ -29,8 +29,8 @@ export const InHeading = {
 		},
 	},
 	argTypes: {
-		titel: { control: "text" },
-		badge: { control: "text" },
+		titel: { control: "text", name: "Titel" },
+		badge: { control: "text", name: "Badge" },
 	},
 	args: {
 		titel: "Binnenkort beschikbaar",

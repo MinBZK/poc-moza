@@ -1,0 +1,229 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as FeedbackStories from "./Feedback.stories";
+
+<Meta title="Ontwerppatronen/E-mailverificatie" />
+
+# E-mailverificatie
+
+Wanneer een gebruiker een e-mailadres toevoegt of wijzigt, moet dit geverifieerd worden voordat het actief wordt. Dit patroon beschrijft deze flow, zowel de ‘happy-flow’ als situaties waarin het mis kan gaan.
+
+## Waarom verificatie?
+
+Een e-mailadres is een communicatiekanaal waarlangs de overheid notificaties stuurt. Een foutief of niet-bereikbaar adres kan ertoe leiden dat de gebruiker belangrijke berichten mist. Verificatie beschermt zowel de gebruiker als de organisatie.
+
+## Happy-flow
+
+De gebruiker wijzigt het e-mailadres en bevestigt dit succesvol.
+
+### 1. Invoer
+
+De gebruiker voert een nieuw e-mailadres in met de actie **Contactgegevens wijzigen** op de pagina **Contactvoorkeuren** en klikt op **Opslaan**.
+
+#### Validatie bij invoer
+
+- Formaat-check (bevat `@` en geldig domein voorafgaand aan een `.`)
+- Adres verschilt van huidig adres
+
+##### Toegestane leestekens
+
+In het lokale deel (vóór de `@`):
+
+- Letters (`a`–`z`) en cijfers (`0`–`9`)
+- Punt (`.`), koppelteken (`-`) en underscore (`_`)
+- Plusteken (`+`) (vaak gebruikt voor filtering, bijvoorbeeld _email+boekhouding@voorbeeld.nl_)
+
+In de domeinnaam (na de `@`):
+
+- Letters (`a`–`z`) en cijfers (`0`–`9`)
+- Koppelteken (`-`), maar niet aan het begin of einde van een domeinnaam
+- Punt (`.`), als scheiding tussen labels (bijvoorbeeld _email@boekhouding.voorbeeld.nl_)
+
+##### Wanneer valideren (_“reward early, punish late”_)
+
+- Leeg veld: pas markeren bij het opslaan van het formulier, niet bij het verlaten van het veld
+- Velden met een ongeldig formaat: valideren wanneer de gebruiker het veld verlaat (_on blur_)
+- Zodra de gebruiker een fout corrigeert: direct foutmelding en `aria-invalid` staat op invoerveld verwijderen
+- Nooit valideren terwijl de gebruiker nog aan het typen is
+
+**Technische implementatie:**
+
+- Het invoerveld gebruikt `type="email"`, dit zorgt ondermeer voor het juiste toetsenbord op mobiele apparaten
+- `novalidate` op het formulier onderdrukt standaard browser-validatie popups
+- `autocomplete="email"` en `spellcheck="false"` op het invoerveld conform [WCAG 2.2 criterium 1.3.5](https://www.w3.org/WAI/WCAG21/Understanding/identify-input-purpose.html)
+- Verplichte velden zijn gemarkeerd met `aria-required="true"` in plaats van het `required`-attribuut
+- Foutmeldingen zijn gekoppeld via `aria-describedby` aan het invoerveld
+- Bij een fout krijgt het invoerveld `aria-invalid="true"`, dat wordt verwijderd zodra de gebruiker het adres aanpast
+
+### 2. Bevestigingsmail verstuurd
+
+Na **Opslaan** toont de pagina een feedbackmelding:
+
+<Canvas of={FeedbackStories.VerificatiemailVerstuurd} sourceState="none" />
+
+**Ontwerpkeuzes:**
+
+- Het oude e-mailadres blijft actief totdat het nieuwe is geverifieerd
+- Het invoerveld E-mailadres wijzigd naar `readonly`
+- De feedbackmelding is van het type `feedback-info`
+- Een optie “Verificatiemail opnieuw versturen” is beschikbaar als link-button
+
+### 3. Verificatie voltooid
+
+De gebruiker vult de verificatiecode uit de bevestigingsmail in. De gebruiker komt automatisch op de **Contactvoorkeuren** pagina terug waar deze melding wordt getoont:
+
+<Canvas of={FeedbackStories.VerificatiemailGewijzigd} sourceState="none" />
+
+**Ontwerpkeuzes:**
+
+- Feedbackmelding van het type `feedback-succes`
+- Het oude adres wordt direct vervangen
+- De pagina Contactvoorkeuren toont het nieuwe adres
+
+## Unhappy-flows
+
+### Ongeldig e-mailadres formaat
+
+De gebruiker voert een e-mailadres in dat niet voldoet aan het verwachte formaat:
+
+<Canvas of={FeedbackStories.VerificatiemailFormatIssue} sourceState="none" />
+
+**Ontwerpkeuzes:**
+
+- Feedbackmelding van het type `feedback-error`, inline onder het invoerveld
+- Het invoerveld krijgt `aria-invalid="true"` en de foutstyling wordt automatisch toegepast
+- De foutmelding verdwijnt zodra de gebruiker het adres corrigeert (_reward early_)
+- Focus wordt op het invoerveld gezet
+
+### Link verlopen
+
+De verificatielink heeft een geldigheidsduur van 20 minuten. Als de gebruiker te laat de verificatiecode invoert verschijnt deze melding:
+
+<Canvas of={FeedbackStories.VerificatiemailVerlopen} sourceState="none" />
+
+**Ontwerpkeuzes:**
+
+- Feedbackmelding van het type `feedback-warning`
+- Directe link voor het aanvragen van een nieuwe bevestigingsmail
+- Het oude e-mailadres blijft actief
+
+### Verificatiecode al gebruikt
+
+De gebruiker vult nogmaals dezelfde verificatiecode in:
+
+<Canvas of={FeedbackStories.VerificatiemailAlGeverifieerd} sourceState="none" />
+
+**Ontwerpkeuzes:**
+
+- Feedbackmelding van het type `feedback-info` (geen fout, maar informatief)
+
+### Ongeldig of onbereikbaar adres
+
+De verificatiemail kan niet worden afgeleverd (_hard bounce_):
+
+<Canvas of={FeedbackStories.VerificatiemailBounce} sourceState="none" />
+
+**Ontwerpkeuzes:**
+
+- Feedbackmelding van het type `feedback-error`
+- Het formulier wordt opnieuw getoond met het ingevoerde adres
+- Het invoerveld wordt voorzien van `aria-invalid`, de bijbehorende foutstyling wordt automatisch toegepast
+- `aria-invalid` wordt verwijderd zodra de gebruiker het adres aanpast, omdat de nieuwe invoer mogelijk wel geldig is
+- Het oude e-mailadres blijft actief
+
+## Staten-overzicht
+
+<table>
+	<thead>
+		<tr>
+			<th>Staat</th>
+			<th>Feedbacktype</th>
+			<th>Oud adres</th>
+			<th>Actie</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Verificatiemail verstuurd</td>
+			<td>
+				<code>feedback-info</code>
+			</td>
+			<td>Actief</td>
+			<td>Opnieuw versturen, Annuleren</td>
+		</tr>
+		<tr>
+			<td>Verificatie voltooid</td>
+			<td>
+				<code>feedback-succes</code>
+			</td>
+			<td>Vervangen</td>
+			<td>Geen, gebruiker gaat terug naar **Contactvoorkeuren**</td>
+		</tr>
+		<tr>
+			<td>Link verlopen</td>
+			<td>
+				<code>feedback-warning</code>
+			</td>
+			<td>Actief</td>
+			<td>Nieuwe mail aanvragen, flow wordt herstart</td>
+		</tr>
+		<tr>
+			<td>Link al gebruikt</td>
+			<td>
+				<code>feedback-info</code>
+			</td>
+			<td>Vervangen</td>
+			<td>Geen</td>
+		</tr>
+		<tr>
+			<td>Onbereikbaar adres</td>
+			<td>
+				<code>feedback-error</code>
+			</td>
+			<td>Actief</td>
+			<td>Opnieuw invoeren</td>
+		</tr>
+	</tbody>
+</table>
+
+## Toegankelijkheid
+
+- Feedbackmeldingen worden aangekondigd via een `aria-live="polite"` regio, zodat screenreaders de statuswijziging communiceren
+- De verificatiecode in de e-mail moet duidelijk beschrijven wat er gebeurt: _“Bevestig uw e-mailadres voor MijnOverheid Zakelijk door deze code in te voeren in het veld **Verificatiecode**”_ in de tekst van de e-mail
+- Foutmeldingen bij het formulier worden gekoppeld via `aria-describedby` aan het invoerveld
+- De **Opnieuw versturen**-knop communiceert na klik de nieuwe staat (niet alleen visueel)
+
+## Openstaande vragen
+
+- **Geldigheidsduur** — hoe lang is de verificatielink geldig? Momenteel is deze in het prototype vastgesteld op 20 minuten.
+- **Gedeelde mailbox** — als het e-mailadres een gedeelde bedrijfsmailbox is, wie bevestigt dan? De wijziging hoeft niet door dezelfde persoon bevestigd te worden
+- **Terugvaloptie** — moet er een alternatief verificatiemechanisme zijn als e-mail niet werkt (bijvoorbeeld sms-code)?
+
+## Bronnen
+
+**[GOV.UK — Confirm an email address](https://design-system.service.gov.uk/patterns/confirm-an-email-address/)**
+
+- Het Britse overheidspatroon voor e-mailverificatie. Beschrijft dezelfde stappen: invoer, bevestigingsmail, verificatie. Adviseert om het oude adres actief te houden tot verificatie is afgerond. Gebruikte verificatielinks verlopen bij gebruik, bij het aanvragen van een nieuwe link, of bij het wijzigen van het adres.
+
+**[GOV.UK — Email addresses (input)](https://design-system.service.gov.uk/patterns/email-addresses/)**
+
+- Richtlijnen voor het invoerveld: gebruik `type="email"`, `autocomplete="email"` (WCAG 2.2, 1.3.5), `spellcheck="false"`. Laat ruimte voor minimaal 30 tekens. Sta plakken altijd toe. Overweeg te waarschuwen bij veelvoorkomende typfouten in domeinnamen (bijvoorbeeld "homtail.com").
+
+**[NNGroup — How to Report Errors in Forms](https://www.nngroup.com/articles/errors-forms-design-guidelines/)**
+
+- Toon foutmeldingen naast het veld, niet alleen bovenaan het formulier. Gebruik kleur én een icoon (niet kleur alleen). Houd de foutmelding zichtbaar terwijl de gebruiker corrigeert. Valideer pas na het verlaten van het veld, nooit tijdens het typen.
+
+**[Smashing Magazine — Accessible Form Validation](https://www.smashingmagazine.com/2023/02/guide-accessible-form-validation/)**
+
+- Gebruik `aria-describedby` om foutmeldingen te koppelen aan het veld (niet `aria-errormessage`, onvoldoende screenreader-ondersteuning). Gebruik `aria-invalid="true"` op foutieve velden. Onderdrukt native validatie met `novalidate` op het formulier en gebruik `aria-required="true"` in plaats van `required`. Schakel de verstuurknop nooit uit.
+
+**[Smashing Magazine — Inline Validation (Reward Early, Punish Late)](https://www.smashingmagazine.com/2022/09/inline-validation-web-forms-ux/)**
+
+- Het "reward early, punish late" patroon: bevestig correcties direct (reward early), maar wacht met het tonen van nieuwe fouten tot de gebruiker het veld verlaat (punish late). Verwijder foutmeldingen zodra de invoer geldig wordt, wacht niet op blur.
+
+**[WCAG 3.3.1 — Error Identification](https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html)**
+
+- Foutmeldingen moeten het foutveld identificeren en de fout in tekst beschrijven. Relevant voor de validatie bij invoer en de unhappy-flows.
+
+**[WCAG 4.1.3 — Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)**
+
+- Statusberichten (zoals "Verificatiemail verstuurd") moeten via ARIA live regions aan hulptechnologie worden gecommuniceerd zonder dat de focus verplaatst wordt.

@@ -5,7 +5,7 @@ subNavActive: "/moza/contactvoorkeuren/"
 
 {% include "side-nav-overheid.njk" %}
 
-<article>
+<article id="hoofd-inhoud">
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
@@ -32,26 +32,22 @@ subNavActive: "/moza/contactvoorkeuren/"
 		</div>
 
 		<form action="{{ '/moza/contactvoorkeuren/' | url }}">
-			<table class="data-overview">
-				<tr>
-					<th scope="row">Voorkeurskanaal</th>
-					<td>
-						<ul class="list-plain">
-							<li><input type="radio" id="contact-channel-email" name="contact-channel" checked /><label for="contact-channel-email">E-mail</label></li>
-							<li><input type="radio" id="contact-channel-post" name="contact-channel" /><label for="contact-channel-post">Post</label></li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">Bellen</th>
-					<td>
-						<ul class="list-plain">
-							<li><input type="radio" id="contact-allow-phone-yes" name="contact-allow-phone" /><label for="contact-allow-phone-yes">Ik mag gebeld worden</label></li>
-							<li><input type="radio" id="contact-allow-phone-no" name="contact-allow-phone" checked /><label for="contact-allow-phone-no">Ik wil niet gebeld worden</label></li>
-						</ul>
-					</td>
-				</tr>
-			</table>
+			<dl class="data-overview">
+				<dt>Voorkeurskanaal</dt>
+				<dd>
+					<ul class="list-plain">
+						<li><input type="radio" id="contact-channel-email" name="contact-channel" checked /><label for="contact-channel-email">E-mail</label></li>
+						<li><input type="radio" id="contact-channel-post" name="contact-channel" /><label for="contact-channel-post">Post</label></li>
+					</ul>
+				</dd>
+				<dt>Bellen</dt>
+				<dd>
+					<ul class="list-plain">
+						<li><input type="radio" id="contact-allow-phone-yes" name="contact-allow-phone" /><label for="contact-allow-phone-yes">Ik mag gebeld worden</label></li>
+						<li><input type="radio" id="contact-allow-phone-no" name="contact-allow-phone" checked /><label for="contact-allow-phone-no">Ik wil niet gebeld worden</label></li>
+					</ul>
+				</dd>
+			</dl>
 
 			<div class="action-group">
 				<button type="submit">Opslaan</button>

@@ -12,8 +12,8 @@ export const Standaard = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
-		helptekst: { control: "text" },
+		label: { control: "text", name: "Label" },
+		helptekst: { control: "text", name: "Helptekst" },
 	},
 	args: {
 		label: "Standaard tekstinvoerveld",
@@ -41,8 +41,8 @@ export const Email = {
 		},
 	},
 	argTypes: {
-		label: { control: "text" },
-		placeholder: { control: "text" },
+		label: { control: "text", name: "Label" },
+		placeholder: { control: "text", name: "Placeholder" },
 	},
 	args: {
 		label: "E-mailadres",

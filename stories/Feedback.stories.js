@@ -21,8 +21,41 @@ const feedbackIconFout = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 export default {
 	title: "Componenten/Feedback",
 	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component: `Feedbackmeldingen informeren de gebruiker over de uitkomst van een actie of over een situatie die aandacht vraagt. Elke variant heeft een eigen kleur en icoon die de urgentie communiceert.
+
+**Heading-niveau en visuele stijl**
+
+De titel van een feedbackmelding is een heading (\`<h2>\`–\`<h6>\`). Het juiste heading-niveau wordt bepaald door de positie in de pagina-structuur, niet door de gewenste visuele grootte. Een feedbackmelding binnen een \`<section>\` met een \`<h2>\` gebruikt \`<h3>\` als titel.`,
+			},
+		},
+	},
+	argTypes: {
+		toonTitel: { control: "inline-radio", options: ["Aan", "Uit"], name: "Titel" },
+		titel: { control: "text", name: "Titel", if: { arg: "toonTitel", eq: "Aan" } },
+		headingNiveau: {
+			control: "select",
+			options: ["h2", "h3", "h4", "h5", "h6"],
+			name: "Heading-niveau",
+			if: { arg: "toonTitel", eq: "Aan" },
+		},
+		inhoud: { control: "text", name: "Inhoud" },
+	},
+	args: {
+		toonTitel: "Aan",
+		headingNiveau: "h3",
+		inhoud: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+	},
 };
 
+function renderContent({ toonTitel, titel, headingNiveau, inhoud }) {
+	if (toonTitel === "Aan" && titel) {
+		return `<div><${headingNiveau}>${titel}</${headingNiveau}><p>${inhoud}</p></div>`;
+	}
+	return `<div><p>${inhoud}</p></div>`;
+}
 
 export const Neutraal = {
 	parameters: {
@@ -32,20 +65,12 @@ export const Neutraal = {
 			},
 		},
 	},
-	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
-	},
 	args: {
 		titel: "Neutrale feedback",
-		inhoud: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam asperiores odio nulla et?",
 	},
-	render: ({ titel, inhoud }) => `
+	render: (args) => `
 <div class="feedback">
-	<div>
-		<p>${titel}</p>
-		<p>${inhoud}</p>
-	</div>
+	${renderContent(args)}
 	<button class="btn-close link-button">
 		<i>Sluit notificatie</i>
 	</button>
@@ -61,21 +86,13 @@ export const Informatie = {
 			},
 		},
 	},
-	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
-	},
 	args: {
 		titel: "Informatie",
-		inhoud: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt sint mollitia culpa distinctio omnis quasi aperiam dolorem.",
 	},
-	render: ({ titel, inhoud }) => `
+	render: (args) => `
 <div class="feedback feedback-info">
 	${feedbackIconInfo}
-	<div>
-		<p>${titel}</p>
-		<p>${inhoud}</p>
-	</div>
+	${renderContent(args)}
 	<button class="btn-close link-button">
 		<i>Sluit notificatie</i>
 	</button>
@@ -91,21 +108,13 @@ export const Succes = {
 			},
 		},
 	},
-	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
-	},
 	args: {
 		titel: "Succes",
-		inhoud: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nulla doloribus in explicabo minus amet deleniti excepturi.",
 	},
-	render: ({ titel, inhoud }) => `
+	render: (args) => `
 <div class="feedback feedback-succes">
 	${feedbackIconSucces}
-	<div>
-		<p>${titel}</p>
-		<p>${inhoud}</p>
-	</div>
+	${renderContent(args)}
 	<button class="btn-close link-button">
 		<i>Sluit notificatie</i>
 	</button>
@@ -121,21 +130,13 @@ export const Waarschuwing = {
 			},
 		},
 	},
-	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
-	},
 	args: {
 		titel: "Waarschuwing",
-		inhoud: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, incidunt perspiciatis adipisci iusto veniam magnam.",
 	},
-	render: ({ titel, inhoud }) => `
+	render: (args) => `
 <div class="feedback feedback-warning">
 	${feedbackIconWaarschuwing}
-	<div>
-		<p>${titel}</p>
-		<p>${inhoud}</p>
-	</div>
+	${renderContent(args)}
 	<button class="btn-close link-button">
 		<i>Sluit notificatie</i>
 	</button>
@@ -151,21 +152,13 @@ export const Foutmelding = {
 			},
 		},
 	},
-	argTypes: {
-		titel: { control: "text" },
-		inhoud: { control: "text" },
-	},
 	args: {
 		titel: "Foutmelding",
-		inhoud: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus iste tempore dignissimos fuga.",
 	},
-	render: ({ titel, inhoud }) => `
+	render: (args) => `
 <div class="feedback feedback-error">
 	${feedbackIconFout}
-	<div>
-		<p>${titel}</p>
-		<p>${inhoud}</p>
-	</div>
+	${renderContent(args)}
 </div>
 `,
 };
@@ -226,6 +219,92 @@ export const AlleVarianten = {
 			<p>Bericht tekst.</p>
 		</div>
 	</div>
+</div>
+`,
+};
+
+// Losse feedbackvarianten voor gebruik in andere stories (niet als component gerenderd)
+
+export const VerificatiemailFormatIssue = {
+	tags: ["!autodocs", "!dev"],
+	args: {
+		toonTitel: "Uit",
+		inhoud: 'Vul een geldig e-mailadres in, bijvoorbeeld email@voorbeeld.nl.',
+	},
+	render: (args) => `
+<div class="feedback feedback-error">
+	${feedbackIconFout}
+	${renderContent(args)}
+</div>
+`,
+};
+
+export const VerificatiemailVerstuurd = {
+	tags: ["!autodocs", "!dev"],
+	args: {
+		toonTitel: "Uit",
+		inhoud: 'Vul de verificatiecode in die is verzonden naar <strong>email@voorbeeld.nl</strong> om uw e-mailadres te verifiëren. Geen e-mail ontvangen? Controleer uw spam-folder of <a href="#">gebruik deze link om een nieuwe code aan te vragen</a>.',
+	},
+	render: (args) => `
+<div class="feedback feedback-info">
+	${feedbackIconInfo}
+	${renderContent(args)}
+</div>
+`,
+};
+
+export const VerificatiemailGewijzigd = {
+	tags: ["!autodocs", "!dev"],
+	args: {
+		toonTitel: "Uit",
+		inhoud: 'Uw e-mailadres is gewijzigd naar <strong>nieuw@voorbeeld.nl</strong>. Alle toekomstige berichten worden naar dit adres gestuurd.',
+	},
+	render: (args) => `
+<div class="feedback feedback-succes">
+	${feedbackIconSucces}
+	${renderContent(args)}
+</div>
+`,
+};
+
+export const VerificatiemailVerlopen = {
+	tags: ["!autodocs", "!dev"],
+	args: {
+		toonTitel: "Uit",
+		inhoud: 'Deze verificatiecode is verlopen. <a href="#">Gebruik deze link om een nieuwe verificatiemail te ontvangen</a>.',
+	},
+	render: (args) => `
+<div class="feedback feedback-warning">
+	${feedbackIconWaarschuwing}
+	${renderContent(args)}
+</div>
+`,
+};
+
+export const VerificatiemailAlGeverifieerd = {
+	tags: ["!autodocs", "!dev"],
+	args: {
+		toonTitel: "Uit",
+		inhoud: 'Dit e-mailadres is al geverifieerd. U hoeft verder niets te doen.',
+	},
+	render: (args) => `
+<div class="feedback feedback-info">
+	${feedbackIconInfo}
+	${renderContent(args)}
+</div>
+`,
+};
+
+export const VerificatiemailBounce = {
+	tags: ["!autodocs", "!dev"],
+	args: {
+		toonTitel: "Uit",
+		inhoud: 'De verificatiemail naar nieuw@voorbeeld.nl kon niet worden bezorgd. Controleer het e-mailadres en probeer het opnieuw.',
+	},
+	render: (args) => `
+<div class="feedback feedback-error">
+	${feedbackIconFout}
+	${renderContent(args)}
 </div>
 `,
 };

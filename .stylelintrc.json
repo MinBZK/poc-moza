@@ -1,6 +1,18 @@
 {
-	"plugins": ["stylelint-use-logical"],
+	"extends": ["stylelint-config-standard"],
+	"plugins": ["stylelint-use-logical", "stylelint-order"],
 	"rules": {
-		"csstools/use-logical": "always"
+		"csstools/use-logical": "always",
+		"order/properties-alphabetical-order": true,
+		"import-notation": null,
+		"font-family-name-quotes": null,
+		"rule-empty-line-before": null,
+		"at-rule-empty-line-before": null,
+		"comment-empty-line-before": null,
+		"media-feature-range-notation": null,
+		"no-descending-specificity": null,
+		"property-no-deprecated": null,
+		"selector-class-pattern": null,
+		"no-duplicate-selectors": null
 	}
 }

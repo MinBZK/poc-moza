@@ -1,6 +1,27 @@
 export default {
 	title: "Typografie/Koppen",
 	tags: ["autodocs"],
+	parameters: {
+		docs: {
+			description: {
+				component: `Kopteksten (\`<h1>\`–\`<h6>\`) structureren de pagina-inhoud in een logische hiërarchie. Het heading-niveau wordt bepaald door de positie in de documentstructuur, niet door de gewenste visuele grootte.
+
+**Semantiek boven vormgeving**
+
+Gebruik altijd het juiste heading-niveau voor de context. Een \`<h3>\` volgt op een \`<h2>\`, niet op een \`<h1>\`. Sla geen niveaus over — dat verstoort de navigatie voor screenreaders en de inhoudsopgave.
+
+**Visuele stijlklassen**
+
+Wanneer het ontwerp een andere visuele grootte vraagt dan het semantische niveau, gebruik dan de stijlklassen \`.h1\` t/m \`.h6\`:
+
+\`\`\`html
+<h3 class="h2">Visueel als h2, semantisch een h3</h3>
+\`\`\`
+
+Zo blijft de heading-hiërarchie intact voor hulptechnologie, terwijl het ontwerp flexibel blijft. Dit is bijvoorbeeld nuttig bij componenten (zoals feedbackmeldingen of cards) die op verschillende plekken in de pagina geplaatst kunnen worden.`,
+			},
+		},
+	},
 };
 
 export const AlleKoppen = {
@@ -45,7 +66,7 @@ export const H1 = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Koptekst niveau 1" },
 	render: ({ tekst }) => `<h1>${tekst}</h1>`,
 };
@@ -58,7 +79,7 @@ export const H2 = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Koptekst niveau 2" },
 	render: ({ tekst }) => `<h2>${tekst}</h2>`,
 };
@@ -71,7 +92,7 @@ export const H3 = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Koptekst niveau 3" },
 	render: ({ tekst }) => `<h3>${tekst}</h3>`,
 };
@@ -84,7 +105,7 @@ export const H4 = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Koptekst niveau 4" },
 	render: ({ tekst }) => `<h4>${tekst}</h4>`,
 };
@@ -97,7 +118,7 @@ export const H5 = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Koptekst niveau 5" },
 	render: ({ tekst }) => `<h5>${tekst}</h5>`,
 };
@@ -110,7 +131,7 @@ export const H6 = {
 			},
 		},
 	},
-	argTypes: { tekst: { control: "text" } },
+	argTypes: { tekst: { control: "text", name: "Tekst" } },
 	args: { tekst: "Koptekst niveau 6" },
 	render: ({ tekst }) => `<h6>${tekst}</h6>`,
 };

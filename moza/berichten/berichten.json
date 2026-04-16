@@ -55,7 +55,7 @@
 			"feature": "zakelijk-vervoer"
 		},
 		{
-			"label": "Pesoneel en rollen",
+			"label": "Personeel en rollen",
 			"url": "/moza/personeel/",
 			"icon": "/assets/icons/icon-personeel.svg",
 			"feature": "personeel"

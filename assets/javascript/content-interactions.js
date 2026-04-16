@@ -74,10 +74,29 @@ function getItemData(li) {
 }
 
 function showNextReserve(list) {
-	const reserve = list?.querySelector("li.reserve-topic[hidden]");
+	// Zoek het eerste reserve-topic dat nog verborgen is en niet al aan het verdwijnen is
+	const reserve = list?.querySelector("li.reserve-topic[hidden]:not(.removing)");
 	if (!reserve) return;
 	reserve.hidden = false;
 	reserve.classList.remove("reserve-topic");
+}
+
+function removeTopic(li) {
+	const list = li.closest("ul");
+	// Toon de volgende reserve direct, zodat het totaal aantal zichtbare items klopt
+	showNextReserve(list);
+	// Fade het verwijderde item uit
+	let done = false;
+	function hide() {
+		if (done) return;
+		done = true;
+		li.hidden = true;
+		li.classList.remove("remove-item");
+	}
+	li.offsetHeight;
+	li.classList.add("remove-item");
+	li.addEventListener("transitionend", hide, { once: true });
+	setTimeout(hide, 1000);
 }
 
 // Deel topic via Web Share API (fallback: kopieer link naar klembord)
@@ -99,50 +118,34 @@ document.addEventListener("click", async (e) => {
 	} catch {}
 });
 
-document.addEventListener("click", (e) => {
-	const btn = e.target.closest(".hide-topic");
-	if (!btn) return;
-	const li = btn.closest("li");
-	if (!li) return;
-	const list = li.closest("ul");
-	const data = getItemData(li);
-	if (data.title) {
-		localStorage.setItem("hidden:" + data.title, JSON.stringify(data));
-	}
-	li.hidden = true;
-	showNextReserve(list);
+// Relevantie radio groups: unieke namen toewijzen en verbergen bij "niet relevant"
+let relevanceCounter = 0;
+document.querySelectorAll(".relevance-group").forEach((fieldset) => {
+	const radios = fieldset.querySelectorAll("input[type='radio']");
+	const groupName = "relevance-" + relevanceCounter++;
+	radios.forEach((r) => { r.name = groupName; });
 });
 
-// Relevant / Niet relevant toggle buttons
-document.addEventListener("click", (e) => {
-	const btn = e.target.closest(".mark-relevant, .mark-irrelevant");
-	if (!btn) return;
-	const li = btn.closest("li");
+document.addEventListener("change", (e) => {
+	const radio = e.target.closest(".relevance-group input[type='radio']");
+	if (!radio) return;
+	const li = radio.closest("li");
 	if (!li) return;
 	const data = getItemData(li);
 	if (!data.title) return;
 
-	const isPressed = btn.getAttribute("aria-pressed") === "true";
-	const sibling = btn.matches(".mark-relevant")
-		? li.querySelector(".mark-irrelevant")
-		: li.querySelector(".mark-relevant");
+	const value = radio.value;
+	localStorage.setItem("relevant:" + data.title, JSON.stringify({ ...data, value }));
 
-	if (isPressed) {
-		// Uitschakelen
-		btn.setAttribute("aria-pressed", "false");
-		localStorage.removeItem("relevant:" + data.title);
-	} else {
-		// Inschakelen en andere uitschakelen
-		btn.setAttribute("aria-pressed", "true");
-		if (sibling) sibling.setAttribute("aria-pressed", "false");
-		const value = btn.matches(".mark-relevant") ? "relevant" : "irrelevant";
-		localStorage.setItem("relevant:" + data.title, JSON.stringify({ ...data, value }));
+	if (value === "irrelevant") {
+		localStorage.setItem("hidden:" + data.title, JSON.stringify(data));
+		removeTopic(li);
 	}
 });
 
-// Herstel relevant/irrelevant staat bij laden
-document.querySelectorAll(".mark-relevant, .mark-irrelevant").forEach((btn) => {
-	const li = btn.closest("li");
+// Herstel relevantie-staat bij laden
+document.querySelectorAll(".relevance-group").forEach((fieldset) => {
+	const li = fieldset.closest("li");
 	if (!li) return;
 	const data = getItemData(li);
 	if (!data.title) return;
@@ -150,11 +153,8 @@ document.querySelectorAll(".mark-relevant, .mark-irrelevant").forEach((btn) => {
 	if (!raw) return;
 	try {
 		const stored = JSON.parse(raw);
-		if (stored.value === "relevant" && btn.matches(".mark-relevant")) {
-			btn.setAttribute("aria-pressed", "true");
-		} else if (stored.value === "irrelevant" && btn.matches(".mark-irrelevant")) {
-			btn.setAttribute("aria-pressed", "true");
-		}
+		const radio = fieldset.querySelector(`input[value="${stored.value}"]`);
+		if (radio) radio.checked = true;
 	} catch {}
 });
 
@@ -184,9 +184,11 @@ document.querySelectorAll(".list-content-links li.reserve-topic").forEach((li) =
 });
 
 // Verberg eerder verborgen topics bij laden en schuif reserve-topics door
+// Alleen voor items die nog zichtbaar waren — items die al hidden zijn
+// (bijv. reserves waarvan .reserve-topic hierboven is verwijderd) overslaan
 document.querySelectorAll(".list-content-links li:not(.reserve-topic)").forEach((li) => {
-	// Sla items op de Bewaard-pagina over
 	if (li.closest("#saved-groups") || li.closest("#hidden-groups")) return;
+	if (li.hidden) return;
 	const data = getItemData(li);
 	if (data.title && localStorage.getItem("hidden:" + data.title)) {
 		li.hidden = true;

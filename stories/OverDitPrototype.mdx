@@ -68,28 +68,113 @@ Omdat er geen server of database is, worden gebruikersacties opgeslagen in de **
 
 Alle interactielogica staat in **content-interactions.js**, dat op elke pagina wordt geladen via de base-template. Het script:
 
-- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, `aria-pressed`, verborgen items, gesloten notificaties)
+- Herstelt opgeslagen staten bij het laden van de pagina (checkboxes, radio buttons, verborgen items, gesloten notificaties)
 - Slaat wijzigingen direct op bij interactie
 - Gebruikt event delegation (`document.addEventListener`) zodat het ook werkt met dynamisch gegenereerde elementen
 
-### Semantiek van de toggle-buttons
+### Semantiek van de relevantie-keuze
 
-De **Relevant** en **Niet relevant** knoppen zijn geïmplementeerd als `<button>` elementen met `aria-pressed`:
+De **Relevant** en **Niet relevant** opties zijn geïmplementeerd als een radio button group binnen een `<fieldset>`:
 
 ```html
-<button class="link-button mark-relevant" aria-pressed="false">Relevant</button> <button class="link-button mark-irrelevant" aria-pressed="false">Niet relevant</button>
+<fieldset class="relevance-group">
+	<legend class="visually-hidden">Is dit relevant voor u?</legend>
+	<label class="relevance-option relevance-yes">
+		<input type="radio" name="relevance-0" value="relevant" />
+		<span class="relevance-icon"></span>
+		<span>Relevant</span>
+	</label>
+	<label class="relevance-option relevance-no">
+		<input type="radio" name="relevance-0" value="irrelevant" />
+		<span class="relevance-icon"></span>
+		<span>Niet relevant</span>
+	</label>
+</fieldset>
 ```
 
-- `aria-pressed="false"` — niet ingedrukt (standaard, neutraal)
-- `aria-pressed="true"` — ingedrukt (actief)
-- De twee knoppen zijn wederzijds exclusief: het indrukken van de ene zet de andere uit
-- Screenreaders communiceren de staat als "ingedrukt" of "niet ingedrukt"
-
-Dit is semantisch correcter dan een checkbox (die binair is) omdat er drie toestanden zijn: neutraal, relevant, en niet relevant.
+- De `<fieldset>` met `<legend>` geeft screenreaders context: “Is dit relevant voor u?”
+- Radio buttons zijn natively wederzijds exclusief — de browser handhaaft dit zonder JavaScript
+- Toetsenbordnavigatie werkt automatisch via pijltoetsen binnen de groep
+- De radio inputs zijn visueel verborgen; de labels zijn gestyled als knoppen met iconen
+- Bij “Niet relevant” wordt het item verborgen en schuift een reserve-topic door
+- Unieke `name`-attributen worden per groep toegewezen door JavaScript, zodat elke radio group onafhankelijk werkt
 
 ### De pagina Bewaard
 
 De pagina **Bewaard** leest alle `favorite:` en `hidden:` sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel.
+
+## Berichtenbox
+
+De Berichtenbox simuleert het ophalen van berichten uit meerdere bronnen (overheidsinstanties en gemeentes) via het Federatief Berichtenstelsel. Er is geen backend — alle data wordt gegenereerd tijdens de Eleventy-build en opgeslagen in `window.berichtenboxData`.
+
+### Berichten ophalen
+
+Bij het eerste bezoek aan de Berichtenbox wordt een voortgangsanimatie getoond die simuleert dat berichten worden opgehaald uit meerdere bronnen. De animatie duurt vier seconden en toont het aantal bronnen en gevonden berichten.
+
+### Polling (demo-berichten)
+
+Op de inbox-pagina worden periodiek nieuwe berichten gegenereerd om het "ophalen" van berichten te simuleren. Deze demo-berichten:
+
+- Krijgen een `msg-live-*` ID en worden opgeslagen in localStorage
+- Zijn beperkt tot maximaal vijf stuks
+- Verschijnen bovenaan de inbox, waarna het onderste bericht naar de volgende pagina verschuift
+- Linken naar een generieke detailpagina (`bericht-demo.html`) die het bericht uit de state rendert
+
+De polling-interval is standaard 60 seconden. Voor testen kan `?poll=5` aan de URL worden toegevoegd (minimum 5 seconden).
+
+### Opgeslagen staten
+
+Alle berichtenbox-state wordt bewaard onder de localStorage-sleutel `berichtenbox`:
+
+<table>
+	<thead>
+		<tr>
+			<th>Actie</th>
+			<th>State-eigenschap</th>
+			<th>Beschrijving</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><strong>Bericht gelezen</strong></td>
+			<td><code>gelezen</code></td>
+			<td>Object met bericht-ID's als sleutels</td>
+		</tr>
+		<tr>
+			<td><strong>Archiveren</strong></td>
+			<td><code>gearchiveerd</code></td>
+			<td>Bericht verplaatst naar archief-tab</td>
+		</tr>
+		<tr>
+			<td><strong>Verwijderen</strong></td>
+			<td><code>verwijderd</code></td>
+			<td>Bericht verplaatst naar prullenbak-tab</td>
+		</tr>
+		<tr>
+			<td><strong>Verplaatsen naar map</strong></td>
+			<td><code>mapOverride</code></td>
+			<td>Bericht toegewezen aan een map</td>
+		</tr>
+		<tr>
+			<td><strong>Eigen map aanmaken</strong></td>
+			<td><code>eigenMappen</code></td>
+			<td>Door de gebruiker aangemaakte mappen</td>
+		</tr>
+		<tr>
+			<td><strong>Demo-berichten</strong></td>
+			<td><code>nieuweBerichten</code></td>
+			<td>Via polling binnengekomen berichten (max. 5)</td>
+		</tr>
+	</tbody>
+</table>
+
+### Berichtenbox resetten
+
+Op de Berichtenbox-pagina staat een resetlink (`data-berichtenbox-reset`) die alle berichtenbox-state wist en de pagina herlaadt. Handmatig kan het ook via de browserconsole:
+
+```js
+localStorage.removeItem("berichtenbox");
+```
 
 ## Feature flags
 
