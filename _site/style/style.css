@@ -25,13 +25,13 @@
 @font-face {
 	font-family: "RijksSansVF";
 	font-style: normal;
-	font-weight: 400;
+	font-weight: 100 900;
 	src: url("../assets/fonts/RijksSansVF-Regular.ttf") format("truetype");
 }
 @font-face {
 	font-family: "RijksSansVF";
 	font-style: italic;
-	font-weight: 400;
+	font-weight: 100 900;
 	src: url("../assets/fonts/RijksSansVF-Italic.ttf") format("truetype");
 }
 
