@@ -272,7 +272,6 @@
 
 		const mapIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M58 15H29v-2c0-1.1-.9-2-2-2H12c-1.1 0-2 .9-2 2v4.69c7.13.47 40.09 2.62 40.59 2.75.28.07.38.21.4.34 0 .04.02.23-.01.23H4.53c-1.29 0-2.24 1.2-1.95 2.46l7.06 30c.27 1.16 1.18 1.54 2.36 1.54h46a2 2 0 0 0 2-2V17c0-1.1-.9-2-2-2" /></svg>';
 
-		const huidigeMap = state.mapOverride[berichtId];
 		alleMappen.forEach((m) => {
 			const li = document.createElement('li');
 			const btn = document.createElement('button');
@@ -286,22 +285,10 @@
 				sluitVerplaatsPaneel();
 				render(huidigeView());
 				updateMapLabelDetail(m.slug);
+				const naarInbox = document.querySelector('[data-actie="naar-inbox"]');
+				if (naarInbox) naarInbox.hidden = false;
 			});
 			li.appendChild(btn);
-			if (huidigeMap === m.slug) {
-				const uitBtn = document.createElement('button');
-				uitBtn.type = 'button';
-				uitBtn.className = 'icon-button';
-				uitBtn.textContent = 'Verwijder uit map';
-				uitBtn.addEventListener('click', () => {
-					state.mapOverride[berichtId] = null;
-					opslaan();
-					sluitVerplaatsPaneel();
-					render(huidigeView());
-					updateMapLabelDetail(null);
-				});
-				li.appendChild(uitBtn);
-			}
 			ul.appendChild(li);
 		});
 		nieuweMapBevestig.addEventListener('click', () => {
@@ -576,6 +563,12 @@
 		state.gelezen[berichtId] = true;
 		opslaan();
 
+		// Toon "Verplaats naar inbox" alleen als het bericht in een map zit.
+		const berichtData = data.berichten.find((b) => b.id === berichtId);
+		const effMap = mapVan(berichtId, berichtData ? berichtData.map : null);
+		const naarInboxBtn = content.querySelector('[data-actie="naar-inbox"]');
+		if (naarInboxBtn && effMap) naarInboxBtn.hidden = false;
+
 		content.querySelectorAll('[data-actie]').forEach((btn) => {
 			btn.addEventListener('click', () => {
 				const actie = btn.dataset.actie;
@@ -596,6 +589,10 @@
 					location.href = url('/moza/berichtenbox/');
 				} else if (actie === 'verplaatsen') {
 					toonVerplaatsPaneel(berichtId, btn);
+				} else if (actie === 'naar-inbox') {
+					state.mapOverride[berichtId] = null;
+					opslaan();
+					location.href = url('/moza/berichtenbox/');
 				}
 			});
 		});
