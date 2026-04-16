@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json.
- * Gegenereerd op 16-4-2026, 08:25:49
+ * Gegenereerd op 16-4-2026, 08:42:06
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _toepassing.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _toepassing.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -30,11 +30,12 @@
   --toepassing-color-border-inverse: var(--rijkshuisstijl-color-grijs-200); /** Randen op color.*.inverse en donkere oppervlakken */
   --toepassing-color-border-strong: var(--rijkshuisstijl-color-grijs-700); /** Randen met hoge nadruk; bijv. invoervelden of visuele groepering */
   --toepassing-color-border-subtle: var(--rijkshuisstijl-color-grijs-400); /** Zachtere scheiding, bijv. tussen lijstitems of tabelrijen */
-  --toepassing-color-component-badge-background: var(--toepassing-color-feedback-info-emphasis);
+  --toepassing-color-component-badge-background: var(--toepassing-color-feedback-attention);
   --toepassing-color-component-badge-text: var(--toepassing-color-text-inverse);
   --toepassing-color-component-footer-background: var(--rijkshuisstijl-color-grijs-700);
   --toepassing-color-component-side-nav-background-hover: var(--rijkshuisstijl-color-grijs-200);
   --toepassing-color-component-text-input-border-default: var(--toepassing-color-border-default);
+  --toepassing-color-feedback-attention: var(--rijkshuisstijl-color-robijnrood-500);
   --toepassing-color-feedback-error-border: var(--toepassing-color-feedback-error-default);
   --toepassing-color-feedback-error-default: var(--rijkshuisstijl-color-rood-500);
   --toepassing-color-feedback-error-emphasis: var(--rijkshuisstijl-color-rood-600);

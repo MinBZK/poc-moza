@@ -1049,6 +1049,10 @@
           "$type": "color",
           "$value": "{color.robijnrood.500}"
         }
+      },
+      "attention": {
+        "$type": "color",
+        "$value": "{color.robijnrood.500}"
       }
     },
     "background": {
@@ -1225,7 +1229,7 @@
       "badge": {
         "background": {
           "$type": "color",
-          "$value": "{color.feedback.info.emphasis}"
+          "$value": "{color.feedback.attention}"
         },
         "text": {
           "$type": "color",
