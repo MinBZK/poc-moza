@@ -1930,45 +1930,6 @@ button {
 	gap: var(--toepassing-space-padding-md);
 	justify-content: space-between;
 }
-.mode-switch {
-	border: var(--toepassing-border-default);
-	border-radius: var(--toepassing-border-radius-md);
-	display: flex;
-	flex-shrink: 0;
-	margin: 0;
-	overflow: hidden;
-	padding: 0;
-}
-.mode-option {
-	cursor: pointer;
-	display: flex;
-	font: var(--toepassing-text-label);
-	margin: 0;
-	input {
-		block-size: 1px;
-		clip: rect(0 0 0 0);
-		clip-path: inset(50%);
-		inline-size: 1px;
-		overflow: hidden;
-		position: absolute;
-	}
-	span {
-		display: block;
-		padding: var(--toepassing-space-padding-xs) var(--toepassing-space-padding-md);
-		transition: var(--toepassing-transition-default);
-	}
-	&:hover span {
-		background: var(--toepassing-color-interactive-alternate-hover-background);
-	}
-	input:checked + span {
-		background: var(--toepassing-color-interactive-default-background);
-		color: var(--toepassing-color-text-inverse);
-	}
-	input:focus-visible + span {
-		outline: var(--toepassing-focus-outline);
-		outline-offset: var(--mox-size-5xs);
-	}
-}
 .chat-status {
 	color: var(--toepassing-color-text-subtle-1);
 	font: var(--toepassing-text-smalltext);
@@ -2000,7 +1961,7 @@ button {
 	}
 }
 .chat-status-warning {
-	color: var(--mox-color-feedback-warning-border);
+	color: var(--toepassing-color-feedback-warning-border);
 	font-style: italic;
 }
 .chat-messages {
@@ -2038,7 +1999,7 @@ button {
 }
 .chat-message-loading {
 	font-style: italic;
-	opacity: var(--mox-opacity-interactive-disabled);
+	opacity: var(--toepassing-opacity-interactive-disabled);
 }
 .chat-input-form {
 	display: flex;
