@@ -1853,26 +1853,18 @@ button {
 }
 
 .feature-flags-panel {
-	background: var(--toepassing-color-background-default);
-	border: var(--toepassing-border-default);
 	border-radius: var(--toepassing-border-radius-md);
 	box-shadow: var(--toepassing-box-shadow-default);
-	font: var(--toepassing-text-smalltext-default);
 	inset-block-end: 2rem;
 	inset-inline-end: var(--toepassing-space-padding-lg);
 	max-block-size: 70vh;
 	overflow-y: auto;
 	padding: var(--toepassing-space-padding-md);
 	position: fixed;
-	z-index: 1000;
-	.feature-flags-heading {
-		font: var(--toepassing-text-heading-h3);
-		margin-block-end: var(--toepassing-space-padding-sm);
-	}
+	z-index: 2;
 	.feature-flags-group-heading {
 		border-block-start: var(--toepassing-border-default);
 		color: var(--toepassing-color-text-subtle-1);
-		font: var(--toepassing-text-heading-h4);
 		margin-block: var(--toepassing-space-padding-sm);
 		padding-block-start: var(--toepassing-space-padding-sm);
 	}
