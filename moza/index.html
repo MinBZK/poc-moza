@@ -5,7 +5,7 @@ title: "MijnOverheid Zakelijk: Home"
 {% include "side-nav-overheid.njk" %}
 
 <article id="hoofd-inhoud">
-	<h1>Welkom Robin Vogel</h1>
+	<h1>Welkom <span data-profiel="voornaam">Robin</span> <span data-profiel="achternaam">Vogel</span></h1>
 
 	<h2>Actualiteiten</h2>
 
@@ -134,19 +134,19 @@ title: "MijnOverheid Zakelijk: Home"
 	<section class="card">
 		<dl class="data-overview">
 			<dt>Handelsnaam</dt>
-			<dd>Bloom B.V.</dd>
+			<dd data-profiel="handelsnaam">Bloom B.V.</dd>
 			<dt>KVK-nummer</dt>
-			<dd>12345678</dd>
+			<dd data-profiel="kvkNummer">12345678</dd>
 			<dt>RSIN-nummer</dt>
-			<dd>12345678</dd>
+			<dd data-profiel="rsinNummer">12345678</dd>
 			<dt>BTW-identificatienummer</dt>
-			<dd>NL00012345678</dd>
+			<dd data-profiel="btwNummer">NL00012345678</dd>
 			<dt>Omzetbelastingnummer</dt>
-			<dd>012345678B01</dd>
+			<dd data-profiel="omzetbelastingnummer">012345678B01</dd>
 			<dt>Startdatum</dt>
-			<dd>12 februari 2018</dd>
+			<dd data-profiel="startdatum">12 februari 2018</dd>
 			<dt>Rechtsvorm</dt>
-			<dd>Besloten vennootschap</dd>
+			<dd data-profiel="rechtsvorm">Besloten vennootschap</dd>
 		</dl>
 		<p class="metadata">Bron: <a href="https://kvk.nl/">KVK</a> en <a href="https://belastingdienst.nl/">Belastingdienst</a></p>
 		<a class="btn-cta" href="{{ '/moza/bedrijfsgegevens/' | url }}">Alle bedrijfsgegevens</a>

@@ -31,7 +31,7 @@
 						<path fill="none" d="M0 0h24v24H0z"/>
 						<path fill="currentColor" d="M8.115 3.513c-.328.501-.362 1.274-.359 2.003.003.699-.014 1.358.048 1.698-.48-.023-.68.362-.607 1.666.066 1.156.527 1.406.803 1.565.243 1.17.712 2.277 1.541 3.114l.002-.012c-.051.304-.116.627-.2.948-1.141.401-3.944 1.445-4.764 2.31C3.545 17.896 3 22 3 22h18s-.545-4.105-1.58-5.194c-.818-.864-3.611-1.906-4.757-2.309a8.608 8.608 0 0 1-.219-.938c.83-.837 1.313-1.945 1.556-3.114.275-.159.723-.409.788-1.565.074-1.304-.127-1.69-.607-1.666.062-.338.067-.98.062-1.667-.005-.727-.04-1.507-.333-2.034-.365-.656-.878-1.04-1.878-.803-.875-.421-1.797-.873-3.34-.532-1.739.385-2.353.993-2.577 1.335z"/>
 					</svg>
-					<span class="account-switcher-label">R.J. Vogel — Bloom B.V.</strong></span>
+					<span class="account-switcher-label" data-profiel="initialen-bedrijf">R.J. Vogel — Bloom B.V.</span>
 				</button>
 				<ul class="account-switcher-menu" role="menu" hidden>
 					<li class="account-switcher-group-label">Mijn ondernemingen</li>
@@ -77,7 +77,7 @@
 					<path fill="none" d="M0 0h24v24H0z"/>
 					<path fill="currentColor" d="M8.115 3.513c-.328.501-.362 1.274-.359 2.003.003.699-.014 1.358.048 1.698-.48-.023-.68.362-.607 1.666.066 1.156.527 1.406.803 1.565.243 1.17.712 2.277 1.541 3.114l.002-.012c-.051.304-.116.627-.2.948-1.141.401-3.944 1.445-4.764 2.31C3.545 17.896 3 22 3 22h18s-.545-4.105-1.58-5.194c-.818-.864-3.611-1.906-4.757-2.309a8.608 8.608 0 0 1-.219-.938c.83-.837 1.313-1.945 1.556-3.114.275-.159.723-.409.788-1.565.074-1.304-.127-1.69-.607-1.666.062-.338.067-.98.062-1.667-.005-.727-.04-1.507-.333-2.034-.365-.656-.878-1.04-1.878-.803-.875-.421-1.797-.873-3.34-.532-1.739.385-2.353.993-2.577 1.335z"/>
 				</svg>
-				R.J. Vogel
+				<span data-profiel="naam">R.J. Vogel</span>
 			</span>
 			<a class="icon-link" href="/moza/uitgelogd/">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -160,6 +160,8 @@
     <script src="/assets/javascript/account-switcher.js"></script>
     <script src="/assets/javascript/content-interactions.js"></script>
     <script src="/assets/javascript/feature-flags.js"></script>
+    <script>window.testprofielenData = [{"id":"bloom","actief":true,"persoon":{"voornaam":"Robin","achternaam":"Vogel","initialen":"R.J."},"bedrijf":{"handelsnaam":"Bloom B.V.","kvkNummer":"12345678","rsinNummer":"12345678","btwNummer":"NL00012345678","omzetbelastingnummer":"012345678B01","startdatum":"12 februari 2018","rechtsvorm":"Besloten vennootschap","branche":"Advies en consultancy","vestigingsadres":"Stationsweg 12, 's-Gravenhage","gemeente":"'s-Gravenhage","rol":"Eigenaar"},"andereBedrijven":[{"naam":"Vogel & Partners Consultancy","rol":"Eigenaar"},{"naam":"Kwartaal Vastgoed B.V.","rol":"Eigenaar"}],"belangen":[{"naam":"Stichting Groenrijk","rol":"Bestuurslid"},{"naam":"Coöperatie ZuidWest U.A.","rol":"Aandeelhouder"}],"subsidies":["wbso","kia","bmkb","eia","mia-vamil","innovatiekrediet","seed-capital","sde","mit","praktijkleren"],"regelgeving":["minimumloon","arbowet","avg","loonbelasting","milieubeheer","arbeid-vreemdelingen","omgevingswet","wwft","gelijke-kansen","transparante-arbeidsvoorwaarden"],"buurt":"s-gravenhage"},{"id":"bakkerij","actief":false,"persoon":{"voornaam":"Fatima","achternaam":"El Amrani","initialen":"F."},"bedrijf":{"handelsnaam":"Bakkerij El Amrani","kvkNummer":"87654321","rsinNummer":"87654321","btwNummer":"NL00087654321","omzetbelastingnummer":"087654321B01","startdatum":"3 september 2020","rechtsvorm":"Eenmanszaak","branche":"Horeca en voeding","vestigingsadres":"Marktplein 3, Voorburg","gemeente":"Voorburg","rol":"Eigenaar"},"andereBedrijven":[],"belangen":[],"subsidies":["praktijkleren","sde","kia","bmkb"],"regelgeving":["minimumloon","arbowet","avg","warenwet","omgevingswet"],"buurt":"voorburg"},{"id":"techstart","actief":false,"persoon":{"voornaam":"Daan","achternaam":"de Vries","initialen":"D.W."},"bedrijf":{"handelsnaam":"ByteForge B.V.","kvkNummer":"55667788","rsinNummer":"55667788","btwNummer":"NL00055667788","omzetbelastingnummer":"055667788B01","startdatum":"15 januari 2024","rechtsvorm":"Besloten vennootschap","branche":"Informatietechnologie","vestigingsadres":"Hofweg 8, 's-Gravenhage","gemeente":"'s-Gravenhage","rol":"Eigenaar"},"andereBedrijven":[],"belangen":[{"naam":"Stichting Open Source NL","rol":"Bestuurslid"}],"subsidies":["wbso","innovatiekrediet","seed-capital","mit"],"regelgeving":["avg","arbowet","transparante-arbeidsvoorwaarden","gelijke-kansen"],"buurt":"s-gravenhage"}];</script>
+    <script src="/assets/javascript/testprofielen.js"></script>
     <script src="/assets/javascript/tab-interface.js"></script>
     <script src="/assets/javascript/external-links.js"></script>
     <script src="/assets/javascript/berichtenbox.js"></script>
