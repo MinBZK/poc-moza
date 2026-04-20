@@ -1,7 +1,7 @@
 /**
  * Automatisch gegenereerd op basis van design tokens.
  * De bron is tokens.json.
- * Gegenereerd op 16-4-2026, 18:37:42
+ * Gegenereerd op 20-4-2026, 10:48:59
  * _rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _toepassing.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _toepassing.css, niet aan die in _rijkshuisstijl.css.
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
@@ -198,6 +198,7 @@
   --toepassing-text-size-title-xl: var(--rijkshuisstijl-text-font-size-2xl);
   --toepassing-text-smalltext: var(--rijkshuisstijl-text-weight-default) var(--toepassing-text-size-body-sm)/var(--rijkshuisstijl-text-line-height-sm) var(--toepassing-text-font-family-body);
   --toepassing-text-text-decoration-hyperlink: underline solid currentColor var(--toepassing-border-width-xs);
-  --toepassing-transition-default: background .2s ease, border .2s ease, color .2s ease; /** Standaard transitie die toegepast wordt op alle CSS properties. */
-  --toepassing-transition-transform: transform .2s ease; /** Transitie die toegepast wordt op transform: */
+  --toepassing-transition-default: background .2s ease, border .2s ease, color .2s ease; /** Standaard transitie die toegepast wordt op alle CSS properties */
+  --toepassing-transition-opacity: opacity .2s ease; /** Transitie die toegepast wordt op opacity */
+  --toepassing-transition-transform: transform .2s ease; /** Transitie die toegepast wordt op transform */
 }

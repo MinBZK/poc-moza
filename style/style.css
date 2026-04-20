@@ -1834,21 +1834,16 @@ button {
 /* Feature flags toggle-paneel */
 
 .feature-flags-toggle {
-	background: var(--toepassing-color-feedback-neutral-emphasis);
-	border: none;
-	border-radius: var(--toepassing-border-radius-md) var(--toepassing-border-radius-md) 0 0;
-	color: var(--toepassing-color-text-inverse);
-	cursor: pointer;
-	font: var(--toepassing-text-smalltext-default);
-	font-weight: var(--toepassing-text-font-weight-semi-bold);
+	border-start-start-radius: var(--toepassing-border-radius-md);
 	inset-block-end: 0;
-	inset-inline-end: var(--toepassing-space-padding-lg);
-	padding-block: var(--toepassing-space-padding-2xs);
-	padding-inline: var(--toepassing-space-padding-sm);
+	inset-inline-end: 0;
+	opacity: 0;
 	position: fixed;
-	z-index: 1000;
+	transition: var(--toepassing-transition-opacity);
+	z-index: 1;
 	&:hover {
-		background: var(--toepassing-color-interactive-hover-background);
+		opacity: 1;
+		transition: var(--toepassing-transition-opacity);
 	}
 }
 

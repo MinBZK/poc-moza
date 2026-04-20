@@ -2071,12 +2071,17 @@
     "default": {
       "$type": "other",
       "$value": "background .2s ease, border .2s ease, color .2s ease",
-      "$description": "Standaard transitie die toegepast wordt op alle CSS properties."
+      "$description": "Standaard transitie die toegepast wordt op alle CSS properties"
+    },
+    "opacity": {
+      "$type": "other",
+      "$value": "opacity .2s ease",
+      "$description": "Transitie die toegepast wordt op opacity"
     },
     "transform": {
       "$type": "other",
       "$value": "transform .2s ease",
-      "$description": "Transitie die toegepast wordt op transform:"
+      "$description": "Transitie die toegepast wordt op transform"
     }
   },
   "border": {
