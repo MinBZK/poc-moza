@@ -546,6 +546,15 @@
 
 		var answered = false;
 
+		// Timeout-bescherming: 60s om verbinding te maken, 90s stilte tijdens streamen
+		var controller = new AbortController();
+		var connectTimer = setTimeout(function () { controller.abort("connect-timeout"); }, 60_000);
+		var idleTimer = null;
+		function resetIdleTimer() {
+			if (idleTimer) clearTimeout(idleTimer);
+			idleTimer = setTimeout(function () { controller.abort("idle-timeout"); }, 90_000);
+		}
+
 		try {
 			var response = await fetch(API_BASE + "/chat/stream", {
 				method: "POST",
@@ -559,17 +568,21 @@
 					session_id: sessions[comboKey],
 					mode: mode,
 				}),
+				signal: controller.signal,
 			});
 
+			clearTimeout(connectTimer);
 			if (!response.ok) throw new Error("Server niet bereikbaar");
 
 			var reader = response.body.getReader();
 			var decoder = new TextDecoder();
 			var buffer = "";
+			resetIdleTimer();
 
 			while (true) {
 				var chunk = await reader.read();
 				if (chunk.done) break;
+				resetIdleTimer();
 				buffer += decoder.decode(chunk.value, { stream: true });
 
 				var parts = buffer.split("\n\n");
@@ -621,12 +634,14 @@
 		} catch (err) {
 			setLoading(false);
 			if (!answered) {
-				addMessage(
-					"Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.",
-					"error"
-				);
+				var reason = err && err.name === "AbortError"
+					? "De assistent reageerde te lang niet. Probeer het opnieuw."
+					: "Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.";
+				addMessage(reason, "error");
 			}
 		} finally {
+			clearTimeout(connectTimer);
+			if (idleTimer) clearTimeout(idleTimer);
 			submitting = false;
 		}
 	});
