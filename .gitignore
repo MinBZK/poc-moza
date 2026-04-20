@@ -1,6 +1,12 @@
+__pycache__/
+_site/.claude/*
+.claude/*
 .DS_Store
-style-dictionary/node_modules/*
+.env
+*.crdownload
 */.DS_Store
+agent-os/standards/index.yml
+mcp/host/.env
 node_modules/
 storybook-static/
 *.crdownload
@@ -14,3 +20,4 @@ _test_build/
 MOx.git/
 build-storybook.log
 agent-os/standards/index.yml
+style-dictionary/node_modules/*
