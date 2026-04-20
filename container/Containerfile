@@ -31,7 +31,8 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app/services/host \
     STATIC_DIR=/app/_site \
     VLAM_HOST=0.0.0.0 \
-    VLAM_PORT=8080
+    VLAM_PORT=8080 \
+    ALLOW_API_KEY_OVERRIDE=true
 
 WORKDIR /app/services/host
 EXPOSE 8080
