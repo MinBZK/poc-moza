@@ -545,7 +545,6 @@
 		setLoading(true);
 
 		var answered = false;
-		var pendingJournal = [];
 
 		try {
 			var response = await fetch(API_BASE + "/chat/stream", {
@@ -595,23 +594,8 @@
 						showThinking(payload.message);
 					} else if (eventType === "tool") {
 						showThinking(payload.message + "...");
-						// Verzamel tool-aanroepen als journal entries
-						pendingJournal.push({
-							timestamp: new Date().toISOString(),
-							gebeurtenis: payload.message,
-							actor: "Digitale Assistent",
-						});
-					} else if (eventType === "case" && payload.data) {
-						// Voeg verzamelde tool-stappen toe aan het journal
-						var journal = payload.data.journal || [];
-						for (var j = 0; j < pendingJournal.length; j++) {
-							journal.unshift(pendingJournal[j]);
-						}
-						payload.data.journal = journal;
-						// Sla lopende zaak op in localStorage
-						var cases = JSON.parse(localStorage.getItem("lopende-zaken") || "[]");
-						cases.push(payload.data);
-						localStorage.setItem("lopende-zaken", JSON.stringify(cases));
+					} else if (eventType === "case") {
+						// Backend stuurt zaak-data; UI wordt later toegevoegd door een collega.
 					} else if (eventType === "answer" && !answered) {
 						answered = true;
 						hideThinking();
