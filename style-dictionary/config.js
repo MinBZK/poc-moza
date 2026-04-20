@@ -10,7 +10,7 @@ StyleDictionary.registerFileHeader({
     return [
       'Automatisch gegenereerd op basis van design tokens.',
       'De bron is tokens.json.',
-      `Gegenereerd op ${new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}`,
+    //   `Gegenereerd op ${new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })}`,
       '_rijkshuisstijl.css bevat opties uit de Rijkshuisstijl, _toepassing.css bevat de toepassing van deze opties. Refereer in het CSS bestand alleen aan de variabelen in _toepassing.css, niet aan die in _rijkshuisstijl.css.',
       'CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.',
     ];
