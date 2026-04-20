@@ -34,15 +34,15 @@
 			"badge": "3"
 		},
 		{
-			"label": "Digitale Assistent",
-			"url": "/moza/digitale-assistent/",
-			"icon": "/assets/icons/icon-assistent.svg"
-		},
-		{
 			"label": "Bewaard",
 			"url": "/moza/bewaard/",
 			"icon": "/assets/icons/icon-favoriet.svg"
-
+		},
+		{
+			"label": "Digitale assistent",
+			"url": "/moza/digitale-assistent/",
+			"icon": "/assets/icons/icon-assistent.svg",
+			"feature": "Digitale assistent"
 		},
 		{
 			"label": "Belastingen",

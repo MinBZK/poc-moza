@@ -1,5 +1,5 @@
 ---
-title: "MijnOverheid Zakelijk: Digitale Assistent"
+title: "MijnOverheid Zakelijk: Digitale assistent"
 ---
 
 {% include "side-nav-overheid.njk" %}
@@ -8,11 +8,11 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
-			<li aria-current="page">Digitale Assistent</li>
+			<li aria-current="page">Digitale assistent</li>
 		</ol>
 	</nav>
 
-	<h1>Digitale Assistent</h1>
+	<h1>Digitale assistent</h1>
 
 	<section class="card chat-container">
 		<div class="chat-status" id="chat-status" aria-live="polite"></div>
@@ -38,110 +38,108 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		</form>
 	</section>
 
-	<section class="card card-faq">
-		<h3>Veelgestelde vragen</h3>
-
-		<details name="faq">
-			<summary>
-				<h4>Wat kan de digitale assistent voor mij doen?</h4>
-			</summary>
-			<section>
-				<p>De digitale assistent kan u helpen met vragen over regelgeving, subsidies, vergunningen en uw bedrijfsregistratie. De assistent raadpleegt actuele bronnen zoals het Handelsregister (KvK), de Regelingenbank (KOOP) en RVO.</p>
-			</section>
-		</details>
-
-		<details name="faq">
-			<summary>
-				<h4>Hoe betrouwbaar zijn de antwoorden?</h4>
-			</summary>
-			<section>
-				<p>De assistent verwijst waar mogelijk naar officiële bronnen. Controleer belangrijke informatie altijd bij de betreffende overheidsinstantie. De assistent is een hulpmiddel, geen juridisch advies.</p>
-			</section>
-		</details>
-
-		<details name="faq">
-			<summary>
-				<h4>Worden mijn gegevens opgeslagen?</h4>
-			</summary>
-			<section>
-				<p>Uw gesprek wordt alleen voor de duur van uw sessie bewaard en daarna verwijderd. Er worden geen persoonsgegevens opgeslagen zonder uw toestemming.</p>
-			</section>
-		</details>
+	<section class="card">
+		<h2>Veelgestelde vragen</h2>
+		<ul class="accordion">
+			<li>
+				<details name="faq">
+					<summary>
+						<h3>Wat kan de digitale assistent voor mij doen?</h3>
+					</summary>
+					<p>De digitale assistent kan u helpen met vragen over regelgeving, subsidies, vergunningen en uw bedrijfsregistratie. De assistent raadpleegt actuele bronnen zoals het Handelsregister (KvK), de Regelingenbank (KOOP) en RVO.</p>
+				</details>
+			</li>
+			<li>
+				<details name="faq">
+					<summary>
+						<h3>Hoe betrouwbaar zijn de antwoorden?</h3>
+					</summary>
+					<p>De assistent verwijst waar mogelijk naar officiële bronnen. Controleer belangrijke informatie altijd bij de betreffende overheidsinstantie. De assistent is een hulpmiddel, geen juridisch advies.</p>
+				</details>
+			</li>
+			<li>
+				<details name="faq">
+					<summary>
+						<h3>Worden mijn gegevens opgeslagen?</h3>
+					</summary>
+					<p>Uw gesprek wordt alleen voor de duur van uw sessie bewaard en daarna verwijderd. Er worden geen persoonsgegevens opgeslagen zonder uw toestemming.</p>
+				</details>
+			</li>
+		</ul>
 	</section>
 </article>
 
 <script>
-(function () {
-	var API_BASE = window.location.hostname === "localhost" ? "http://localhost:8000" : "";
-	var form = document.getElementById("chat-form");
-	var input = document.getElementById("chat-input");
-	var messages = document.getElementById("chat-messages");
-	var statusEl = document.getElementById("chat-status");
-	var sessions = {};
-	var chatHistory = {};
-	var serverStatus = null;
-	var submitting = false;
-	var initialMessages = messages.innerHTML;
+	(function () {
+		var API_BASE = "http://localhost:8000";
+		var form = document.getElementById("chat-form");
+		var input = document.getElementById("chat-input");
+		var messages = document.getElementById("chat-messages");
+		var statusEl = document.getElementById("chat-status");
+		var modeInputs = document.querySelectorAll('input[name="chat-mode"]');
+		var sessions = { vlam: null, claude: null };
+		var chatHistory = { vlam: null, claude: null };
+		var serverStatus = null;
 
-	var SERVER_LABELS = {
-		kvk: "KvK Handelsregister",
-		koop: "KOOP Regelingenbank",
-		regelrecht: "RegelRecht",
-		rvo: "RVO",
-	};
+		var SERVER_LABELS = {
+			kvk: "KvK Handelsregister",
+			koop: "KOOP Regelingenbank",
+			regelrecht: "RegelRecht",
+			rvo: "RVO",
+		};
 
-	function getLLM() {
-		return localStorage.getItem("setting:llm") || "vlam";
-	}
+		function getMode() {
+			return document.querySelector('input[name="chat-mode"]:checked').value;
+		}
 
-	function getTransport() {
-		return localStorage.getItem("setting:transport") || "mcp";
-	}
+		function parseMarkdown(text) {
+			var lines = text.split("\n");
+			var html = [];
+			var inList = false;
 
-	function getComboKey() {
-		return getLLM() + ":" + getTransport();
-	}
+			for (var i = 0; i < lines.length; i++) {
+				var line = lines[i].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-	function getAPIMode() {
-		var transport = getTransport();
-		if (transport === "cli") return "cli:" + getLLM();
-		return getLLM();
-	}
+				// Headers
+				if (/^#### (.+)$/.test(line)) {
+					line = "<strong>" + line.replace(/^#### /, "") + "</strong>";
+				} else if (/^### (.+)$/.test(line)) {
+					line = "<strong>" + line.replace(/^### /, "") + "</strong>";
+				} else if (/^## (.+)$/.test(line)) {
+					line = "<strong>" + line.replace(/^## /, "") + "</strong>";
+				} else if (/^# (.+)$/.test(line)) {
+					line = "<strong>" + line.replace(/^# /, "") + "</strong>";
+				}
 
-	function parseMarkdown(text) {
-		var lines = text.split("\n");
-		var html = [];
-		var inList = false;
+				// List items
+				if (/^[-*] (.+)$/.test(line)) {
+					if (!inList) {
+						html.push("<ul>");
+						inList = true;
+					}
+					line = "<li>" + line.replace(/^[-*] /, "") + "</li>";
+				} else if (inList) {
+					html.push("</ul>");
+					inList = false;
+				}
 
-		for (var i = 0; i < lines.length; i++) {
-			var line = lines[i]
-				.replace(/&/g, "&amp;")
-				.replace(/</g, "&lt;")
-				.replace(/>/g, "&gt;");
+				// Inline formatting
+				line = line
+					.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+					.replace(/\*(.+?)\*/g, "<em>$1</em>")
+					.replace(/`(.+?)`/g, "<code>$1</code>")
+					.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
-			// Headers
-			if (/^#### (.+)$/.test(line)) { line = "<strong>" + line.replace(/^#### /, "") + "</strong>"; }
-			else if (/^### (.+)$/.test(line)) { line = "<strong>" + line.replace(/^### /, "") + "</strong>"; }
-			else if (/^## (.+)$/.test(line)) { line = "<strong>" + line.replace(/^## /, "") + "</strong>"; }
-			else if (/^# (.+)$/.test(line)) { line = "<strong>" + line.replace(/^# /, "") + "</strong>"; }
-
-			// List items
-			if (/^[-*] (.+)$/.test(line)) {
-				if (!inList) { html.push("<ul>"); inList = true; }
-				line = "<li>" + line.replace(/^[-*] /, "") + "</li>";
-			} else if (inList) {
-				html.push("</ul>");
-				inList = false;
+				html.push(line);
 			}
 
-			// Inline formatting
-			line = line
-				.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-				.replace(/\*(.+?)\*/g, "<em>$1</em>")
-				.replace(/`(.+?)`/g, "<code>$1</code>")
-				.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-
-			html.push(line);
+			if (inList) html.push("</ul>");
+			return html
+				.join("<br>")
+				.replace(/<br><ul>/g, "<ul>")
+				.replace(/<\/ul><br>/g, "</ul>")
+				.replace(/<br><li>/g, "<li>")
+				.replace(/<\/li><br><li>/g, "</li><li>");
 		}
 
 		if (inList) html.push("</ul>");
@@ -261,7 +259,6 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 			e.preventDefault();
 			form.requestSubmit();
 		}
-	});
 
 	form.addEventListener("submit", async function (e) {
 		e.preventDefault();
@@ -379,6 +376,86 @@ title: "MijnOverheid Zakelijk: Digitale Assistent"
 		} finally {
 			submitting = false;
 		}
-	});
-})();
+
+		function renderStatusOffline() {
+			statusEl.innerHTML = '<p class="chat-status-warning">Host niet bereikbaar — de assistent kan geen vragen beantwoorden.</p>';
+		}
+
+		// Haal status op bij laden
+		fetch(API_BASE + "/health")
+			.then(function (r) {
+				return r.json();
+			})
+			.then(renderStatus)
+			.catch(renderStatusOffline);
+
+		// Bewaar en herstel gesprek bij wisselen van modus
+		modeInputs.forEach(function (radio) {
+			radio.addEventListener("change", function () {
+				var prev = this.value === "vlam" ? "claude" : "vlam";
+				// Sla huidige chat op
+				chatHistory[prev] = messages.innerHTML;
+
+				// Herstel of start nieuw gesprek
+				var mode = getMode();
+				if (chatHistory[mode]) {
+					messages.innerHTML = chatHistory[mode];
+				} else {
+					messages.innerHTML = "";
+					var welkom = mode === "vlam" ? "Welkom! Ik ben VLAM, de digitale assistent van de Rijksoverheid. Waarmee kan ik u helpen?" : "Welkom! Ik ben Claude, digitale assistent van MijnOverheid Zakelijk. Waarmee kan ik u helpen?";
+					addMessage(welkom, "assistant");
+				}
+				messages.scrollTop = messages.scrollHeight;
+			});
+		});
+
+		input.addEventListener("input", function () {
+			this.style.blockSize = "auto";
+			this.style.blockSize = this.scrollHeight + "px";
+		});
+
+		input.addEventListener("keydown", function (e) {
+			if (e.key === "Enter" && !e.shiftKey) {
+				e.preventDefault();
+				form.requestSubmit();
+			}
+		});
+
+		form.addEventListener("submit", async function (e) {
+			e.preventDefault();
+			var message = input.value.trim();
+			if (!message) return;
+
+			addMessage(message, "user");
+			input.value = "";
+			input.style.blockSize = "auto";
+			setLoading(true);
+
+			try {
+				var response = await fetch(API_BASE + "/chat", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						message: message,
+						session_id: sessions[getMode()],
+						mode: getMode(),
+					}),
+				});
+
+				if (!response.ok) throw new Error("Server niet bereikbaar");
+
+				var data = await response.json();
+				sessions[getMode()] = data.session_id;
+				setLoading(false);
+				addMessage(data.reply, "assistant");
+			} catch (err) {
+				setLoading(false);
+				var errorDiv = document.createElement("div");
+				errorDiv.className = "feedback feedback-warning";
+				errorDiv.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.38 19.64 13.67 2.47c-.73-1.3-2.6-1.3-3.34 0L.62 19.64c-.72 1.28.2 2.86 1.67 2.86h19.43c1.46 0 2.38-1.58 1.66-2.86z"/><path class="icon-color-inverse" d="M10.54 17.45c0-.44.12-.82.36-1.12.24-.31.6-.46 1.09-.46.48 0 .85.14 1.1.4.25.27.38.66.38 1.18 0 .43-.12.8-.36 1.09-.24.29-.6.44-1.09.44-.48 0-.85-.13-1.1-.39-.25-.25-.38-.63-.38-1.14zm.31-10.27 2.48-.2-.22 5.51v2.63l-2.27.05V7.18z"/></svg><div><p>Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.</p></div>';
+				messages.appendChild(errorDiv);
+				messages.scrollTop = messages.scrollHeight;
+			}
+		});
+	})();
 </script>
