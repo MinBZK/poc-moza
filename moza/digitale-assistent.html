@@ -190,8 +190,8 @@ title: "MijnOverheid Zakelijk: Digitale assistent"
 			statusEl.innerHTML = '<p class="chat-status-warning">Host niet bereikbaar — de assistent kan geen vragen beantwoorden.</p>';
 		}
 
-		// Haal status op bij laden
-		fetch(API_BASE + "/health")
+		// Haal status op bij laden (3s timeout zodat de pagina niet hangt als de host niet draait)
+		fetch(API_BASE + "/health", { signal: AbortSignal.timeout(3000) })
 			.then(function (r) {
 				return r.json();
 			})
