@@ -58,7 +58,7 @@ VLAM_BASE_URL=https://api.demo.vlam.ai/v2.1/projects/poc/openai-compatible/v1
 VLAM_MODEL_ID=ubiops-deployment/bzk-dig-chat//chat-model
 ```
 
-Zonder VLAM-keys wordt alleen Claude beschikbaar. 
+Zonder VLAM-keys wordt alleen Claude beschikbaar.
 
 ## API
 

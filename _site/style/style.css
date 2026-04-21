@@ -1879,6 +1879,60 @@ button {
 		gap: var(--toepassing-space-padding-xs);
 		padding-block: var(--toepassing-space-padding-2xs);
 	}
+	.settings-radio-group {
+		border: none;
+		display: flex;
+		align-items: center;
+		gap: var(--toepassing-space-padding-xs);
+		margin-block: var(--toepassing-space-padding-2xs);
+		padding: 0;
+		legend {
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
+			margin-inline-end: var(--toepassing-space-padding-xs);
+		}
+		.mode-option {
+			display: flex;
+			align-items: center;
+			gap: var(--toepassing-space-padding-2xs);
+			padding: 0;
+		}
+	}
+	.settings-field {
+		margin-block: var(--toepassing-space-padding-2xs);
+		label {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			font-weight: var(--toepassing-text-font-weight-semi-bold);
+			padding-block: 0;
+		}
+		input[type="password"],
+		input[type="text"] {
+			border: var(--toepassing-border-default);
+			border-radius: var(--toepassing-border-radius-sm);
+			box-sizing: border-box;
+			font: inherit;
+			font-weight: normal;
+			inline-size: 100%;
+			padding: var(--toepassing-space-padding-2xs) var(--toepassing-space-padding-xs);
+		}
+	}
+	.feature-flags-fullscreen {
+		background: var(--toepassing-color-interactive-default-background);
+		border: var(--toepassing-border-default);
+		border-radius: var(--toepassing-border-radius-sm);
+		color: var(--toepassing-color-text-default);
+		cursor: pointer;
+		font: inherit;
+		inline-size: 100%;
+		padding-block: var(--toepassing-space-padding-2xs);
+		padding-inline: var(--toepassing-space-padding-sm);
+		text-align: start;
+		&:hover {
+			background: var(--toepassing-color-interactive-hover-background);
+			color: var(--toepassing-color-text-inverse);
+		}
+	}
 	.feature-flags-clear {
 		background: var(--toepassing-color-feedback-error-default);
 		border: none;
@@ -1962,6 +2016,7 @@ button {
 }
 .chat-status-warning {
 	color: var(--toepassing-color-feedback-warning-border);
+	color: var(--toepassing-color-feedback-warning-border);
 	font-style: italic;
 }
 .chat-messages {
@@ -2000,6 +2055,27 @@ button {
 .chat-message-loading {
 	font-style: italic;
 	opacity: var(--toepassing-opacity-interactive-disabled);
+}
+.chat-message-thinking {
+	font-style: italic;
+	opacity: var(--toepassing-opacity-interactive-disabled);
+	.thinking-text::before {
+		content: "";
+		display: inline-block;
+		inline-size: 0.7em;
+		block-size: 0.7em;
+		border: 2px solid currentColor;
+		border-block-start-color: transparent;
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+		margin-inline-end: 0.5em;
+		vertical-align: middle;
+	}
+}
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
 }
 .chat-input-form {
 	display: flex;

@@ -195,3 +195,53 @@ document.querySelectorAll(".list-content-links li:not(.reserve-topic)").forEach(
 		showNextReserve(li.closest("ul"));
 	}
 });
+
+// Ongelezen-status: markeer content-links als gelezen bij klik en werk badge bij.
+function updateUnreadBadge() {
+	const ongelezen = document.querySelectorAll(".content-link.is-unread").length;
+	document.querySelectorAll("[data-unread-badge]").forEach((badge) => {
+		badge.textContent = ongelezen;
+		badge.hidden = ongelezen === 0;
+	});
+	// Sla het aantal op zodat de badge ook op andere pagina's klopt.
+	try {
+		localStorage.setItem("unread:count", String(ongelezen));
+	} catch (e) { /* localStorage niet toegankelijk */ }
+}
+
+// Herstel gelezen-status bij laden.
+document.querySelectorAll(".content-link.is-unread").forEach((link) => {
+	const heading = link.querySelector("h2, h3, h4");
+	if (!heading) return;
+	const key = "read:" + heading.textContent.trim();
+	if (localStorage.getItem(key)) {
+		link.classList.remove("is-unread");
+	}
+});
+
+// Markeer als gelezen bij klik.
+document.addEventListener("click", (e) => {
+	const link = e.target.closest(".content-link.is-unread");
+	if (!link) return;
+	const heading = link.querySelector("h2, h3, h4");
+	if (!heading) return;
+	localStorage.setItem("read:" + heading.textContent.trim(), "true");
+	link.classList.remove("is-unread");
+	updateUnreadBadge();
+});
+
+// Badge op andere pagina's bijwerken vanuit localStorage.
+try {
+	const opgeslagen = localStorage.getItem("unread:count");
+	if (opgeslagen !== null) {
+		document.querySelectorAll("[data-unread-badge]").forEach((badge) => {
+			badge.textContent = opgeslagen;
+			badge.hidden = opgeslagen === "0";
+		});
+	}
+} catch (e) { /* localStorage niet toegankelijk */ }
+
+// Op pagina's met content-links: bereken de echte telling.
+if (document.querySelector(".content-link.is-unread") !== null || document.querySelector(".content-link") !== null) {
+	updateUnreadBadge();
+}
