@@ -1,6 +1,7 @@
 import { register } from '@tokens-studio/sd-transforms';
 import StyleDictionary from 'style-dictionary';
 import { readFile, writeFile, mkdir } from 'fs/promises';
+import { execSync } from 'child_process';
 
 register(StyleDictionary); // No excludeParentKeys needed for merged file
 
@@ -174,6 +175,14 @@ console.log('Filtered transforms:', tsTransforms);
 
   await sd.cleanAllPlatforms();
   await sd.buildAllPlatforms();
+
+  // Corrigeer gegenereerde CSS volgens Stylelint-regels (moderne notatie, hex-afkortingen, etc.)
+  try {
+    execSync('npx stylelint --fix ../style/_rijkshuisstijl.css ../style/_toepassing.css', { stdio: 'inherit' });
+  } catch (e) {
+    // Stylelint --fix kan met exit code 2 eindigen als er niet-fixbare waarschuwingen zijn; dat is geen fout.
+    if (e.status !== 2) throw e;
+  }
 }
 
 run();

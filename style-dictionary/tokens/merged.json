@@ -1229,7 +1229,7 @@
       "badge": {
         "background": {
           "$type": "color",
-          "$value": "{color.feedback.info.emphasis}"
+          "$value": "{color.feedback.attention}"
         },
         "text": {
           "$type": "color",
