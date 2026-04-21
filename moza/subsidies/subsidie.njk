@@ -1,0 +1,50 @@
+---
+pagination:
+  data: subsidiesData
+  size: 1
+  alias: subsidie
+permalink: "/moza/subsidies/{{ subsidie.id }}/"
+eleventyComputed:
+  title: "MijnOverheid Zakelijk: {{ subsidie.titel }}"
+subNavActive: "/moza/actueel/"
+---
+
+{% include "side-nav-overheid.njk" %}
+
+<article id="hoofd-inhoud">
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li><a href="{{ '/moza/actueel/' | url }}">Actualiteiten</a></li>
+			<li><a href="{{ '/moza/subsidies/' | url }}">Subsidies en financiering</a></li>
+			<li aria-current="page">{{ subsidie.titel }}</li>
+		</ol>
+	</nav>
+
+	<h1>{{ subsidie.titel }}</h1>
+
+	<section class="card">
+		<p class="intro">{{ subsidie.beschrijving }}</p>
+
+		<dl class="data-overview">
+			<dt>Verstrekker</dt>
+			<dd>{{ subsidie.verstrekker }}</dd>
+			<dt>Type</dt>
+			<dd>{{ subsidie.type }}</dd>
+			<dt>Aanvraagperiode</dt>
+			<dd>{{ subsidie.aanvraagperiode }}</dd>
+			{% if subsidie.maximaalBedrag %}
+			<dt>Maximaal bedrag</dt>
+			<dd>{{ subsidie.maximaalBedrag }}</dd>
+			{% endif %}
+		</dl>
+
+		{% for alinea in subsidie.inhoud %}
+		<p>{{ alinea }}</p>
+		{% endfor %}
+
+		<div class="action-group">
+			<a class="btn-cta" href="{{ subsidie.externUrl }}" rel="external">Bekijk op de bron</a>
+		</div>
+	</section>
+</article>
