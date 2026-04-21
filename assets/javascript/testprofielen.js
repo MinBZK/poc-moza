@@ -50,6 +50,14 @@
 		return profielen.find(function (p) { return p.id === id; });
 	}
 
+	function vindProfielOpLabel(label) {
+		return profielen.find(function (p) { return p.label === label; });
+	}
+
+	function urlLabel(profiel) {
+		return profiel.label || profiel.id;
+	}
+
 	function profielUitUrl() {
 		var params = new URLSearchParams(location.search);
 		return params.get("profiel");
@@ -57,9 +65,10 @@
 
 	function actiefProfiel() {
 		// 1. URL-parameter heeft voorrang (deelbaar, zelfde voor iedereen).
-		var urlId = profielUitUrl();
-		if (urlId) {
-			var urlProfiel = vindProfiel(urlId);
+		var urlParam = profielUitUrl();
+		if (urlParam) {
+			// Zoek op label eerst, dan op id als fallback.
+			var urlProfiel = vindProfielOpLabel(urlParam) || vindProfiel(urlParam);
 			if (urlProfiel) return urlProfiel;
 		}
 		// 2. localStorage (persoonlijke keuze via Flags-paneel).
@@ -132,7 +141,7 @@
 
 		var list = document.createElement("ul");
 
-		profielen.forEach(function (profiel) {
+		profielen.forEach(function (profiel, i) {
 			var li = document.createElement("li");
 			var label = document.createElement("label");
 			var radio = document.createElement("input");
@@ -142,13 +151,13 @@
 			radio.checked = profiel.id === actief.id;
 			radio.addEventListener("change", function () {
 				slaActiefOp(profiel.id);
-				// Bewaar de URL-parameter als die er al was.
 				var params = new URLSearchParams(location.search);
-				params.set("profiel", profiel.id);
+				params.set("profiel", urlLabel(profiel));
 				location.search = params.toString();
 			});
 			label.appendChild(radio);
-			label.appendChild(document.createTextNode(" " + profiel.persoon.voornaam + " " + profiel.persoon.achternaam + " \u2014 " + profiel.bedrijf.handelsnaam));
+			var kiezerLabel = profiel.label || ("Respondent " + i);
+			label.appendChild(document.createTextNode(" " + kiezerLabel + ": " + profiel.bedrijf.handelsnaam));
 			li.appendChild(label);
 			list.appendChild(li);
 		});
@@ -179,9 +188,11 @@
 	window.Testprofielen = {
 		actief: function () { return actiefProfiel(); },
 		wissel: function (id) {
-			slaActiefOp(id);
+			var p = vindProfiel(id) || vindProfielOpLabel(id);
+			if (!p) return;
+			slaActiefOp(p.id);
 			var params = new URLSearchParams(location.search);
-			params.set("profiel", id);
+			params.set("profiel", urlLabel(p));
 			location.search = params.toString();
 		},
 		profielen: profielen,

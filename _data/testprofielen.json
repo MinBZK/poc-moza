@@ -2,6 +2,7 @@
 	{
 		"id": "bloom",
 		"actief": true,
+		"label": "Robin Vogel",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -35,6 +36,7 @@
 	{
 		"id": "dierenwinkel",
 		"actief": false,
+		"label": "R1",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -62,6 +64,7 @@
 	{
 		"id": "makelaar",
 		"actief": false,
+		"label": "R2",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -89,6 +92,7 @@
 	{
 		"id": "projectontwikkelaar",
 		"actief": false,
+		"label": "R3",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -116,6 +120,7 @@
 	{
 		"id": "haarstylist",
 		"actief": false,
+		"label": "Reserve-1",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -143,6 +148,7 @@
 	{
 		"id": "schilder",
 		"actief": false,
+		"label": "R4",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -170,6 +176,7 @@
 	{
 		"id": "kunstsalon",
 		"actief": false,
+		"label": "R5",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -197,6 +204,7 @@
 	{
 		"id": "melkveehouder",
 		"actief": false,
+		"label": "R6",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -224,6 +232,7 @@
 	{
 		"id": "attracties",
 		"actief": false,
+		"label": "Reserve-2",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
