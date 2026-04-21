@@ -26,7 +26,7 @@
   --toepassing-color-border-inverse: var(--rijkshuisstijl-color-grijs-200); /** Randen op color.*.inverse en donkere oppervlakken */
   --toepassing-color-border-strong: var(--rijkshuisstijl-color-grijs-700); /** Randen met hoge nadruk; bijv. invoervelden of visuele groepering */
   --toepassing-color-border-subtle: var(--rijkshuisstijl-color-grijs-400); /** Zachtere scheiding, bijv. tussen lijstitems of tabelrijen */
-  --toepassing-color-component-badge-background: var(--toepassing-color-feedback-info-emphasis);
+  --toepassing-color-component-badge-background: var(--toepassing-color-feedback-attention);
   --toepassing-color-component-badge-text: var(--toepassing-color-text-inverse);
   --toepassing-color-component-footer-background: var(--rijkshuisstijl-color-grijs-700);
   --toepassing-color-feedback-attention: var(--rijkshuisstijl-color-robijnrood-400);

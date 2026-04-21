@@ -36,7 +36,7 @@
 	{
 		"id": "dierenwinkel",
 		"actief": false,
-		"label": "R1",
+		"label": "Sessie-1",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -64,7 +64,7 @@
 	{
 		"id": "makelaar",
 		"actief": false,
-		"label": "R2",
+		"label": "Sessie-2",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -92,7 +92,7 @@
 	{
 		"id": "projectontwikkelaar",
 		"actief": false,
-		"label": "R3",
+		"label": "Sessie-3",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -148,7 +148,7 @@
 	{
 		"id": "schilder",
 		"actief": false,
-		"label": "R4",
+		"label": "Sessie-4",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -176,7 +176,7 @@
 	{
 		"id": "kunstsalon",
 		"actief": false,
-		"label": "R5",
+		"label": "Sessie-5",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -204,7 +204,7 @@
 	{
 		"id": "melkveehouder",
 		"actief": false,
-		"label": "R6",
+		"label": "Sessie-6",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
