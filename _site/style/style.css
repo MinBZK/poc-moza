@@ -1862,7 +1862,7 @@ button {
 	overflow-y: auto;
 	padding: var(--toepassing-space-padding-md);
 	position: fixed;
-	z-index: 2;
+	z-index: 1;
 	.feature-flags-group-heading {
 		border-block-start: var(--toepassing-border-default);
 		color: var(--toepassing-color-text-subtle-1);
