@@ -111,6 +111,54 @@ Bij het gebruik van `npm run dev` worden design tokens automatisch opnieuw gebou
 
 ---
 
+## Digitale Assistent (backend)
+
+De [Digitale Assistent](services/README.md) draait op een Python-host (FastAPI) die twee LLM-backends (VLAM en Claude) combineert met overheidsbronnen via MCP of CLI.
+
+### Lokaal draaien geïntegreerd via `npm run dev`
+
+`npm run dev` start drie processen tegelijk via `concurrently`:
+
+- **eleventy** — `eleventy --watch`, herbouwt `_site/` bij elke wijziging
+- **tokens** — chokidar-watcher die Style Dictionary triggert bij `tokens/tokens.json`
+- **backend** — `python api.py` in `services/host/`, serveert de API én de gebouwde `_site/` op dezelfde poort
+
+Doordat de backend ook de statische site serveert is er één origin: geen CORS-gedoe, geen aparte `--serve` van Eleventy. De poort wordt gelezen uit `services/host/.env` (`VLAM_PORT`, standaard `8001` in deze setup omdat poort `8000` op macOS vaak door `pinniped` wordt gebruikt).
+
+De Digitale Assistent is dan bereikbaar op [`localhost:8001/moza/digitale-assistent/`](http://localhost:8001/moza/digitale-assistent/).
+
+> **Let op — geen hot-reload:** Eleventy draait in `--watch` (alleen rebuild, geen BrowserSync). Bij wijzigingen moet je de browser handmatig verversen. Doe eenmalig `npm run build` voordat je `npm run dev` start, zodat `_site/` bestaat als de backend mount.
+
+### Lokaal draaien met `uv` (alleen backend)
+
+Als alternatief, alleen de host zonder Eleventy-watcher:
+
+``` bash
+cd services/host
+uv run --with-requirements requirements.txt \
+  uvicorn api:app --host 0.0.0.0 --port 8090
+```
+
+### API-sleutels
+
+API-sleutels kunnen op twee manieren worden gezet:
+
+- via `services/host/.env` (zie `services/host/.env.example`)
+- via het feature-flags paneel rechtsonder in de site — deze worden per request als `X-VLAM-API-Key` / `X-Claude-API-Key` header meegestuurd en overrulen de `.env`
+
+UI-keys werken alleen als `ALLOW_API_KEY_OVERRIDE=true` in `services/host/.env`. Lege UI-velden vallen automatisch terug op de `.env`-keys.
+
+### Containerisatie
+
+De `container/Containerfile` bouwt een single-image deployment: een Node-builder genereert de Eleventy-site, een Python-release-image installeert de host-dependencies en serveert alles via `uvicorn` op poort 8080. Dezelfde image wordt gebruikt voor preview- en productiedeploys (ZAD).
+
+``` bash
+docker build -f container/Containerfile -t moza .
+docker run --rm -p 8080:8080 --env-file services/host/.env moza
+```
+
+---
+
 ## Storybook
 
 [Storybook](https://storybook.js.org/) is de omgeving om afzonderlijke componenten te bekijken, testen en documenteren.
@@ -154,7 +202,7 @@ npm install
 
 | Script | Commando | Beschrijving |
 | ------ | -------- | ------------ |
-| `npm run dev` | Eleventy serve + token watcher + Storybook watcher | Alle drie parallel, met live reload en automatische Storybook-build bij wijzigingen |
+| `npm run dev` | Eleventy watch + token watcher + FastAPI-backend | Alle drie parallel. Backend serveert `_site/` én de chat-API op dezelfde poort (`VLAM_PORT` uit `services/host/.env`, default `8001`). Geen hot-reload, browser handmatig verversen. |
 | `npm run build` | Tokens + Eleventy | Volledige productie-build |
 | `npm run tokens` | Alleen Style Dictionary | Handmatig tokens bouwen |
 | `npm run storybook` | Storybook dev server | Componentenbibliotheek lokaal bekijken |
@@ -172,7 +220,12 @@ npm install
     📁 fonts                Rijkslettertype webfonts
     📁 icons                iconen
     📁 images               afbeeldingen
+📂 container                Containerfile voor de gebundelde deployment (site + host)
 📂 moza                     prototype voor MijnOverheid Zakelijk, gebaseerd op deze omgeving
+📂 services                 Digitale Assistent — FastAPI-host, MCP-servers en CLI-tools
+    📁 host                 FastAPI-host die statische site én chat-API serveert
+    📁 mcp                  MCP-servers (kvk, koop, regelrecht, rvo)
+    📁 cli                  Bash-CLI's als alternatief transport
 📂 stories                  ‘stories’ om componenten weer te geven in Storybook
 📂 style
     📄 _reset.css           cross-browser stijl normalisatie
