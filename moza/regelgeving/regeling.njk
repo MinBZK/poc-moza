@@ -1,0 +1,46 @@
+---
+pagination:
+  data: regelgevingData
+  size: 1
+  alias: regeling
+permalink: "/moza/regelgeving/{{ regeling.id }}/"
+eleventyComputed:
+  title: "MijnOverheid Zakelijk: {{ regeling.titel }}"
+subNavActive: "/moza/actueel/"
+---
+
+{% include "side-nav-overheid.njk" %}
+
+<article id="hoofd-inhoud">
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li><a href="{{ '/moza/actueel/' | url }}">Actualiteiten</a></li>
+			<li><a href="{{ '/moza/regelgeving/' | url }}">Wetten en regelgeving</a></li>
+			<li aria-current="page">{{ regeling.titel }}</li>
+		</ol>
+	</nav>
+
+	<h1>{{ regeling.titel }}</h1>
+
+	<section class="card">
+		<p class="intro">{{ regeling.beschrijving }}</p>
+
+		<dl class="data-overview">
+			<dt>Bron</dt>
+			<dd>{{ regeling.bron }}</dd>
+			<dt>Inwerkingtreding</dt>
+			<dd>{{ regeling.inwerkingtreding }}</dd>
+			<dt>Geldt voor</dt>
+			<dd>{{ regeling.geldtVoor }}</dd>
+		</dl>
+
+		{% for alinea in regeling.inhoud %}
+		<p>{{ alinea }}</p>
+		{% endfor %}
+
+		<div class="action-group">
+			<a class="btn-cta" href="{{ regeling.externUrl }}" rel="external">Bekijk op wetten.overheid.nl</a>
+		</div>
+	</section>
+</article>
