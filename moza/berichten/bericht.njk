@@ -1,0 +1,46 @@
+---
+pagination:
+  data: buurtberichtenData
+  size: 1
+  alias: bericht
+permalink: "/moza/berichten/{{ bericht.id }}/"
+eleventyComputed:
+  title: "MijnOverheid Zakelijk: {{ bericht.titel }}"
+subNavActive: "/moza/actueel/"
+---
+
+{% include "side-nav-overheid.njk" %}
+
+<article id="hoofd-inhoud">
+	<nav class="breadcrumb">
+		<ol>
+			<li><a href="{{ '/moza/' | url }}">Home</a></li>
+			<li><a href="{{ '/moza/actueel/' | url }}">Actualiteiten</a></li>
+			<li><a href="{{ '/moza/berichten/' | url }}">Berichten over uw buurt</a></li>
+			<li aria-current="page">{{ bericht.titel }}</li>
+		</ol>
+	</nav>
+
+	<h1>{{ bericht.titel }}</h1>
+
+	<section class="card">
+		<p class="intro">{{ bericht.beschrijving }}</p>
+
+		<dl class="data-overview">
+			<dt>Bron</dt>
+			<dd>{{ bericht.bron }}</dd>
+			<dt>Datum</dt>
+			<dd>{{ bericht.datum }}</dd>
+			<dt>Locatie</dt>
+			<dd>{{ bericht.locatie }}</dd>
+		</dl>
+
+		{% for alinea in bericht.inhoud %}
+		<p>{{ alinea }}</p>
+		{% endfor %}
+
+		<div class="action-group">
+			<a class="btn-cta" href="{{ bericht.externUrl }}" rel="external">Bekijk op officielebekendmakingen.nl</a>
+		</div>
+	</section>
+</article>

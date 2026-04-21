@@ -50,13 +50,25 @@
 		return profielen.find(function (p) { return p.id === id; });
 	}
 
+	function profielUitUrl() {
+		var params = new URLSearchParams(location.search);
+		return params.get("profiel");
+	}
+
 	function actiefProfiel() {
+		// 1. URL-parameter heeft voorrang (deelbaar, zelfde voor iedereen).
+		var urlId = profielUitUrl();
+		if (urlId) {
+			var urlProfiel = vindProfiel(urlId);
+			if (urlProfiel) return urlProfiel;
+		}
+		// 2. localStorage (persoonlijke keuze via Flags-paneel).
 		var opgeslagen = leesActiefId();
 		if (opgeslagen) {
 			var profiel = vindProfiel(opgeslagen);
 			if (profiel) return profiel;
 		}
-		// Fallback: het profiel dat als actief is gemarkeerd in de data.
+		// 3. Fallback: het profiel dat als actief is gemarkeerd in de data.
 		return profielen.find(function (p) { return p.actief; }) || profielen[0];
 	}
 
@@ -130,7 +142,10 @@
 			radio.checked = profiel.id === actief.id;
 			radio.addEventListener("change", function () {
 				slaActiefOp(profiel.id);
-				location.reload();
+				// Bewaar de URL-parameter als die er al was.
+				var params = new URLSearchParams(location.search);
+				params.set("profiel", profiel.id);
+				location.search = params.toString();
 			});
 			label.appendChild(radio);
 			label.appendChild(document.createTextNode(" " + profiel.persoon.voornaam + " " + profiel.persoon.achternaam + " \u2014 " + profiel.bedrijf.handelsnaam));
@@ -146,10 +161,29 @@
 	pasToe(profiel);
 	bouwKiezer();
 
+	// Behoud ?profiel= parameter op alle interne links.
+	var urlProfielId = profielUitUrl();
+	if (urlProfielId) {
+		document.querySelectorAll("a[href]").forEach(function (a) {
+			var href = a.getAttribute("href");
+			// Alleen interne links (beginnen met / of zijn relatief, geen http/mailto/tel).
+			if (!href || /^(https?:|mailto:|tel:)/.test(href)) return;
+			// Voeg de parameter toe als die er nog niet in zit.
+			if (href.indexOf("profiel=") !== -1) return;
+			var separator = href.indexOf("?") !== -1 ? "&" : "?";
+			a.setAttribute("href", href + separator + "profiel=" + encodeURIComponent(urlProfielId));
+		});
+	}
+
 	// Publieke API voor debugging.
 	window.Testprofielen = {
 		actief: function () { return actiefProfiel(); },
-		wissel: function (id) { slaActiefOp(id); location.reload(); },
+		wissel: function (id) {
+			slaActiefOp(id);
+			var params = new URLSearchParams(location.search);
+			params.set("profiel", id);
+			location.search = params.toString();
+		},
 		profielen: profielen,
 	};
 })();
