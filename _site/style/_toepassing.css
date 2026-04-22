@@ -10,11 +10,13 @@
   --toepassing-border-component-tabs-tab-hover: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-hover-border);
   --toepassing-border-component-tabs-tab-inactive: var(--toepassing-border-width-md) solid var(--toepassing-color-border-subtle);
   --toepassing-border-component-tabs-tab-selected: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-selected-border);
-  --toepassing-border-default: var(--toepassing-border-width-xs) solid var(--rijkshuisstijl-color-grijs-200);
+  --toepassing-border-default: var(--toepassing-border-width-xs) solid var(--toepassing-color-border-default);
   --toepassing-border-radius-lg: var(--rijkshuisstijl-border-radius-8);
   --toepassing-border-radius-md: var(--rijkshuisstijl-border-radius-4);
   --toepassing-border-radius-round: 999px;
   --toepassing-border-radius-sm: var(--rijkshuisstijl-border-radius-2);
+  --toepassing-border-strong: var(--toepassing-border-width-xs) solid var(--toepassing-color-border-strong);
+  --toepassing-border-subtle: var(--toepassing-border-width-xs) solid var(--toepassing-color-border-subtle);
   --toepassing-border-width-lg: var(--rijkshuisstijl-border-width-3);
   --toepassing-border-width-md: var(--rijkshuisstijl-border-width-2);
   --toepassing-border-width-xs: var(--rijkshuisstijl-border-width-1);
@@ -26,10 +28,10 @@
   --toepassing-color-background-inverse: var(--rijkshuisstijl-color-lintblauw-500); /** Donker oppervlak in een licht thema (en andersom), voor contrastrijke secties zoals footers */
   --toepassing-color-background-raised: var(--rijkshuisstijl-color-grijs-100); /** Verhoogde oppervlakken zoals kaarten, popovers en dropdowns. Zit visueel boven color.background.default */
   --toepassing-color-background-subtle: var(--rijkshuisstijl-color-grijs-100); /** Gedempt oppervlak, voor secundaire panelen of verdiepte gebieden zoals codeblokken en tabelkoppen */
-  --toepassing-color-border-default: var(--rijkshuisstijl-color-grijs-600); /** Standaardranden voor invoervelden, kaarten en scheidingslijnen */
+  --toepassing-color-border-default: var(--rijkshuisstijl-color-grijs-500); /** Standaardranden voor invoervelden, kaarten en scheidingslijnen */
   --toepassing-color-border-inverse: var(--rijkshuisstijl-color-grijs-200); /** Randen op color.*.inverse en donkere oppervlakken */
-  --toepassing-color-border-strong: var(--rijkshuisstijl-color-grijs-700); /** Randen met hoge nadruk; bijv. invoervelden of visuele groepering */
-  --toepassing-color-border-subtle: var(--rijkshuisstijl-color-grijs-400); /** Zachtere scheiding, bijv. tussen lijstitems of tabelrijen */
+  --toepassing-color-border-strong: var(--rijkshuisstijl-color-grijs-600); /** Randen met hoge nadruk; bijv. invoervelden of visuele groepering */
+  --toepassing-color-border-subtle: var(--rijkshuisstijl-color-grijs-200); /** Zachtere scheiding, bijv. tussen lijstitems of tabelrijen */
   --toepassing-color-component-badge-background: var(--toepassing-color-feedback-attention);
   --toepassing-color-component-badge-text: var(--toepassing-color-text-inverse);
   --toepassing-color-component-footer-background: var(--rijkshuisstijl-color-grijs-700);

@@ -1061,8 +1061,8 @@ dd + dt {
 /* Voortgangsbalk */
 .progress-bar {
 	background: var(--toepassing-color-background-raised);
-	block-size: var(--toepassing-size-xs);
-	border: var(--toepassing-border-default);
+	block-size: var(--toepassing-size-2xs);
+	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-round);
 	overflow: hidden;
 }
@@ -1070,12 +1070,14 @@ dd + dt {
 	align-items: center;
 	background: var(--toepassing-color-feedback-success-emphasis);
 	block-size: 100%;
-	border: var(--toepassing-border-default);
+	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-round);
 	color: var(--toepassing-color-text-inverse);
 	display: flex;
 	font: var(--toepassing-text-component-text-badge);
 	justify-content: center;
+	min-inline-size: fit-content;
+	white-space: nowrap;
 }
 
 .list-indent {
@@ -1106,7 +1108,7 @@ tr {
 }
 th,
 td {
-	/* border-block-end: var(--toepassing-border-default); */
+	/* border-block-end: var(--toepassing-border-subtle); */
 	padding-block: var(--toepassing-space-padding-xs);
 	text-align: start;
 	.feedback {
@@ -1123,7 +1125,7 @@ caption {
 /* Uitklapblok (details/summary) */
 
 details {
-	border: var(--toepassing-border-default);
+	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
 	&[open] summary::before {
 		transform: rotate(90deg);
@@ -1165,7 +1167,7 @@ summary {
 			margin-block-start: var(--toepassing-space-layout-xs);
 		}
 		&:not(:last-of-type) {
-			border-block-end: var(--toepassing-border-default);
+			border-block-end: var(--toepassing-border-subtle);
 			padding-block-end: var(--toepassing-space-padding-lg);
 		}
 	}
@@ -1213,7 +1215,7 @@ summary {
 				translate: 0 -2rem;
 			}
 			&:not(:last-child) {
-				/* border-block-end: var(--toepassing-border-default); */
+				/* border-block-end: var(--toepassing-border-subtle); */
 				.content-link {
 					padding-block-end: 0;
 				}
@@ -1223,7 +1225,7 @@ summary {
 			}
 		}
 		.data-overview {
-			margin-block-end: var(--toepassing-space-margin-sm);
+			margin-block: var(--toepassing-space-margin-xs) var(--toepassing-space-margin-sm);
 		}
 		> * + * {
 			margin-block-start: var(--toepassing-space-layout-xs);
@@ -1243,7 +1245,7 @@ summary {
 	}
 }
 .card-topic:not(:last-child) {
-	border-block-end: var(--toepassing-border-default);
+	border-block-end: var(--toepassing-border-subtle);
 }
 /* Onzichtbare overlay-link voor klikbare cards */
 .card-link {
@@ -1545,7 +1547,7 @@ button {
 
 .feedback {
 	background: var(--toepassing-color-feedback-neutral-subtle);
-	border: var(--toepassing-border-default);
+	border: var(--toepassing-border-subtle);
 	border-color: var(--toepassing-color-feedback-neutral-border);
 	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
@@ -1645,7 +1647,7 @@ button {
 }
 .account-switcher-menu {
 	background: var(--toepassing-color-background-default);
-	border: var(--toepassing-border-default);
+	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
 	box-shadow: var(--toepassing-box-shadow-default);
 	inset-block-start: 100%;
@@ -1684,7 +1686,7 @@ button {
 		padding-block: var(--toepassing-space-padding-2xs);
 		padding-inline: var(--toepassing-space-padding-sm);
 		&:not(:first-child) {
-			border-block-start: var(--toepassing-border-default);
+			border-block-start: var(--toepassing-border-subtle);
 			margin-block-start: var(--toepassing-space-padding-xs);
 			padding-block-start: var(--toepassing-space-padding-sm);
 		}
@@ -1711,7 +1713,7 @@ button {
 	}
 	tr {
 		background: var(--toepassing-color-background-default);
-		border-block-end: var(--toepassing-border-default);
+		border-block-end: var(--toepassing-border-subtle);
 		position: relative;
 		transition: var(--toepassing-transition-default);
 		a::after {
@@ -1765,7 +1767,7 @@ button {
 /* Berichtenbox laadindicator */
 .berichtenbox-progress {
 	background: var(--toepassing-color-feedback-success-subtle);
-	border: var(--toepassing-border-default);
+	border: var(--toepassing-border-subtle);
 	border-color: var(--toepassing-color-feedback-success-border);
 	border-radius: var(--toepassing-border-radius-md);
 	padding: var(--toepassing-space-lg);
@@ -1849,7 +1851,7 @@ button {
 /* Berichtenbox: verplaats bericht naar map paneel */
 .berichtenbox-move-panel {
 	background: var(--toepassing-color-background-raised);
-	border: 1px solid var(--toepassing-color-border-default);
+	border: 1px solid var(--toepassing-color-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
 	margin-block: var(--toepassing-space-md);
 	padding: var(--toepassing-space-md);
@@ -1904,7 +1906,7 @@ button {
 	position: fixed;
 	z-index: 1;
 	.feature-flags-group-heading {
-		border-block-start: var(--toepassing-border-default);
+		border-block-start: var(--toepassing-border-subtle);
 		color: var(--toepassing-color-text-subtle-1);
 		margin-block: var(--toepassing-space-padding-sm);
 		padding-block-start: var(--toepassing-space-padding-sm);
@@ -1949,7 +1951,7 @@ button {
 		}
 		input[type="password"],
 		input[type="text"] {
-			border: var(--toepassing-border-default);
+			border: var(--toepassing-border-subtle);
 			border-radius: var(--toepassing-border-radius-sm);
 			box-sizing: border-box;
 			font: inherit;
@@ -2044,7 +2046,7 @@ button {
 	font-style: italic;
 }
 .chat-messages {
-	border: var(--toepassing-border-default);
+	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
 	flex-direction: column;

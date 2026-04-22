@@ -13,39 +13,30 @@ title: "MijnOverheid Zakelijk: Home"
 		<section>
 			<h3>Subsidies en financiering</h3>
 			<ul class="list-content-links">
-				<li>
-					<a href="{{ '/moza/actueel/#section-subsidies' | url }}" class="content-link">
-						<h4>WBSO: belastingvoordeel voor innovatie</h4>
+				{% for subsidie in subsidiesData | batch(4) | first %}
+				<li class="card-topic{% if loop.index0 >= 1 %} reserve-topic{% endif %}"{% if loop.index0 >= 1 %} hidden{% endif %}>
+					<a href="{{ '/moza/subsidies/' | url }}{{ subsidie.id }}/" class="content-link{% if subsidie.isOngelezen %} is-unread{% endif %}">
+						<h4>{{ subsidie.titel }}</h4>
 						<span class="card-link"></span>
 					</a>
-					<p>Belastingvoordeel als uw bedrijf werkt aan nieuwe producten, diensten of software.</p>
-					<p>Aanvragen kan het hele jaar door.</p>
+					<p>{{ subsidie.beschrijving }}</p>
+					<dl class="data-overview">
+						<dt>Verstrekker</dt>
+						<dd>{{ subsidie.verstrekker }}</dd>
+						<dt>Type</dt>
+						<dd>{{ subsidie.type }}</dd>
+						{% if subsidie.budgetVergeven %}
+						<dt>Budget vergeven</dt>
+						<dd>
+							<div class="progress-bar" role="progressbar" aria-label="Budget vergeven" aria-valuenow="{{ subsidie.budgetVergeven }}" aria-valuemin="0" aria-valuemax="100">
+								<div class="progress-bar-fill" style="inline-size: {{ subsidie.budgetVergeven }}%">{{ subsidie.budgetVergeven }}%</div>
+							</div>
+						</dd>
+						{% endif %}
+					</dl>
 					{% include "action-group.njk" %}
 				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-subsidies' | url }}" class="content-link">
-						<h4>Kleinschaligheidsinvesteringsaftrek (KIA)</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>Belastingvoordeel als u investeert in bedrijfsmiddelen, zoals machines, inventaris of computers.</p>
-					{% include "action-group.njk" %}
-				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-subsidies' | url }}" class="content-link">
-						<h4>Borgstelling MKB-kredieten (BMKB)</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>De overheid staat borg voor een deel van uw lening. Hierdoor kunt u als MKB'er makkelijker geld lenen bij de bank.</p>
-					{% include "action-group.njk" %}
-				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-subsidies' | url }}" class="content-link">
-						<h4>Energie-investeringsaftrek (EIA)</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>Fiscaal voordeel bij investeringen in energiebesparende bedrijfsmiddelen en duurzame energie.</p>
-					{% include "action-group.njk" %}
-				</li>
+				{% endfor %}
 			</ul>
 			<a class="btn-cta" href="{{ '/moza/actueel/#section-subsidies' | url }}">Naar Subsidies en financiering</a>
 		</section>
@@ -53,38 +44,22 @@ title: "MijnOverheid Zakelijk: Home"
 		<section>
 			<h3>Wetten en regelgeving</h3>
 			<ul class="list-content-links">
-				<li>
-					<a href="{{ '/moza/actueel/#section-wetten' | url }}" class="content-link">
-						<h4>Minimumloon per 1 januari 2026</h4>
+				{% for regeling in regelgevingData | batch(4) | first %}
+				<li class="card-topic{% if loop.index0 >= 1 %} reserve-topic{% endif %}"{% if loop.index0 >= 1 %} hidden{% endif %}>
+					<a href="{{ '/moza/regelgeving/' | url }}{{ regeling.id }}/" class="content-link{% if regeling.isOngelezen %} is-unread{% endif %}">
+						<h4>{{ regeling.titel }}</h4>
 						<span class="card-link"></span>
 					</a>
-					<p>Het minimumloon is aangepast. Bekijk wat u minimaal moet betalen aan uw werknemers.</p>
+					<p>{{ regeling.beschrijving }}</p>
+					<dl class="data-overview">
+						<dt>Bron</dt>
+						<dd>{{ regeling.bron }}</dd>
+						<dt>Geldt voor</dt>
+						<dd>{{ regeling.geldtVoor }}</dd>
+					</dl>
 					{% include "action-group.njk" %}
 				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-wetten' | url }}" class="content-link">
-						<h4>Wijziging Arbowet: veilig en gezond werken</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>De regels over veilig en gezond werken zijn aangepast. Bekijk wat dit betekent voor uw bedrijf.</p>
-					{% include "action-group.njk" %}
-				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-wetten' | url }}" class="content-link">
-						<h4>Privacywetgeving (AVG): omgaan met persoonsgegevens</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>Regels over hoe u gegevens van klanten en werknemers moet beschermen en verwerken.</p>
-					{% include "action-group.njk" %}
-				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-wetten' | url }}" class="content-link">
-						<h4>Wet op de loonbelasting: werkkostenregeling</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>Regels over belastingvrije vergoedingen en verstrekkingen aan werknemers. De vrije ruimte is in 2026 gewijzigd.</p>
-					{% include "action-group.njk" %}
-				</li>
+				{% endfor %}
 			</ul>
 			<a class="btn-cta" href="{{ '/moza/actueel/#section-wetten' | url }}">Naar Wetten en regelgeving</a>
 		</section>
@@ -92,38 +67,22 @@ title: "MijnOverheid Zakelijk: Home"
 		<section>
 			<h3>Berichten over uw buurt</h3>
 			<ul class="list-content-links">
-				<li>
-					<a href="{{ '/moza/actueel/#section-berichten' | url }}" class="content-link">
-						<h4>Wegafsluiting Stationsweg vanaf 10 maart</h4>
+				{% for bericht in buurtberichtenData | batch(4) | first %}
+				<li class="card-topic{% if loop.index0 >= 1 %} reserve-topic{% endif %}"{% if loop.index0 >= 1 %} hidden{% endif %}>
+					<a href="{{ '/moza/berichten/' | url }}{{ bericht.id }}/" class="content-link{% if bericht.isOngelezen %} is-unread{% endif %}">
+						<h4>{{ bericht.titel }}</h4>
 						<span class="card-link"></span>
 					</a>
-					<p>19 februari 2026 — De Stationsweg is afgesloten van 10 tot en met 28 maart vanwege werkzaamheden aan het riool. Verkeer wordt omgeleid.</p>
+					<p>{{ bericht.beschrijving }}</p>
+					<dl class="data-overview">
+						<dt>Datum</dt>
+						<dd>{{ bericht.datum }}</dd>
+						<dt>Locatie</dt>
+						<dd>{{ bericht.locatie }}</dd>
+					</dl>
 					{% include "action-group.njk" %}
 				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-berichten' | url }}" class="content-link">
-						<h4>Aanpassing parkeerregels en laad-/loszones</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>19 februari 2026 — De gemeente past de parkeerregels aan in uw buurt. De tijden voor laden en lossen veranderen per 1 april.</p>
-					{% include "action-group.njk" %}
-				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-berichten' | url }}" class="content-link">
-						<h4>Bestemmingsplan gewijzigd nabij uw vestigingsadres</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>19 februari 2026 — Het bestemmingsplan voor het gebied rond uw bedrijf is aangepast. U kunt zes weken lang bezwaar maken.</p>
-					{% include "action-group.njk" %}
-				</li>
-				<li hidden class="reserve-topic">
-					<a href="{{ '/moza/actueel/#section-berichten' | url }}" class="content-link">
-						<h4>Vergunning verleend: bouwwerkzaamheden Industrieweg 12</h4>
-						<span class="card-link"></span>
-					</a>
-					<p>12 februari 2026 — Er is een omgevingsvergunning verleend voor verbouwing van het pand aan de Industrieweg 12, nabij uw vestigingsadres.</p>
-					{% include "action-group.njk" %}
-				</li>
+				{% endfor %}
 			</ul>
 			<a class="btn-cta" href="{{ '/moza/actueel/#section-berichten' | url }}">Naar Berichten over uw buurt</a>
 		</section>

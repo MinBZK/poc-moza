@@ -42,6 +42,14 @@ subNavActive: "/moza/actueel/"
 					<dt>Maximaal bedrag</dt>
 					<dd>{{ subsidie.maximaalBedrag }}</dd>
 					{% endif %}
+					{% if subsidie.budgetVergeven %}
+					<dt>Budget vergeven</dt>
+					<dd>
+						<div class="progress-bar" role="progressbar" aria-label="Budget vergeven" aria-valuenow="{{ subsidie.budgetVergeven }}" aria-valuemin="0" aria-valuemax="100">
+							<div class="progress-bar-fill" style="inline-size: {{ subsidie.budgetVergeven }}%">{{ subsidie.budgetVergeven }}%</div>
+						</div>
+					</dd>
+					{% endif %}
 				</dl>
 				<div class="action-group">
 					<label class="save-favorite"><input type="checkbox" /> <span class="favorite-label">Bewaar</span> <span class="visually-hidden">{{ subsidie.titel }}</span></label>

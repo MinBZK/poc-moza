@@ -1110,19 +1110,19 @@
       }
     },
     "border": {
-      "default": {
-        "$type": "color",
-        "$value": "{color.grijs.600}",
-        "$description": "Standaardranden voor invoervelden, kaarten en scheidingslijnen"
-      },
       "subtle": {
         "$type": "color",
-        "$value": "{color.grijs.400}",
+        "$value": "{color.grijs.200}",
         "$description": "Zachtere scheiding, bijv. tussen lijstitems of tabelrijen"
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.grijs.500}",
+        "$description": "Standaardranden voor invoervelden, kaarten en scheidingslijnen"
       },
       "strong": {
         "$type": "color",
-        "$value": "{color.grijs.700}",
+        "$value": "{color.grijs.600}",
         "$description": "Randen met hoge nadruk; bijv. invoervelden of visuele groepering"
       },
       "inverse": {
@@ -2139,12 +2139,28 @@
         }
       }
     },
+    "subtle": {
+      "$type": "border",
+      "$value": {
+        "width": "{border-width.xs}",
+        "style": "solid",
+        "color": "{color.border.subtle}"
+      }
+    },
     "default": {
       "$type": "border",
       "$value": {
         "width": "{border-width.xs}",
         "style": "solid",
-        "color": "{color.grijs.200}"
+        "color": "{color.border.default}"
+      }
+    },
+    "strong": {
+      "$type": "border",
+      "$value": {
+        "width": "{border-width.xs}",
+        "style": "solid",
+        "color": "{color.border.strong}"
       }
     }
   },
