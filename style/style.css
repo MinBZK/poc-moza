@@ -910,6 +910,7 @@ button.side-nav-toggle {
 			font-weight: var(--toepassing-text-font-weight-semi-bold);
 		}
 		svg {
+			align-self: first baseline;
 			block-size: var(--toepassing-size-icon-md);
 			flex-shrink: 0;
 		}
@@ -1588,7 +1589,7 @@ button {
 		fill: var(--toepassing-color-feedback-info-icon);
 	}
 }
-.feedback-succes {
+.feedback-success {
 	background: var(--toepassing-color-feedback-success-subtle);
 	border-color: var(--toepassing-color-feedback-success-border);
 	svg path:not(.icon-color-inverse) {

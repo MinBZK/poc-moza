@@ -112,7 +112,7 @@ export const Succes = {
 		titel: "Succes",
 	},
 	render: (args) => `
-<div class="feedback feedback-succes">
+<div class="feedback feedback-success">
 	${feedbackIconSucces}
 	${renderContent(args)}
 	<button class="btn-close link-button">
@@ -192,7 +192,7 @@ export const AlleVarianten = {
 			<i>Sluit notificatie</i>
 		</button>
 	</div>
-	<div class="feedback feedback-succes">
+	<div class="feedback feedback-success">
 		${feedbackIconSucces}
 		<div>
 			<p>Succes</p>
@@ -260,7 +260,7 @@ export const VerificatiemailGewijzigd = {
 		inhoud: 'Uw e-mailadres is gewijzigd naar <strong>nieuw@voorbeeld.nl</strong>. Alle toekomstige berichten worden naar dit adres gestuurd.',
 	},
 	render: (args) => `
-<div class="feedback feedback-succes">
+<div class="feedback feedback-success">
 	${feedbackIconSucces}
 	${renderContent(args)}
 </div>

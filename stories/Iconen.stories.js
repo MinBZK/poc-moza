@@ -12,7 +12,7 @@ const iconColors = {
 	"interactive-alternate-active": "--toepassing-color-interactive-alternate-active-icon",
 	"interactive-alternate-selected": "--toepassing-color-interactive-alternate-selected-icon",
 	"feedback-info": "--toepassing-color-feedback-info-icon",
-	"feedback-succes": "--toepassing-color-feedback-success-icon",
+	"feedback-success": "--toepassing-color-feedback-success-icon",
 	"feedback-waarschuwing": "--toepassing-color-feedback-warning-icon",
 	"feedback-fout": "--toepassing-color-feedback-error-icon",
 	"feedback-neutraal": "--toepassing-color-feedback-neutral-icon",
