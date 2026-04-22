@@ -1170,7 +1170,7 @@
       "hover": {
         "background": {
           "$type": "color",
-          "$value": "{color.grijs.200}",
+          "$value": "{color.grijs.100}",
           "$description": "Staat bij aanwijzen met de muis"
         },
         "text": {
@@ -1187,7 +1187,7 @@
       "active": {
         "background": {
           "$type": "color",
-          "$value": "{color.grijs.400}",
+          "$value": "{color.grijs.300}",
           "$description": "Staat terwijl element ingedrukt is"
         },
         "text": {
@@ -1234,6 +1234,22 @@
         "text": {
           "$type": "color",
           "$value": "{color.text.inverse}"
+        }
+      },
+      "text-input": {
+        "border": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.border.default}"
+          }
+        }
+      },
+      "side-nav": {
+        "background": {
+          "hover": {
+            "$type": "color",
+            "$value": "{color.grijs.200}"
+          }
         }
       }
     },
@@ -1426,15 +1442,15 @@
     "weight": {
       "default": {
         "$type": "fontWeights",
-        "$value": "Regular"
+        "$value": "400"
       },
       "semibold": {
         "$type": "fontWeights",
-        "$value": "SemiBold"
+        "$value": "500"
       },
       "bold": {
         "$type": "fontWeights",
-        "$value": "Bold"
+        "$value": "600"
       }
     },
     "font-size": {
@@ -1973,6 +1989,10 @@
       "$type": "borderRadius",
       "$value": "4"
     },
+    "8": {
+      "$type": "borderRadius",
+      "$value": "8"
+    },
     "round": {
       "$type": "borderRadius",
       "$value": "999px"
@@ -1984,6 +2004,10 @@
     "md": {
       "$type": "borderRadius",
       "$value": "{border-radius.4}"
+    },
+    "lg": {
+      "$type": "borderRadius",
+      "$value": "{border-radius.8}"
     }
   },
   "box-shadow": {
@@ -2081,8 +2105,36 @@
           "$type": "border",
           "$value": {
             "color": "{color.hemelblauw.500}",
-            "width": "{border-width.2}",
+            "width": "{border-width.md}",
             "style": "solid"
+          }
+        }
+      },
+      "tabs": {
+        "tab": {
+          "inactive": {
+            "$type": "border",
+            "$value": {
+              "width": "{border-width.md}",
+              "style": "solid",
+              "color": "{color.border.subtle}"
+            }
+          },
+          "hover": {
+            "$type": "border",
+            "$value": {
+              "width": "{border-width.md}",
+              "style": "solid",
+              "color": "{color.interactive.hover.border}"
+            }
+          },
+          "selected": {
+            "$type": "border",
+            "$value": {
+              "color": "{color.interactive.selected.border}",
+              "width": "{border-width.md}",
+              "style": "solid"
+            }
           }
         }
       }
@@ -2090,7 +2142,7 @@
     "default": {
       "$type": "border",
       "$value": {
-        "width": "1px",
+        "width": "{border-width.xs}",
         "style": "solid",
         "color": "{color.grijs.200}"
       }

@@ -15,10 +15,7 @@ title: "MijnOverheid Zakelijk: Actualiteiten"
 	<h1>Actualiteiten</h1>
 
 	<div class="feedback feedback-info" id="info-actualiteiten">
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-			<path class="feedback-icon-color-background" d="M22.04 3.78c-.16-.95-.88-1.67-1.83-1.83-2.73-.45-7.3-.45-8.21-.45-.91 0-5.48 0-8.22.46-.94.15-1.67.88-1.82 1.82C1.5 6.52 1.5 11.09 1.5 12s0 5.48.46 8.22c.16.95.88 1.67 1.83 1.83 2.74.46 7.3.46 8.22.46.91 0 5.48 0 8.22-.46.95-.16 1.67-.88 1.83-1.83.46-2.74.46-7.3.46-8.22-.02-2.74-.02-5.48-.48-8.22z" />
-			<path class="icon-color-inverse" d="M10.71 6.93c0-.34.11-.63.33-.88.22-.25.54-.38.95-.38.41 0 .72.12.94.36.22.24.33.54.33.9 0 .32-.11.61-.33.86s-.54.37-.94.37c-.41 0-.72-.12-.95-.35-.22-.24-.33-.53-.33-.88zm2.4 2.39v8.96H10.9V9.41l2.21-.09z" />
-		</svg>
+		{% icon "/assets/icons/icon-informatie.svg" %}
 		<div>
 			<p>Deze actualiteiten zijn geselecteerd op basis van uw vestigingsadres, branche en rechtsvorm. Door items te bewaren, te delen of aan te geven of iets relevant is, helpt u ons om u steeds betere aanbevelingen te doen.</p>
 		</div>
@@ -33,172 +30,28 @@ title: "MijnOverheid Zakelijk: Actualiteiten"
 			<p>Subsidies en financiering waar u mogelijk voor in aanmerking komt.</p>
 		</hgroup>
 		<ul class="list-content-links">
-			<li>
-				<a href="{{ '/moza/subsidies/wbso/' | url }}" class="content-link is-unread">
-					<h3>WBSO: belastingvoordeel voor innovatie</h3>
+			{% for subsidie in subsidiesData %}
+			<li class="card-topic{% if loop.index0 >= 3 %} reserve-topic{% endif %}"{% if loop.index0 >= 3 %} hidden{% endif %}>
+				<a href="{{ '/moza/subsidies/' | url }}{{ subsidie.id }}/" class="content-link{% if subsidie.isOngelezen %} is-unread{% endif %}">
+					<h3>{{ subsidie.titel }}</h3>
 					<span class="card-link"></span>
 				</a>
-				<p>Belastingvoordeel als uw bedrijf werkt aan nieuwe producten, diensten of software.</p>
+				<p>{{ subsidie.beschrijving }}</p>
 				<dl class="data-overview">
 					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
+					<dd>{{ subsidie.verstrekker }}</dd>
 					<dt>Type</dt>
-					<dd>Fiscale regeling</dd>
+					<dd>{{ subsidie.type }}</dd>
 					<dt>Aanvraagperiode</dt>
-					<dd>Doorlopend open</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li>
-				<a href="{{ '/moza/subsidies/kia/' | url }}" class="content-link is-unread">
-					<h3>Kleinschaligheidsinvesteringsaftrek (KIA)</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Belastingvoordeel als u investeert in bedrijfsmiddelen, zoals machines, inventaris of computers.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Belastingdienst</dd>
-					<dt>Type</dt>
-					<dd>Fiscale regeling</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Bij uw jaarlijkse belastingaangifte</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li>
-				<a href="{{ '/moza/subsidies/bmkb/' | url }}" class="content-link">
-					<h3>Borgstelling MKB-kredieten (BMKB)</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>De overheid staat borg voor een deel van uw lening. Hierdoor kunt u als MKB’er makkelijker geld lenen bij de bank.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Borgstelling</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Doorlopend open (via uw bank)</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/eia/' | url }}" class="content-link">
-					<h3>Energie-investeringsaftrek (EIA)</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Fiscaal voordeel bij investeringen in energiebesparende bedrijfsmiddelen en duurzame energie.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Fiscale regeling</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Doorlopend open (melding binnen 3 maanden na opdracht)</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/mia-vamil/' | url }}" class="content-link">
-					<h3>MIA/Vamil: milieu-investeringen</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Fiscaal voordeel bij investeringen in milieuvriendelijke technieken en bedrijfsmiddelen.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Fiscale regeling</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Doorlopend open (melding binnen 3 maanden na opdracht)</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/innovatiekrediet/' | url }}" class="content-link">
-					<h3>Innovatiekrediet</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Krediet voor de ontwikkeling van veelbelovende en vernieuwende producten, processen of diensten.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Krediet</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Doorlopend open</dd>
+					<dd>{{ subsidie.aanvraagperiode }}</dd>
+					{% if subsidie.maximaalBedrag %}
 					<dt>Maximaal bedrag</dt>
-					<dd>Tot 5 miljoen euro (technisch) of 10 miljoen euro (klinisch)</dd>
+					<dd>{{ subsidie.maximaalBedrag }}</dd>
+					{% endif %}
 				</dl>
 				{% include "action-group.njk" %}
 			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/seed-capital/' | url }}" class="content-link">
-					<h3>Seed Capital: vroegefasefinanciering</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Financiering voor technostarters en creatieve starters via participatie door investeringsfondsen.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Financiering (via erkende Seed-fondsen)</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Doorlopend open</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/sde/' | url }}" class="content-link">
-					<h3>SDE++: stimulering duurzame energie</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Subsidie voor de inzet van technieken voor hernieuwbare energie en CO₂-reductie.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Subsidie</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Najaar 2026 (openstellingsronde)</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/mit/' | url }}" class="content-link">
-					<h3>MIT: MKB-innovatiestimulering topsectoren</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Subsidie voor MKB-ondernemers die innovatieprojecten uitvoeren binnen de topsectoren.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Subsidie</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Juni 2026 (haalbaarheidsstudies) en september 2026 (R&D-samenwerking)</dd>
-					<dt>Maximaal bedrag</dt>
-					<dd>Tot 50.000 euro (haalbaarheid) of 350.000 euro (R&D)</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/subsidies/praktijkleren/' | url }}" class="content-link">
-					<h3>Subsidieregeling praktijkleren</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Tegemoetkoming voor bedrijven die praktijkleerplaatsen of werkleerplaatsen aanbieden.</p>
-				<dl class="data-overview">
-					<dt>Verstrekker</dt>
-					<dd>Rijksdienst voor Ondernemend Nederland (RVO)</dd>
-					<dt>Type</dt>
-					<dd>Subsidie</dd>
-					<dt>Aanvraagperiode</dt>
-					<dd>Juni tot en met september 2026 (na afloop studiejaar)</dd>
-					<dt>Maximaal bedrag</dt>
-					<dd>Tot 2.700 euro per leerplaats</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
+			{% endfor %}
 		</ul>
 
 		<a class="btn-cta" href="{{ '/moza/subsidies/' | url }}">Meer Subsidies en financiering</a>
@@ -210,166 +63,24 @@ title: "MijnOverheid Zakelijk: Actualiteiten"
 			<p>Wetten en regelgeving die mogelijk relevant voor uw onderneming kunnen zijn.</p>
 		</hgroup>
 		<ul class="list-content-links">
-			<li>
-				<a href="{{ '/moza/regelgeving/minimumloon/' | url }}" class="content-link is-unread">
-					<h3>Minimumloon per 1 januari 2026</h3>
+			{% for regeling in regelgevingData %}
+			<li class="card-topic{% if loop.index0 >= 3 %} reserve-topic{% endif %}"{% if loop.index0 >= 3 %} hidden{% endif %}>
+				<a href="{{ '/moza/regelgeving/' | url }}{{ regeling.id }}/" class="content-link{% if regeling.isOngelezen %} is-unread{% endif %}">
+					<h3>{{ regeling.titel }}</h3>
 					<span class="card-link"></span>
 				</a>
-				<p>Het minimumloon is aangepast. Bekijk wat u minimaal moet betalen aan uw werknemers.</p>
+				<p>{{ regeling.beschrijving }}</p>
 				<dl class="data-overview">
 					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
+					<dd>{{ regeling.bron }}</dd>
 					<dt>Inwerkingtreding</dt>
-					<dd>1 januari 2026</dd>
+					<dd>{{ regeling.inwerkingtreding }}</dd>
 					<dt>Geldt voor</dt>
-					<dd>Werkgevers met personeel</dd>
+					<dd>{{ regeling.geldtVoor }}</dd>
 				</dl>
 				{% include "action-group.njk" %}
 			</li>
-			<li>
-				<a href="{{ '/moza/regelgeving/arbowet/' | url }}" class="content-link">
-					<h3>Wijziging Arbowet: veilig en gezond werken</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>De regels over veilig en gezond werken zijn aangepast. Bekijk wat dit betekent voor uw bedrijf.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 januari 2026</dd>
-					<dt>Geldt voor</dt>
-					<dd>Alle werkgevers</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li>
-				<a href="{{ '/moza/regelgeving/avg/' | url }}" class="content-link">
-					<h3>Privacywetgeving (AVG): omgaan met persoonsgegevens</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Regels over hoe u gegevens van klanten en werknemers moet beschermen en verwerken.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Europese Unie</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>25 mei 2018</dd>
-					<dt>Geldt voor</dt>
-					<dd>Alle ondernemingen die persoonsgegevens verwerken</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/loonbelasting/' | url }}" class="content-link">
-					<h3>Wet op de loonbelasting: werkkostenregeling</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Regels over belastingvrije vergoedingen en verstrekkingen aan werknemers. De vrije ruimte is in 2026 gewijzigd.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Wijziging</dt>
-					<dd>Gewijzigd per 1 januari 2026</dd>
-					<dt>Geldt voor</dt>
-					<dd>Werkgevers met personeel</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/milieubeheer/' | url }}" class="content-link">
-					<h3>Wet milieubeheer: rapportageplicht energiebesparing</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Bedrijven met een jaarlijks energieverbruik boven de drempelwaarde zijn verplicht energiebesparende maatregelen te rapporteren.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 juli 2023</dd>
-					<dt>Geldt voor</dt>
-					<dd>Ondernemingen met energieverbruik boven 50.000 kWh of 25.000 m³ gas per jaar</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/arbeid-vreemdelingen/' | url }}" class="content-link">
-					<h3>Wet arbeid vreemdelingen: werkvergunningen</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Als u werknemers van buiten de EU wilt aannemen, heeft u in de meeste gevallen een werkvergunning nodig.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 januari 2026 (gewijzigd)</dd>
-					<dt>Geldt voor</dt>
-					<dd>Werkgevers die personeel van buiten de EU in dienst nemen</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/omgevingswet/' | url }}" class="content-link">
-					<h3>Omgevingswet: regels voor de fysieke leefomgeving</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>De Omgevingswet bundelt regels voor bouwen, milieu, water en ruimtelijke ordening. Relevant als u bouwt, verbouwt of uw bedrijfsactiviteiten wijzigt.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 januari 2024</dd>
-					<dt>Geldt voor</dt>
-					<dd>Ondernemingen die bouwen, verbouwen of bedrijfsactiviteiten wijzigen</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/wwft/' | url }}" class="content-link">
-					<h3>Wet ter voorkoming van witwassen (Wwft)</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Verplichtingen voor het identificeren van klanten en het melden van ongebruikelijke transacties.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 augustus 2008 (laatst gewijzigd 2024)</dd>
-					<dt>Geldt voor</dt>
-					<dd>Financiële dienstverleners, accountants, belastingadviseurs, makelaars</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/gelijke-kansen/' | url }}" class="content-link">
-					<h3>Wet toezicht gelijke kansen bij werving en selectie</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Werkgevers en intermediairs moeten een werkwijze hebben die gelijke kansen biedt bij werving en selectie.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Rijksoverheid</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 juli 2026</dd>
-					<dt>Geldt voor</dt>
-					<dd>Alle werkgevers en intermediairs</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/regelgeving/transparante-arbeidsvoorwaarden/' | url }}" class="content-link">
-					<h3>Wet transparante en voorspelbare arbeidsvoorwaarden</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Regels over informatieverstrekking aan werknemers, studiekostenbedingen en het verbod op nevenwerkzaamheden.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Europese Unie (omgezet in Nederlandse wet)</dd>
-					<dt>Inwerkingtreding</dt>
-					<dd>1 augustus 2022</dd>
-					<dt>Geldt voor</dt>
-					<dd>Alle werkgevers met personeel</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
+			{% endfor %}
 		</ul>
 
 		<a class="btn-cta" href="{{ '/moza/regelgeving/' | url }}">Meer Wetten en regelgeving</a>
@@ -381,166 +92,24 @@ title: "MijnOverheid Zakelijk: Actualiteiten"
 			<p>Berichten die betrekking hebben op de omgeving van uw bedrijfsadres.</p>
 		</hgroup>
 		<ul class="list-content-links">
-			<li>
-				<a href="{{ '/moza/berichten/wegafsluiting-stationsweg/' | url }}" class="content-link">
-					<h3>Wegafsluiting Stationsweg vanaf 10 maart</h3>
+			{% for bericht in buurtberichtenData %}
+			<li class="card-topic{% if loop.index0 >= 3 %} reserve-topic{% endif %}"{% if loop.index0 >= 3 %} hidden{% endif %}>
+				<a href="{{ '/moza/berichten/' | url }}{{ bericht.id }}/" class="content-link{% if bericht.isOngelezen %} is-unread{% endif %}">
+					<h3>{{ bericht.titel }}</h3>
 					<span class="card-link"></span>
 				</a>
-				<p>De Stationsweg is afgesloten van 10 tot en met 28 maart vanwege werkzaamheden aan het riool. Verkeer wordt omgeleid.</p>
+				<p>{{ bericht.beschrijving }}</p>
 				<dl class="data-overview">
 					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
+					<dd>{{ bericht.bron }}</dd>
 					<dt>Datum</dt>
-					<dd>19 februari 2026</dd>
+					<dd>{{ bericht.datum }}</dd>
 					<dt>Locatie</dt>
-					<dd>Stationsweg, nabij uw vestigingsadres</dd>
+					<dd>{{ bericht.locatie }}</dd>
 				</dl>
 				{% include "action-group.njk" %}
 			</li>
-			<li>
-				<a href="{{ '/moza/berichten/parkeerregels-laadzones/' | url }}" class="content-link">
-					<h3>Aanpassing parkeerregels en laad-/loszones</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>De gemeente past de parkeerregels aan in uw buurt. De tijden voor laden en lossen veranderen per 1 april.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>19 februari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Omgeving vestigingsadres</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li>
-				<a href="{{ '/moza/berichten/bestemmingsplan-gewijzigd/' | url }}" class="content-link">
-					<h3>Bestemmingsplan gewijzigd nabij uw vestigingsadres</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Het bestemmingsplan voor het gebied rond uw bedrijf is aangepast. U kunt zes weken lang bezwaar maken.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>19 februari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Omgeving vestigingsadres</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/vergunning-bouwwerkzaamheden-industrieweg/' | url }}" class="content-link">
-					<h3>Vergunning verleend: bouwwerkzaamheden Industrieweg 12</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Er is een omgevingsvergunning verleend voor verbouwing van het pand aan de Industrieweg 12, nabij uw vestigingsadres.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>12 februari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Industrieweg 12</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/snelheidsverlaging-havenweg/' | url }}" class="content-link">
-					<h3>Tijdelijke snelheidsverlaging Havenweg</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Op de Havenweg geldt tijdelijk een snelheidslimiet van 30 km/u vanwege werkzaamheden aan de brug. Verwachte duur: 6 weken.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>5 februari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Havenweg</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/evenementenvergunning-buurtmarkt/' | url }}" class="content-link">
-					<h3>Evenementenvergunning buurtmarkt 15 maart</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Op 15 maart vindt de jaarlijkse buurtmarkt plaats. Er gelden tijdelijke verkeersmaatregelen rondom het marktplein.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>29 januari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Marktplein</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/geluidszone-bedrijventerrein/' | url }}" class="content-link">
-					<h3>Nieuwe geluidszone vastgesteld voor bedrijventerrein</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>De gemeente heeft een nieuwe geluidszone vastgesteld voor het bedrijventerrein. Dit kan gevolgen hebben voor uw bedrijfsactiviteiten.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>22 januari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Bedrijventerrein nabij vestigingsadres</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/onderhoud-riolering-kanaalstraat/' | url }}" class="content-link">
-					<h3>Onderhoud riolering Kanaalstraat: hinder verwacht</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Vanaf 1 februari wordt het riool in de Kanaalstraat vervangen. Bereikbaarheid van bedrijven kan tijdelijk beperkt zijn.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>15 januari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Kanaalstraat</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/aanleg-fietspad-bedrijvenweg/' | url }}" class="content-link">
-					<h3>Aanleg fietspad langs Bedrijvenweg</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>De gemeente legt een nieuw fietspad aan langs de Bedrijvenweg. Tijdens de werkzaamheden is de weg smaller beschikbaar voor autoverkeer.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>8 januari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Bedrijvenweg</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
-			<li hidden class="reserve-topic">
-				<a href="{{ '/moza/berichten/kapvergunning-bomen-parkstraat/' | url }}" class="content-link">
-					<h3>Kapvergunning verleend: bomen Parkstraat</h3>
-					<span class="card-link"></span>
-				</a>
-				<p>Er is een kapvergunning verleend voor vijf bomen aan de Parkstraat. U kunt tot 14 februari bezwaar indienen.</p>
-				<dl class="data-overview">
-					<dt>Bron</dt>
-					<dd>Gemeente 's-Gravenhage</dd>
-					<dt>Datum</dt>
-					<dd>3 januari 2026</dd>
-					<dt>Locatie</dt>
-					<dd>Parkstraat</dd>
-				</dl>
-				{% include "action-group.njk" %}
-			</li>
+			{% endfor %}
 		</ul>
 
 		<a class="btn-cta" href="{{ '/moza/berichten/' | url }}">Meer Berichten over uw buurt</a>
@@ -576,7 +145,7 @@ title: "MijnOverheid Zakelijk: Actualiteiten"
 					</summary>
 					<p>
 						MijnOverheid Zakelijk toont een selectie van subsidies en regelgeving op basis van uw bedrijfsprofiel. Voor een volledig overzicht van alle beschikbare subsidies kunt u terecht op
-						<a href="https://www.rvo.nl/subsidies-financiering">rvo.nl</a>. Wet- en regelgeving vindt u op <a href="https://wetten.overheid.nl/">wetten.overheid.nl</a>.
+						<a href="https://www.rvo.nl/subsidies-financiering" rel="external">rvo.nl</a>. Wet- en regelgeving vindt u op <a href="https://wetten.overheid.nl/" rel="external">wetten.overheid.nl</a>.
 					</p>
 				</details>
 			</li>

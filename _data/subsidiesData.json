@@ -45,7 +45,8 @@
 		"type": "Borgstelling",
 		"aanvraagperiode": "Doorlopend open (via uw bank)",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 11
 	},
 	{
 		"id": "eia",
@@ -93,7 +94,8 @@
 		"type": "Krediet",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "Tot 5 miljoen euro (technisch) of 10 miljoen euro (klinisch)",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 39
 	},
 	{
 		"id": "seed-capital",
@@ -109,7 +111,8 @@
 		"type": "Financiering (via erkende Seed-fondsen)",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 21
 	},
 	{
 		"id": "sde",
@@ -125,7 +128,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Najaar 2026 (openstellingsronde)",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 77
 	},
 	{
 		"id": "mit",
@@ -141,7 +145,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Juni 2026 (haalbaarheidsstudies) en september 2026 (R&D-samenwerking)",
 		"maximaalBedrag": "Tot 50.000 euro (haalbaarheid) of 350.000 euro (R&D)",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 62
 	},
 	{
 		"id": "praktijkleren",
@@ -157,7 +162,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Juni tot en met september 2026 (na afloop studiejaar)",
 		"maximaalBedrag": "Tot 2.700 euro per leerplaats",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 19
 	},
 	{
 		"id": "tek",
@@ -173,7 +179,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 72
 	},
 	{
 		"id": "dei",
@@ -189,7 +196,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "1 januari 2026 — 7 september 2026",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 79
 	},
 	{
 		"id": "groeifaciliteit",
@@ -205,7 +213,8 @@
 		"type": "Garantieregeling",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 91
 	},
 	{
 		"id": "dggf",
@@ -221,7 +230,8 @@
 		"type": "Krediet",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 61
 	},
 	{
 		"id": "sib",
@@ -237,7 +247,8 @@
 		"type": "Voucher",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "€2.400",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 83
 	},
 	{
 		"id": "pps-toeslag",
@@ -253,7 +264,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "1 april 2026 — 17 september 2026",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 8
 	},
 	{
 		"id": "eurostars",
@@ -269,7 +281,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "12 maart 2026 — 17 juni 2026",
 		"maximaalBedrag": "€500.000",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 28
 	},
 	{
 		"id": "horizon-europe",
@@ -285,7 +298,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 51
 	},
 	{
 		"id": "isde",
@@ -301,7 +315,8 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 35
 	},
 	{
 		"id": "seba",
@@ -333,7 +348,8 @@
 		"type": "Krediet",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": null,
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 19
 	},
 	{
 		"id": "bbsc",
@@ -349,7 +365,8 @@
 		"type": "Garantieregeling",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "€35.000",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 53
 	},
 	{
 		"id": "mkb-groen",
@@ -397,6 +414,7 @@
 		"type": "Voucher",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "€1.250",
-		"isOngelezen": false
+		"isOngelezen": false,
+		"budgetVergeven": 13
 	}
 ]

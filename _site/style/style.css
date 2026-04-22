@@ -488,7 +488,7 @@ textarea,
 [type="url"],
 [type="week"],
 textarea {
-	border: var(--toepassing-border-width-xs) solid var(--toepassing-color-component-text-input-border-default);
+	border: var(--toepassing-border-width-xs) solid var(--toepassing-color-interactive-default-border);
 	inline-size: 100%;
 	~ .feedback,
 	~ * .feedback {
@@ -551,6 +551,7 @@ label {
 	display: flex;
 	flex-direction: column;
 	gap: var(--toepassing-space-layout-xs);
+	position: relative;
 	button,
 	a.btn-cta {
 		inline-size: 100%;
@@ -567,7 +568,6 @@ label {
 		display: inline-flex;
 		font: var(--toepassing-text-smalltext);
 		gap: var(--toepassing-space-layout-3xs);
-		position: relative;
 		svg {
 			block-size: var(--toepassing-size-icon-sm);
 			fill: currentcolor;
@@ -974,6 +974,24 @@ button.side-nav-toggle {
 	}
 }
 
+/* Navigatie: Link terug */
+
+.back-link {
+	display: inline-block;
+	font-size: var(--rijkshuisstijl-text-font-size-sm);
+	&::before {
+		background-color: currentcolor;
+		block-size: var(--toepassing-size-icon-xs);
+		content: "";
+		display: inline-block;
+		inline-size: var(--toepassing-size-icon-xs);
+		margin-inline-end: var(--toepassing-space-layout-3xs);
+		mask: url("../assets/icons/icon-link-intern.svg") no-repeat center / contain;
+		transform: rotate(180deg);
+		vertical-align: middle;
+	}
+}
+
 /* Navigatie: footer */
 
 footer {
@@ -1038,6 +1056,26 @@ dd + dt {
 	li {
 		border: 0 !important;
 	}
+}
+
+/* Voortgangsbalk */
+.progress-bar {
+	background: var(--toepassing-color-background-raised);
+	block-size: var(--toepassing-size-xs);
+	border: var(--toepassing-border-default);
+	border-radius: var(--toepassing-border-radius-round);
+	overflow: hidden;
+}
+.progress-bar-fill {
+	align-items: center;
+	background: var(--toepassing-color-feedback-success-emphasis);
+	block-size: 100%;
+	border: var(--toepassing-border-default);
+	border-radius: var(--toepassing-border-radius-round);
+	color: var(--toepassing-color-text-inverse);
+	display: flex;
+	font: var(--toepassing-text-component-text-badge);
+	justify-content: center;
 }
 
 .list-indent {
@@ -1175,7 +1213,7 @@ summary {
 				translate: 0 -2rem;
 			}
 			&:not(:last-child) {
-				border-block-end: var(--toepassing-border-default);
+				/* border-block-end: var(--toepassing-border-default); */
 				.content-link {
 					padding-block-end: 0;
 				}
@@ -1203,6 +1241,9 @@ summary {
 			mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
 		}
 	}
+}
+.card-topic:not(:last-child) {
+	border-block-end: var(--toepassing-border-default);
 }
 /* Onzichtbare overlay-link voor klikbare cards */
 .card-link {
@@ -1311,7 +1352,6 @@ summary {
 	cursor: pointer;
 	display: inline-flex;
 	font: var(--toepassing-text-smalltext);
-	position: relative; /* Boven de card-link overlay */
 	&:has(input:focus-visible) {
 		outline: var(--toepassing-focus-outline);
 		outline-offset: var(--toepassing-focus-outline-offset);
@@ -1542,28 +1582,28 @@ button {
 .feedback-info {
 	background: var(--toepassing-color-feedback-info-subtle);
 	border-color: var(--toepassing-color-feedback-info-border);
-	svg {
+	svg path:not(.icon-color-inverse) {
 		fill: var(--toepassing-color-feedback-info-icon);
 	}
 }
 .feedback-succes {
 	background: var(--toepassing-color-feedback-success-subtle);
 	border-color: var(--toepassing-color-feedback-success-border);
-	svg {
+	svg path:not(.icon-color-inverse) {
 		fill: var(--toepassing-color-feedback-success-icon);
 	}
 }
 .feedback-warning {
 	background: var(--toepassing-color-feedback-warning-subtle);
 	border-color: var(--toepassing-color-feedback-warning-border);
-	svg {
+	svg path:not(.icon-color-inverse) {
 		fill: var(--toepassing-color-feedback-warning-icon);
 	}
 }
 .feedback-error {
 	background: var(--toepassing-color-feedback-error-subtle);
 	border-color: var(--toepassing-color-feedback-error-border);
-	svg {
+	svg path:not(.icon-color-inverse) {
 		fill: var(--toepassing-color-feedback-error-icon);
 	}
 }

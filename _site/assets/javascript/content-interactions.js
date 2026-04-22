@@ -8,16 +8,17 @@
  * - Notificaties sluiten (dismissed:)
  */
 
-// Vul lege visually-hidden labels in op basis van de heading in dezelfde <li>
+// Vul lege visually-hidden labels in op basis van de heading in dezelfde <li> of <article>
 document.querySelectorAll(".action-group .visually-hidden").forEach((span) => {
 	if (span.textContent.trim()) return;
-	const heading = span.closest("li")?.querySelector("h2, h3, h4");
+	const container = span.closest("li") || span.closest("article");
+	const heading = container?.querySelector("h1, h2, h3, h4");
 	if (heading) span.textContent = heading.textContent.trim();
 });
 
 function getCategory(li) {
 	const section = li.closest("section");
-	const heading = section?.querySelector("h2, h3");
+	const heading = section?.querySelector("h2");
 	return heading?.textContent.trim() || "";
 }
 
@@ -29,12 +30,22 @@ function getFavoriteKey(checkbox) {
 
 function getFavoriteData(checkbox) {
 	const li = checkbox.closest("li");
-	if (!li) return null;
-	const link = li.querySelector("a.content-link");
-	const title = link?.querySelector("h3")?.textContent.trim() || "";
-	const url = link?.getAttribute("href") || "";
-	const desc = li.querySelector(":scope > p")?.textContent.trim() || "";
-	const category = getCategory(li);
+	if (li) {
+		const link = li.querySelector("a.content-link");
+		const title = link?.querySelector("h3")?.textContent.trim() || "";
+		const url = link?.getAttribute("href") || "";
+		const desc = li.querySelector(":scope > p")?.textContent.trim() || "";
+		const category = getCategory(li);
+		return { title, url, desc, category };
+	}
+	// Detailpagina: haal data uit de pagina zelf.
+	const article = checkbox.closest("article");
+	if (!article) return null;
+	const title = article.querySelector("h1")?.textContent.trim() || "";
+	const url = location.pathname;
+	const desc = article.querySelector(".intro")?.textContent.trim() || "";
+	const breadcrumb = article.querySelector(".breadcrumb li:nth-child(3) a");
+	const category = breadcrumb?.textContent.trim() || "";
 	return { title, url, desc, category };
 }
 
@@ -124,6 +135,39 @@ document.querySelectorAll(".relevance-group").forEach((fieldset) => {
 	const radios = fieldset.querySelectorAll("input[type='radio']");
 	const groupName = "relevance-" + relevanceCounter++;
 	radios.forEach((r) => { r.name = groupName; });
+});
+
+// Verberg topic bij klik op "Niet relevant voor mij" (.hide-topic)
+document.addEventListener("click", (e) => {
+	const btn = e.target.closest(".hide-topic");
+	if (!btn) return;
+
+	// Op een overzichtspagina: verberg het item in de lijst.
+	const li = btn.closest("li");
+	if (li) {
+		const data = getItemData(li);
+		if (!data.title) return;
+		localStorage.setItem("hidden:" + data.title, JSON.stringify(data));
+		removeTopic(li);
+		return;
+	}
+
+	// Op een detailpagina: sla op en ga terug naar de overzichtspagina.
+	const article = btn.closest("article");
+	if (!article) return;
+	const title = article.querySelector("h1")?.textContent.trim() || "";
+	if (!title) return;
+	const desc = article.querySelector(".intro")?.textContent.trim() || "";
+	const url = location.pathname;
+	const section = article.querySelector(".breadcrumb li:nth-child(3) a");
+	const category = section?.textContent.trim() || "";
+	localStorage.setItem("hidden:" + title, JSON.stringify({ title, url, desc, category }));
+	// Navigeer terug naar de overzichtspagina (derde breadcrumb-item).
+	if (section?.href) {
+		location.href = section.href;
+	} else {
+		history.back();
+	}
 });
 
 document.addEventListener("change", (e) => {
@@ -241,7 +285,7 @@ try {
 	}
 } catch (e) { /* localStorage niet toegankelijk */ }
 
-// Op pagina's met content-links: bereken de echte telling.
-if (document.querySelector(".content-link.is-unread") !== null || document.querySelector(".content-link") !== null) {
+// Op de actueel-pagina: bereken de echte telling vanuit de DOM.
+if (location.pathname.includes("/actueel")) {
 	updateUnreadBadge();
 }

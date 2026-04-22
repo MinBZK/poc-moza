@@ -23,6 +23,8 @@ subNavActive: "/moza/actueel/"
 
 	<h1>{{ bericht.titel }}</h1>
 
+	<a href="{{ '/moza/berichten/' | url }}" class="back-link">Terug naar Berichten over uw buurt</a>
+
 	<section class="card">
 		<p class="intro">{{ bericht.beschrijving }}</p>
 
@@ -38,6 +40,8 @@ subNavActive: "/moza/actueel/"
 		{% for alinea in bericht.inhoud %}
 		<p>{{ alinea }}</p>
 		{% endfor %}
+
+		{% include "action-group.njk" %}
 
 		<div class="action-group">
 			<a class="btn-cta" href="{{ bericht.externUrl }}" rel="external">Bekijk op officielebekendmakingen.nl</a>

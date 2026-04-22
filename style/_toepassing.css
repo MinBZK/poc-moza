@@ -6,8 +6,12 @@
  */
 :root {
   --toepassing-border-card-default: var(--toepassing-box-shadow-default);
-  --toepassing-border-component-pageheader-border: var(--rijkshuisstijl-border-width-2) solid var(--rijkshuisstijl-color-hemelblauw-500);
-  --toepassing-border-default: 1px solid var(--rijkshuisstijl-color-grijs-200);
+  --toepassing-border-component-pageheader-border: var(--toepassing-border-width-md) solid var(--rijkshuisstijl-color-hemelblauw-500);
+  --toepassing-border-component-tabs-tab-hover: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-hover-border);
+  --toepassing-border-component-tabs-tab-inactive: var(--toepassing-border-width-md) solid var(--toepassing-color-border-subtle);
+  --toepassing-border-component-tabs-tab-selected: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-selected-border);
+  --toepassing-border-default: var(--toepassing-border-width-xs) solid var(--rijkshuisstijl-color-grijs-200);
+  --toepassing-border-radius-lg: var(--rijkshuisstijl-border-radius-8);
   --toepassing-border-radius-md: var(--rijkshuisstijl-border-radius-4);
   --toepassing-border-radius-round: 999px;
   --toepassing-border-radius-sm: var(--rijkshuisstijl-border-radius-2);
@@ -29,6 +33,8 @@
   --toepassing-color-component-badge-background: var(--toepassing-color-feedback-attention);
   --toepassing-color-component-badge-text: var(--toepassing-color-text-inverse);
   --toepassing-color-component-footer-background: var(--rijkshuisstijl-color-grijs-700);
+  --toepassing-color-component-side-nav-background-hover: var(--rijkshuisstijl-color-grijs-200);
+  --toepassing-color-component-text-input-border-default: var(--toepassing-color-border-default);
   --toepassing-color-feedback-attention: var(--rijkshuisstijl-color-robijnrood-400);
   --toepassing-color-feedback-error-border: var(--toepassing-color-feedback-error-default);
   --toepassing-color-feedback-error-default: var(--rijkshuisstijl-color-rood-500);
@@ -68,13 +74,13 @@
   --toepassing-color-interactive-active-border: var(--toepassing-color-interactive-hover-border); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-active-icon: var(--toepassing-color-interactive-hover-icon); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-active-text: var(--toepassing-color-interactive-hover-text); /** Staat terwijl element ingedrukt is */
-  --toepassing-color-interactive-alternate-active-background: var(--rijkshuisstijl-color-grijs-400); /** Staat terwijl element ingedrukt is */
+  --toepassing-color-interactive-alternate-active-background: var(--rijkshuisstijl-color-grijs-300); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-alternate-active-icon: var(--toepassing-color-interactive-alternate-active-text); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-alternate-active-text: var(--toepassing-color-interactive-alternate-default-text); /** Staat terwijl element ingedrukt is */
   --toepassing-color-interactive-alternate-default-background: var(--rijkshuisstijl-color-neutraal-transparent); /** Ruststaat van klikbaar/tikbaar element */
   --toepassing-color-interactive-alternate-default-icon: var(--toepassing-color-interactive-alternate-default-text); /** Ruststaat van klikbaar/tikbaar element */
   --toepassing-color-interactive-alternate-default-text: var(--toepassing-color-text-default); /** Ruststaat van klikbaar/tikbaar element */
-  --toepassing-color-interactive-alternate-hover-background: var(--rijkshuisstijl-color-grijs-200); /** Staat bij aanwijzen met de muis */
+  --toepassing-color-interactive-alternate-hover-background: var(--rijkshuisstijl-color-grijs-100); /** Staat bij aanwijzen met de muis */
   --toepassing-color-interactive-alternate-hover-icon: var(--toepassing-color-interactive-alternate-hover-text); /** Staat bij aanwijzen met de muis */
   --toepassing-color-interactive-alternate-hover-text: var(--toepassing-color-interactive-alternate-default-text); /** Staat bij aanwijzen met de muis */
   --toepassing-color-interactive-alternate-selected-background: var(--rijkshuisstijl-color-hemelblauw-50); /** Ingeschakeld, aangevinkt, actief element */

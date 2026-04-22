@@ -23,6 +23,8 @@ subNavActive: "/moza/actueel/"
 
 	<h1>{{ regeling.titel }}</h1>
 
+	<a href="{{ '/moza/regelgeving/' | url }}" class="back-link">Terug naar Wetten en regelgeving</a>
+
 	<section class="card">
 		<p class="intro">{{ regeling.beschrijving }}</p>
 
@@ -38,6 +40,8 @@ subNavActive: "/moza/actueel/"
 		{% for alinea in regeling.inhoud %}
 		<p>{{ alinea }}</p>
 		{% endfor %}
+
+		{% include "action-group.njk" %}
 
 		<div class="action-group">
 			<a class="btn-cta" href="{{ regeling.externUrl }}" rel="external">Bekijk op wetten.overheid.nl</a>

@@ -8,6 +8,7 @@
   --rijkshuisstijl-border-radius-1: 1px;
   --rijkshuisstijl-border-radius-2: 2px;
   --rijkshuisstijl-border-radius-4: 4px;
+  --rijkshuisstijl-border-radius-8: 8px;
   --rijkshuisstijl-border-width-1: 1px;
   --rijkshuisstijl-border-width-2: 2px;
   --rijkshuisstijl-border-width-3: 3px;
@@ -198,8 +199,8 @@
   --rijkshuisstijl-text-line-height-md: 1.5;
   --rijkshuisstijl-text-line-height-sm: 1.5;
   --rijkshuisstijl-text-line-height-xl: 1.25;
-  --rijkshuisstijl-text-weight-bold: 700;
+  --rijkshuisstijl-text-weight-bold: 600;
   --rijkshuisstijl-text-weight-default: 400;
-  --rijkshuisstijl-text-weight-semibold: 600;
+  --rijkshuisstijl-text-weight-semibold: 500;
   --rijkshuisstijl-typography-spacing-paragraph-default: 0.5rem;
 }
