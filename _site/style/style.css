@@ -1921,7 +1921,7 @@ button {
 		background: var(--toepassing-color-interactive-default-background);
 		border: var(--toepassing-border-default);
 		border-radius: var(--toepassing-border-radius-sm);
-		color: var(--toepassing-color-text-default);
+		color: var(--toepassing-color-text-inverse);
 		cursor: pointer;
 		font: inherit;
 		inline-size: 100%;
@@ -2007,7 +2007,7 @@ button {
 		content: "\25CF";
 	}
 	.chat-status-disconnected::before {
-		color: var(--toepassing-color-interactive-disabled-border);
+		color: var(--toepassing-color-feedback-error-icon);
 		content: "\25CF";
 	}
 	p {
@@ -2082,7 +2082,12 @@ button {
 	gap: var(--toepassing-space-padding-sm);
 	inline-size: 100%;
 	textarea {
+		background: var(--toepassing-color-interactive-default-surface);
+		border: var(--toepassing-border-width-md) solid var(--toepassing-color-border-default);
+		border-radius: var(--toepassing-border-radius-sm);
 		flex: 1;
+		padding-block: var(--toepassing-space-padding-sm);
+		padding-inline: var(--toepassing-space-padding-md);
 		resize: none;
 	}
 	button {

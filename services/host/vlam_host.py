@@ -291,9 +291,8 @@ class VLAMHost:
         if llm == "vlam":
             if not self.vlam_client:
                 yield {
-                    "type": "answer",
-                    "message": "VLAM-backend is niet geconfigureerd.",
-                    "session_id": session_id,
+                    "type": "error",
+                    "message": "De VLAM-backend is niet geconfigureerd. Vul uw VLAM API-sleutel in via het instellingenpaneel.",
                 }
                 yield {"type": "done"}
                 return
@@ -302,6 +301,13 @@ class VLAMHost:
             else:
                 gen = self._chat_vlam_stream(messages)
         elif llm == "claude":
+            if not self.claude_client.api_key:
+                yield {
+                    "type": "error",
+                    "message": "De Claude-backend is niet geconfigureerd. Vul uw Claude API-sleutel in via het instellingenpaneel.",
+                }
+                yield {"type": "done"}
+                return
             if use_cli:
                 gen = self._chat_cli_stream(messages)
             else:
@@ -348,10 +354,10 @@ class VLAMHost:
             except (TimeoutError, anthropic.APIStatusError) as e:
                 logger.error("Claude-call mislukt: %s", e)
                 yield {
-                    "type": "answer",
+                    "type": "error",
                     "message": (
                         "De assistent is op dit moment niet bereikbaar. "
-                        "Probeer het later opnieuw."
+                        "Controleer uw API-sleutel of probeer het later opnieuw."
                     ),
                 }
                 return
@@ -415,10 +421,10 @@ class VLAMHost:
             except (TimeoutError, openai.APIStatusError) as e:
                 logger.error("VLAM-call mislukt: %s", e)
                 yield {
-                    "type": "answer",
+                    "type": "error",
                     "message": (
                         "De assistent is op dit moment niet bereikbaar. "
-                        "Probeer het later opnieuw."
+                        "Controleer uw API-sleutel of probeer het later opnieuw."
                     ),
                 }
                 return
@@ -498,10 +504,10 @@ class VLAMHost:
             except (TimeoutError, anthropic.APIStatusError) as e:
                 logger.error("Claude-call (CLI-modus) mislukt: %s", e)
                 yield {
-                    "type": "answer",
+                    "type": "error",
                     "message": (
                         "De assistent is op dit moment niet bereikbaar. "
-                        "Probeer het later opnieuw."
+                        "Controleer uw API-sleutel of probeer het later opnieuw."
                     ),
                 }
                 return
@@ -580,10 +586,10 @@ class VLAMHost:
             except (TimeoutError, openai.APIStatusError) as e:
                 logger.error("VLAM CLI-call mislukt: %s", e)
                 yield {
-                    "type": "answer",
+                    "type": "error",
                     "message": (
                         "De assistent is op dit moment niet bereikbaar. "
-                        "Probeer het later opnieuw."
+                        "Controleer uw API-sleutel of probeer het later opnieuw."
                     ),
                 }
                 return

@@ -483,8 +483,12 @@
 	}
 
 	function renderStatusOffline() {
+		var items = Object.keys(SERVER_LABELS).map(function (key) {
+			return '<li class="chat-status-disconnected">' + SERVER_LABELS[key] + "</li>";
+		});
 		statusEl.innerHTML =
-			'<p class="chat-status-warning">Host niet bereikbaar — de assistent kan geen vragen beantwoorden.</p>';
+			'<p class="chat-status-warning">Host niet bereikbaar — geen connectie met de bronnen.</p>' +
+			"<ul>" + items.join("") + "</ul>";
 	}
 
 		// Haal status op bij laden (3s timeout zodat de pagina niet hangt als de host niet draait)
@@ -574,7 +578,11 @@
 			});
 
 			clearTimeout(connectTimer);
-			if (!response.ok) throw new Error("Server niet bereikbaar");
+			if (!response.ok) {
+				var httpErr = new Error("http-error");
+				httpErr.status = response.status;
+				throw httpErr;
+			}
 
 			var reader = response.body.getReader();
 			var decoder = new TextDecoder();
@@ -611,18 +619,19 @@
 						showThinking(payload.message + "...");
 					} else if (eventType === "case") {
 						// Backend stuurt zaak-data; UI wordt later toegevoegd door een collega.
-					} else if (eventType === "answer" && !answered) {
+					} else if ((eventType === "answer" || eventType === "error") && !answered) {
 						answered = true;
 						hideThinking();
-						sessions[comboKey] = payload.session_id;
+						if (payload.session_id) sessions[comboKey] = payload.session_id;
+						var role = eventType === "error" ? "error" : "assistant";
 						// Toon alleen als gebruiker nog in dezelfde combinatie zit
 						if (getComboKey() === comboKey) {
-							addMessage(payload.message, "assistant");
+							addMessage(payload.message, role);
 						} else {
 							// Sla op in chatHistory zodat het zichtbaar wordt bij terugwisselen
 							var temp = messages.innerHTML;
 							messages.innerHTML = chatHistory[comboKey] || "";
-							addMessage(payload.message, "assistant");
+							addMessage(payload.message, role);
 							chatHistory[comboKey] = messages.innerHTML;
 							messages.innerHTML = temp;
 						}
@@ -636,9 +645,18 @@
 		} catch (err) {
 			setLoading(false);
 			if (!answered) {
-				var reason = err && err.name === "AbortError"
-					? "De assistent reageerde te lang niet. Probeer het opnieuw."
-					: "Er is iets misgegaan bij het verbinden met de assistent. Probeer het later opnieuw.";
+				var reason;
+				if (err && err.name === "AbortError") {
+					reason = "De assistent reageerde te lang niet. Probeer het opnieuw.";
+				} else if (err && err.status === 401) {
+					reason = "Uw API-sleutel ontbreekt of is onjuist. Controleer de sleutel in het instellingenpaneel.";
+				} else if (err && err.status === 403) {
+					reason = "Uw API-sleutel heeft geen toegang tot deze backend.";
+				} else if (err && err.status >= 500) {
+					reason = "De assistent heeft een technisch probleem. Probeer het later opnieuw.";
+				} else {
+					reason = "De assistent is niet bereikbaar. Controleer uw internetverbinding en probeer het opnieuw.";
+				}
 				addMessage(reason, "error");
 			}
 		} finally {
