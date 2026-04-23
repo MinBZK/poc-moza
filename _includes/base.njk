@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ '/assets/favicon/favicon.ico' | url }}" type="image/x-icon">
     <link rel="icon" sizes="192x192" href="{{ '/assets/favicon/touch-icon.png' | url }}">
     <link rel="apple-touch-icon" href="{{ '/assets/favicon/apple-touch-icon.png' | url }}">
-    {% block extraStyles %}{% endblock %}
+    {% if extraStyles %}{{ extraStyles | safe }}{% endif %}
 </head>
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
 
@@ -21,7 +21,7 @@
         {% include "header-mobu.njk" %}
     {% elif headerType == "mobu-uitgelogd" %}
         {% include "header-mobu-uitgelogd.njk" %}
-    {% else %}
+    {% elif headerType != "none" %}
         {% include "header-rijksoverheid.njk" %}
     {% endif %}
 
@@ -33,20 +33,20 @@
         {% include "footer-overheid.njk" %}
     {% elif footerType == "mobu" %}
         {% include "footer-mobu.njk" %}
-    {% else %}
+    {% elif footerType != "none" %}
     <footer></footer>
     {% endif %}
 
     <script>window.PATH_PREFIX = "{{ '/' | url }}";</script>
-    <script src="{{ '/assets/javascript/aria-disabled.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/indeterminate.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/account-switcher.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/content-interactions.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/feature-flags.js' | url }}"></script>
+    <script src="{{ '/assets/javascript/aria-disabled.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/indeterminate.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/account-switcher.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/content-interactions.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/feature-flags.js' | url }}" defer></script>
     <script>window.testprofielenData = {{ testprofielen | dump | safe }};</script>
-    <script src="{{ '/assets/javascript/testprofielen.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/tab-interface.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/external-links.js' | url }}"></script>
-    <script src="{{ '/assets/javascript/berichtenbox.js' | url }}"></script>
+    <script src="{{ '/assets/javascript/testprofielen.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/tab-interface.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/external-links.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/berichtenbox.js' | url }}" defer></script>
 </body>
 </html>
