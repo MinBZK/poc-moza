@@ -47,31 +47,32 @@ subNavActive: "/moza/actueel/"
 			</li>
 			{% endfor %}
 		</ul>
+
+		{% if pagination.pages.length > 1 %}
+			<nav class="pagination" aria-label="Paginering">
+				<ol>
+					{% if pagination.previousPageHref %}
+					<li>
+						<a href="{{ pagination.previousPageHref | url }}" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a>
+					</li>
+					{% endif %}
+					{% for href in pagination.hrefs %}
+					<li>
+						{% if loop.index0 == pagination.pageNumber %}
+						<span aria-current="page">{{ loop.index }}</span>
+						{% else %}
+						<a href="{{ href | url }}">{{ loop.index }}</a>
+						{% endif %}
+					</li>
+					{% endfor %}
+					{% if pagination.nextPageHref %}
+					<li>
+						<a href="{{ pagination.nextPageHref | url }}" rel="next">Volgende<span class="visually-hidden"> pagina</span></a>
+					</li>
+					{% endif %}
+				</ol>
+			</nav>
+		{% endif %}
 	</section>
 
-	{% if pagination.pages.length > 1 %}
-	<nav class="pagination" aria-label="Paginering">
-		<ol>
-			{% if pagination.previousPageHref %}
-			<li>
-				<a href="{{ pagination.previousPageHref | url }}" rel="prev">Vorige<span class="visually-hidden"> pagina</span></a>
-			</li>
-			{% endif %}
-			{% for href in pagination.hrefs %}
-			<li>
-				{% if loop.index0 == pagination.pageNumber %}
-				<span aria-current="page">{{ loop.index }}</span>
-				{% else %}
-				<a href="{{ href | url }}">{{ loop.index }}</a>
-				{% endif %}
-			</li>
-			{% endfor %}
-			{% if pagination.nextPageHref %}
-			<li>
-				<a href="{{ pagination.nextPageHref | url }}" rel="next">Volgende<span class="visually-hidden"> pagina</span></a>
-			</li>
-			{% endif %}
-		</ol>
-	</nav>
-	{% endif %}
 </article>
