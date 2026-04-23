@@ -1245,8 +1245,18 @@ summary {
 		}
 	}
 }
-.card-topic:not(:last-child) {
-	border-block-end: var(--toepassing-border-subtle);
+.card-topic {
+	margin-block-end: var(--toepassing-space-margin-2xs);
+	padding-block-end: 0 !important;
+	.action-group {
+		background: var(--toepassing-color-background-subtle);
+		border-radius: var(--toepassing-border-radius-md);
+		font-weight: var(--toepassing-text-font-weight-semi-bold);
+		padding: var(--toepassing-space-padding-sm) var(--toepassing-space-padding-md) var(--toepassing-space-padding-xs);
+	}
+	&:not(:last-child) {
+		/* border-block-end: var(--toepassing-border-subtle); */
+	}
 }
 /* Onzichtbare overlay-link voor klikbare cards */
 .card-link {
