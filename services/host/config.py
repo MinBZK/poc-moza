@@ -26,9 +26,17 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
 
 # VLAM API (UbiOps/Mistral — OpenAI-compatibele API)
+# Base URL en model-ID hebben zinvolle defaults (zie PDR-001) zodat een frontend
+# met alleen een API-key-override ook werkt als de server-env deze niet expliciet zet.
 VLAM_API_KEY = os.getenv("VLAM_API_KEY", "")
-VLAM_BASE_URL = os.getenv("VLAM_BASE_URL", "")
-VLAM_MODEL_ID = os.getenv("VLAM_MODEL_ID", "")
+VLAM_BASE_URL = os.getenv(
+    "VLAM_BASE_URL",
+    "https://api.demo.vlam.ai/v2.1/projects/poc/openai-compatible/v1",
+)
+VLAM_MODEL_ID = os.getenv(
+    "VLAM_MODEL_ID",
+    "ubiops-deployment/bzk-dig-mistralmedium-flexibel//chat-model",
+)
 
 # MCP-servers: naam → pad naar server.py
 # Relatieve paden uit .env worden opgelost t.o.v. de host-directory (BASE_DIR)
