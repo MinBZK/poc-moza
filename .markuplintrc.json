@@ -1,0 +1,11 @@
+{
+	"extends": ["markuplint:recommended"],
+	"parser": {
+		".njk$": "@markuplint/nunjucks-parser",
+		".html$": "@markuplint/nunjucks-parser"
+	},
+	"excludeFiles": ["_site/**"],
+	"rules": {
+		"ineffective-attr": false
+	}
+}

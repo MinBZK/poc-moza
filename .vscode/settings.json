@@ -6,11 +6,11 @@
 		"nunjucks": "html"
 	},
 	"[css]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.formatOnSave": true
+		"editor.formatOnSave": false
 	},
 	"editor.codeActionsOnSave": {
 		"source.fixAll.stylelint": "explicit"
 	},
-	"stylelint.validate": ["css"]
+	"stylelint.validate": ["css"],
+	"markuplint.enable": true
 }

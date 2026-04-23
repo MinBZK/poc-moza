@@ -41,17 +41,7 @@ body {
 	color: var(--toepassing-color-text-default);
 	display: flex;
 	flex-direction: column;
-	font-family:
-		var(--toepassing-text-font-family-body),
-		system-ui,
-		-apple-system,
-		"Segoe UI",
-		Roboto,
-		"Helvetica Neue",
-		Arial,
-		"Noto Sans",
-		"Liberation Sans",
-		sans-serif;
+	font-family: var(--toepassing-text-font-family-body), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 	min-block-size: 100vh;
 	min-block-size: 100dvh; /* Fallback: vh voor browsers zonder dvh-ondersteuning */
 	> * + * {
