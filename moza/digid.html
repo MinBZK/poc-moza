@@ -21,6 +21,10 @@ layout: "base.njk"
 		overflow-inline: auto;
 		padding: 0;
 	}
+	body.digid .feature-flags-toggle,
+	body.digid .feature-flags-panel {
+		z-index: 10;
+	}
 	body.digid > main > article {
 		margin: 0;
 		padding: 0;
@@ -52,6 +56,7 @@ layout: "base.njk"
 	}
 </style>
 
+<span hidden data-feature="Inlogflow" data-feature-type="pagina" data-feature-default="off"></span>
 <article id="hoofd-inhoud">
 	<div class="digid-page">
 		<img src="{{ '/moza/ondernemersplein/digid.nl_inloggen.png' | url }}" alt="DigiD inloggen — Hoe wilt u inloggen?" width="4994" height="2400" />

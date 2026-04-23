@@ -21,6 +21,10 @@ layout: "base.njk"
 		overflow-inline: auto;
 		padding: 0;
 	}
+	body.ondernemersplein .feature-flags-toggle,
+	body.ondernemersplein .feature-flags-panel {
+		z-index: 10;
+	}
 	body.ondernemersplein > main > article {
 		margin: 0;
 		padding: 0;
@@ -52,6 +56,7 @@ layout: "base.njk"
 	}
 </style>
 
+<span hidden data-feature="Inlogflow" data-feature-type="pagina" data-feature-default="off"></span>
 <article id="hoofd-inhoud">
 	<div class="op-page">
 		<img src="{{ '/moza/ondernemersplein/ondernemersplein.overheid.nl.png' | url }}" alt="Ondernemersplein — alles van de overheid op één plek" width="4994" height="4274" />
