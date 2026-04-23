@@ -1,5 +1,5 @@
 ---
-title: "MijnOverheid Zakelijk: Bewaard"
+title: "MijnOverheid Zakelijk: Bewaarde items"
 ---
 
 {% include "side-nav-overheid.njk" %}
@@ -8,11 +8,11 @@ title: "MijnOverheid Zakelijk: Bewaard"
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
-			<li aria-current="page">Bewaard</li>
+			<li aria-current="page">Bewaarde items</li>
 		</ol>
 	</nav>
 
-	<h1>Bewaard</h1>
+	<h1>Bewaarde items</h1>
 
 	<section class="card">
 		<p>Hier vindt u berichten, subsidies en regelgeving die u hebt bewaard.</p>
@@ -140,7 +140,7 @@ title: "MijnOverheid Zakelijk: Bewaard"
 			li.appendChild(p);
 		}
 		const actions = document.createElement("div");
-		actions.className = "action-group";
+		actions.className = "action-group topic-options";
 		if (options?.share && item.url) {
 			const shareBtn = document.createElement("button");
 			shareBtn.className = "link-button share-topic";
@@ -153,7 +153,9 @@ title: "MijnOverheid Zakelijk: Bewaard"
 						await navigator.clipboard.writeText(item.url);
 						const svgHtml = shareBtn.querySelector("svg").outerHTML;
 						shareBtn.innerHTML = svgHtml + " Link gekopieerd";
-						setTimeout(() => { shareBtn.innerHTML = svgHtml + " Deel"; }, 2000);
+						setTimeout(() => {
+							shareBtn.innerHTML = svgHtml + " Deel";
+						}, 2000);
 					}
 				} catch {}
 			});
@@ -183,11 +185,18 @@ title: "MijnOverheid Zakelijk: Bewaard"
 			const ul = document.createElement("ul");
 			ul.className = "list-content-links";
 			groups[cat].forEach((item) => {
-				renderCard(ul, item, btnClass, btnText, (li, item) => {
-					onClickFn(li, item);
-					if (ul.children.length === 0) section.remove();
-					if (container.children.length === 0) emptyEl.hidden = false;
-				}, options);
+				renderCard(
+					ul,
+					item,
+					btnClass,
+					btnText,
+					(li, item) => {
+						onClickFn(li, item);
+						if (ul.children.length === 0) section.remove();
+						if (container.children.length === 0) emptyEl.hidden = false;
+					},
+					options,
+				);
 			});
 			section.appendChild(ul);
 			container.appendChild(section);
@@ -208,15 +217,23 @@ title: "MijnOverheid Zakelijk: Bewaard"
 		setTimeout(hide, 1000);
 	}
 
-	renderGroups(savedGroups, savedEmpty, favorites, "delete-topic", "Verwijderen", (li, item) => {
-		localStorage.removeItem(item.key);
-		const ul = li.closest("ul");
-		const section = li.closest("section");
-		fadeOut(li, "down", () => {
-			if (ul && ul.children.length === 0 && section) section.remove();
-			if (savedGroups && savedGroups.children.length === 0) savedEmpty.hidden = false;
-		});
-	}, { share: true });
+	renderGroups(
+		savedGroups,
+		savedEmpty,
+		favorites,
+		"delete-topic",
+		"Verwijder uit bewaarde items",
+		(li, item) => {
+			localStorage.removeItem(item.key);
+			const ul = li.closest("ul");
+			const section = li.closest("section");
+			fadeOut(li, "down", () => {
+				if (ul && ul.children.length === 0 && section) section.remove();
+				if (savedGroups && savedGroups.children.length === 0) savedEmpty.hidden = false;
+			});
+		},
+		{ share: true },
+	);
 
 	renderGroups(hiddenGroups, hiddenEmpty, hiddenTopics, "restore-topic", "Toch relevant", (li, item) => {
 		localStorage.removeItem(item.key);

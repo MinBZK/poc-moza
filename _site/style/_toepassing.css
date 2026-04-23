@@ -5,6 +5,9 @@
  * CSS variabelen worden automatisch gegenereerd, bewerk deze niet handmatig.
  */
 :root {
+  --toepassing-animation-fade-fade-in: fade-in var(--toepassing-motion-speed-slow) var(--toepassing-motion-easing-default);
+  --toepassing-animation-fade-fade-out: fade-out var(--toepassing-motion-speed-slow) var(--toepassing-motion-easing-default);
+  --toepassing-animation-icon-pop: icon-pop var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default);
   --toepassing-border-card-default: var(--toepassing-box-shadow-default);
   --toepassing-border-component-pageheader-border: var(--toepassing-border-width-md) solid var(--rijkshuisstijl-color-hemelblauw-500);
   --toepassing-border-component-tabs-tab-hover: var(--toepassing-border-width-md) solid var(--toepassing-color-interactive-hover-border);
@@ -115,6 +118,9 @@
   --toepassing-color-text-subtle-2: var(--rijkshuisstijl-color-grijs-600); /** Tertiaire tekst: placeholders, metadata */
   --toepassing-focus-outline-offset: var(--rijkshuisstijl-space-2);
   --toepassing-focus-outline: var(--toepassing-border-width-lg) dotted var(--toepassing-color-interactive-focus-outline);
+  --toepassing-motion-easing-default: ease;
+  --toepassing-motion-speed-fast: 0.2s;
+  --toepassing-motion-speed-slow: 0.8s;
   --toepassing-opacity-interactive-disabled: .6;
   --toepassing-page-max-inline-size: 71.25rem;
   --toepassing-pointer-target-min-size: var(--toepassing-size-md);
@@ -200,7 +206,7 @@
   --toepassing-text-size-title-xl: var(--rijkshuisstijl-text-font-size-2xl);
   --toepassing-text-smalltext: var(--rijkshuisstijl-text-weight-default) var(--toepassing-text-size-body-sm)/var(--rijkshuisstijl-text-line-height-sm) var(--toepassing-text-font-family-body);
   --toepassing-text-text-decoration-hyperlink: underline solid currentcolor var(--toepassing-border-width-xs);
-  --toepassing-transition-default: background .2s ease, border .2s ease, color .2s ease; /** Standaard transitie die toegepast wordt op alle CSS properties */
-  --toepassing-transition-opacity: opacity .2s ease; /** Transitie die toegepast wordt op opacity */
-  --toepassing-transition-transform: transform .2s ease; /** Transitie die toegepast wordt op transform */
+  --toepassing-transition-default: background var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), border var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), color var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Standaard transitie die toegepast wordt op alle CSS properties */
+  --toepassing-transition-opacity: opacity var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Transitie die toegepast wordt op opacity */
+  --toepassing-transition-transform: transform var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Transitie die toegepast wordt op transform */
 }

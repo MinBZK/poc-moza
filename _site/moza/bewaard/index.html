@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MijnOverheid Zakelijk: Bewaard</title>
+    <title>MijnOverheid Zakelijk: Bewaarde items</title>
     <link rel="stylesheet" href="/style/style.css">
     <meta name="description" content="MijnOverheid Zakelijk">
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico" type="image/x-icon">
@@ -173,7 +173,7 @@
 	<path fill="currentColor" d="M18.61 3.91C14.17 1.94 12 6.18 12 6.18S9.83 1.94 5.39 3.91s-4.09 11.6 6.18 17a.94.94 0 0 0 .87 0c10.26-5.4 10.56-15.06 6.17-17Z" />
 </svg>
 
-					Bewaard
+					Bewaarde items
 					
 					
 				</a>
@@ -275,11 +275,11 @@
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="/moza/">Home</a></li>
-			<li aria-current="page">Bewaard</li>
+			<li aria-current="page">Bewaarde items</li>
 		</ol>
 	</nav>
 
-	<h1>Bewaard</h1>
+	<h1>Bewaarde items</h1>
 
 	<section class="card">
 		<p>Hier vindt u berichten, subsidies en regelgeving die u hebt bewaard.</p>
@@ -407,7 +407,7 @@
 			li.appendChild(p);
 		}
 		const actions = document.createElement("div");
-		actions.className = "action-group";
+		actions.className = "action-group topic-options";
 		if (options?.share && item.url) {
 			const shareBtn = document.createElement("button");
 			shareBtn.className = "link-button share-topic";
@@ -420,7 +420,9 @@
 						await navigator.clipboard.writeText(item.url);
 						const svgHtml = shareBtn.querySelector("svg").outerHTML;
 						shareBtn.innerHTML = svgHtml + " Link gekopieerd";
-						setTimeout(() => { shareBtn.innerHTML = svgHtml + " Deel"; }, 2000);
+						setTimeout(() => {
+							shareBtn.innerHTML = svgHtml + " Deel";
+						}, 2000);
 					}
 				} catch {}
 			});
@@ -450,11 +452,18 @@
 			const ul = document.createElement("ul");
 			ul.className = "list-content-links";
 			groups[cat].forEach((item) => {
-				renderCard(ul, item, btnClass, btnText, (li, item) => {
-					onClickFn(li, item);
-					if (ul.children.length === 0) section.remove();
-					if (container.children.length === 0) emptyEl.hidden = false;
-				}, options);
+				renderCard(
+					ul,
+					item,
+					btnClass,
+					btnText,
+					(li, item) => {
+						onClickFn(li, item);
+						if (ul.children.length === 0) section.remove();
+						if (container.children.length === 0) emptyEl.hidden = false;
+					},
+					options,
+				);
 			});
 			section.appendChild(ul);
 			container.appendChild(section);
@@ -475,15 +484,23 @@
 		setTimeout(hide, 1000);
 	}
 
-	renderGroups(savedGroups, savedEmpty, favorites, "delete-topic", "Verwijderen", (li, item) => {
-		localStorage.removeItem(item.key);
-		const ul = li.closest("ul");
-		const section = li.closest("section");
-		fadeOut(li, "down", () => {
-			if (ul && ul.children.length === 0 && section) section.remove();
-			if (savedGroups && savedGroups.children.length === 0) savedEmpty.hidden = false;
-		});
-	}, { share: true });
+	renderGroups(
+		savedGroups,
+		savedEmpty,
+		favorites,
+		"delete-topic",
+		"Verwijder uit bewaarde items",
+		(li, item) => {
+			localStorage.removeItem(item.key);
+			const ul = li.closest("ul");
+			const section = li.closest("section");
+			fadeOut(li, "down", () => {
+				if (ul && ul.children.length === 0 && section) section.remove();
+				if (savedGroups && savedGroups.children.length === 0) savedEmpty.hidden = false;
+			});
+		},
+		{ share: true },
+	);
 
 	renderGroups(hiddenGroups, hiddenEmpty, hiddenTopics, "restore-topic", "Toch relevant", (li, item) => {
 		localStorage.removeItem(item.key);

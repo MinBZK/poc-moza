@@ -99,9 +99,9 @@ De **Relevant** en **Niet relevant** opties zijn geïmplementeerd als een radio 
 - Bij “Niet relevant” wordt het item verborgen en schuift een reserve-topic door
 - Unieke `name`-attributen worden per groep toegewezen door JavaScript, zodat elke radio group onafhankelijk werkt
 
-### De pagina Bewaard
+### De pagina Bewaarde items
 
-De pagina **Bewaard** leest alle `favorite:` en `hidden:` sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel.
+De pagina **Bewaarde items** leest alle `favorite:` en `hidden:` sleutels uit localStorage en rendert deze als volledige, klikbare cards — inclusief titel, URL en beschrijving. Acties op deze pagina (verwijderen, toch relevant markeren) werken ook via localStorage en corrigeren het profiel.
 
 ## Berichtenbox
 
@@ -136,33 +136,57 @@ Alle berichtenbox-state wordt bewaard onder de localStorage-sleutel `berichtenbo
 	</thead>
 	<tbody>
 		<tr>
-			<td><strong>Bericht gelezen</strong></td>
-			<td><code>gelezen</code></td>
+			<td>
+				<strong>Bericht gelezen</strong>
+			</td>
+			<td>
+				<code>gelezen</code>
+			</td>
 			<td>Object met bericht-ID's als sleutels</td>
 		</tr>
 		<tr>
-			<td><strong>Archiveren</strong></td>
-			<td><code>gearchiveerd</code></td>
+			<td>
+				<strong>Archiveren</strong>
+			</td>
+			<td>
+				<code>gearchiveerd</code>
+			</td>
 			<td>Bericht verplaatst naar archief-tab</td>
 		</tr>
 		<tr>
-			<td><strong>Verwijderen</strong></td>
-			<td><code>verwijderd</code></td>
+			<td>
+				<strong>Verwijderen</strong>
+			</td>
+			<td>
+				<code>verwijderd</code>
+			</td>
 			<td>Bericht verplaatst naar prullenbak-tab</td>
 		</tr>
 		<tr>
-			<td><strong>Verplaatsen naar map</strong></td>
-			<td><code>mapOverride</code></td>
+			<td>
+				<strong>Verplaatsen naar map</strong>
+			</td>
+			<td>
+				<code>mapOverride</code>
+			</td>
 			<td>Bericht toegewezen aan een map</td>
 		</tr>
 		<tr>
-			<td><strong>Eigen map aanmaken</strong></td>
-			<td><code>eigenMappen</code></td>
+			<td>
+				<strong>Eigen map aanmaken</strong>
+			</td>
+			<td>
+				<code>eigenMappen</code>
+			</td>
 			<td>Door de gebruiker aangemaakte mappen</td>
 		</tr>
 		<tr>
-			<td><strong>Demo-berichten</strong></td>
-			<td><code>nieuweBerichten</code></td>
+			<td>
+				<strong>Demo-berichten</strong>
+			</td>
+			<td>
+				<code>nieuweBerichten</code>
+			</td>
 			<td>Via polling binnengekomen berichten (max. 5)</td>
 		</tr>
 	</tbody>

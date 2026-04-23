@@ -36,7 +36,7 @@
 			"feature": "actualiteiten"
 		},
 		{
-			"label": "Bewaard",
+			"label": "Bewaarde items",
 			"url": "/moza/bewaard/",
 			"icon": "/assets/icons/icon-favoriet.svg",
 			"feature": "bewaard"
