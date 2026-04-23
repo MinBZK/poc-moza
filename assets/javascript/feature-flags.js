@@ -54,6 +54,13 @@ function applyFeatureFlags() {
 	document.querySelectorAll("[data-feature]").forEach((el) => {
 		el.hidden = !isFeatureEnabled(el.dataset.feature);
 	});
+	// Wijs inloglinks naar Ondernemersplein als de Inlogflow-flag aan staat
+	const inlogflowAan = isFeatureEnabled("Inlogflow");
+	document.querySelectorAll("[data-inlogflow-link]").forEach((el) => {
+		if (inlogflowAan) {
+			el.href = (typeof window.PATH_PREFIX === "string" && window.PATH_PREFIX !== "/" ? window.PATH_PREFIX.replace(/\/$/, "") : "") + "/moza/ondernemersplein/";
+		}
+	});
 }
 
 const TYPE_LABELS = {
