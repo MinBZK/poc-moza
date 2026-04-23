@@ -18,6 +18,7 @@ layout: "base.njk"
 	body.ondernemersplein > main {
 		display: block;
 		max-inline-size: none;
+		overflow-inline: auto;
 		padding: 0;
 	}
 	body.ondernemersplein > main > article {
@@ -31,19 +32,11 @@ layout: "base.njk"
 		display: none;
 	}
 
-	.op-inloggen-link {
-		background: red;
-		opacity: 0.3;
-	}
-	.digid-app-link {
-		background: red;
-		opacity: 0.3;
-	}
-
 	.op-page {
-		margin-inline: auto;
-		position: relative;
 		inline-size: 2497px;
+		inset-inline-start: 50%;
+		position: relative;
+		translate: -50% 0;
 	}
 	.op-page img {
 		display: block;
@@ -52,10 +45,10 @@ layout: "base.njk"
 	}
 	.op-inloggen-link {
 		position: absolute;
-		inset-block-start: 5px;
-		inset-inline-end: 310px;
+		inset-block-start: 79px;
+		inset-inline-end: 660px;
 		inline-size: 120px;
-		block-size: 25px;
+		block-size: 32px;
 	}
 </style>
 

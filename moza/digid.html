@@ -18,6 +18,7 @@ layout: "base.njk"
 	body.digid > main {
 		display: block;
 		max-inline-size: none;
+		overflow-inline: auto;
 		padding: 0;
 	}
 	body.digid > main > article {
@@ -30,19 +31,12 @@ layout: "base.njk"
 	body.digid > footer {
 		display: none;
 	}
-	.op-inloggen-link {
-		background: red;
-		opacity: 0.3;
-	}
-	.digid-app-link {
-		background: red;
-		opacity: 0.3;
-	}
 
 	.digid-page {
-		margin-inline: auto;
-		position: relative;
 		inline-size: 2497px;
+		inset-inline-start: 50%;
+		position: relative;
+		translate: -50% 0;
 	}
 	.digid-page img {
 		display: block;
@@ -51,10 +45,10 @@ layout: "base.njk"
 	}
 	.digid-app-link {
 		position: absolute;
-		inset-block-start: 215px;
-		inset-inline-start: 525px;
-		inline-size: 210px;
-		block-size: 90px;
+		inset-block-start: 218px;
+		inset-inline-start: 1079px;
+		inline-size: 354px;
+		block-size: 96px;
 	}
 </style>
 
