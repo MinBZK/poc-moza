@@ -28,12 +28,14 @@ jobs:
         id: tag
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "name=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
-            echo "ref=refs/tags/${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+            RAW_TAG="${{ github.event.inputs.tag }}"
+            echo "ref=refs/tags/$RAW_TAG" >> "$GITHUB_OUTPUT"
           else
-            echo "name=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+            RAW_TAG="${GITHUB_REF#refs/tags/}"
             echo "ref=$GITHUB_REF" >> "$GITHUB_OUTPUT"
           fi
+          SAFE_NAME=$(echo "$RAW_TAG" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-//;s/-$//')
+          echo "name=$SAFE_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Lowercase image name
         run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
