@@ -432,6 +432,10 @@ button, [type="date"], [type="datetime-local"], [type="email"], [type="month"], 
 	mask: url("../assets/icons/icon-link-intern.svg") no-repeat center / contain;
 	vertical-align: middle;
 }
+a.btn-cta[rel~="external"]::after {
+	mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
+	vertical-align: baseline;
+}
 
 /* Formulieren: tekst-invoer elementen */
 [type="date"], [type="datetime-local"], [type="email"], [type="month"], [type="number"], [type="password"], [type="search"], [type="tel"], [type="text"], [type="time"], [type="url"], [type="week"], textarea {
@@ -1949,10 +1953,31 @@ h1, h2, h3, h4, h5, h6, a, button {
 }
 
 /* Tijdelijke fixes voor gebruikersonderzoeken 2026-04 */
+.page-homepage {
+	.list-content-links li {
+		&:not(:last-of-type) {
+			border-block-end: var(--toepassing-border-subtle);
+		}
+	}
+}
+.tiles {
+	h3 {
+		position: relative;
+	}
+	.badge {
+		inset-block-start:0;
+		inset-inline-end: 0;
+		position: absolute	
+	}
+}
 .temp-badge-feature-release {
 	background-color: var(--rijkshuisstijl-color-grijs-300);
 	color: var(--rijkshuisstijl-color-grijs-700);
+	display: none;
 	flex-shrink: 0;
+}
+.temp-navitem-feature-release:hover .temp-badge-feature-release {
+	display: inline-block;
 }
 .temp-navitem-feature-release {
 	opacity: 0.5;

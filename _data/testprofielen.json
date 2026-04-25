@@ -31,7 +31,9 @@
 		],
 		"subsidies": ["wbso", "kia", "bmkb", "eia", "mia-vamil", "innovatiekrediet", "seed-capital", "sde", "mit", "praktijkleren"],
 		"regelgeving": ["minimumloon", "arbowet", "avg", "loonbelasting", "milieubeheer", "arbeid-vreemdelingen", "omgevingswet", "wwft", "gelijke-kansen", "transparante-arbeidsvoorwaarden"],
-		"buurt": "s-gravenhage"
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["mkb-digitaliseringssubsidie", "duurzaam-advies-voucher"],
+		"homepageRegelgeving": ["ai-verordening"]
 	},
 	{
 		"id": "dierenwinkel",
@@ -59,7 +61,9 @@
 		"belangen": [],
 		"subsidies": ["kia", "bmkb", "praktijkleren", "seba", "cyberweerbaarheid", "mkb-groen", "isde"],
 		"regelgeving": ["minimumloon", "arbowet", "avg", "warenwet", "handelsregisterwet", "wet-werk-zekerheid", "transparante-arbeidsvoorwaarden", "gelijke-behandeling-leeftijd", "tabakswet"],
-		"buurt": "voorburg"
+		"buurt": "voorburg",
+		"homepageSubsidies": ["circulaire-retail", "mkb-cyberweerbaarheid-voucher"],
+		"homepageRegelgeving": ["uitgebreide-producentenverantwoordelijkheid"]
 	},
 	{
 		"id": "makelaar",
@@ -87,7 +91,9 @@
 		"belangen": [{ "naam": "NVM", "rol": "Lid" }],
 		"subsidies": ["kia", "bmkb", "cyberweerbaarheid", "seba", "mkb-groen"],
 		"regelgeving": ["minimumloon", "arbowet", "avg", "wwft", "omgevingswet", "handelsregisterwet", "wet-werk-zekerheid", "transparante-arbeidsvoorwaarden", "gelijke-kansen", "mededingingswet"],
-		"buurt": "s-gravenhage"
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["energielabel-c-subsidie", "verduurzaming-bedrijfspanden"],
+		"homepageRegelgeving": ["wwft-verscherpt-clientenonderzoek"]
 	},
 	{
 		"id": "projectontwikkelaar",
@@ -115,7 +121,9 @@
 		"belangen": [{ "naam": "NEPROM", "rol": "Lid" }],
 		"subsidies": ["bmkb", "groeifaciliteit", "kia", "eia", "mia-vamil", "mkb-groen", "sde", "isde"],
 		"regelgeving": ["omgevingswet", "milieubeheer", "wwft", "avg", "arbowet", "minimumloon", "handelsregisterwet", "was", "mededingingswet", "csrd"],
-		"buurt": "s-gravenhage"
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["natuurinclusief-bouwen", "circulaire-bouwmaterialen"],
+		"homepageRegelgeving": ["omgevingswet-stikstofnorm"]
 	},
 	{
 		"id": "haarstylist",
@@ -143,7 +151,9 @@
 		"belangen": [],
 		"subsidies": ["kia", "bbsc", "cyberweerbaarheid", "seba"],
 		"regelgeving": ["avg", "handelsregisterwet", "warenwet", "omgevingswet", "wdo"],
-		"buurt": "s-gravenhage"
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["mkb-cyberweerbaarheid-voucher", "mkb-digitaliseringssubsidie"],
+		"homepageRegelgeving": ["ai-verordening"]
 	},
 	{
 		"id": "schilder",
@@ -171,7 +181,9 @@
 		"belangen": [{ "naam": "OnderhoudNL", "rol": "Lid" }],
 		"subsidies": ["kia", "bmkb", "praktijkleren", "seba", "mkb-groen", "isde", "tek"],
 		"regelgeving": ["minimumloon", "arbowet", "omgevingswet", "milieubeheer", "avg", "was", "wet-werk-zekerheid", "loonbelasting", "handelsregisterwet", "gelijke-kansen"],
-		"buurt": "voorburg"
+		"buurt": "voorburg",
+		"homepageSubsidies": ["gezond-veilig-werken", "loodvrij-schilderen"],
+		"homepageRegelgeving": ["arbowet-gevaarlijke-stoffen"]
 	},
 	{
 		"id": "kunstsalon",
@@ -199,7 +211,9 @@
 		"belangen": [],
 		"subsidies": ["kia", "bbsc", "cyberweerbaarheid", "mkb-groen", "isde"],
 		"regelgeving": ["avg", "handelsregisterwet", "omgevingswet", "warenwet", "wdo", "dienstenwet", "mededingingswet"],
-		"buurt": "s-gravenhage"
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["toeristische-innovatie", "cultureel-ondernemerschap"],
+		"homepageRegelgeving": ["dienstenwet-informatieplicht"]
 	},
 	{
 		"id": "melkveehouder",
@@ -227,7 +241,9 @@
 		"belangen": [{ "naam": "LTO Nederland", "rol": "Lid" }],
 		"subsidies": ["kia", "bmkb", "praktijkleren", "sde", "eia", "mia-vamil", "isde", "groenprojecten", "dei", "tek"],
 		"regelgeving": ["minimumloon", "arbowet", "milieubeheer", "omgevingswet", "bestrijdingsmiddelen", "avg", "loonbelasting", "handelsregisterwet", "wet-werk-zekerheid", "csrd"],
-		"buurt": "voorburg"
+		"buurt": "voorburg",
+		"homepageSubsidies": ["duurzame-veehouderij", "precisielandbouw"],
+		"homepageRegelgeving": ["meststoffenwet-fosfaatplafond"]
 	},
 	{
 		"id": "attracties",
@@ -255,6 +271,8 @@
 		"belangen": [{ "naam": "IAAPA Europe", "rol": "Lid" }],
 		"subsidies": ["wbso", "bmkb", "groeifaciliteit", "dggf", "sib", "eurostars", "horizon-europe", "innovatiekrediet", "mit", "pps-toeslag"],
 		"regelgeving": ["minimumloon", "arbowet", "avg", "arbeid-vreemdelingen", "dienstenwet", "wwft", "handelsregisterwet", "wet-werk-zekerheid", "wor", "csrd"],
-		"buurt": "s-gravenhage"
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["toeristische-innovatie", "mkb-digitaliseringssubsidie"],
+		"homepageRegelgeving": ["dienstenwet-informatieplicht"]
 	}
 ]

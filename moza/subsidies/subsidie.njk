@@ -15,7 +15,6 @@ subNavActive: "/moza/actueel/"
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
-			<li><a href="{{ '/moza/actueel/' | url }}">Actualiteiten</a></li>
 			<li><a href="{{ '/moza/subsidies/' | url }}">Subsidies en financiering</a></li>
 			<li aria-current="page">{{ subsidie.titel }}</li>
 		</ol>
@@ -56,7 +55,7 @@ subNavActive: "/moza/actueel/"
 		{% include "action-group.njk" %}
 
 		<div class="action-group">
-			<a class="btn-cta" href="{{ subsidie.externUrl }}" rel="external">Bekijk bij {{ subsidie.verstrekker }}</a>
+			<a class="btn-cta" href="{{ subsidie.externUrl }}" rel="external">Bekijk op de website van {{ subsidie.verstrekker }}</a>
 		</div>
 	</section>
 </article>

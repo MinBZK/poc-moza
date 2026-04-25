@@ -37,6 +37,11 @@
     <footer></footer>
     {% endif %}
 
+
+	<button data-feedback-fish>
+  		Feedback
+	</button>
+
     <script>window.PATH_PREFIX = "{{ '/' | url }}";</script>
     <script src="{{ '/assets/javascript/aria-disabled.js' | url }}" defer></script>
     <script src="{{ '/assets/javascript/indeterminate.js' | url }}" defer></script>
@@ -44,9 +49,14 @@
     <script src="{{ '/assets/javascript/content-interactions.js' | url }}" defer></script>
     <script src="{{ '/assets/javascript/feature-flags.js' | url }}" defer></script>
     <script>window.testprofielenData = {{ testprofielen | dump | safe }};</script>
+    <script>window.subsidiesData = {{ subsidiesData | dump | safe }};</script>
+    <script>window.regelgevingData = {{ regelgevingData | dump | safe }};</script>
     <script src="{{ '/assets/javascript/testprofielen.js' | url }}" defer></script>
+    <script src="{{ '/assets/javascript/homepage-profiel.js' | url }}" defer></script>
     <script src="{{ '/assets/javascript/tab-interface.js' | url }}" defer></script>
     <script src="{{ '/assets/javascript/external-links.js' | url }}" defer></script>
     <script src="{{ '/assets/javascript/berichtenbox.js' | url }}" defer></script>
+	<script src="https://feedback.fish/ff.js?pid=04c22f69e72016" defer></script>
+
 </body>
 </html>

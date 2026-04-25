@@ -7,7 +7,9 @@
 		{
 			"label": "Home",
 			"url": "/moza/",
-			"icon": "/assets/icons/icon-home.svg"
+			"icon": "/assets/icons/icon-home.svg",
+			"badge": "3",
+			"unreadBadge": true
 		},
 		{
 			"label": "Bedrijfsgegevens",
@@ -20,9 +22,7 @@
 			"url": "/moza/berichtenbox/",
 			"icon": "/assets/icons/icon-berichtenbox.svg",
 			"feature": "Berichtenbox",
-			"disabled": true,
-			"badge": "nov 2026",
-			"badgeClass": "temp-badge-feature-release"
+			"unreadBadge": false
 		},
 		{
 			"label": "Lopende zaken",
@@ -34,11 +34,14 @@
 			"badgeClass": "temp-badge-feature-release"
 		},
 		{
-			"label": "Actualiteiten",
-			"url": "/moza/actueel/",
-			"icon": "/assets/icons/icon-nieuws.svg",
-			"badge": "3",
-			"unreadBadge": true
+			"label": "Subsidies en financiering",
+			"url": "/moza/subsidies/",
+			"icon": "/assets/icons/icon-nieuws.svg"
+		},
+		{
+			"label": "Wetten en regelgeving",
+			"url": "/moza/regelgeving/",
+			"icon": "/assets/icons/icon-nieuws.svg"
 		},
 		{
 			"label": "Bewaarde items",
@@ -49,10 +52,7 @@
 			"label": "Digitale assistent",
 			"url": "/moza/digitale-assistent/",
 			"icon": "/assets/icons/icon-assistent.svg",
-			"feature": "Digitale assistent",
-			"disabled": true,
-			"badge": "medio 2027",
-			"badgeClass": "temp-badge-feature-release"
+			"feature": "Digitale assistent"
 		},
 		{
 			"label": "Belastingen",
@@ -79,7 +79,7 @@
 			"icon": "/assets/icons/icon-personeel.svg",
 			"feature": "Personeel en rollen",
 			"disabled": true,
-			"badge": "onbekend",
+			"badge": "2029",
 			"badgeClass": "temp-badge-feature-release"
 		},
 		{
