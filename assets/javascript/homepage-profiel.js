@@ -40,10 +40,12 @@
 		return div;
 	}
 
-	function maakBadgeHtml(interestType) {
-		if (!interestType) return "";
-		return "<span class=\"badge badge-interest-" + interestType + "\">"
-			+ (interestType === "business" ? "Uw bedrijf" : "Uw branche") + "</span>";
+	function maakInterestSmall(interestType) {
+		if (!interestType) return null;
+		var small = document.createElement("small");
+		small.className = "interest-" + interestType;
+		small.innerHTML = interestType === "business" ? "Mogelijk relevant voor <b>uw bedrijf</b>" : "Mogelijk relevant voor <b>uw branche</b>";
+		return small;
 	}
 
 	function maakSubsidieLi(item, interestType) {
@@ -52,8 +54,10 @@
 		var a = document.createElement("a");
 		a.href = PATH_PREFIX + "/moza/subsidies/" + item.id + "/";
 		a.className = "content-link is-unread";
-		a.innerHTML = "<h3>" + item.titel + maakBadgeHtml(interestType) + "</h3><span class=\"card-link\"></span>";
+		a.innerHTML = "<h3>" + item.titel + "</h3><span class=\"card-link\"></span>";
 		li.appendChild(a);
+		var interest = maakInterestSmall(interestType);
+		if (interest) li.appendChild(interest);
 		var p = document.createElement("p");
 		p.textContent = item.beschrijving;
 		li.appendChild(p);
@@ -74,8 +78,10 @@
 		var a = document.createElement("a");
 		a.href = PATH_PREFIX + "/moza/regelgeving/" + item.id + "/";
 		a.className = "content-link is-unread";
-		a.innerHTML = "<h3>" + item.titel + maakBadgeHtml(interestType) + "</h3><span class=\"card-link\"></span>";
+		a.innerHTML = "<h3>" + item.titel + "</h3><span class=\"card-link\"></span>";
 		li.appendChild(a);
+		var interest = maakInterestSmall(interestType);
+		if (interest) li.appendChild(interest);
 		var p = document.createElement("p");
 		p.textContent = item.beschrijving;
 		li.appendChild(p);
@@ -193,6 +199,11 @@
 		var brancheSubs = resolveIds(brancheSubIds, vindSubsidie);
 		var bedrijfRegs = resolveIds(bedrijfRegIds, vindRegeling);
 		var brancheRegs = resolveIds(brancheRegIds, vindRegeling);
+
+		// Voorkom dat subsidies en regelgeving hetzelfde aantal tonen
+		if (brancheSubs.length > 0 && (bedrijfSubs.length + brancheSubs.length) === (bedrijfRegs.length + brancheRegs.length)) {
+			brancheSubs = brancheSubs.slice(0, -1);
+		}
 
 		// Gecombineerde lijsten: bedrijf-items eerst, dan branche-items
 		var alleSubs = tagItems(bedrijfSubs, maakSubsidieLi, "business")

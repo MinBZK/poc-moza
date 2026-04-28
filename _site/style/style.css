@@ -1114,7 +1114,6 @@ caption {
 	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
 	font-weight: var(--toepassing-text-font-weight-semi-bold);
-	margin-block-start: var(--toepassing-space-margin-xl);
 	padding: var(--toepassing-space-padding-sm) var(--toepassing-space-padding-md);
 }
 /* Onzichtbare overlay-link voor klikbare cards */
@@ -1973,13 +1972,14 @@ h1, h2, h3, h4, h5, h6, a, button {
 .temp-badge-feature-release {
 	background-color: var(--rijkshuisstijl-color-grijs-300);
 	color: var(--rijkshuisstijl-color-grijs-700);
-	display: none;
-	flex-shrink: 0;
+	display: none !important;
+	/* flex-shrink: 0; */
 }
 .temp-navitem-feature-release {
 	&:hover, &:focus-visible {
 		.temp-badge-feature-release {
-			display: inline-block;}
+			display: inline-block;
+		}
 	}
 }
 .temp-navitem-feature-release {
@@ -1987,4 +1987,33 @@ h1, h2, h3, h4, h5, h6, a, button {
 }
 [data-badge-id="subsidies-count"], [data-badge-id="regelgeving-count"] {
 	font-weight: bold;
+}
+
+small.interest-industry, small.interest-business {
+	color: var(--toepassing-color-text-subtle-2);
+	display: inline-block;
+	font-size: var(--rijkshuisstijl-text-font-size-sm);
+	margin-block: var(--toepassing-space-margin-2xs)  !important;
+}
+
+.side-nav {
+	a {
+		gap: var(--toepassing-space-2xs)
+	}
+	.badge {
+		align-items: center;
+		block-size: 24px;
+		display: inline-flex;
+		padding: var(--toepassing-space-padding-xs);
+	}
+}
+.tiles {
+	p a {
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+.external-link--new-window {
+	font-size: var(--rijkshuisstijl-text-font-size-sm);
 }
