@@ -44,7 +44,7 @@ function getFavoriteData(checkbox) {
 	const title = article.querySelector("h1")?.textContent.trim() || "";
 	const url = location.pathname;
 	const desc = article.querySelector(".intro")?.textContent.trim() || "";
-	const breadcrumb = article.querySelector(".breadcrumb li:nth-child(3) a");
+	const breadcrumb = article.querySelector(".breadcrumb li:nth-child(2) a") || article.querySelector(".breadcrumb li:nth-child(3) a");
 	const category = breadcrumb?.textContent.trim() || "";
 	return { title, url, desc, category };
 }
