@@ -138,9 +138,9 @@
 			if (huidigePagina > 0) {
 				var prevLi = document.createElement("li");
 				var prevA = document.createElement("a");
-				prevA.href = "#";
+				prevA.href = "#hoofd-inhoud";
 				prevA.innerHTML = "Vorige<span class=\"visually-hidden\"> pagina</span>";
-				prevA.addEventListener("click", function (e) { e.preventDefault(); toonPagina(huidigePagina - 1); });
+				prevA.addEventListener("click", function (e) { e.preventDefault(); toonPagina(huidigePagina - 1); document.getElementById("hoofd-inhoud").scrollIntoView(); });
 				prevLi.appendChild(prevA);
 				ol.appendChild(prevLi);
 			}
@@ -154,10 +154,10 @@
 					li.appendChild(span);
 				} else {
 					var a = document.createElement("a");
-					a.href = "#";
+					a.href = "#hoofd-inhoud";
 					a.textContent = i + 1;
 					(function (pag) {
-						a.addEventListener("click", function (e) { e.preventDefault(); toonPagina(pag); });
+						a.addEventListener("click", function (e) { e.preventDefault(); toonPagina(pag); document.getElementById("hoofd-inhoud").scrollIntoView(); });
 					})(i);
 					li.appendChild(a);
 				}
@@ -169,7 +169,7 @@
 				var nextA = document.createElement("a");
 				nextA.href = "#";
 				nextA.innerHTML = "Volgende<span class=\"visually-hidden\"> pagina</span>";
-				nextA.addEventListener("click", function (e) { e.preventDefault(); toonPagina(huidigePagina + 1); });
+				nextA.addEventListener("click", function (e) { e.preventDefault(); toonPagina(huidigePagina + 1); document.getElementById("hoofd-inhoud").scrollIntoView(); });
 				nextLi.appendChild(nextA);
 				ol.appendChild(nextLi);
 			}

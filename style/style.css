@@ -1066,6 +1066,11 @@ caption {
 		li {
 			padding-block-end: var(--toepassing-space-padding-md);
 			position: relative;
+			&[hidden] {
+				display: none;
+				margin: 0;
+				padding: 0;
+			}
 			&.remove-item {
 				animation: var(--toepassing-animation-fade-fade-out);
 			}
