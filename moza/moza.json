@@ -9,7 +9,7 @@
 			"url": "/moza/",
 			"icon": "/assets/icons/icon-home.svg",
 			"badge": "3",
-			"unreadBadge": true
+			"unreadBadge": false
 		},
 		{
 			"label": "Bedrijfsgegevens",
@@ -36,12 +36,19 @@
 		{
 			"label": "Subsidies en financiering",
 			"url": "/moza/subsidies/",
-			"icon": "/assets/icons/icon-nieuws.svg"
+			"icon": "/assets/icons/icon-subsidie.svg",
+			"badgeId": "subsidies-count"
 		},
 		{
 			"label": "Wetten en regelgeving",
 			"url": "/moza/regelgeving/",
-			"icon": "/assets/icons/icon-nieuws.svg"
+			"icon": "/assets/icons/icon-wet.svg",
+			"badgeId": "regelgeving-count"
+		},
+		{
+			"label": "Berichten over uw buurt",
+			"url": "/moza/berichten/",
+			"icon": "/assets/icons/icon-locatie.svg"
 		},
 		{
 			"label": "Bewaarde items",

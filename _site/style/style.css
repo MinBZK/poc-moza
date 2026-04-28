@@ -1663,7 +1663,7 @@ summary {
 }
 
 #saved-groups section {
-	margin-block-end: var(--toepassing-space-layout-sm);
+	/* margin-block-end: var(--toepassing-space-layout-sm); */
 	padding-block-end: 0;
 }
 
@@ -1984,4 +1984,7 @@ h1, h2, h3, h4, h5, h6, a, button {
 }
 .temp-navitem-feature-release {
 	opacity: 0.5;
+}
+[data-badge-id="subsidies-count"], [data-badge-id="regelgeving-count"] {
+	font-weight: bold;
 }

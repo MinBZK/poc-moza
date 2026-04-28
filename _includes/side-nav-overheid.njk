@@ -7,8 +7,9 @@
 				<a href="{{ item.url | url }}"{% if page.url == item.url or subNavActive == item.url or (item.url != '/moza/' and page.url.startsWith(item.url)) %} aria-current="page"{% endif %}{% if item.disabled %} class="temp-navitem-feature-release"{% endif %}>
 					{% if item.icon %}{% icon item.icon %}{% endif %}
 					{{ item.label }}
+					{% if item.badgeId %}<span class="badge" data-badge-id="{{ item.badgeId }}"></span>{% endif %}
 					{% if item.unreadBadge %}<span class="badge" data-unread-badge>{{ item.badge }}</span>{% endif %}
-					{% if item.badge and not item.unreadBadge %}<span class="badge{% if item.badgeClass %} {{ item.badgeClass }}{% endif %}">{{ item.badge }}</span>{% endif %}
+					{% if item.badge and item.unreadBadge != false and not item.badgeId %}<span class="badge{% if item.badgeClass %} {{ item.badgeClass }}{% endif %}">{{ item.badge }}</span>{% endif %}
 					{% if item.label == "Berichtenbox" and item.unreadBadge != false and not item.disabled %}<span class="badge" data-berichtenbox-count="ongelezen">{{ berichtenboxData.aantalOngelezen or 0 }}</span>{% endif %}
 				</a>
 			</li>

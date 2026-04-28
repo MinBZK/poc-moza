@@ -6,89 +6,23 @@ title: "MijnOverheid Zakelijk: Home"
 
 <article id="hoofd-inhoud" class="page-homepage">
 	<h1>Welkom <span data-profiel="voornaam">Robin</span> <span data-profiel="achternaam">Vogel</span></h1>
-
-	<section class="card" data-homepage-subsidies>
-		<h2>Nieuwe subsidies en financiering</h2>
-		<ul class="list-content-links" aria-busy="true"></ul>
-		<a class="btn-cta" href="{{ '/moza/subsidies/' | url }}">Naar overige subsidies en financiering</a>
-	</section>
-	<section class="card" data-homepage-regelgeving>
-		<h2>Actuele wetten en regelgeving</h2>
-		<ul class="list-content-links" aria-busy="true"></ul>
-		<a class="btn-cta" href="{{ '/moza/regelgeving/' | url }}">Naar overige wetten en regelgeving</a>
-	</section>
-
+	<h2>Actualiteiten</h2>
 	<div class="tiles">
 		<section class="card">
-			<h3>Bedrijfsgegevens</h3>
-			<p>Bekijk uw KVK-gegevens, BTW-nummer, rechtsvorm en andere registraties op één plek.</p>
-			<a class="btn-cta" href="{{ '/moza/bedrijfsgegevens/' | url }}">Ga naar Bedrijfsgegevens</a>
-		</section>
-		<section class="card">
-			<h3>Berichtenbox</h3>
-			<p>Ontvang post van de overheid digitaal. Veilig en altijd beschikbaar.</p>
-			<a class="btn-cta" href="{{ '/moza/berichtenbox/' | url }}">Ga naar Berichtenbox</a>
-		</section>
-		<section class="card">
-			<h3>Lopende zaken <span class="badge">juni 2027</span></h3>
-			<p>Volg de status van uw aanvragen, vergunningen en meldingen bij de overheid.</p>
-			<p>Deze functionaliteit wordt in juni 2027 verwacht.</p>
-			<a class="btn-cta" href="{{ '/moza/lopende-zaken/' | url }}" disabled>Ga naar Lopende zaken</a>
-		</section>
-		<section class="card">
 			<h3>Subsidies en financiering</h3>
-			<p>Ontdek welke subsidies, fiscale regelingen en financieringsmogelijkheden beschikbaar zijn voor uw onderneming.</p>
+			<p>Er zijn <span data-badge-id="subsidies-count"></span> nieuwe subsidies en/of financieringsmogelijkheden sinds uw laatste bezoek die mogelijk interessant voor u kunnen zijn.</p>
 			<a class="btn-cta" href="{{ '/moza/subsidies/' | url }}">Ga naar Subsidies en financiering</a>
 		</section>
 		<section class="card">
 			<h3>Wetten en regelgeving</h3>
-			<p>Blijf op de hoogte van wetten en regels die gelden voor uw branche en bedrijfsvorm.</p>
+			<p>Er zijn <span data-badge-id="regelgeving-count"></span> nieuwe wetten of regelgeving, of wijzigingen op bestaande wet- of regelgeving die mogelijk op u van toepassing zijn.</p>
+			<ul class="list-content-links" aria-busy="true"></ul>
 			<a class="btn-cta" href="{{ '/moza/regelgeving/' | url }}">Ga naar Wetten en regelgeving</a>
 		</section>
 		<section class="card">
-			<h3>Bewaarde items</h3>
-			<p>Bekijk subsidies, regelgeving en berichten die u hebt bewaard of als niet relevant gemarkeerd.</p>
-			<a class="btn-cta" href="{{ '/moza/bewaard/' | url }}">Ga naar Bewaarde items</a>
-		</section>
-		<section class="card">
-			<h3>Digitale assistent</h3>
-			<p>Stel vragen over regelgeving, subsidies en uw bedrijfsgegevens aan de digitale assistent.</p>
-			<a class="btn-cta" href="{{ '/moza/digitale-assistent/' | url }}">Ga naar Digitale assistent</a>
-		</section>
-		<section class="card">
-			<h3>Belastingen <span class="badge">januari 2028</span></h3>
-			<p>Bekijk uw belastingaangiftes, aanslagen en openstaande betalingen.</p>
-			<p>Deze functionaliteit wordt in januari 2028 verwacht.</p>
-			<a class="btn-cta" href="{{ '/moza/belastingen/' | url }}" disabled>Ga naar Belastingen</a>
-		</section>
-		<section class="card">
-			<h3>Zakelijk vervoer <span class="badge">medio 2028</span></h3>
-			<p>Beheer uw zakelijke voertuigen, kentekenregistraties en vervoersvergunningen.</p>
-			<p>Deze functionaliteit wordt medio 2028 verwacht.</p>
-			<a class="btn-cta" href="{{ '/moza/zakelijk-vervoer/' | url }}" disabled>Ga naar Zakelijk vervoer</a>
-		</section>
-		<section class="card">
-			<h3>Personeel en rollen <span class="badge">2029</span></h3>
-			<p>Beheer medewerkers, machtigingen en rollen binnen uw organisatie.</p>
-			<p>Deze functionaliteit wordt in 2029 verwacht.</p>
-			<a class="btn-cta" href="{{ '/moza/personeel/' | url }}" disabled>Ga naar Personeel en rollen</a>
-		</section>
-		<section class="card">
-			<h3>Ziekte en verlof <span class="badge">medio 2029</span></h3>
-			<p>Regel ziekmeldingen, re-integratie en verlofregistratie voor uw personeel.</p>
-			<p>Deze functionaliteit wordt medio 2029 verwacht.</p>
-			<a class="btn-cta" href="{{ '/moza/ziekte-verlof/' | url }}" disabled>Ga naar Ziekte en verlof</a>
-		</section>
-		<section class="card">
-			<h3>Gegevensdeling en dataverwerking <span class="badge">januari 2028</span></h3>
-			<p>Bekijk welke gegevens overheidsorganisaties over uw bedrijf verwerken en delen.</p>
-			<p>Deze functionaliteit wordt in januari 2028 verwacht.</p>
-			<a class="btn-cta" href="{{ '/moza/dataverwerking/' | url }}" disabled>Ga naar Gegevensdeling</a>
-		</section>
-		<section class="card">
-			<h3>Contactvoorkeuren</h3>
-			<p>Stel in hoe en waarover u berichten van de overheid wilt ontvangen.</p>
-			<a class="btn-cta" href="{{ '/moza/contactvoorkeuren/' | url }}">Ga naar Contactvoorkeuren</a>
+			<h3>Berichten over uw buurt</h3>
+			<p>Berichten die betrekking hebben op de omgeving van uw bedrijfsadres.</p>
+			<a class="btn-cta" href="{{ '/moza/berichten/' | url }}">Ga naar Berichten over uw buurt</a>
 		</section>
 	</div>
 
