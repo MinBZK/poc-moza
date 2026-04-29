@@ -27,10 +27,10 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 				<div data-berichtenbox-toolbar>
 					<p class="metadata"><span data-berichtenbox-counter-total>{{ berichtenboxData.berichten | length }}</span> berichten uit <span data-berichtenbox-sources>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen, <span data-berichtenbox-counter-unread>{{ berichtenboxData.berichten | selectattr("isOngelezen") | length }}</span> ongelezen berichten.</p>
 
-					<label class="berichtenbox-search">
+					<div class="berichtenbox-search">
 						<label for="search-berichtenbox">Filter berichten</label>
 						<input type="search" id="search-berichtenbox" data-berichtenbox-search-input placeholder="Filter op afzender of onderwerp" />
-					</label>
+					</div>
 				</div>
 
 				<div class="berichtenbox-progress" data-berichtenbox-progress hidden role="status" aria-live="polite">
