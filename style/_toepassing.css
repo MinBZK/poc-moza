@@ -206,7 +206,7 @@
 	--toepassing-text-size-title-xl: var(--rijkshuisstijl-text-font-size-2xl);
 	--toepassing-text-smalltext: var(--rijkshuisstijl-text-weight-default) var(--toepassing-text-size-body-sm)/var(--rijkshuisstijl-text-line-height-sm) var(--toepassing-text-font-family-body);
 	--toepassing-text-text-decoration-hyperlink: underline solid currentcolor var(--toepassing-border-width-xs);
-	--toepassing-transition-default: background var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), border var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), color var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Standaard transitie die toegepast wordt op alle CSS properties */
+	--toepassing-transition-default: background var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), border var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), color var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default), text-decoration var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Standaard transitie die toegepast wordt op alle CSS properties */
 	--toepassing-transition-opacity: opacity var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Transitie die toegepast wordt op opacity */
 	--toepassing-transition-transform: transform var(--toepassing-motion-speed-fast) var(--toepassing-motion-easing-default); /** Transitie die toegepast wordt op transform */
 }

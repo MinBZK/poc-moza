@@ -116,7 +116,6 @@ main {
 aside {
 	max-inline-size: min-content;
 	@media (min-width: 800px) {
-		max-inline-size: 100%;
 		min-inline-size: var(--toepassing-size-subnav-width);
 	}
 	@media (max-width: 799px) {
@@ -193,13 +192,13 @@ em, i {
 
 a {
 	color: var(--toepassing-color-interactive-default-text);
-	text-decoration: var(--toepassing-text-decoration-hyperlink);
+	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 	text-decoration-skip-ink: auto;
 	text-underline-offset: 3px;
 	transition: var(--toepassing-transition-default);
 	&:hover, &:focus-visible {
 		color: var(--toepassing-color-interactive-hover-text);
-		text-decoration: none;
+		text-decoration-color: transparent;
 	}
 	&:active {
 		color: var(--toepassing-color-interactive-active-text);
@@ -271,7 +270,7 @@ pre {
 	align-items: center;
 	display: inline-flex;
 	gap: var(--toepassing-space-layout-3xs);
-	text-decoration: none;
+	text-decoration-color: transparent;
 	svg {
 		block-size: var(--toepassing-size-icon-sm);
 	}
@@ -279,7 +278,7 @@ pre {
 .icon-link {
 	&:hover {
 		color: var(--toepassing-color-interactive-hover-text);
-		text-decoration: underline !important;
+		text-decoration: var(--toepassing-text-text-decoration-hyperlink) !important;
 	}
 }
 
@@ -293,7 +292,7 @@ pre {
 	}
 	&:hover, &:active, &:focus-visible {
 		color: var(--toepassing-color-interactive-hover-text);
-		text-decoration: none;
+		text-decoration-color: transparent;
 	}
 }
 
@@ -695,10 +694,10 @@ nav {
 		display: inline-block;
 		font: var(--toepassing-text-nav-main-nav);
 		padding: var(--toepassing-space-padding-md);
-		text-decoration: none;
+		text-decoration-color: transparent;
 	}
 	[aria-current], a:hover {
-		text-decoration: var(--toepassing-text-decoration-hyperlink);
+		text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 	}
 	[aria-current] {
 		font-weight: var(--toepassing-text-font-weight-bold);
@@ -745,19 +744,13 @@ button.side-nav-toggle {
 		@media (max-width: 799px) {
 			background: var(--toepassing-color-background-default);
 			display: none;
-			inline-size: 100%;
-			margin-block-end: var(--toepassing-space-margin-lg);
+			margin-block-end: var(--toepassing-space-margin-md);
 			padding: var(--toepassing-space-padding-md);
 		}
 	}
-	> li + li {
-		margin-block-start: var(--toepassing-space-layout-xs);
-	}
 	li {
-		inline-size: 100%;
 		a {
 			align-items: center;
-			background: var(--toepassing-color-interactive-alternate-default-background);
 			border-radius: var(--toepassing-border-radius-md);
 			color: var(--toepassing-color-interactive-alternate-default-text);
 			display: flex;
@@ -766,18 +759,16 @@ button.side-nav-toggle {
 			padding-block: var(--toepassing-space-padding-2xs);
 			padding-inline: var(--toepassing-space-padding-md);
 			text-decoration: none;
-			&:hover, &:focus {
+			&:hover, &:focus, &:active {
 				background: var(--toepassing-color-side-nav-background-hover);
-				color: var(--toepassing-color-interactive-alternate-default-text);
+				color: inherit;
 			}
 			&:active {
 				background: var(--toepassing-color-interactive-alternate-active-background);
-				color: var(--toepassing-color-interactive-alternate-active-text);
 			}
 		}
 		[aria-current] {
 			background: var(--toepassing-color-interactive-alternate-selected-background);
-			color: var(--toepassing-color-interactive-alternate-selected-text);
 			font-weight: var(--toepassing-text-font-weight-semi-bold);
 		}
 		svg {
@@ -811,7 +802,7 @@ button.side-nav-toggle {
 		display: flex;
 		gap: var(--toepassing-space-padding-xs);
 		list-style: none;
-		> * + * {
+		> * {
 			margin-block-start: 0;
 		}
 	}
@@ -824,22 +815,16 @@ button.side-nav-toggle {
 		min-block-size: var(--toepassing-pointer-target-min-size);
 		min-inline-size: var(--toepassing-pointer-target-min-size);
 		padding-inline: var(--toepassing-space-padding-sm);
-		text-decoration: none;
 	}
 	a {
 		&:hover {
 			background: var(--toepassing-color-interactive-alternate-hover-background);
-		}
-		&:focus-visible {
-			outline: var(--toepassing-focus-outline);
-			outline-offset: var(--toepassing-focus-outline-offset);
 		}
 	}
 	[aria-current="page"] {
 		background: var(--toepassing-color-interactive-selected-background);
 		border-color: var(--toepassing-color-interactive-selected-border);
 		color: var(--toepassing-color-text-inverse);
-		font-weight: var(--toepassing-text-font-weight-semi-bold);
 	}
 }
 
@@ -858,7 +843,7 @@ a[href$=".pdf"]::after {
 /* Navigatie: Link terug */
 .back-link {
 	display: inline-block;
-	font-size: var(--rijkshuisstijl-text-font-size-sm);
+	text-decoration-color: transparent;
 	&::before {
 		background-color: currentcolor;
 		block-size: var(--toepassing-size-icon-xs);
@@ -870,6 +855,9 @@ a[href$=".pdf"]::after {
 		transform: rotate(180deg);
 		vertical-align: middle;
 	}
+	&:hover {
+		text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+	}
 }
 
 /* Navigatie: footer */
@@ -879,10 +867,10 @@ footer {
 		display: inline-block;
 		font: var(--toepassing-text-nav-footer);
 		padding-block: var(--toepassing-space-padding-xs);
-		text-decoration: none;
+		text-decoration-color: transparent;
 		&:hover {
 			color: inherit;
-			text-decoration: var(--toepassing-text-decoration-hyperlink) !important;
+			text-decoration: var(--toepassing-text-text-decoration-hyperlink) !important;
 		}
 	}
 }
@@ -1007,14 +995,14 @@ caption {
 		font-size: var(--toepassing-text-size-title-xl);
 	}
 	a:not(.btn-cta) {
-		text-decoration: none;
+		text-decoration-color: transparent;
 		p {
 			color: var(--toepassing-color-text-default);
 		}
 		&:hover {
 			h3, h4 {
 				color: var(--toepassing-color-interactive-hover-text);
-				text-decoration: underline;
+				text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 			}
 		}
 		/* Onzichtbare link die de hele card klikbaar maakt */
@@ -1210,7 +1198,7 @@ dd .feedback {
 			position: absolute;
 		}
 		&:hover a {
-			text-decoration: var(--toepassing-text-decoration-hyperlink);
+			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 		}
 	}
 	tbody {
@@ -1982,7 +1970,7 @@ small.interest-industry, small.interest-business {
 .tiles {
 	p a {
 		&:hover {
-			text-decoration: underline;
+			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
 		}
 	}
 }
