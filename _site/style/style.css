@@ -615,17 +615,6 @@ a.btn-cta {
 			inline-size: initial;
 		}
 	}
-	.share-topic {
-		/* align-items: center;
-		display: inline-flex;
-		font: var(--toepassing-text-smalltext);
-		gap: var(--toepassing-space-layout-3xs); */
-		svg {
-			block-size: var(--toepassing-size-icon-sm);
-			fill: currentcolor;
-			inline-size: var(--toepassing-size-icon-sm);
-		}
-	}
 }
 
 /* Knoppen zonder visuele knop-stijl (links en iconen die als button functioneren) */
