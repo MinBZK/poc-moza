@@ -52,6 +52,9 @@ header {
 	border-block-end: var(--toepassing-border-pageheader-border);
 	box-shadow: var(--toepassing-box-shadow-default);
 	margin-block-end: var(--toepassing-space-layout-md);
+	@media (max-width: 799px) {
+		margin-block-end: var(--toepassing-space-layout-xs);
+	}
 	.logo {
 		margin-block: 0 var(--toepassing-space-layout-sm);
 		text-align: center;
@@ -113,7 +116,11 @@ main {
 aside {
 	max-inline-size: min-content;
 	@media (min-width: 800px) {
+		max-inline-size: 100%;
 		min-inline-size: var(--toepassing-size-subnav-width);
+	}
+	@media (max-width: 799px) {
+		max-inline-size: 100%;
 	}
 }
 
@@ -186,7 +193,7 @@ em, i {
 
 a {
 	color: var(--toepassing-color-interactive-default-text);
-	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+	text-decoration: var(--toepassing-text-decoration-hyperlink);
 	text-decoration-skip-ink: auto;
 	text-underline-offset: 3px;
 	transition: var(--toepassing-transition-default);
@@ -661,7 +668,6 @@ a.btn-cta {
 
 video {
 	aspect-ratio: 16 / 9;
-	background: var(--toepassing-color-background-subtle);
 	inline-size: 100%;
 }
 
@@ -692,8 +698,7 @@ nav {
 		text-decoration: none;
 	}
 	[aria-current], a:hover {
-		text-decoration: var(--toepassing-text-text-decoration-hyperlink);
-		text-underline-offset: 8px;
+		text-decoration: var(--toepassing-text-decoration-hyperlink);
 	}
 	[aria-current] {
 		font-weight: var(--toepassing-text-font-weight-bold);
@@ -705,7 +710,6 @@ button.side-nav-toggle {
 	align-items: center;
 	background: var(--toepassing-color-background-default);
 	color: var(--toepassing-color-interactive-default-text);
-	cursor: pointer;
 	display: none;
 	gap: var(--toepassing-space-layout-xs);
 	inset-block-start: var(--toepassing-space-padding-sm);
@@ -878,7 +882,7 @@ footer {
 		text-decoration: none;
 		&:hover {
 			color: inherit;
-			text-decoration: var(--toepassing-text-text-decoration-hyperlink) !important;
+			text-decoration: var(--toepassing-text-decoration-hyperlink) !important;
 		}
 	}
 }
@@ -1206,7 +1210,7 @@ dd .feedback {
 			position: absolute;
 		}
 		&:hover a {
-			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+			text-decoration: var(--toepassing-text-decoration-hyperlink);
 		}
 	}
 	tbody {
@@ -1639,7 +1643,7 @@ summary {
 	background: var(--toepassing-color-badge-background);
 	border-radius: var(--toepassing-border-radius-round);
 	color: var(--toepassing-color-badge-text);
-	font: var(--toepassing-text-text-badge);
+	font: var(--toepassing-text-badge);
 	margin-inline-start: auto;
 	padding: 0 var(--toepassing-space-padding-xs);
 	text-align: center;
@@ -1741,7 +1745,7 @@ h1, h2, h3, h4, h5, h6, a, button {
 	border-radius: var(--toepassing-border-radius-round);
 	color: var(--toepassing-color-text-inverse);
 	display: flex;
-	font: var(--toepassing-text-text-badge);
+	font: var(--toepassing-text-badge);
 	justify-content: center;
 	min-inline-size: fit-content;
 	white-space: nowrap;
