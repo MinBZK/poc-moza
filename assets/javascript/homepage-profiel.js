@@ -32,21 +32,13 @@
 	function maakActionGroup(titel) {
 		var div = document.createElement("div");
 		div.className = "action-group topic-options";
-		div.innerHTML = '<label class="save-favorite"><input type="checkbox" /> <span class="favorite-label">Bewaar</span> <span class="visually-hidden">' + titel + '</span></label>'
+		div.innerHTML = '<label class="save-topic"><input type="checkbox" /> <span class="favorite-label">Bewaar</span> <span class="visually-hidden">' + titel + '</span></label>'
 			+ '<button class="link-button share-topic" data-feature="Delen" data-feature-type="functionaliteit">' + ' Deel</button>'
 			+ '<button class="link-button hide-topic">Niet relevant voor mij</button>';
 		return div;
 	}
 
-	function maakInterestSmall(interestType) {
-		if (!interestType) return null;
-		var small = document.createElement("small");
-		small.className = "interest-" + interestType;
-		small.innerHTML = interestType === "business" ? "Mogelijk relevant voor <b>uw bedrijf</b>" : "Mogelijk relevant voor <b>uw branche</b>";
-		return small;
-	}
-
-	function maakSubsidieLi(item, interestType) {
+	function maakSubsidieLi(item) {
 		var li = document.createElement("li");
 		li.className = "card-topic";
 		var a = document.createElement("a");
@@ -54,8 +46,6 @@
 		a.className = "content-link is-unread";
 		a.innerHTML = "<h3>" + item.titel + "</h3><span class=\"card-link\"></span>";
 		li.appendChild(a);
-		var interest = maakInterestSmall(interestType);
-		if (interest) li.appendChild(interest);
 		var p = document.createElement("p");
 		p.textContent = item.beschrijving;
 		li.appendChild(p);
@@ -70,7 +60,7 @@
 		return li;
 	}
 
-	function maakRegelingLi(item, interestType) {
+	function maakRegelingLi(item) {
 		var li = document.createElement("li");
 		li.className = "card-topic";
 		var a = document.createElement("a");
@@ -78,8 +68,6 @@
 		a.className = "content-link is-unread";
 		a.innerHTML = "<h3>" + item.titel + "</h3><span class=\"card-link\"></span>";
 		li.appendChild(a);
-		var interest = maakInterestSmall(interestType);
-		if (interest) li.appendChild(interest);
 		var p = document.createElement("p");
 		p.textContent = item.beschrijving;
 		li.appendChild(p);
@@ -99,7 +87,7 @@
 		while (ul.firstChild) ul.removeChild(ul.firstChild);
 		var getoond = limiet ? getagdeItems.slice(0, limiet) : getagdeItems;
 		getoond.forEach(function (entry) {
-			ul.appendChild(entry.maakFn(entry.item, entry.interest));
+			ul.appendChild(entry.maakFn(entry.item));
 		});
 		ul.setAttribute("aria-busy", "false");
 	}
@@ -118,7 +106,7 @@
 			var eind = Math.min(start + PAGINA_GROOTTE, getagdeItems.length);
 			for (var i = start; i < eind; i++) {
 				var entry = getagdeItems[i];
-				ul.appendChild(entry.maakFn(entry.item, entry.interest));
+				ul.appendChild(entry.maakFn(entry.item));
 			}
 			ul.setAttribute("aria-busy", "false");
 			renderPaginering();
@@ -182,8 +170,8 @@
 		return ids.map(vindFn).filter(Boolean);
 	}
 
-	function tagItems(items, maakFn, interest) {
-		return items.map(function (item) { return { item: item, maakFn: maakFn, interest: interest }; });
+	function tagItems(items, maakFn) {
+		return items.map(function (item) { return { item: item, maakFn: maakFn }; });
 	}
 
 	function render() {
@@ -204,14 +192,14 @@
 		}
 
 		// Gecombineerde lijsten: bedrijf-items eerst, dan branche-items
-		var alleSubs = tagItems(bedrijfSubs, maakSubsidieLi, "business")
-			.concat(tagItems(brancheSubs, maakSubsidieLi, "industry"));
-		var alleRegs = tagItems(bedrijfRegs, maakRegelingLi, "business")
-			.concat(tagItems(brancheRegs, maakRegelingLi, "industry"));
+		var alleSubs = tagItems(bedrijfSubs, maakSubsidieLi)
+			.concat(tagItems(brancheSubs, maakSubsidieLi));
+		var alleRegs = tagItems(bedrijfRegs, maakRegelingLi)
+			.concat(tagItems(brancheRegs, maakRegelingLi));
 
-		// Homepage (zonder badges)
-		var homeSubItems = tagItems(bedrijfSubs, maakSubsidieLi, null);
-		var homeRegItems = tagItems(bedrijfRegs, maakRegelingLi, null);
+		// Homepage
+		var homeSubItems = tagItems(bedrijfSubs, maakSubsidieLi);
+		var homeRegItems = tagItems(bedrijfRegs, maakRegelingLi);
 		vulLijst(document.querySelector("[data-homepage-subsidies]"), homeSubItems);
 		vulLijst(document.querySelector("[data-homepage-regelgeving]"), homeRegItems);
 

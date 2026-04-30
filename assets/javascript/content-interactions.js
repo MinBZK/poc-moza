@@ -23,7 +23,7 @@ function getCategory(li) {
 }
 
 function getFavoriteKey(checkbox) {
-	const label = checkbox.closest(".save-favorite");
+	const label = checkbox.closest(".save-topic");
 	const hidden = label?.querySelector(".visually-hidden");
 	return hidden ? "favorite:" + hidden.textContent.trim() : null;
 }
@@ -50,7 +50,7 @@ function getFavoriteData(checkbox) {
 }
 
 // Herstel opgeslagen staat bij laden
-document.querySelectorAll(".save-favorite input[type='checkbox']").forEach((checkbox) => {
+document.querySelectorAll(".save-topic input[type='checkbox']").forEach((checkbox) => {
 	const key = getFavoriteKey(checkbox);
 	if (!key) return;
 	const stored = localStorage.getItem(key);
@@ -62,7 +62,7 @@ document.querySelectorAll(".save-favorite input[type='checkbox']").forEach((chec
 
 // Sla staat op bij wijziging
 document.addEventListener("change", (e) => {
-	if (e.target.matches(".save-favorite input[type='checkbox']")) {
+	if (e.target.matches(".save-topic input[type='checkbox']")) {
 		const key = getFavoriteKey(e.target);
 		if (!key) return;
 		if (e.target.checked) {

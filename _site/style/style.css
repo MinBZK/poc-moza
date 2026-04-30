@@ -193,6 +193,7 @@ em, i {
 a {
 	color: var(--toepassing-color-interactive-default-text);
 	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+	text-decoration-color: currentcolor;
 	text-decoration-skip-ink: auto;
 	text-underline-offset: 3px;
 	transition: var(--toepassing-transition-default);
@@ -307,7 +308,7 @@ pre {
 }
 :focus-visible {
 	outline: var(--toepassing-focus-outline);
-	outline-offset: var(--toepassing-focus-outline-offset);
+	outline-offset: var(--toepassing-focus-outline-offset-md);
 	&[aria-disabled] {
 		outline-color: var(--toepassing-color-interactive-disabled-border);
 	}
@@ -537,7 +538,7 @@ ul.selection {
 	}
 	&:focus-visible {
 		outline: var(--toepassing-focus-outline);
-		outline-offset: calc(2 * var(--toepassing-focus-outline-offset));
+		outline-offset: calc(2 * var(--toepassing-focus-outline-offset-md));
 		&::before {
 			outline: 2px solid var(--toepassing-color-interactive-default-surface);
 		}
@@ -577,7 +578,7 @@ button, a.btn-cta {
 		border-color: var(--toepassing-color-interactive-default-border);
 		color: var(--toepassing-color-interactive-default-text);
 	}
-	&:hover, &:focus {
+	&:hover, &:focus-visible {
 		background: var(--toepassing-color-interactive-hover-background);
 		border-color: var(--toepassing-color-interactive-hover-border);
 		color: var(--toepassing-color-text-inverse);
@@ -631,10 +632,10 @@ a.btn-cta {
 	cursor: pointer;
 	min-block-size: unset;
 	padding: 0;
-	&:hover, &:focus, &:focus-visible, &:active {
+	&:hover, &:focus-visible, &:active {
 		background: inherit !important;
-		color: inherit !important;
-	}
+		color: inherit !important;	
+	}	
 }
 .icon-button {
 	display: flex;
@@ -721,7 +722,7 @@ button.side-nav-toggle {
 		mask: url("../assets/icons/icon-menu.svg") no-repeat center / contain;
 		transition: var(--toepassing-transition-transform);
 	}
-	&:hover, &:active, &:focus, &:focus-visible, &:focus-within {
+	&:hover, &:active, &:focus-visible {
 		background: inherit;
 		color: inherit;
 	}
@@ -759,8 +760,8 @@ button.side-nav-toggle {
 			padding-block: var(--toepassing-space-padding-2xs);
 			padding-inline: var(--toepassing-space-padding-md);
 			text-decoration: none;
-			&:hover, &:focus, &:active {
-				background: var(--toepassing-color-side-nav-background-hover);
+			&:hover, &:focus-visible, &:active {
+				background: var(--toepassing-color-interactive-alternate-hover-background);
 				color: inherit;
 			}
 			&:active {
@@ -878,7 +879,7 @@ footer {
 .footer-links {
 	display: flex;
 	flex-direction: column;
-	gap: var(--toepassing-space-layout-md);
+	gap: var(--toepassing-space-margin-lg);
 	justify-content: flex-end;
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
@@ -887,8 +888,8 @@ footer {
 	}
 	nav {
 		max-inline-size: 12rem;
-		> * + * {
-			margin-block-start: var(--toepassing-space-layout-xs);
+		h4 {
+			margin-block-end: var(--toepassing-space-layout-xs);
 		}
 	}
 }
@@ -941,17 +942,14 @@ dd + dt {
 table {
 	inline-size: 100%;
 }
-thead {
-	color: var(--toepassing-color-text-subtle-1);
-}
 th {
+	color: var(--toepassing-color-text-subtle-1);
 	font-weight: var(--toepassing-text-font-weight-semi-bold);
 }
 tr {
 	vertical-align: top;
 }
 th, td {
-	/* border-block-end: var(--toepassing-border-subtle); */
 	padding-block: var(--toepassing-space-padding-xs);
 	text-align: start;
 	.feedback {
@@ -959,8 +957,7 @@ th, td {
 	}
 }
 caption {
-	caption-side: bottom;
-	caption-side: block-end; /* Logical property; caption-side: bottom als fallback */
+	caption-side: bottom; /* Logical property wordt nog niet ondersteund */
 	padding-block-start: var(--toepassing-space-padding-sm);
 	text-align: end;
 }
@@ -995,19 +992,17 @@ caption {
 		font-size: var(--toepassing-text-size-title-xl);
 	}
 	a:not(.btn-cta) {
-		text-decoration-color: transparent;
-		p {
-			color: var(--toepassing-color-text-default);
-		}
 		&:hover {
 			h3, h4 {
 				color: var(--toepassing-color-interactive-hover-text);
 				text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+				transition: var(--toepassing-transition-default);
 			}
 		}
 		/* Onzichtbare link die de hele card klikbaar maakt */
 		&:focus-visible .card-link {
 			outline: var(--toepassing-focus-outline);
+			outline-offset: var(--toepassing-focus-outline-offset-lg);
 		}
 	}
 	.list-content-links {
@@ -1063,20 +1058,30 @@ caption {
 .card-topic {
 	margin-block-end: var(--toepassing-space-margin-xs);
 	padding-block-end: 0 !important;
+	.content-link {
+		text-decoration: none;
+		h3, h4 {
+			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+			text-decoration-color: transparent;
+			transition: var(--toepassing-transition-default);
+		}
+		&:hover h3, &:hover h4 {
+			text-decoration-color: currentcolor;
+		}
+	}
 }
 .topic-options {
 	background: var(--toepassing-color-background-subtle);
 	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
-	font-weight: var(--toepassing-text-font-weight-semi-bold);
 	padding: var(--toepassing-space-padding-sm) var(--toepassing-space-padding-md);
 }
 /* Onzichtbare overlay-link voor klikbare cards */
 .card-link {
 	block-size: 100%;
+	border-radius: var(--toepassing-border-radius-sm);
 	inline-size: 100%;
 	inset-block-start: 0;
-	outline-offset: var(--toepassing-focus-outline-offset-2);
 	position: absolute;
 }
 
@@ -1099,7 +1104,7 @@ caption {
 
 .feedback {
 	background: var(--toepassing-color-feedback-neutral-subtle);
-	border: var(--toepassing-border-subtle);
+	border: var(--toepassing-border-default);
 	border-color: var(--toepassing-color-feedback-neutral-border);
 	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
@@ -1107,11 +1112,6 @@ caption {
 	padding: var(--toepassing-space-padding-md);
 	&[hidden] {
 		display: none;
-	}
-	div {
-		display: flex;
-		flex-direction: column;
-		gap: var(--toepassing-space-layout-2xs);
 	}
 	h2, h3, h4, h5, h6 {
 		font: var(--toepassing-text-heading-h6);
@@ -1124,7 +1124,7 @@ caption {
 		min-block-size: auto;
 	}
 	svg {
-		align-self: self-start;
+		align-self: first baseline;
 		flex-shrink: 0;
 		inline-size: var(--toepassing-size-icon-md);
 	}
@@ -1459,9 +1459,27 @@ dd .feedback {
 details {
 	border: var(--toepassing-border-subtle);
 	border-radius: var(--toepassing-border-radius-md);
-	&[open] summary::before {
-		transform: rotate(90deg);
-		transition: var(--toepassing-transition-transform);
+	&[open] {
+		border-color: var(--toepassing-color-interactive-alternate-selected-border);
+		summary {
+			background: var(--toepassing-color-interactive-alternate-selected-background);
+			&:hover, &:focus-visible {
+				background: var(--toepassing-color-interactive-alternate-hover-background);
+			}
+			&::before {
+				transform: rotate(90deg);
+				transition: var(--toepassing-transition-transform);
+			}
+		}
+	}
+	&:has(summary:hover) {
+		border-color: var(--toepassing-color-interactive-alternate-hover-border);
+	}
+	&:has(summary:focus-visible) {
+		border-color: var(--toepassing-color-interactive-alternate-focus-border);
+	}
+	&:has(summary:active) {
+		border-color: var(--toepassing-color-interactive-alternate-active-border);
 	}
 }
 summary {
@@ -1470,8 +1488,13 @@ summary {
 	display: flex;
 	gap: var(--toepassing-space-layout-2xs);
 	padding: var(--toepassing-space-padding-sm);
-	&:hover, &:focus {
+	transition: var(--toepassing-transition-default);
+	&:hover, &:focus-visible, &:active {
 		background: var(--toepassing-color-interactive-alternate-hover-background);
+		color: var(--toepassing-color-text-default);
+	}
+	&:active {
+		background: var(--toepassing-color-interactive-alternate-active-background);
 	}
 	&::before {
 		content: url("../assets/icons/icon-chevron.svg");
@@ -1492,29 +1515,22 @@ summary {
 	p {
 		padding: var(--toepassing-space-padding-sm);
 	}
-	> * + * {
-		margin-block-start: var(--toepassing-space-layout-3xs);
-	}
 }
 
 /* Tab interface */
 [role="tablist"] {
 	border-block-end: var(--toepassing-border-tabs-tab-inactive);
-	box-sizing: border-box;
-	padding-inline-start: 0;
 	li {
 		display: inline-block;
 		margin-block-end: calc(-1 * var(--toepassing-border-width-md));
 	}
 	a {
 		border-block-end: var(--toepassing-border-tabs-tab-inactive);
-		border-start-end-radius: var(--toepassing-border-radius-md);
-		border-start-start-radius: var(--toepassing-border-radius-md);
+		border-radius: var(--toepassing-border-radius-md) var(--toepassing-border-radius-md) 0 0;
 		display: inline-block;
-		padding-block: var(--toepassing-space-padding-xs);
-		padding-inline: var(--toepassing-space-padding-md);
-		&:hover {
-			background: var(--toepassing-color-interactive-alternate-hover-background) !important;
+		padding: var(--toepassing-space-padding-xs) var(--toepassing-space-padding-md);
+		&:hover, &:focus-visible {
+			background: var(--toepassing-color-interactive-alternate-hover-background);
 			border-block-end: var(--toepassing-border-tabs-tab-hover);
 		}
 		svg {
@@ -1529,15 +1545,17 @@ summary {
 }
 
 /* Topic opties */
-.save-favorite, .share-topic, .hide-topic, .delete-topic, .restore-topic {
+.save-topic, .share-topic, .hide-topic, .delete-topic, .restore-topic {
 	align-items: center;
+	border-radius: var(--toepassing-border-radius-sm);
 	color: var(--toepassing-color-interactive-default-icon);
 	cursor: pointer;
 	display: inline-flex;
 	font: var(--toepassing-text-smalltext);
+	font-weight: var(--toepassing-text-font-weight-semi-bold);
 	&:has(input:focus-visible) {
 		outline: var(--toepassing-focus-outline);
-		outline-offset: var(--toepassing-focus-outline-offset);
+		outline-offset: var(--toepassing-focus-outline-offset-md);
 	}
 	input, svg {
 		appearance: none;
@@ -1661,7 +1679,7 @@ h1, h2, h3, h4, h5, h6, a, button {
 		content: "";
 		margin-inline-start: var(--toepassing-space-padding-2xs);
 	}
-	&:hover, &:focus {
+	&:hover, &:focus-visible {
 		background: none !important;
 		color: inherit !important;
 	}
@@ -1947,13 +1965,6 @@ h1, h2, h3, h4, h5, h6, a, button {
 }
 [data-badge-id="subsidies-count"], [data-badge-id="regelgeving-count"] {
 	font-weight: bold;
-}
-
-small.interest-industry, small.interest-business {
-	color: var(--toepassing-color-text-subtle-2);
-	display: inline-block;
-	font-size: var(--rijkshuisstijl-text-font-size-sm);
-	margin-block: var(--toepassing-space-margin-2xs)  !important;
 }
 
 .side-nav {

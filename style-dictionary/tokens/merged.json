@@ -1170,7 +1170,12 @@
       "hover": {
         "background": {
           "$type": "color",
-          "$value": "{color.grijs.100}",
+          "$value": "{color.grijs.200}",
+          "$description": "Staat bij aanwijzen met de muis"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{color.interactive-alternate.hover.background}",
           "$description": "Staat bij aanwijzen met de muis"
         },
         "text": {
@@ -1190,6 +1195,11 @@
           "$value": "{color.grijs.300}",
           "$description": "Staat terwijl element ingedrukt is"
         },
+        "border": {
+          "$type": "color",
+          "$value": "{color.interactive-alternate.active.background}",
+          "$description": "Staat terwijl element ingedrukt is"
+        },
         "text": {
           "$type": "color",
           "$value": "{color.interactive-alternate.default.text}",
@@ -1205,6 +1215,11 @@
         "background": {
           "$type": "color",
           "$value": "{color.hemelblauw.50}",
+          "$description": "Ingeschakeld, aangevinkt, actief element"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{color.interactive-alternate.selected.background}",
           "$description": "Ingeschakeld, aangevinkt, actief element"
         },
         "text": {
@@ -1630,12 +1645,6 @@
         "$value": "{text.weight.bold}"
       }
     },
-    "text-decoration": {
-      "hyperlink": {
-        "$type": "textDecoration",
-        "$value": "underline solid currentColor {border-width.xs}"
-      }
-    },
     "code": {
       "$type": "typography",
       "$value": {
@@ -2055,6 +2064,12 @@
       "$value": "1140"
     }
   },
+  "text-decoration": {
+    "hyperlink": {
+      "$type": "textDecoration",
+      "$value": "underline solid currentColor {border-width.xs}"
+    }
+  },
   "opacity": {
     "interactive": {
       "disabled": {
@@ -2069,15 +2084,21 @@
       "$value": "{border-width.lg} dotted {color.interactive.focus.outline}"
     },
     "outline-offset": {
-      "$type": "spacing",
-      "$value": "{space.2}"
+      "md": {
+        "$type": "spacing",
+        "$value": "{space.2}"
+      },
+      "lg": {
+        "$type": "spacing",
+        "$value": "{space.4}"
+      }
     }
   },
   "transition": {
     "default": {
       "$type": "other",
       "$value": "background {motion.speed.fast} {motion.easing.default}, border {motion.speed.fast} {motion.easing.default}, color {motion.speed.fast} {motion.easing.default}, text-decoration {motion.speed.fast} {motion.easing.default}",
-      "$description": "Standaard transitie die toegepast wordt op alle CSS properties"
+      "$description": "Standaard transitie die toegepast wordt op meerdere CSS properties"
     },
     "opacity": {
       "$type": "other",
