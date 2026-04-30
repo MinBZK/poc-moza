@@ -624,7 +624,6 @@ a.btn-cta {
 	color: var(--toepassing-color-interactive-default-text);
 	cursor: pointer;
 	min-block-size: unset;
-	min-inline-size: unset;
 	padding: 0;
 	&:hover, &:focus, &:focus-visible, &:active {
 		background: inherit !important;
@@ -645,7 +644,6 @@ a.btn-cta {
 	display: flex;
 	margin-inline-start: auto;
 	min-block-size: var(--toepassing-pointer-target-min-size);
-	min-inline-size: var(--toepassing-pointer-target-min-size);
 	i {
 		display: none;
 	}
