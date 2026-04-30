@@ -29,13 +29,11 @@
 	function vindSubsidie(id) { return subsidies.find(function (s) { return s.id === id; }); }
 	function vindRegeling(id) { return regelgeving.find(function (r) { return r.id === id; }); }
 
-	var DELEN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="currentColor" d="M48 42c-2.045 0-3.925.69-5.436 1.84L23.921 33.13c.046-.372.078-.747.078-1.13a8.956 8.956 0 0 0-1.975-5.618c.088-.08.31-.095.518.038.378.239 1.78 1.273 3.323 3.4l16.712-9.648A8.948 8.948 0 0 0 48 22a9 9 0 1 0-9-9c0 .377.03.746.076 1.111L20.46 24.858A8.95 8.95 0 0 0 15 23a9 9 0 0 0 0 18c2.032 0 3.9-.681 5.407-1.817l18.666 10.725A9.047 9.047 0 0 0 39 51a9 9 0 1 0 9-9z"/></svg>';
-
 	function maakActionGroup(titel) {
 		var div = document.createElement("div");
 		div.className = "action-group topic-options";
 		div.innerHTML = '<label class="save-favorite"><input type="checkbox" /> <span class="favorite-label">Bewaar</span> <span class="visually-hidden">' + titel + '</span></label>'
-			+ '<button class="link-button share-topic" data-feature="Delen" data-feature-type="functionaliteit">' + DELEN_ICON + ' Deel</button>'
+			+ '<button class="link-button share-topic" data-feature="Delen" data-feature-type="functionaliteit">' + ' Deel</button>'
 			+ '<button class="link-button hide-topic">Niet relevant voor mij</button>';
 		return div;
 	}
