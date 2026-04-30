@@ -211,6 +211,13 @@ function buildTogglePanel() {
 
 	document.body.appendChild(panel);
 	document.body.appendChild(toggle);
+
+	document.addEventListener("click", (e) => {
+		if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) {
+			panel.hidden = true;
+			toggle.setAttribute("aria-expanded", "false");
+		}
+	});
 }
 
 applyFeatureFlags();

@@ -1219,37 +1219,35 @@
         }
       }
     },
-    "component": {
-      "footer": {
-        "background": {
-          "$type": "color",
-          "$value": "{color.grijs.700}"
-        }
+    "footer": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.grijs.700}"
+      }
+    },
+    "badge": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.feedback.attention}"
       },
-      "badge": {
-        "background": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text.inverse}"
+      }
+    },
+    "text-input": {
+      "border": {
+        "default": {
           "$type": "color",
-          "$value": "{color.feedback.attention}"
-        },
-        "text": {
+          "$value": "{color.border.default}"
+        }
+      }
+    },
+    "side-nav": {
+      "background": {
+        "hover": {
           "$type": "color",
-          "$value": "{color.text.inverse}"
-        }
-      },
-      "text-input": {
-        "border": {
-          "default": {
-            "$type": "color",
-            "$value": "{color.border.default}"
-          }
-        }
-      },
-      "side-nav": {
-        "background": {
-          "hover": {
-            "$type": "color",
-            "$value": "{color.grijs.200}"
-          }
+          "$value": "{color.grijs.200}"
         }
       }
     },
@@ -1414,12 +1412,10 @@
         "$value": "{size.48}"
       }
     },
-    "component": {
-      "subnav": {
-        "width": {
-          "$type": "sizing",
-          "$value": "288"
-        }
+    "subnav": {
+      "width": {
+        "$type": "sizing",
+        "$value": "288"
       }
     }
   },
@@ -1429,6 +1425,10 @@
         "$type": "fontFamilies",
         "$value": "RijksSansVF",
         "$description": "Rijksoverheid Sans variable font"
+      },
+      "monospace": {
+        "$type": "fontFamilies",
+        "$value": "Monaco, Consolas, \"Lucida Console\", monospace"
       },
       "body": {
         "$type": "fontFamilies",
@@ -1639,7 +1639,7 @@
     "code": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "monospace",
+        "fontFamily": "{text.font-family.monospace}",
         "fontWeight": "{text.font-weight.semi-bold}",
         "fontSize": "{text.size.body.sm}"
       }
@@ -1671,17 +1671,13 @@
         }
       }
     },
-    "component": {
-      "text": {
-        "badge": {
-          "$type": "typography",
-          "$value": {
-            "fontFamily": "{text.font-family.body}",
-            "fontWeight": "{text.font-weight.semi-bold}",
-            "fontSize": "{text.size.body.2xs}",
-            "lineHeight": "{text.line-height.md}"
-          }
-        }
+    "badge": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{text.font-family.body}",
+        "fontWeight": "{text.font-weight.semi-bold}",
+        "fontSize": "{text.size.body.2xs}",
+        "lineHeight": "{text.line-height.md}"
       }
     },
     "size": {
@@ -1732,6 +1728,14 @@
           "$type": "fontSizes",
           "$value": "{text.font-size.4xl}"
         }
+      }
+    },
+    "input-digits": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{text.font-family.monospace}",
+        "fontWeight": "{text.font-weight.semi-bold}",
+        "fontSize": "{text.font-size.sm}"
       }
     }
   },
@@ -1927,12 +1931,10 @@
         "$value": "{space.2xl}"
       }
     },
-    "component": {
-      "card": {
-        "padding": {
-          "$type": "spacing",
-          "$value": "{space.padding.xl}"
-        }
+    "card": {
+      "padding": {
+        "$type": "spacing",
+        "$value": "{space.padding.xl}"
       }
     },
     "layout": {
@@ -2095,42 +2097,40 @@
         "$value": "{box-shadow.default}"
       }
     },
-    "component": {
-      "pageheader": {
-        "border": {
+    "pageheader": {
+      "border": {
+        "$type": "border",
+        "$value": {
+          "color": "{color.hemelblauw.500}",
+          "width": "{border-width.md}",
+          "style": "solid"
+        }
+      }
+    },
+    "tabs": {
+      "tab": {
+        "inactive": {
           "$type": "border",
           "$value": {
-            "color": "{color.hemelblauw.500}",
+            "width": "{border-width.md}",
+            "style": "solid",
+            "color": "{color.border.subtle}"
+          }
+        },
+        "hover": {
+          "$type": "border",
+          "$value": {
+            "width": "{border-width.md}",
+            "style": "solid",
+            "color": "{color.interactive.hover.border}"
+          }
+        },
+        "selected": {
+          "$type": "border",
+          "$value": {
+            "color": "{color.interactive.selected.border}",
             "width": "{border-width.md}",
             "style": "solid"
-          }
-        }
-      },
-      "tabs": {
-        "tab": {
-          "inactive": {
-            "$type": "border",
-            "$value": {
-              "width": "{border-width.md}",
-              "style": "solid",
-              "color": "{color.border.subtle}"
-            }
-          },
-          "hover": {
-            "$type": "border",
-            "$value": {
-              "width": "{border-width.md}",
-              "style": "solid",
-              "color": "{color.interactive.hover.border}"
-            }
-          },
-          "selected": {
-            "$type": "border",
-            "$value": {
-              "color": "{color.interactive.selected.border}",
-              "width": "{border-width.md}",
-              "style": "solid"
-            }
           }
         }
       }
