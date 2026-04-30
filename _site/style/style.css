@@ -38,52 +38,46 @@
 /* -- PAGINA-LAYOUT -- */
 
 body {
+	background: var(--toepassing-color-background-subtle);
 	color: var(--toepassing-color-text-default);
 	display: flex;
 	flex-direction: column;
 	font-family: var(--toepassing-text-font-family-body), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 	min-block-size: 100vh;
 	min-block-size: 100dvh; /* Fallback: vh voor browsers zonder dvh-ondersteuning */
-	> * + * {
-		margin-block-start: var(--toepassing-space-layout-md);
-	}
 }
 
 header {
-	position: relative;
+	background: var(--toepassing-color-background-default);
+	border-block-end: var(--toepassing-border-pageheader-border);
+	box-shadow: var(--toepassing-box-shadow-default);
+	margin-block-end: var(--toepassing-space-layout-md);
 	.logo {
-		margin-block: 0;
+		margin-block: 0 var(--toepassing-space-layout-sm);
 		text-align: center;
 		img {
 			inline-size: var(--toepassing-size-logo-width);
 		}
-		nav {
-			li {
-				display: inline-block;
-			}
-		}
 	}
 	.user-menu {
-		align-items: center;
 		display: flex;
 		gap: var(--toepassing-space-layout-md);
 	}
-	/* Toon fallback-naam als accountwisselaar verborgen is, verberg anders */
+	/* Toon fallback-naam als accountwisselaar verborgen is, anders verbergen */
 	.account-switcher-fallback {
 		display: none;
 	}
 	.account-switcher[hidden] ~ .account-switcher-fallback {
 		display: inline-flex;
 	}
-	> * + * {
-		margin-block-start: var(--toepassing-space-layout-md);
-	}
 }
 .page-head {
+	align-items: last baseline;
 	display: flex;
 	justify-content: space-between;
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
+	padding-block-end: var(--toepassing-space-padding-sm);
 	padding-inline: var(--toepassing-space-padding-md);
 	.page-title {
 		font: var(--toepassing-text-heading-h2);
@@ -91,7 +85,6 @@ header {
 }
 
 main {
-	flex: 1;
 	inline-size: 100%;
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
@@ -120,37 +113,14 @@ main {
 aside {
 	max-inline-size: min-content;
 	@media (min-width: 800px) {
-		min-inline-size: var(--toepassing-size-component-subnav-width);
+		min-inline-size: var(--toepassing-size-subnav-width);
 	}
 }
 
 footer {
-	background: var(--toepassing-color-component-footer-background);
+	background: var(--toepassing-color-footer-background);
 	color: var(--toepassing-color-text-inverse);
-	margin-block-start: 0; /* Compensatie voor layout-spacing op body */
 	padding: var(--toepassing-space-padding-xl) var(--toepassing-space-padding-md);
-}
-
-.skip-link {
-	margin-block-start: var(--toepassing-space-margin-sm);
-	margin-inline-start: var(--toepassing-space-margin-sm);
-	padding: var(--toepassing-space-component-md) var(--toepassing-space-component-lg);
-	position: absolute;
-	translate: -200% 0%;
-	&:focus-visible {
-		translate: 0 0;
-	}
-}
-
-/* MijnOverheid Zakelijk specifiek */
-body.moza {
-	background: var(--toepassing-color-background-subtle);
-}
-
-.moza header {
-	background: var(--toepassing-color-background-default);
-	border-block-end: var(--toepassing-border-component-pageheader-border);
-	box-shadow: var(--toepassing-box-shadow-default);
 }
 
 .moza article {
@@ -160,19 +130,7 @@ body.moza {
 }
 
 /* Landing (uitgelogde staat) */
-.landing {
-	margin-inline: auto;
-	max-inline-size: 40rem;
-	> * + * {
-		margin-block-start: var(--toepassing-space-layout-md);
-	}
-}
 .landing-hero {
-	> * + * {
-		margin-block-start: var(--toepassing-space-layout-xs);
-	}
-}
-.landing-features {
 	> * + * {
 		margin-block-start: var(--toepassing-space-layout-xs);
 	}
@@ -259,6 +217,16 @@ pre {
 
 /* -- TOEGANKELIJKHEID -- */
 
+.skip-link {
+	margin-block-start: var(--toepassing-space-margin-sm);
+	margin-inline-start: var(--toepassing-space-margin-sm);
+	position: absolute;
+	translate: -200% 0%;
+	&:focus-visible {
+		translate: 0 0;
+	}
+}
+
 /* Visueel verborgen maar toegankelijk voor screenreaders */
 .visually-hidden {
 	block-size: 1px;
@@ -342,7 +310,7 @@ pre {
 	}
 }
 
-/* Bevestigde opties (niet meer wijzigbaar, gemarkeerd met vinkje) */
+/* Bevestigde opties (niet meer wijzigbaar, gemarkeerd met vinkje, wordt gebruikt voor Aangesloten organisaties onder Contactgegevens) */
 li.option--confirmed {
 	&::before {
 		background-color: var(--toepassing-color-feedback-success-icon);
@@ -352,9 +320,6 @@ li.option--confirmed {
 		inline-size: var(--toepassing-size-icon-md);
 		margin-inline-end: var(--toepassing-space-margin-2xs);
 		mask-image: url("../assets/icons/icon-succes.svg");
-		mask-position: center;
-		mask-repeat: no-repeat;
-		mask-size: contain;
 		vertical-align: middle;
 	}
 }
@@ -366,7 +331,7 @@ li.option--confirmed {
 		position: relative;
 		&::before {
 			background: var(--toepassing-color-feedback-attention);
-			block-size: var(--toepassing-size-3xs);
+			block-size: var(--toepassing-size-xs);
 			border-radius: var(--toepassing-border-radius-round);
 			content: "";
 			flex-shrink: 0;
@@ -432,9 +397,24 @@ button, [type="date"], [type="datetime-local"], [type="email"], [type="month"], 
 	mask: url("../assets/icons/icon-link-intern.svg") no-repeat center / contain;
 	vertical-align: middle;
 }
-a.btn-cta[rel~="external"]::after {
+.btn-cta[rel~="external"]::after {
 	mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
 	vertical-align: baseline;
+}
+
+/* Formulieren: labels */
+legend, label {
+	display: block;
+	font: var(--toepassing-text-label);
+	margin-block-end: var(--toepassing-space-margin-3xs);
+}
+label {
+	cursor: pointer;
+}
+
+.form-field-helper-text {
+	color: var(--toepassing-color-text-subtle-1);
+	font: var(--toepassing-text-smalltext-default);
 }
 
 /* Formulieren: tekst-invoer elementen */
@@ -449,24 +429,7 @@ textarea {
 	resize: block; /* Alleen verticaal resizen zodat de breedte-layout intact blijft */
 }
 
-/* Formulieren: verificatiecode (6-cijferige code-invoer) */
-.code-input {
-	display: flex;
-	gap: var(--toepassing-space-layout-2xs);
-	margin-block-end: var(--toepassing-space-margin-xs);
-	.verify-digit {
-		inline-size: var(--toepassing-size-md);
-		text-align: center;
-	}
-}
-
 /* Formulieren: inline feedback bij invoervelden */
-td .feedback {
-	font: var(--toepassing-text-smalltext-default);
-	margin-block-start: var(--toepassing-space-margin-2xs);
-	padding: var(--toepassing-space-padding-sm);
-}
-
 .form-field-error {
 	color: var(--toepassing-color-feedback-error-icon);
 	font: var(--toepassing-text-smalltext-default);
@@ -474,18 +437,6 @@ td .feedback {
 	&[hidden] {
 		display: none;
 	}
-}
-
-/* Formulieren: labels */
-legend, label {
-	display: block;
-	font: var(--toepassing-text-label);
-	margin-block-end: var(--toepassing-space-margin-3xs);
-}
-
-.form-field-helper-text {
-	color: var(--toepassing-color-text-subtle-1);
-	font: var(--toepassing-text-smalltext-default);
 }
 
 /* Formulieren: zoekveld met knop */
@@ -498,7 +449,7 @@ legend, label {
 	}
 }
 
-/* Formulieren: checkboxes en radio's (custom appearance) */
+/* Formulieren: (custom) checkboxes en radio button's */
 ul.selection {
 	list-style: none;
 	padding: 0;
@@ -521,17 +472,16 @@ ul.selection {
 	place-content: center;
 	transition: var(--toepassing-transition-default);
 	vertical-align: top;
-	/* Vinkje/bolletje: standaard verborgen via scale(0) */
 	&::before, &[data-indeterminate]::before {
 		block-size: var(--toepassing-size-icon-sm);
 		content: "";
 		inline-size: var(--toepassing-size-icon-sm);
-		transform: scale(0);
+		transform: scale(0); /* Vinkje/bolletje: standaard verborgen met scale(0) */
 		transition: var(--toepassing-transition-transform);
 	}
 	&:checked {
 		background: var(--toepassing-color-interactive-default-background);
-		border-color: var(--toepassing-color-interactive-default-background);
+		border-color: var(--toepassing-color-interactive-default-border);
 		&::before {
 			transform: scale(1);
 		}
@@ -540,7 +490,7 @@ ul.selection {
 		border-color: var(--toepassing-color-interactive-hover-border);
 		&:checked {
 			background: var(--toepassing-color-interactive-hover-background);
-			border-color: var(--toepassing-color-interactive-hover-background);
+			border-color: var(--toepassing-color-interactive-hover-border);
 		}
 	}
 	+ label {
@@ -549,6 +499,7 @@ ul.selection {
 	}
 	&[aria-disabled] + label {
 		color: var(--toepassing-color-interactive-disabled-text);
+		cursor: unset;
 	}
 }
 [type="checkbox"] {
@@ -556,10 +507,9 @@ ul.selection {
 		background-color: var(--toepassing-color-text-inverse);
 		mask: url("../assets/icons/icon-vink.svg") no-repeat center / contain;
 	}
-	/* Tri-state: indeterminate (min-icoon) */
 	&[data-indeterminate] {
 		background: var(--toepassing-color-interactive-default-background);
-		border-color: var(--toepassing-color-interactive-default-background);
+		border-color: var(--toepassing-color-interactive-default-border);
 		&::before {
 			mask: url("../assets/icons/icon-minus.svg") no-repeat center / contain;
 			transform: scale(1);
@@ -578,6 +528,27 @@ ul.selection {
 		&:hover {
 			background: var(--toepassing-color-interactive-hover-background);
 		}
+	}
+	&:focus-visible {
+		outline: var(--toepassing-focus-outline);
+		outline-offset: calc(2 * var(--toepassing-focus-outline-offset));
+		&::before {
+			outline: 2px solid var(--toepassing-color-interactive-default-surface);
+		}
+	}
+}
+
+/* Formulieren: verificatiecode (6-cijferige code-invoer) */
+.verificationcode-input {
+	display: flex;
+	gap: var(--toepassing-space-layout-2xs);
+	margin-block-end: var(--toepassing-space-margin-xs);
+	.verificationcode-verify-digit {
+		font-family: monospace;
+		font-size: var(--rijkshuisstijl-text-font-size-sm);
+		font-weight: var(--toepassing-text-font-weight-bold);
+		inline-size: var(--toepassing-size-md);
+		text-align: center;
 	}
 }
 
@@ -805,7 +776,7 @@ button.side-nav-toggle {
 			padding-inline: var(--toepassing-space-padding-md);
 			text-decoration: none;
 			&:hover, &:focus {
-				background: var(--toepassing-color-component-side-nav-background-hover);
+				background: var(--toepassing-color-side-nav-background-hover);
 				color: var(--toepassing-color-interactive-alternate-default-text);
 			}
 			&:active {
@@ -1025,7 +996,7 @@ caption {
 	display: flex;
 	flex-direction: column;
 	gap: var(--toepassing-space-layout-sm);
-	padding: var(--toepassing-space-component-card-padding);
+	padding: var(--toepassing-space-card-padding);
 	section {
 		> * + * {
 			margin-block-start: var(--toepassing-space-layout-xs);
@@ -1203,7 +1174,7 @@ caption {
 .feedback-error {
 	background: var(--toepassing-color-feedback-error-subtle);
 	border-color: var(--toepassing-color-feedback-error-border);
-	svg path:not(.icon-color-inverse) {
+	svg path:not(.icon-color-inverse), svg circle:not(.icon-color-inverse) {
 		fill: var(--toepassing-color-feedback-error-icon);
 	}
 }
@@ -1549,7 +1520,7 @@ summary {
 
 /* Tab interface */
 [role="tablist"] {
-	border-block-end: var(--toepassing-border-component-tabs-tab-inactive);
+	border-block-end: var(--toepassing-border-tabs-tab-inactive);
 	box-sizing: border-box;
 	padding-inline-start: 0;
 	li {
@@ -1557,7 +1528,7 @@ summary {
 		margin-block-end: calc(-1 * var(--toepassing-border-width-md));
 	}
 	a {
-		border-block-end: var(--toepassing-border-component-tabs-tab-inactive);
+		border-block-end: var(--toepassing-border-tabs-tab-inactive);
 		border-start-end-radius: var(--toepassing-border-radius-md);
 		border-start-start-radius: var(--toepassing-border-radius-md);
 		display: inline-block;
@@ -1565,7 +1536,7 @@ summary {
 		padding-inline: var(--toepassing-space-padding-md);
 		&:hover {
 			background: var(--toepassing-color-interactive-alternate-hover-background) !important;
-			border-block-end: var(--toepassing-border-component-tabs-tab-hover);
+			border-block-end: var(--toepassing-border-tabs-tab-hover);
 		}
 		svg {
 			margin-inline-end: var(--toepassing-space-margin-3xs);
@@ -1574,7 +1545,7 @@ summary {
 	}
 	[aria-selected="true"] {
 		background: var(--toepassing-color-interactive-alternate-selected-background);
-		border-block-end: var(--toepassing-border-component-tabs-tab-selected);
+		border-block-end: var(--toepassing-border-tabs-tab-selected);
 	}
 }
 
@@ -1673,10 +1644,10 @@ summary {
 
 /* Badge (teller/label naast headings of in navigatie) */
 .badge {
-	background: var(--toepassing-color-component-badge-background);
+	background: var(--toepassing-color-badge-background);
 	border-radius: var(--toepassing-border-radius-round);
-	color: var(--toepassing-color-component-badge-text);
-	font: var(--toepassing-text-component-text-badge);
+	color: var(--toepassing-color-badge-text);
+	font: var(--toepassing-text-text-badge);
 	margin-inline-start: auto;
 	padding: 0 var(--toepassing-space-padding-xs);
 	text-align: center;
@@ -1778,7 +1749,7 @@ h1, h2, h3, h4, h5, h6, a, button {
 	border-radius: var(--toepassing-border-radius-round);
 	color: var(--toepassing-color-text-inverse);
 	display: flex;
-	font: var(--toepassing-text-component-text-badge);
+	font: var(--toepassing-text-text-badge);
 	justify-content: center;
 	min-inline-size: fit-content;
 	white-space: nowrap;
@@ -1939,8 +1910,8 @@ h1, h2, h3, h4, h5, h6, a, button {
 	background: var(--toepassing-color-feedback-success-default);
 	color: var(--toepassing-color-text-inverse);
 	font-weight: var(--toepassing-text-font-weight-bold);
-	inline-size: 280px;
-	inset-block-start: 0;
+	inline-size: 256px;
+	inset-block-start: 3rem;
 	inset-inline-end: -4rem;
 	padding-block: var(--toepassing-space-padding-sm);
 	padding-inline: var(--toepassing-space-padding-lg);

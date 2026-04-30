@@ -183,6 +183,7 @@
 	--rijkshuisstijl-space-80: 5rem;
 	--rijkshuisstijl-space-base: 0.5rem; /** Base spacing-size for calculation. Defaults to 8 to follow 8px grid. */
 	--rijkshuisstijl-text-font-family-default: rijkssansvf; /** Rijksoverheid Sans variable font */
+	--rijkshuisstijl-text-font-family-monospace: monaco, consolas, "Lucida Console", monospace;
 	--rijkshuisstijl-text-font-size-2xl: 1.5rem;
 	--rijkshuisstijl-text-font-size-2xs: 0.6667rem;
 	--rijkshuisstijl-text-font-size-3xl: 2rem;
