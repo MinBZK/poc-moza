@@ -178,7 +178,7 @@
 	--toepassing-space-sm: var(--rijkshuisstijl-space-12);
 	--toepassing-space-xl: var(--rijkshuisstijl-space-32);
 	--toepassing-space-xs: var(--rijkshuisstijl-space-8);
-	--toepassing-text-badge: var(--toepassing-text-font-weight-semi-bold) var(--toepassing-text-size-body-2xs)/var(--rijkshuisstijl-text-line-height-md) var(--toepassing-text-font-family-body);
+	--toepassing-text-badge: var(--toepassing-text-font-weight-bold) var(--toepassing-text-size-body-2xs)/var(--rijkshuisstijl-text-line-height-md) var(--toepassing-text-font-family-body);
 	--toepassing-text-code: var(--toepassing-text-font-weight-semi-bold) var(--toepassing-text-size-body-sm) var(--rijkshuisstijl-text-font-family-monospace);
 	--toepassing-text-decoration-hyperlink: underline solid currentcolor var(--toepassing-border-width-xs);
 	--toepassing-text-font-family-body: var(--rijkshuisstijl-text-font-family-default);

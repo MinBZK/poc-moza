@@ -1629,20 +1629,25 @@ summary {
 	padding-block-end: var(--toepassing-space-padding-xl);
 }
 
-/* Badge (teller/label naast headings of in navigatie) */
+/* Badge */
 .badge {
+	align-items: center;     /* verticaal (cross-axis) */
+	align-self: flex-start;
 	background: var(--toepassing-color-badge-background);
 	border-radius: var(--toepassing-border-radius-round);
 	color: var(--toepassing-color-badge-text);
+	display: inline-flex;
 	font: var(--toepassing-text-badge);
-	margin-inline-start: auto;
-	padding: var(--toepassing-space-padding-2xs) var(--toepassing-space-padding-xs);
-	text-align: center;
+	justify-content: center;
+	min-block-size: var(--toepassing-size-icon-sm);
+	min-inline-size: var(--toepassing-size-icon-sm);
+	padding-inline: var(--toepassing-space-padding-2xs)
+
 }
 h1, h2, h3, h4, h5, h6, a, button {
 	.badge {
-		margin-inline-start: var(--toepassing-space-margin-3xs);
-		vertical-align: super;
+		margin-inline: var(--toepassing-space-margin-3xs) calc(-1 * var(--toepassing-space-margin-3xs));
+		vertical-align: text-top;
 	}
 }
 
