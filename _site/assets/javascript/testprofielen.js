@@ -10,7 +10,7 @@
  *   data-profiel="achternaam"        → persoon.achternaam
  *   data-profiel="initialen"         → persoon.initialen
  *   data-profiel="naam"              → persoon.voornaam + " " + persoon.achternaam
- *   data-profiel="initialen-bedrijf" → persoon.initialen + " " + persoon.achternaam + " — " + bedrijf.handelsnaam
+ *   data-profiel="initialen-bedrijf" → persoon.initialen + " " + persoon.achternaam + " van " + bedrijf.handelsnaam
  *   data-profiel="handelsnaam"       → bedrijf.handelsnaam
  *   data-profiel="kvkNummer"         → bedrijf.kvkNummer
  *   data-profiel="rsinNummer"        → bedrijf.rsinNummer
@@ -89,7 +89,7 @@
 			case "achternaam": return p.achternaam;
 			case "initialen": return p.initialen;
 			case "naam": return p.voornaam + " " + p.achternaam;
-			case "initialen-bedrijf": return p.initialen + " " + p.achternaam + " \u2014 " + b.handelsnaam;
+			case "initialen-bedrijf": return p.initialen + " " + p.achternaam + " van " + b.handelsnaam;
 			case "handelsnaam": return b.handelsnaam;
 			case "kvkNummer": return b.kvkNummer;
 			case "rsinNummer": return b.rsinNummer;
