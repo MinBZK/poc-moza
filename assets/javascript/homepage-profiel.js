@@ -81,6 +81,10 @@
 		return li;
 	}
 
+	function meldGerenderd(container) {
+		container.dispatchEvent(new CustomEvent("content:rendered", { bubbles: true }));
+	}
+
 	function vulLijst(container, getagdeItems, limiet) {
 		if (!container) return;
 		var ul = container.querySelector("ul");
@@ -90,6 +94,7 @@
 			ul.appendChild(entry.maakFn(entry.item));
 		});
 		ul.setAttribute("aria-busy", "false");
+		meldGerenderd(ul);
 	}
 
 	function vulPaginering(container, getagdeItems) {
@@ -110,6 +115,7 @@
 			}
 			ul.setAttribute("aria-busy", "false");
 			renderPaginering();
+			meldGerenderd(ul);
 		}
 
 		function renderPaginering() {
@@ -174,6 +180,30 @@
 		return items.map(function (item) { return { item: item, maakFn: maakFn }; });
 	}
 
+	var huidigeAlleSubs = [];
+	var huidigeAlleRegs = [];
+
+	function isOngelezen(item) {
+		try {
+			if (localStorage.getItem("read:" + item.titel)) return false;
+			if (localStorage.getItem("hidden:" + item.titel)) return false;
+		} catch (e) { /* localStorage niet toegankelijk */ }
+		return true;
+	}
+
+	function updateSideNavBadges() {
+		var ongelezenSubs = huidigeAlleSubs.filter(function (entry) { return isOngelezen(entry.item); }).length;
+		var ongelezenRegs = huidigeAlleRegs.filter(function (entry) { return isOngelezen(entry.item); }).length;
+		document.querySelectorAll('[data-badge-id="subsidies-count"]').forEach(function (el) {
+			el.textContent = ongelezenSubs;
+			el.hidden = ongelezenSubs === 0;
+		});
+		document.querySelectorAll('[data-badge-id="regelgeving-count"]').forEach(function (el) {
+			el.textContent = ongelezenRegs;
+			el.hidden = ongelezenRegs === 0;
+		});
+	}
+
 	function render() {
 		var profiel = actiefProfiel();
 		var bedrijfSubIds = profiel.homepageSubsidies || [];
@@ -209,18 +239,13 @@
 		if (ovzSub) vulPaginering(ovzSub, alleSubs);
 		if (ovzReg) vulPaginering(ovzReg, alleRegs);
 
-		// Side-nav badges updaten
-		var totaleSubs = alleSubs.length;
-		var totaleRegs = alleRegs.length;
-		document.querySelectorAll('[data-badge-id="subsidies-count"]').forEach(function (el) {
-			el.textContent = totaleSubs;
-			el.hidden = totaleSubs === 0;
-		});
-		document.querySelectorAll('[data-badge-id="regelgeving-count"]').forEach(function (el) {
-			el.textContent = totaleRegs;
-			el.hidden = totaleRegs === 0;
-		});
+		// Side-nav badges tonen ongelezen aantal per categorie.
+		huidigeAlleSubs = alleSubs;
+		huidigeAlleRegs = alleRegs;
+		updateSideNavBadges();
 	}
+
+	document.addEventListener("content:read", updateSideNavBadges);
 
 	render();
 })();

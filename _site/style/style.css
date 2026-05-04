@@ -334,7 +334,7 @@ li.option--confirmed {
 /* Ongelezen staat */
 .is-unread {
 	h3, .berichtenbox-row-sender {
-		font-weight: var(--toepassing-text-font-weight-semi-bold);
+		font-weight: var(--toepassing-text-font-weight-bold);
 		position: relative;
 		&::before {
 			background: var(--toepassing-color-feedback-attention);
@@ -1631,7 +1631,7 @@ summary {
 
 /* Badge */
 .badge {
-	align-items: center;     /* verticaal (cross-axis) */
+	align-items: center;
 	align-self: flex-start;
 	background: var(--toepassing-color-badge-background);
 	border-radius: var(--toepassing-border-radius-round);

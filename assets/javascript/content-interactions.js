@@ -219,14 +219,25 @@ function updateUnreadBadge() {
 	} catch (e) { /* localStorage niet toegankelijk */ }
 }
 
+// Herstel gelezen-status voor alle ongelezen links binnen een scope.
+function herstelGelezenStatus(root = document) {
+	root.querySelectorAll(".content-link.is-unread").forEach((link) => {
+		const heading = link.querySelector("h2, h3, h4");
+		if (!heading) return;
+		const key = "read:" + heading.textContent.trim();
+		if (localStorage.getItem(key)) {
+			link.classList.remove("is-unread");
+		}
+	});
+}
+
 // Herstel gelezen-status bij laden.
-document.querySelectorAll(".content-link.is-unread").forEach((link) => {
-	const heading = link.querySelector("h2, h3, h4");
-	if (!heading) return;
-	const key = "read:" + heading.textContent.trim();
-	if (localStorage.getItem(key)) {
-		link.classList.remove("is-unread");
-	}
+herstelGelezenStatus();
+
+// Herstel + badge bijwerken na dynamische rendering (zie homepage-profiel.js).
+document.addEventListener("content:rendered", (e) => {
+	herstelGelezenStatus(e.target instanceof Element ? e.target : document);
+	updateUnreadBadge();
 });
 
 // Markeer als gelezen bij klik.
@@ -238,6 +249,7 @@ document.addEventListener("click", (e) => {
 	localStorage.setItem("read:" + heading.textContent.trim(), "true");
 	link.classList.remove("is-unread");
 	updateUnreadBadge();
+	document.dispatchEvent(new CustomEvent("content:read"));
 });
 
 // Badge op andere pagina's bijwerken vanuit localStorage.
