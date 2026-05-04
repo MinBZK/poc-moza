@@ -25,7 +25,7 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 		<section role="tabpanel" id="berichtenbox-inbox" class="berichtenbox-layout" aria-labelledby="tab-berichtenbox-inbox">
 			<section class="berichtenbox-content">
 				<div data-berichtenbox-toolbar>
-					<p class="metadata"><span data-berichtenbox-counter-total>{{ berichtenboxData.berichten | length }}</span> berichten uit <span data-berichtenbox-sources>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen, <span data-berichtenbox-counter-unread>{{ berichtenboxData.berichten | selectattr("isOngelezen") | length }}</span> ongelezen berichten.</p>
+					<p class="metadata"><b data-berichtenbox-counter-total>{{ berichtenboxData.berichten | length }}</b> berichten uit <b data-berichtenbox-sources>{{ berichtenboxData.aantalMagazijnen }}</b> bronnen, <b data-berichtenbox-counter-unread>{{ berichtenboxData.berichten | selectattr("isOngelezen") | length }}</b> ongelezen berichten.</p>
 
 					<div class="berichtenbox-search">
 						<label for="search-berichtenbox">Filter berichten</label>
@@ -33,11 +33,10 @@ permalink: "/moza/berichtenbox/{% if pagination.pageNumber > 0 %}pagina-{{ pagin
 					</div>
 				</div>
 
-				<div class="berichtenbox-progress" data-berichtenbox-progress hidden role="status" aria-live="polite">
-					Berichten ophalen…
-					<span class="berichtenbox-progress-count"><span data-berichtenbox-progress-source>0</span> van <span data-berichtenbox-progress-total>{{ berichtenboxData.aantalMagazijnen }}</span> bronnen</span>
-					<span class="berichtenbox-progress-messages"><span data-berichtenbox-progress-found>0</span> berichten gevonden</span>
-					<div class="berichtenbox-progress-bar"><div class="berichtenbox-progress-bar-fill" data-berichtenbox-progress-bar></div></div>
+				<div class="feedback-progress" data-berichtenbox-progress hidden role="status" aria-live="polite">
+					<p>Berichten worden opgehaald bij de bron…</p>
+					<p class="metadata"><b data-berichtenbox-progress-source>0</b> van <b data-berichtenbox-progress-total>{{ berichtenboxData.aantalMagazijnen }}</b> bronnen, <b data-berichtenbox-progress-found>0</b> berichten gevonden</p>
+					<div class="progress-bar"><div class="progress-bar-fill" data-berichtenbox-progress-bar></div></div>
 				</div>
 
 				<div class="visually-hidden" data-berichtenbox-live aria-live="polite"></div>
