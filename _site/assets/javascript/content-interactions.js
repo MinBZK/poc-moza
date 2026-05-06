@@ -262,8 +262,3 @@ try {
 		});
 	}
 } catch (e) { /* localStorage niet toegankelijk */ }
-
-// Op de actueel-pagina: bereken de echte telling vanuit de DOM.
-if (location.pathname.includes("/actueel")) {
-	updateUnreadBadge();
-}
