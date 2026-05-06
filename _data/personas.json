@@ -2,7 +2,7 @@
 	{
 		"id": "bloom",
 		"actief": true,
-		"label": "Robin Vogel",
+		"label": "Adviseur",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -29,7 +29,7 @@
 			{ "naam": "Stichting Groenrijk", "rol": "Bestuurslid" },
 			{ "naam": "Coöperatie ZuidWest U.A.", "rol": "Aandeelhouder" }
 		],
-		"subsidies": ["wbso", "kia", "bmkb", "eia", "mia-vamil", "praktijkleren"],
+		"subsidies": ["wbso", "kia", "bmkb", "mit", "pps-toeslag", "praktijkleren"],
 		"regelgeving": ["minimumloon", "arbowet", "avg", "wwft", "loonbelasting", "transparante-arbeidsvoorwaarden"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["mkb-digitaliseringssubsidie", "duurzaam-advies-voucher"],
@@ -38,7 +38,7 @@
 	{
 		"id": "dierenwinkel",
 		"actief": false,
-		"label": "Sessie-1",
+		"label": "Winkelier",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -68,7 +68,7 @@
 	{
 		"id": "makelaar",
 		"actief": false,
-		"label": "Sessie-2",
+		"label": "Makelaar",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -90,7 +90,7 @@
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "NVM", "rol": "Lid" }],
 		"subsidies": ["kia", "bmkb", "mkb-groen", "cyberweerbaarheid", "seba"],
-		"regelgeving": ["minimumloon", "wwft", "avg", "omgevingswet", "handelsregisterwet", "mededingingswet"],
+		"regelgeving": ["minimumloon", "wwft", "wft", "avg", "omgevingswet", "handelsregisterwet", "mededingingswet"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["energielabel-c-subsidie", "verduurzaming-bedrijfspanden"],
 		"homepageRegelgeving": ["wwft-verscherpt-clientenonderzoek"]
@@ -98,7 +98,7 @@
 	{
 		"id": "projectontwikkelaar",
 		"actief": false,
-		"label": "Sessie-3",
+		"label": "Projectontwikkelaar",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -128,7 +128,7 @@
 	{
 		"id": "haarstylist",
 		"actief": false,
-		"label": "Reserve-1",
+		"label": "Haarstylist",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -149,16 +149,16 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [],
-		"subsidies": ["kia", "bbsc", "seba", "cyberweerbaarheid", "mkb-groen"],
-		"regelgeving": ["avg", "warenwet", "omgevingswet", "handelsregisterwet", "wdo"],
+		"subsidies": ["kia", "bbsc", "praktijkleren", "cyberweerbaarheid", "mkb-groen"],
+		"regelgeving": ["avg", "warenwet", "arbowet", "omgevingswet", "handelsregisterwet"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["mkb-cyberweerbaarheid-voucher", "mkb-digitaliseringssubsidie"],
-		"homepageRegelgeving": ["ai-verordening"]
+		"homepageRegelgeving": ["arbowet-gevaarlijke-stoffen"]
 	},
 	{
 		"id": "schilder",
 		"actief": false,
-		"label": "Sessie-4",
+		"label": "Schilder",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -188,7 +188,7 @@
 	{
 		"id": "kunstsalon",
 		"actief": false,
-		"label": "Sessie-5",
+		"label": "Cultureel ondernemer",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -210,7 +210,7 @@
 		"andereBedrijven": [{ "naam": "Lichtveld B&B", "rol": "Eigenaar" }],
 		"belangen": [],
 		"subsidies": ["kia", "bbsc", "mkb-groen", "cyberweerbaarheid", "isde"],
-		"regelgeving": ["avg", "omgevingswet", "dienstenwet", "warenwet", "wdo", "mededingingswet"],
+		"regelgeving": ["avg", "omgevingswet", "dienstenwet", "warenwet", "transparante-arbeidsvoorwaarden", "mededingingswet"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["toeristische-innovatie", "cultureel-ondernemerschap"],
 		"homepageRegelgeving": ["dienstenwet-informatieplicht"]
@@ -218,7 +218,7 @@
 	{
 		"id": "melkveehouder",
 		"actief": false,
-		"label": "Sessie-6",
+		"label": "Melkveehouder",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",
@@ -240,7 +240,7 @@
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "LTO Nederland", "rol": "Lid" }],
 		"subsidies": ["kia", "bmkb", "sde", "eia", "mia-vamil", "praktijkleren"],
-		"regelgeving": ["minimumloon", "arbowet", "milieubeheer", "bestrijdingsmiddelen", "omgevingswet", "csrd"],
+		"regelgeving": ["minimumloon", "arbowet", "milieubeheer", "bestrijdingsmiddelen", "omgevingswet", "was"],
 		"buurt": "voorburg",
 		"homepageSubsidies": ["duurzame-veehouderij", "precisielandbouw"],
 		"homepageRegelgeving": ["meststoffenwet-fosfaatplafond"]
@@ -248,7 +248,7 @@
 	{
 		"id": "attracties",
 		"actief": false,
-		"label": "Reserve-2",
+		"label": "Attractiebouwer",
 		"persoon": {
 			"voornaam": "Robin",
 			"achternaam": "Vogel",

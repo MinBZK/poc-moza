@@ -2,28 +2,28 @@
  * homepage-profiel.js
  *
  * Vult dynamische secties op de homepage, overzichtspagina's en
- * detailoverzichtspagina's op basis van het actieve testprofiel.
+ * detailoverzichtspagina's op basis van de actieve persona.
  */
 
 (function () {
 	"use strict";
 
-	var profielen = window.testprofielenData;
+	var personas = window.personasData;
 	var subsidies = window.subsidiesData;
 	var regelgeving = window.regelgevingData;
-	if (!profielen || !subsidies || !regelgeving) return;
+	if (!personas || !subsidies || !regelgeving) return;
 
-	var LS_KEY = "testprofiel";
+	var LS_KEY = "persona";
 	var PAGINA_GROOTTE = 5;
 	var PATH_PREFIX = (typeof window.PATH_PREFIX === "string" && window.PATH_PREFIX !== "/")
 		? window.PATH_PREFIX.replace(/\/$/, "")
 		: "";
 
-	function actiefProfiel() {
+	function actievePersona() {
 		var id;
 		try { id = localStorage.getItem(LS_KEY); } catch (e) { /* */ }
-		var profiel = id ? profielen.find(function (p) { return p.id === id; }) : null;
-		return profiel || profielen.find(function (p) { return p.actief; }) || profielen[0];
+		var persona = id ? personas.find(function (p) { return p.id === id; }) : null;
+		return persona || personas.find(function (p) { return p.actief; }) || personas[0];
 	}
 
 	function vindSubsidie(id) { return subsidies.find(function (s) { return s.id === id; }); }
@@ -205,11 +205,11 @@
 	}
 
 	function render() {
-		var profiel = actiefProfiel();
-		var bedrijfSubIds = profiel.homepageSubsidies || [];
-		var brancheSubIds = (profiel.subsidies || []).filter(function (id) { return bedrijfSubIds.indexOf(id) === -1; });
-		var bedrijfRegIds = profiel.homepageRegelgeving || [];
-		var brancheRegIds = (profiel.regelgeving || []).filter(function (id) { return bedrijfRegIds.indexOf(id) === -1; });
+		var persona = actievePersona();
+		var bedrijfSubIds = persona.homepageSubsidies || [];
+		var brancheSubIds = (persona.subsidies || []).filter(function (id) { return bedrijfSubIds.indexOf(id) === -1; });
+		var bedrijfRegIds = persona.homepageRegelgeving || [];
+		var brancheRegIds = (persona.regelgeving || []).filter(function (id) { return bedrijfRegIds.indexOf(id) === -1; });
 
 		var bedrijfSubs = resolveIds(bedrijfSubIds, vindSubsidie);
 		var brancheSubs = resolveIds(brancheSubIds, vindSubsidie);
