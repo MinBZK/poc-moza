@@ -336,18 +336,6 @@ li.option--confirmed {
 	h3, .berichtenbox-row-sender {
 		font-weight: var(--toepassing-text-font-weight-bold);
 		position: relative;
-		&::before {
-			background: var(--toepassing-color-feedback-attention);
-			block-size: var(--toepassing-size-xs);
-			border-radius: var(--toepassing-border-radius-round);
-			content: "";
-			flex-shrink: 0;
-			inline-size: var(--toepassing-size-3xs);
-			inset-block: 0;
-			margin-block: auto;
-			margin-inline-start: calc(-1 * var(--toepassing-space-margin-xs));
-			position: absolute;
-		}
 	}
 	.berichtenbox-row-sender {
 		&::before {
@@ -410,7 +398,8 @@ button, [type="date"], [type="datetime-local"], [type="email"], [type="month"], 
 }
 
 /* Formulieren: labels */
-legend, label {
+legend, label, dt {
+	color: var(--toepassing-color-text-subtle-1);
 	display: block;
 	font: var(--toepassing-text-label);
 	margin-block-end: var(--toepassing-space-margin-3xs);
@@ -918,10 +907,6 @@ li li {
 	margin-block-start: var(--toepassing-space-layout-xs);
 }
 
-dt {
-	font: var(--toepassing-text-label);
-	margin-block-end: var(--toepassing-space-margin-3xs);
-}
 dd {
 	margin-inline-start: 0;
 }
