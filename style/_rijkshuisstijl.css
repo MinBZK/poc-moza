@@ -166,7 +166,7 @@
 	--rijkshuisstijl-size-80: 5rem;
 	--rijkshuisstijl-size-88: 5.5rem;
 	--rijkshuisstijl-size-96: 6rem;
-	--rijkshuisstijl-size-base: 0.5rem; /** Base size for calculation. Defaults to 8 to follow 8px grid. */
+	--rijkshuisstijl-size-base: 0.5rem; /** Basisgrootte voor berekeningen. Volgt het standaard 8pt grid. */
 	--rijkshuisstijl-space-1: 0.0625rem;
 	--rijkshuisstijl-space-12: 0.75rem;
 	--rijkshuisstijl-space-16: 1rem;
@@ -186,9 +186,9 @@
 	--rijkshuisstijl-text-font-family-monospace: monaco, consolas, "Lucida Console", monospace;
 	--rijkshuisstijl-text-font-size-2xl: 1.5rem;
 	--rijkshuisstijl-text-font-size-2xs: 0.6667rem;
-	--rijkshuisstijl-text-font-size-3xl: 2rem;
-	--rijkshuisstijl-text-font-size-4xl: 2.5rem;
-	--rijkshuisstijl-text-font-size-base: 1rem; /** Modifier voor de schaal van overige groottes. */
+	--rijkshuisstijl-text-font-size-3xl: 1.75rem;
+	--rijkshuisstijl-text-font-size-4xl: 2rem;
+	--rijkshuisstijl-text-font-size-base: 1rem; /** Basisgrootte voor berekening van de schaal voor overige groottes. */
 	--rijkshuisstijl-text-font-size-lg: 1.125rem;
 	--rijkshuisstijl-text-font-size-md: 1rem;
 	--rijkshuisstijl-text-font-size-sm: 0.8889rem;
