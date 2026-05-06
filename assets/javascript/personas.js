@@ -1,9 +1,9 @@
 /**
- * testprofielen.js
+ * personas.js
  *
- * Schakelt tussen testprofielen zodat het prototype met verschillende
- * persona's getoond kan worden in gebruikerstests. Het actieve profiel
- * wordt opgeslagen in localStorage onder de key "testprofiel".
+ * Schakelt tussen persona's zodat het prototype met verschillende
+ * gebruikers getoond kan worden in gebruikerstests. De actieve persona
+ * wordt opgeslagen in localStorage onder de key "persona".
  *
  * Elementen met data-profiel-* attributen worden door dit script gevuld:
  *   data-profiel="voornaam"          → persoon.voornaam
@@ -26,11 +26,11 @@
 (function () {
 	"use strict";
 
-	var LS_KEY = "testprofiel";
+	var LS_KEY = "persona";
 
-	// Profielen worden door Eleventy als JSON in de pagina geïnjecteerd.
-	var profielen = window.testprofielenData;
-	if (!profielen || !profielen.length) return;
+	// Persona's worden door Eleventy als JSON in de pagina geïnjecteerd.
+	var personas = window.personasData;
+	if (!personas || !personas.length) return;
 
 	function leesActiefId() {
 		try {
@@ -46,44 +46,44 @@
 		} catch (e) { /* localStorage niet toegankelijk */ }
 	}
 
-	function vindProfiel(id) {
-		return profielen.find(function (p) { return p.id === id; });
+	function vindPersona(id) {
+		return personas.find(function (p) { return p.id === id; });
 	}
 
-	function vindProfielOpLabel(label) {
-		return profielen.find(function (p) { return p.label === label; });
+	function vindPersonaOpLabel(label) {
+		return personas.find(function (p) { return p.label === label; });
 	}
 
-	function urlLabel(profiel) {
-		return profiel.label || profiel.id;
+	function urlLabel(persona) {
+		return persona.label || persona.id;
 	}
 
-	function profielUitUrl() {
+	function personaUitUrl() {
 		var params = new URLSearchParams(location.search);
-		return params.get("profiel");
+		return params.get("persona");
 	}
 
-	function actiefProfiel() {
+	function actievePersona() {
 		// 1. URL-parameter heeft voorrang (deelbaar, zelfde voor iedereen).
-		var urlParam = profielUitUrl();
+		var urlParam = personaUitUrl();
 		if (urlParam) {
 			// Zoek op label eerst, dan op id als fallback.
-			var urlProfiel = vindProfielOpLabel(urlParam) || vindProfiel(urlParam);
-			if (urlProfiel) return urlProfiel;
+			var urlPersona = vindPersonaOpLabel(urlParam) || vindPersona(urlParam);
+			if (urlPersona) return urlPersona;
 		}
 		// 2. localStorage (persoonlijke keuze via Flags-paneel).
 		var opgeslagen = leesActiefId();
 		if (opgeslagen) {
-			var profiel = vindProfiel(opgeslagen);
-			if (profiel) return profiel;
+			var persona = vindPersona(opgeslagen);
+			if (persona) return persona;
 		}
-		// 3. Fallback: het profiel dat als actief is gemarkeerd in de data.
-		return profielen.find(function (p) { return p.actief; }) || profielen[0];
+		// 3. Fallback: de persona die als actief is gemarkeerd in de data.
+		return personas.find(function (p) { return p.actief; }) || personas[0];
 	}
 
-	function waarde(profiel, sleutel) {
-		var p = profiel.persoon;
-		var b = profiel.bedrijf;
+	function waarde(persona, sleutel) {
+		var p = persona.persoon;
+		var b = persona.bedrijf;
 		switch (sleutel) {
 			case "voornaam": return p.voornaam;
 			case "achternaam": return p.achternaam;
@@ -105,17 +105,17 @@
 		}
 	}
 
-	function pasToe(profiel) {
+	function pasToe(persona) {
 		// Vul alle data-profiel elementen.
 		document.querySelectorAll("[data-profiel]").forEach(function (el) {
 			var sleutel = el.getAttribute("data-profiel");
-			var tekst = waarde(profiel, sleutel);
+			var tekst = waarde(persona, sleutel);
 			if (tekst) el.textContent = tekst;
 		});
 
-		// Markeer het actieve profiel in de kiezer.
+		// Markeer de actieve persona in de kiezer.
 		document.querySelectorAll("[data-profiel-id]").forEach(function (el) {
-			var isActief = el.getAttribute("data-profiel-id") === profiel.id;
+			var isActief = el.getAttribute("data-profiel-id") === persona.id;
 			if (isActief) {
 				el.setAttribute("aria-current", "true");
 			} else {
@@ -124,40 +124,40 @@
 		});
 	}
 
-	// Bouw de profielkiezer in het feature flags paneel.
+	// Bouw de persona-kiezer in het feature flags paneel.
 	function bouwKiezer() {
 		var panel = document.querySelector(".feature-flags-panel");
 		if (!panel) return;
 
-		var actief = actiefProfiel();
+		var actief = actievePersona();
 
 		// Voeg de kiezer toe vóór de "localStorage wissen" knop.
 		var clearBtn = panel.querySelector(".feature-flags-clear");
 
 		var heading = document.createElement("p");
 		heading.className = "feature-flags-group-heading";
-		heading.textContent = "Testprofielen";
+		heading.textContent = "Persona's";
 		panel.insertBefore(heading, clearBtn);
 
 		var list = document.createElement("ul");
 
-		profielen.forEach(function (profiel, i) {
+		personas.forEach(function (persona, i) {
 			var li = document.createElement("li");
 			var label = document.createElement("label");
 			var radio = document.createElement("input");
 			radio.type = "radio";
-			radio.name = "testprofiel";
-			radio.value = profiel.id;
-			radio.checked = profiel.id === actief.id;
+			radio.name = "persona";
+			radio.value = persona.id;
+			radio.checked = persona.id === actief.id;
 			radio.addEventListener("change", function () {
-				slaActiefOp(profiel.id);
+				slaActiefOp(persona.id);
 				var params = new URLSearchParams(location.search);
-				params.set("profiel", urlLabel(profiel));
+				params.set("persona", urlLabel(persona));
 				location.search = params.toString();
 			});
 			label.appendChild(radio);
-			var kiezerLabel = profiel.label || ("Respondent " + i);
-			label.appendChild(document.createTextNode(" " + kiezerLabel + ": " + profiel.bedrijf.handelsnaam));
+			var kiezerLabel = persona.label || ("Persona " + i);
+			label.appendChild(document.createTextNode(" " + kiezerLabel + ": " + persona.bedrijf.handelsnaam));
 			li.appendChild(label);
 			list.appendChild(li);
 		});
@@ -166,35 +166,35 @@
 	}
 
 	// Initialisatie.
-	var profiel = actiefProfiel();
-	pasToe(profiel);
+	var persona = actievePersona();
+	pasToe(persona);
 	bouwKiezer();
 
-	// Behoud ?profiel= parameter op alle interne links.
-	var urlProfielId = profielUitUrl();
-	if (urlProfielId) {
+	// Behoud ?persona= parameter op alle interne links.
+	var urlPersonaId = personaUitUrl();
+	if (urlPersonaId) {
 		document.querySelectorAll("a[href]").forEach(function (a) {
 			var href = a.getAttribute("href");
 			// Alleen interne links (beginnen met / of zijn relatief, geen http/mailto/tel).
 			if (!href || /^(https?:|mailto:|tel:)/.test(href)) return;
 			// Voeg de parameter toe als die er nog niet in zit.
-			if (href.indexOf("profiel=") !== -1) return;
+			if (href.indexOf("persona=") !== -1) return;
 			var separator = href.indexOf("?") !== -1 ? "&" : "?";
-			a.setAttribute("href", href + separator + "profiel=" + encodeURIComponent(urlProfielId));
+			a.setAttribute("href", href + separator + "persona=" + encodeURIComponent(urlPersonaId));
 		});
 	}
 
 	// Publieke API voor debugging.
-	window.Testprofielen = {
-		actief: function () { return actiefProfiel(); },
+	window.Personas = {
+		actief: function () { return actievePersona(); },
 		wissel: function (id) {
-			var p = vindProfiel(id) || vindProfielOpLabel(id);
+			var p = vindPersona(id) || vindPersonaOpLabel(id);
 			if (!p) return;
 			slaActiefOp(p.id);
 			var params = new URLSearchParams(location.search);
-			params.set("profiel", urlLabel(p));
+			params.set("persona", urlLabel(p));
 			location.search = params.toString();
 		},
-		profielen: profielen,
+		personas: personas,
 	};
 })();
