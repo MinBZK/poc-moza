@@ -88,6 +88,7 @@ header {
 }
 
 main {
+	flex: 1;
 	inline-size: 100%;
 	margin-inline: auto;
 	max-inline-size: var(--toepassing-page-max-inline-size);
