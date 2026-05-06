@@ -12,6 +12,7 @@ MijnOverheid Zakelijk (MOZa) — een HTML/CSS/JS prototype gebouwd met Eleventy 
 - Design tokens: `tokens/tokens.json` → Style Dictionary aangevuld met sd-transforms → CSS custom properties
 - JavaScript: `assets/javascript/`
 - Includes: `_includes/`
+- Data (persona's, subsidies, regelgeving, berichtenbox): `_data/`
 - Build output: `_site/` (niet handmatig bewerken)
 
 ## Ontwerp-principes (kernregels)
@@ -66,6 +67,9 @@ MijnOverheid Zakelijk (MOZa) — een HTML/CSS/JS prototype gebouwd met Eleventy 
 - Reserve-topics: `<li hidden class="reserve-topic">` schuiven door bij het verbergen van items
 - Animaties bij verbergen/herstellen: `.remove-item` (fade naar beneden) en `.restore-item` (fade naar boven)
 - Accountwisselaar staat achter feature flag `data-feature-default="off"`
+- Pagina-layout: `body` is een flex column met `min-block-size: 100dvh`, `<main>` heeft `flex: 1` zodat `<footer>` altijd onderaan staat
+- Lege dynamische containers: geef ze `class="dynamic-list"` zodat ze via `.dynamic-list:empty { display: none }` uit de layout vallen tot er items zijn
+- Persona's (testaccounts): `_data/personas.json` + `assets/javascript/personas.js`. Wisselbaar via Flags-paneel of `?persona=`-URL-param. localStorage-key: `persona`. Debug-API: `window.Personas`
 
 ## Volledig referentie
 

@@ -52,6 +52,7 @@ Herhalende componenten staan in de `_includes` map:
 | `header-overheid.njk` | Overheid header header met logo |
 | `footer-overheid.njk` | Overheid footer |
 | `side-nav-overheid.njk` | Overheid hoofdnavigatie |
+| `action-group.njk` | Actiegroep onder een topic (Bewaar, Deel, Niet relevant) |
 
 Elke pagina selecteert diens layout en opties bovenaan het bestand:
 
@@ -213,20 +214,23 @@ npm install
 ## Structuur
 
 ``` text
-📂 _includes                herhalende consistente elementen die in meerdere pagina’s toegegepast worden
+📂 _data                    Eleventy-data: persona's, subsidies, regelgeving, berichtenbox
+📂 _includes                herhalende consistente elementen die in meerdere pagina's toegegepast worden
 📂 _site                    statische site gegenereerd door Eleventy.js
 📂 assets
     📁 favicon              favicons voor diverse platformen
     📁 fonts                Rijkslettertype webfonts
     📁 icons                iconen
     📁 images               afbeeldingen
+    📁 javascript           interactielogica per pagina-type (personas, content-interactions, berichtenbox, etc.)
 📂 container                Containerfile voor de gebundelde deployment (site + host)
+📂 mobu                     prototype voor MijnOverheid Burger
 📂 moza                     prototype voor MijnOverheid Zakelijk, gebaseerd op deze omgeving
 📂 services                 Digitale Assistent — FastAPI-host, MCP-servers en CLI-tools
     📁 host                 FastAPI-host die statische site én chat-API serveert
     📁 mcp                  MCP-servers (kvk, koop, regelrecht, rvo)
     📁 cli                  Bash-CLI's als alternatief transport
-📂 stories                  ‘stories’ om componenten weer te geven in Storybook
+📂 stories                  'stories' om componenten weer te geven in Storybook
 📂 style
     📄 _reset.css           cross-browser stijl normalisatie
     📄 _rijkshuisstijl.css  opties uit de Rijkshuisstijl
@@ -236,6 +240,7 @@ npm install
     📄 config.json          configuratiebestand voor Style Dictionary
 📁 tokens
     📄 tokens.json          design tokens JSON bestand
+📄 .stylelintrc.json        Stylelint-config (logical properties, alfabetische volgorde, spacing-regels)
 📄 index.html               homepagina van het MijnOverheid Zakelijk prototype
 📄 package.json             build dependencies
 📄 package-lock.json        locked dependency versions
