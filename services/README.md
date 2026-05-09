@@ -231,7 +231,7 @@ sequenceDiagram
 ## Snel starten
 
 ```bash
-cd mcp/host
+cd services/host
 cp .env.example .env        # Vul API-keys in
 pip install -r requirements.txt
 python api.py               # Start host op poort 8000
@@ -242,7 +242,7 @@ Start daarna het moza-portaal (`npm run dev` in de root) en open de Digitale Ass
 ### Met MCP-servers (Docker)
 
 ```bash
-cd mcp
+cd services
 docker compose up --build
 ```
 
