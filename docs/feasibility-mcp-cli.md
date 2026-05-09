@@ -98,21 +98,21 @@ Eén host, één LLM-orchestratie, twee transportlagen. Volledige stroom-diagram
 
 ## 2.3 Wat ontbreekt of verwart
 
-### A. Bug in de KvK- en KOOP-resource-implementatie
+### A. Bug in de KvK- en KOOP-resource-implementatie (opgelost in deze PR)
 
-De `read_resource`-handler in `services/mcp/kvk/server.py` (en idem koop) retourneert `list[TextResourceContents]`. De huidige `mcp`-bibliotheek (1.26.0) verwacht echter `Iterable[ReadResourceContents]` — een ander type. Het gevolg is een `McpError: 'TextResourceContents' object has no attribute 'content'` zodra een client de resource probeert te lezen. We hebben dit gereproduceerd door direct een MCP-client tegen de KvK-server te draaien.
+De `read_resource`-handler in `services/mcp/kvk/server.py` (en idem koop) retourneerde `list[TextResourceContents]`. De huidige `mcp`-bibliotheek (1.26.0) verwacht echter `Iterable[ReadResourceContents]` — een ander type. Het gevolg was een `McpError: 'TextResourceContents' object has no attribute 'content'` zodra een client de resource probeerde te lezen. Wij hebben dit gereproduceerd door direct een MCP-client tegen de KvK-server te draaien.
 
-Niet zichtbaar in de huidige tests omdat (a) de validator de fout vangt als een ERROR maar niet als FAIL, en (b) de production-code het resource-pad in `vlam_host.py` niet gebruikt — alleen de tool-pad (`mijn_bedrijf` is een tool, niet een resource).
+Niet zichtbaar in de oorspronkelijke tests omdat (a) de validator de fout ving als een ERROR maar niet als FAIL, en (b) de production-code het resource-pad in `vlam_host.py` niet gebruikt — alleen het tool-pad (`mijn_bedrijf` is een tool, niet een resource).
 
-**Fix**: vervang `TextResourceContents(uri=…, text=…, mimeType=…)` door `ReadResourceContents(content=…, mime_type=…)` (of een `str` returnen — de framework wraps die zelf). Eén regel per `read_resource`-handler.
+**Fix uitgevoerd**: in beide servers vervangen door `ReadResourceContents(content=…, mime_type=…)` uit `mcp.server.lowlevel.helper_types`. Validator-runs met `--test-uri` retourneren nu `[PASS] Provenance metadata complete` voor zowel KvK (`kvk://basisprofiel/68750110`) als KOOP (`koop://regeling/BWBR0001840`). Eindstand: 8/9 met 0 gefaald.
 
 ### B. Synchronisatie tussen host en CLI is niet automatisch
 
-`cli_executor.py` heeft handmatig opgeschreven welke commando's bij welke tool horen. Drie problemen:
+`cli_executor.py` heeft handmatig opgeschreven welke commando's bij welke tool horen. Drie problemen, twee blijven open:
 
-1. **CLI's bieden meer dan de host doorgeeft.** `koop-cli` heeft `regeling get <bwb_id>` voor de volledige wettekst — equivalent aan de MCP-resource `koop://regeling/{bwb_id}`. Het LLM kan dit niet bereiken via CLI omdat het commando ontbreekt in `cli_executor.py`. Idem `kvk-cli vestigingen` en `kvk-cli eigenaar`.
-2. **`--fields` wordt nooit doorgegeven.** Geen enkele aanroep in `cli_executor.py` bevat `--fields`. Het LLM kan dus niet het tokenvoordeel benutten dat in PDR-005 als USP van de CLI is beschreven. De 97%-reductie geldt alleen voor menselijke CLI-gebruikers, niet voor de LLM.
-3. **Tool-definities zijn dubbel gedeclareerd.** `CLI_TOOL_DEFINITIONS_ANTHROPIC` (in `vlam_host.py`) en het feitelijke commando in `cli_executor.py` moeten met de hand synchroon worden gehouden. MCP doet dit automatisch via `ListToolsRequest`.
+1. **CLI's bieden meer dan de host doorgeeft** (open). `koop-cli` heeft `regeling get <bwb_id>` voor de volledige wettekst — equivalent aan de MCP-resource `koop://regeling/{bwb_id}`. Het LLM kan dit niet bereiken via CLI omdat het commando ontbreekt in `cli_executor.py`. Idem `kvk-cli vestigingen` en `kvk-cli eigenaar`. Bewust niet in deze PR opgelost: deze tools toevoegen verandert het gedrag van de assistent en hoort in een aparte iteratie met afstemming over routering en prompts.
+2. **`--fields` wordt nooit doorgegeven** (opgelost in deze PR). Elke read-only tool in `CLI_TOOL_DEFINITIONS_ANTHROPIC` heeft nu een optionele `fields`-array; `cli_executor.py` vertaalt die naar `--fields v1,v2,...`. Verificatie: `kvk__mijn_bedrijf` met `fields=["naam","kvkNummer"]` retourneert nu 234 bytes (versus 3378 zonder fields) — een **93% reductie inclusief provenance** in de live host. Muterende tool `rvo__indienen` krijgt geen fields-parameter (response is klein en functioneel).
+3. **Tool-definities blijven dubbel gedeclareerd** (open). `CLI_TOOL_DEFINITIONS_ANTHROPIC` (in `vlam_host.py`) en het feitelijke commando in `cli_executor.py` moeten met de hand synchroon worden gehouden. MCP doet dit automatisch via `ListToolsRequest`. Echte oplossing zit in het CLI-profiel van de standaard ([Bijlage E](#bijlage-e--voorgestelde-uitbreiding-overheidsstandaard), §8.3.2: `--help --json` als single source of truth), niet in een lokale ad-hoc deduplicatie.
 
 ### C. De validator is summier
 

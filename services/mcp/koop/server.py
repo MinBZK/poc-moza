@@ -20,12 +20,12 @@ from datetime import UTC, datetime
 import httpx
 from lxml import etree
 from mcp.server import Server
+from mcp.server.lowlevel.helper_types import ReadResourceContents
 from mcp.server.stdio import stdio_server
 from mcp.types import (
     Resource,
     ResourceTemplate,
     TextContent,
-    TextResourceContents,
     Tool,
     ToolAnnotations,
 )
@@ -273,7 +273,7 @@ async def list_resource_templates() -> list[ResourceTemplate]:
 
 
 @server.read_resource()
-async def read_resource(uri: str) -> list[TextResourceContents]:
+async def read_resource(uri: str) -> list[ReadResourceContents]:
     """Haal een specifieke wet/regeling op bij de bron (standaard §2.1)."""
     bwb_id = str(uri).rstrip("/").split("/")[-1]
 
@@ -288,10 +288,9 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
             "message": f"Geen regeling gevonden voor BWB-ID: {bwb_id}",
         }
         return [
-            TextResourceContents(
-                uri=uri,
-                text=json.dumps(error_body, ensure_ascii=False),
-                mimeType="application/json",
+            ReadResourceContents(
+                content=json.dumps(error_body, ensure_ascii=False),
+                mime_type="application/json",
             )
         ]
     except httpx.HTTPStatusError as e:
@@ -306,10 +305,9 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
             ),
         }
         return [
-            TextResourceContents(
-                uri=uri,
-                text=json.dumps(error_body, ensure_ascii=False),
-                mimeType="application/json",
+            ReadResourceContents(
+                content=json.dumps(error_body, ensure_ascii=False),
+                mime_type="application/json",
             )
         ]
     except httpx.RequestError as e:
@@ -318,18 +316,16 @@ async def read_resource(uri: str) -> list[TextResourceContents]:
             "message": f"KOOP Regelingenbank niet bereikbaar: {e}",
         }
         return [
-            TextResourceContents(
-                uri=uri,
-                text=json.dumps(error_body, ensure_ascii=False),
-                mimeType="application/json",
+            ReadResourceContents(
+                content=json.dumps(error_body, ensure_ascii=False),
+                mime_type="application/json",
             )
         ]
 
     return [
-        TextResourceContents(
-            uri=uri,
-            text=_wrap_provenance(data),
-            mimeType="application/json",
+        ReadResourceContents(
+            content=_wrap_provenance(data),
+            mime_type="application/json",
         )
     ]
 

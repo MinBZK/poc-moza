@@ -161,7 +161,7 @@ CLI: `rvo-cli rapportage indienen 68750110 EBR-2026 "led,isolatie" --dry-run` to
 3. **Complexiteit** — Python MCP-stack vs Bash-scripts
 4. **Standaard-compliance** — Welk transport leent zich beter voor overheidsstandaarden
 
-Het kerninzicht: **de waarde zit in de standaard (provenance, audit, dataminimalisatie), niet in het transport**. MCP en CLI zijn inwisselbare transportlagen onder dezelfde eisen. Het concrete voorstel voor uitbreiding van de overheidsstandaard staat in [bijlage F bij het feasibility-rapport](../../docs/feasibility-mcp-cli-standaard-voorstel.md); de bijbehorende beslissing in [PDR-006](PDR-006-feasibility-conclusie.md).
+Het kerninzicht: **de waarde zit in de standaard (provenance, audit, dataminimalisatie), niet in het transport**. MCP en CLI zijn inwisselbare transportlagen onder dezelfde eisen. Het concrete voorstel voor uitbreiding van de overheidsstandaard staat in [bijlage E bij het feasibility-rapport](../../docs/feasibility-mcp-cli-standaard-voorstel.md); de bijbehorende beslissing in [PDR-006](PDR-006-feasibility-conclusie.md).
 
 ## Consequenties
 
@@ -169,4 +169,4 @@ Het kerninzicht: **de waarde zit in de standaard (provenance, audit, dataminimal
 2. **CLI tool-definities zijn hardcoded** — Anders dan MCP (automatische discovery) moeten CLI tool-schema's handmatig gesynchroniseerd worden in `vlam_host.py`. CLI ondersteunt daarnaast geen MCP-resources (zoals `koop://regeling/{bwb_id}`); alleen tools zijn beschikbaar via CLI.
 3. **Admin panel** — De transport-keuze is verplaatst van de chatpagina naar het admin panel (feature flags), samen met de LLM-keuze (VLAM/Claude).
 4. **Vier combinaties** — VLAM+MCP, VLAM+CLI, Claude+MCP, Claude+CLI zijn allemaal beschikbaar voor vergelijking.
-5. **Standaardisatie** — De huidige MCP-standaard voor de overheid dekt alleen het MCP-protocol. Als CLI een volwaardig alternatief transport is, moet de standaard worden uitgebreid met een CLI-profiel (discovery via `--help --json`, provenance via `--provenance`, gestandaardiseerde exit codes, dataminimalisatie via `--fields`). Het uitgewerkte voorstel staat in [bijlage F bij het feasibility-rapport](../../docs/feasibility-mcp-cli-standaard-voorstel.md). Zonder standaardisatie ontstaat fragmentatie: elke CLI-tool hanteert eigen conventies.
+5. **Standaardisatie** — De huidige MCP-standaard voor de overheid dekt alleen het MCP-protocol. Als CLI een volwaardig alternatief transport is, moet de standaard worden uitgebreid met een CLI-profiel (discovery via `--help --json`, provenance via `--provenance`, gestandaardiseerde exit codes, dataminimalisatie via `--fields`). Het uitgewerkte voorstel staat in [bijlage E bij het feasibility-rapport](../../docs/feasibility-mcp-cli-standaard-voorstel.md). Zonder standaardisatie ontstaat fragmentatie: elke CLI-tool hanteert eigen conventies.

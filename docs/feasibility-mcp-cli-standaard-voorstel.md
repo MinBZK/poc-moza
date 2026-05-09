@@ -1,4 +1,4 @@
-# Bijlage F — Voorstel uitbreiding MCP-standaard met CLI-profiel
+# Bijlage E — Voorstel uitbreiding MCP-standaard met CLI-profiel
 
 | Veld | Waarde |
 |---|---|

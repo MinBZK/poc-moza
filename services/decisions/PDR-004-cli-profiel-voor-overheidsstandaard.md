@@ -2,7 +2,7 @@
 
 | Veld | Waarde |
 |---|---|
-| Status | **Vervangen** door [Bijlage F bij het feasibility-rapport](../../docs/feasibility-mcp-cli-standaard-voorstel.md) |
+| Status | **Vervangen** door [Bijlage E bij het feasibility-rapport](../../docs/feasibility-mcp-cli-standaard-voorstel.md) |
 | Datum | 2026-04-01 (oorspronkelijk) — vervangen op 9 mei 2026 |
 | Beslisser(s) | Projectteam poc-moza |
 | Gerelateerd | PDR-005, PDR-006 |

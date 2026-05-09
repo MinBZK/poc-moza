@@ -17,9 +17,9 @@ Dit rapport beschrijft de bevindingen na zes weken werk. De volledige onderbouwi
 
 Wij behouden beide transportmechanismen voorlopig, maar onder vier expliciete aanvullingen:
 
-1. **De gedeelde standaard krijgt een derde profiel: CLI** (`moza-mcp-standaard-poc`, voorstel in [bijlage F](../../docs/feasibility-mcp-cli-standaard-voorstel.md)). Provenance, audit en mutatie-bevestiging gelden onveranderd; alleen het transport verschilt. Zonder dit profiel is een geldige CLI-implementatie niet te toetsen.
+1. **De gedeelde standaard krijgt een derde profiel: CLI** (`moza-mcp-standaard-poc`, voorstel in [bijlage E](../../docs/feasibility-mcp-cli-standaard-voorstel.md)). Provenance, audit en mutatie-bevestiging gelden onveranderd; alleen het transport verschilt. Zonder dit profiel is een geldige CLI-implementatie niet te toetsen.
 2. **De host-orkestratielaag gaat `--fields` doorgeven aan CLI-tools.** Anders blijft de geadverteerde tokenwinst (97% reductie, zie [bijlage B](../../docs/feasibility-mcp-cli.md#bijlage-b--token-metingen)) theoretisch.
-3. **De KvK- en KOOP-resource-bug wordt gerepareerd** (zie [§2.3.A van het rapport](../../docs/feasibility-mcp-cli.md)). Resources werken nu niet end-to-end vanwege een type-mismatch met de actuele MCP-bibliotheek.
+3. **De KvK- en KOOP-resource-bug wordt gerepareerd** (zie [§2.3.A van het rapport](../../docs/feasibility-mcp-cli.md)). Resources werkten niet end-to-end vanwege een type-mismatch met de actuele MCP-bibliotheek; in deze PR is dat opgelost.
 4. **Een AI Act-classificatie en IAMA/DPIA worden ingepland** vóór de assistent breder dan een gesloten testgroep wordt aangeboden. De `rvo__indienen`-tool kan hoog risico zijn als de uitkomst directe juridische gevolgen heeft.
 
 Wij maken nog géén keuze tussen MCP of CLI als productie-transport. Die beslissing pas wanneer de standaard is uitgebreid en de meetinfrastructuur (token-gebruik, latency, foutfrequentie) over een productie-achtige periode draait.
@@ -44,12 +44,12 @@ Onze gekozen richting. De standaard maakt CLI gelijkwaardig aan MCP voor wie het
 
 ## Consequenties
 
-1. **Werk in `moza-mcp-standaard-poc`** — concrete tekstvoorstellen liggen klaar in [bijlage F](../../docs/feasibility-mcp-cli-standaard-voorstel.md). Te bespreken met de standaardisatiegroep.
+1. **Werk in `moza-mcp-standaard-poc`** — concrete tekstvoorstellen liggen klaar in [bijlage E](../../docs/feasibility-mcp-cli-standaard-voorstel.md). Te bespreken met de standaardisatiegroep.
 2. **Twee bugs te fixen in poc-moza** — KvK-resource (P1), KOOP-resource (P1). Geen workarounds nodig; één regel per server.
 3. **Een wijziging in `cli_executor.py`** — `--fields` doorgeven, ontbrekende commando's toevoegen (`koop-cli regeling get`, `kvk-cli vestigingen`, `kvk-cli eigenaar`). Zie [bijlage C](../../docs/feasibility-mcp-cli.md#bijlage-c--sync-gaten-host--cli).
 4. **Validator uitbreiden** — functionele provenance-check moet bij ERROR een FAIL of duidelijke waarschuwing geven, niet alleen ERROR. Voeg checks toe voor input-schemavalidatie en idempotentie.
 5. **Compliance-traject opstarten** — AI Act, IAMA, DPIA, transparantie-melding aan de gebruiker (Art. 50). Plan voor sluiting van Q3 2026.
-6. **Repo-hygiëne** — opruim-voorstel ligt klaar in [bijlage E](../../docs/feasibility-mcp-cli-opruimen.md) en wordt in dezelfde PR uitgevoerd.
+6. **Repo-hygiëne** — uitgevoerd in dezelfde PR (`mcp/`-map verwijderd, oude PDR-namen rechtgezet, `services/decisions/README.md` toegevoegd, testvragen verplaatst, `.gitignore` opgeschoond).
 
 ## Wat we niet beslissen
 

@@ -46,6 +46,14 @@ async def _run_cli(cmd: list[str]) -> str:
     return stdout.decode().strip()
 
 
+def _append_fields(cmd: list[str], arguments: dict) -> list[str]:
+    """Voeg --fields toe als het LLM specifieke velden vraagt (dataminimalisatie)."""
+    fields = arguments.get("fields")
+    if fields and isinstance(fields, list):
+        cmd += ["--fields", ",".join(str(f) for f in fields)]
+    return cmd
+
+
 async def execute_cli_tool(tool_key: str, arguments: dict) -> str:
     """Vertaal een MCP tool-call naar een CLI-commando en voer uit."""
 
@@ -56,7 +64,7 @@ async def execute_cli_tool(tool_key: str, arguments: dict) -> str:
             "--provenance",
             "--output", "raw",
         ]
-        return await _run_cli(cmd)
+        return await _run_cli(_append_fields(cmd, arguments))
 
     if tool_key == "koop__zoek_regelgeving":
         trefwoord = arguments.get("trefwoord", "")
@@ -75,7 +83,7 @@ async def execute_cli_tool(tool_key: str, arguments: dict) -> str:
         max_resultaten = arguments.get("max_resultaten")
         if max_resultaten:
             cmd += ["--max", str(max_resultaten)]
-        return await _run_cli(cmd)
+        return await _run_cli(_append_fields(cmd, arguments))
 
     if tool_key == "regelrecht__check":
         kvk_nummer = arguments.get("kvk_nummer", "")
@@ -94,7 +102,7 @@ async def execute_cli_tool(tool_key: str, arguments: dict) -> str:
         woonfunctie = arguments.get("is_woonfunctie")
         if woonfunctie:
             cmd += ["--woonfunctie"]
-        return await _run_cli(cmd)
+        return await _run_cli(_append_fields(cmd, arguments))
 
     if tool_key == "rvo__zoek_regeling":
         trefwoord = arguments.get("trefwoord", "")
@@ -104,7 +112,7 @@ async def execute_cli_tool(tool_key: str, arguments: dict) -> str:
             "--provenance",
             "--output", "raw",
         ]
-        return await _run_cli(cmd)
+        return await _run_cli(_append_fields(cmd, arguments))
 
     if tool_key == "rvo__indienen":
         kvk_nummer = arguments.get("kvk_nummer", "")
