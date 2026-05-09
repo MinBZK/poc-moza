@@ -40,6 +40,16 @@ python test_vlam_toolcalling_chain.py
 
 Zie ook `../test-vragen.md` voor handmatige testvragen per tool en toolcombinatie.
 
+## MCP-servers valideren tegen de standaard
+
+```bash
+../validate-mcp-servers.sh
+```
+
+Dit script draait `mcp-standaard validate` tegen alle vier servers, inclusief functionele resource-checks via `--test-uri`. Zonder die test-URIs blijft een type-mismatch op `ReadResourceContents` (zie [`docs/feasibility-mcp-cli.md` §2.3.A](../../docs/feasibility-mcp-cli.md)) onzichtbaar in de check-output. Voer dit script ook uit na elke wijziging in `services/mcp/*/server.py`.
+
+Vereist `uv` en de repo `moza-mcp-standaard-poc` lokaal (default-pad: `../moza-mcp-standaard-poc` of zet `STANDAARD_REPO`-env).
+
 ## Aandachtspunten
 
 **Sync tussen `CLI_TOOL_DEFINITIONS_*` en `cli_executor.py`** — de CLI-modus gebruikt twee handmatige bronnen die op elkaar moeten passen: de tool-definities die het LLM ziet (`vlam_host.py`) en de commando-mapping die wordt uitgevoerd (`cli_executor.py`). MCP doet dit automatisch via `tools/list`. Zie [PDR-005, "CLI tool-definities zijn hardcoded"](../decisions/PDR-005-cli-vs-mcp-transport.md) en [`docs/feasibility-mcp-cli.md` §2.3.B](../../docs/feasibility-mcp-cli.md) voor de nu bekende sync-gaten.

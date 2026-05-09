@@ -1,5 +1,7 @@
 """MCP-clientbeheer: verbindt met MCP-servers en verzamelt beschikbare tools."""
 
+import hashlib
+import json
 import logging
 from pathlib import Path
 
@@ -7,6 +9,24 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 logger = logging.getLogger("vlam.mcp_client")
+
+
+def _tool_fingerprint(tool) -> str:
+    """Hash de stabiele velden van een tool-definitie.
+
+    Onderbouwing: tool-poisoning via gemanipuleerde metadata (zie 2026-onderzoek
+    op MCP-protocol; o.a. arXiv:2603.22489) is een aanvalsvector waarbij een
+    server tussen twee runs een tool-beschrijving aanpast om het LLM te sturen.
+    Door bij host-start een fingerprint te loggen kunnen wij in de audit-trail
+    achterhalen wanneer een definitie veranderde.
+    """
+    payload = {
+        "name": getattr(tool, "name", ""),
+        "description": getattr(tool, "description", "") or "",
+        "inputSchema": getattr(tool, "inputSchema", {}),
+    }
+    blob = json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()[:16]
 
 
 class MCPServerConnection:
@@ -80,7 +100,11 @@ class MCPToolRegistry:
         for tool in tools:
             tool_key = f"{name}__{tool.name}"
             self.tool_map[tool_key] = (name, tool)
-            logger.info("  Tool geregistreerd: %s", tool_key)
+            logger.info(
+                "  Tool geregistreerd: %s [fingerprint:%s]",
+                tool_key,
+                _tool_fingerprint(tool),
+            )
 
     def get_anthropic_tools(self) -> list[dict]:
         """Converteer MCP-tools naar Anthropic API tool-formaat."""
