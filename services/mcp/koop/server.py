@@ -272,29 +272,26 @@ async def list_resource_templates() -> list[ResourceTemplate]:
     ]
 
 
-@server.read_resource()
-async def read_resource(uri: str) -> list[ReadResourceContents]:
-    """Haal een specifieke wet/regeling op bij de bron (standaard §2.1)."""
-    bwb_id = str(uri).rstrip("/").split("/")[-1]
+async def _lees_regeling(bwb_id: str) -> dict:
+    """Haal de inhoud van een regeling op bij de bron en retourneer dict.
 
+    Retourneert een dict met `data` of `error`. Wordt gebruikt door zowel
+    de read_resource-handler als de lees_regeling-tool, zodat beide paden
+    dezelfde logica delen.
+    """
     try:
         xml_url = await _resolve_bwb_to_xml_url(bwb_id)
         xml_bytes = await _fetch_regeling_xml(xml_url)
         data = _extract_text_from_wetten_xml(xml_bytes)
         data["bwb_id"] = bwb_id
+        return data
     except LookupError:
-        error_body = {
+        return {
             "error": "NIET_GEVONDEN",
             "message": f"Geen regeling gevonden voor BWB-ID: {bwb_id}",
         }
-        return [
-            ReadResourceContents(
-                content=json.dumps(error_body, ensure_ascii=False),
-                mime_type="application/json",
-            )
-        ]
     except httpx.HTTPStatusError as e:
-        error_body = {
+        return {
             "error": (
                 "SOURCE_UNAVAILABLE"
                 if e.response.status_code >= 500
@@ -304,20 +301,23 @@ async def read_resource(uri: str) -> list[ReadResourceContents]:
                 f"Regeling {bwb_id} niet beschikbaar: {e.response.status_code}"
             ),
         }
-        return [
-            ReadResourceContents(
-                content=json.dumps(error_body, ensure_ascii=False),
-                mime_type="application/json",
-            )
-        ]
     except httpx.RequestError as e:
-        error_body = {
+        return {
             "error": "SOURCE_UNAVAILABLE",
             "message": f"KOOP Regelingenbank niet bereikbaar: {e}",
         }
+
+
+@server.read_resource()
+async def read_resource(uri: str) -> list[ReadResourceContents]:
+    """Haal een specifieke wet/regeling op bij de bron (standaard §2.1)."""
+    bwb_id = str(uri).rstrip("/").split("/")[-1]
+    data = await _lees_regeling(bwb_id)
+
+    if "error" in data:
         return [
             ReadResourceContents(
-                content=json.dumps(error_body, ensure_ascii=False),
+                content=json.dumps(data, ensure_ascii=False),
                 mime_type="application/json",
             )
         ]
@@ -388,6 +388,35 @@ async def list_tools() -> list[Tool]:
                 openWorldHint=True,
             ),
         ),
+        Tool(
+            name="lees_regeling",
+            description=(
+                "Haal de volledige inhoud van een regeling op aan de hand "
+                "van het BWB-ID (begint met BWBR, BWBV of BWBB). Retourneert "
+                "titel, datum, en de tekst per artikel. Tool-equivalent van "
+                "de resource koop://regeling/{bwb_id}, zodat hosts zonder "
+                "resource-ondersteuning de wettekst alsnog kunnen lezen."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "bwb_id": {
+                        "type": "string",
+                        "description": (
+                            "BWB-ID van de regeling, bijv. 'BWBR0001840' "
+                            "(de Grondwet) of 'BWBR0038472'."
+                        ),
+                    },
+                },
+                "required": ["bwb_id"],
+                "additionalProperties": False,
+            },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                openWorldHint=True,
+            ),
+        ),
     ]
 
 
@@ -402,6 +431,18 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 type="text",
                 text=json.dumps(result, ensure_ascii=False),
             )
+        ]
+
+    if name == "lees_regeling":
+        bwb_id = arguments.get("bwb_id", "")
+        data = await _lees_regeling(bwb_id)
+        _audit_log("lees_regeling", arguments, data)
+        if "error" in data:
+            return [
+                TextContent(type="text", text=json.dumps(data, ensure_ascii=False))
+            ]
+        return [
+            TextContent(type="text", text=_wrap_provenance(data)),
         ]
 
     raise ValueError(f"Onbekende tool: {name}")

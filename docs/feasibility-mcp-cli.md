@@ -108,9 +108,9 @@ Niet zichtbaar in de oorspronkelijke tests omdat (a) de validator de fout ving a
 
 ### B. Synchronisatie tussen host en CLI is niet automatisch
 
-`cli_executor.py` heeft handmatig opgeschreven welke commando's bij welke tool horen. Drie problemen, twee blijven open:
+`cli_executor.py` heeft handmatig opgeschreven welke commando's bij welke tool horen. Drie problemen, twee opgelost in deze PR:
 
-1. **CLI's bieden meer dan de host doorgeeft** (open). `koop-cli` heeft `regeling get <bwb_id>` voor de volledige wettekst — equivalent aan de MCP-resource `koop://regeling/{bwb_id}`. Het LLM kan dit niet bereiken via CLI omdat het commando ontbreekt in `cli_executor.py`. Idem `kvk-cli vestigingen` en `kvk-cli eigenaar`. Bewust niet in deze PR opgelost: deze tools toevoegen verandert het gedrag van de assistent en hoort in een aparte iteratie met afstemming over routering en prompts.
+1. **CLI's bieden meer dan de host doorgeeft** (opgelost in deze PR). `kvk-cli vestigingen` en `kvk-cli eigenaar` zijn nu toegankelijk als tools `kvk__vestigingen` en `kvk__eigenaar`. `koop-cli regeling get <bwb_id>` heeft een tool-equivalent gekregen: `koop__lees_regeling`. De drie nieuwe tools zijn ook MCP-zijdig toegevoegd in `services/mcp/kvk/server.py` en `services/mcp/koop/server.py` met provenance, audit-logging en `ToolAnnotations`. Validator-resultaten: KvK 18/19 PASS, KOOP 13/14 PASS. Het routerings-blok `tool_usage.md` is bijgewerkt zodat het LLM weet wanneer welke tool van toepassing is.
 2. **`--fields` wordt nooit doorgegeven** (opgelost in deze PR). Elke read-only tool in `CLI_TOOL_DEFINITIONS_ANTHROPIC` heeft nu een optionele `fields`-array; `cli_executor.py` vertaalt die naar `--fields v1,v2,...`. Verificatie: `kvk__mijn_bedrijf` met `fields=["naam","kvkNummer"]` retourneert nu 234 bytes (versus 3378 zonder fields) — een **93% reductie inclusief provenance** in de live host. Muterende tool `rvo__indienen` krijgt geen fields-parameter (response is klein en functioneel).
 3. **Tool-definities blijven dubbel gedeclareerd** (open). `CLI_TOOL_DEFINITIONS_ANTHROPIC` (in `vlam_host.py`) en het feitelijke commando in `cli_executor.py` moeten met de hand synchroon worden gehouden. MCP doet dit automatisch via `ListToolsRequest`. Echte oplossing zit in het CLI-profiel van de standaard ([Bijlage E](#bijlage-e--voorgestelde-uitbreiding-overheidsstandaard), §8.3.2: `--help --json` als single source of truth), niet in een lokale ad-hoc deduplicatie.
 
@@ -252,17 +252,17 @@ Geanalyseerd in `services/host/cli_executor.py` versus de werkelijke CLI-tools.
 | Tool / commando | Ondersteund door CLI | Bereikbaar via host | Opmerking |
 |---|---|---|---|
 | `kvk-cli basisprofiel get` | ja | ja | mapped naar `kvk__mijn_bedrijf` |
-| `kvk-cli basisprofiel vestigingen` | ja | **nee** | ontbreekt in `cli_executor.py` |
-| `kvk-cli basisprofiel eigenaar` | ja | **nee** | ontbreekt |
+| `kvk-cli basisprofiel vestigingen` | ja | ja | mapped naar `kvk__vestigingen` (toegevoegd in deze PR) |
+| `kvk-cli basisprofiel eigenaar` | ja | ja | mapped naar `kvk__eigenaar` (toegevoegd) |
 | `koop-cli regeling zoek` | ja | ja | mapped naar `koop__zoek_regelgeving` |
-| `koop-cli regeling get <bwb_id>` | ja | **nee** | equivalent van MCP-resource `koop://regeling/{bwb_id}`; ontbreekt in CLI-pad |
+| `koop-cli regeling get <bwb_id>` | ja | ja | mapped naar `koop__lees_regeling` (toegevoegd, MCP-zijdig ook) |
 | `regelrecht-cli check` | ja | ja | volledig |
 | `rvo-cli regeling zoek` | ja | ja | volledig |
 | `rvo-cli rapportage indienen` | ja | ja | volledig (incl. `--confirm`) |
-| `--fields` op willekeurige cli | ja | **nooit gebruikt** | host laat dit weg |
-| `--select` (jq-expressie) | ja | **nooit gebruikt** | host laat dit weg |
+| `--fields` op alle read-only cli's | ja | ja | host geeft `fields=[…]` door (opgelost in deze PR) |
+| `--select` (jq-expressie) | ja | **nooit gebruikt** | bewust niet doorgezet — zou willekeurige jq-expressie van het LLM aan een subprocess overhandigen, te onveilig zonder verdere validatie |
 
-Dit betekent dat de "MCP en CLI doen hetzelfde voor het LLM"-belofte momenteel **niet helemaal klopt**: in CLI-modus kan het LLM minder. Aanbeveling 4 (zie deel 1) lost dit op.
+De "MCP en CLI doen hetzelfde voor het LLM"-belofte klopt nu voor de leesoperaties. Voor `--select` blijft een functioneel verschil bestaan; dat is bewust gelaten omdat het een execution-vector zou worden voor LLM-gegenereerde jq-expressies zonder review.
 
 ## Bijlage D — Wetenschappelijke onderbouwing
 

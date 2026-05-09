@@ -81,6 +81,22 @@ async def _get_basisprofiel() -> dict:
     return _profiel_cache
 
 
+async def _get_vestigingen() -> dict:
+    """Haal de vestigingen-lijst op voor het sessie-bedrijf."""
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(
+        None, _kvk_fetch, f"/v1/basisprofielen/{SESSIE_KVK_NUMMER}/vestigingen"
+    )
+
+
+async def _get_eigenaar() -> dict:
+    """Haal de eigenaar-informatie op voor het sessie-bedrijf."""
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(
+        None, _kvk_fetch, f"/v1/basisprofielen/{SESSIE_KVK_NUMMER}/eigenaar"
+    )
+
+
 # ---------------------------------------------------------------------------
 # BAG-verrijking via PDOK LVBAG API (openbare data, geen API-key nodig)
 # ---------------------------------------------------------------------------
@@ -294,6 +310,13 @@ async def read_resource(uri: str) -> list[ReadResourceContents]:
 # ---------------------------------------------------------------------------
 
 
+_SESSION_BOUND_INPUT_SCHEMA = {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": False,
+}
+
+
 @server.list_tools()
 async def list_tools() -> list[Tool]:
     """Publiceer beschikbare tools met beschrijving, schema en annotaties."""
@@ -309,11 +332,37 @@ async def list_tools() -> list[Tool]:
                 "via het Kadaster. Geen parameters nodig — de gegevens "
                 "zijn gekoppeld aan de huidige sessie."
             ),
-            inputSchema={
-                "type": "object",
-                "properties": {},
-                "additionalProperties": False,
-            },
+            inputSchema=_SESSION_BOUND_INPUT_SCHEMA,
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                openWorldHint=False,
+            ),
+        ),
+        Tool(
+            name="vestigingen",
+            description=(
+                "Haal de lijst met vestigingen op van de ingelogde gebruiker. "
+                "Retourneert nevenvestigingen, hoofdvestiging, en per vestiging "
+                "het adres en de SBI-activiteiten. Geen parameters nodig — "
+                "sessie-gebonden."
+            ),
+            inputSchema=_SESSION_BOUND_INPUT_SCHEMA,
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                openWorldHint=False,
+            ),
+        ),
+        Tool(
+            name="eigenaar",
+            description=(
+                "Haal de eigenaar-informatie op van de ingelogde gebruiker. "
+                "Retourneert rechtspersoon-gegevens of natuurlijk-persoon-gegevens "
+                "afhankelijk van de rechtsvorm. Geen parameters nodig — "
+                "sessie-gebonden."
+            ),
+            inputSchema=_SESSION_BOUND_INPUT_SCHEMA,
             annotations=ToolAnnotations(
                 readOnlyHint=True,
                 destructiveHint=False,
@@ -323,37 +372,55 @@ async def list_tools() -> list[Tool]:
     ]
 
 
+def _api_error(exc: Exception) -> list[TextContent]:
+    """Format a KvK API-fout als TextContent (gedeeld door alle tools)."""
+    logger.error("KVK API fout: %s", exc)
+    return [
+        TextContent(
+            type="text",
+            text=json.dumps(
+                {"error": "API_FOUT", "message": str(exc)}, ensure_ascii=False
+            ),
+        )
+    ]
+
+
 @server.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     """Voer een tool uit en log de aanroep (standaard §2.2)."""
+    if arguments:
+        logger.warning(
+            "SECURITY: %s aangeroepen met onverwachte arguments: %s "
+            "(genegeerd — tools zijn sessie-gebonden)",
+            name,
+            list(arguments.keys()),
+        )
+
     if name == "mijn_bedrijf":
-        if arguments:
-            logger.warning(
-                "SECURITY: mijn_bedrijf aangeroepen met onverwachte arguments: %s "
-                "(genegeerd — tool is sessie-gebonden)",
-                list(arguments.keys()),
-            )
         try:
             profiel = await _get_basisprofiel()
         except (HTTPError, URLError) as exc:
-            logger.error("KVK API fout: %s", exc)
-            return [
-                TextContent(
-                    type="text",
-                    text=json.dumps(
-                        {"error": "API_FOUT", "message": str(exc)}, ensure_ascii=False
-                    ),
-                )
-            ]
+            return _api_error(exc)
         # Verrijk met BAG-gegevens (gebruiksdoel pand / woonfunctie)
         profiel = await _enrich_with_bag(profiel)
         _audit_log("mijn_bedrijf", {}, profiel)
-        return [
-            TextContent(
-                type="text",
-                text=_wrap_provenance(profiel),
-            )
-        ]
+        return [TextContent(type="text", text=_wrap_provenance(profiel))]
+
+    if name == "vestigingen":
+        try:
+            data = await _get_vestigingen()
+        except (HTTPError, URLError) as exc:
+            return _api_error(exc)
+        _audit_log("vestigingen", {}, data)
+        return [TextContent(type="text", text=_wrap_provenance(data))]
+
+    if name == "eigenaar":
+        try:
+            data = await _get_eigenaar()
+        except (HTTPError, URLError) as exc:
+            return _api_error(exc)
+        _audit_log("eigenaar", {}, data)
+        return [TextContent(type="text", text=_wrap_provenance(data))]
 
     raise ValueError(f"Onbekende tool: {name}")
 

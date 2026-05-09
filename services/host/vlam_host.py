@@ -31,7 +31,10 @@ logger = logging.getLogger("vlam.host")
 # Gebruiksvriendelijke labels voor tools (getoond in de UI tijdens verwerking)
 TOOL_LABELS = {
     "kvk__mijn_bedrijf": "KvK Handelsregister raadplegen",
+    "kvk__vestigingen": "KvK: vestigingen opzoeken",
+    "kvk__eigenaar": "KvK: eigenaar opzoeken",
     "koop__zoek_regelgeving": "KOOP Regelingenbank doorzoeken",
+    "koop__lees_regeling": "KOOP: wettekst lezen",
     "regelrecht__check": "RegelRecht: verplichting toetsen",
     "rvo__zoek_regeling": "RVO: subsidieregeling zoeken",
     "rvo__indienen": "RVO: rapportage indienen",
@@ -93,6 +96,24 @@ CLI_TOOL_DEFINITIONS_ANTHROPIC = [
         },
     },
     {
+        "name": "kvk__vestigingen",
+        "description": "Haal de lijst met vestigingen op van het bedrijf van de ingelogde gebruiker. Geeft per vestiging het adres, vestigingsnummer en de SBI-activiteiten. Sessie-gebonden, geen kvk_nummer nodig.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"fields": _FIELDS_PARAM},
+            "required": [],
+        },
+    },
+    {
+        "name": "kvk__eigenaar",
+        "description": "Haal de eigenaar-informatie op van het bedrijf van de ingelogde gebruiker. Retourneert rechtspersoon- of natuurlijk-persoon-gegevens afhankelijk van de rechtsvorm. Sessie-gebonden, geen kvk_nummer nodig.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"fields": _FIELDS_PARAM},
+            "required": [],
+        },
+    },
+    {
         "name": "koop__zoek_regelgeving",
         "description": "Doorzoek de KOOP Regelingenbank (wetten.overheid.nl) op trefwoord. Retourneert titel, identificatie (BWB-ID), type, organisatie en geldigheid. Veelgebruikte velden: titel, identifier, type.",
         "input_schema": {
@@ -105,6 +126,18 @@ CLI_TOOL_DEFINITIONS_ANTHROPIC = [
                 "fields": _FIELDS_PARAM,
             },
             "required": ["trefwoord"],
+        },
+    },
+    {
+        "name": "koop__lees_regeling",
+        "description": "Haal de volledige inhoud van een regeling op aan de hand van het BWB-ID (begint met BWBR, BWBV of BWBB). Retourneert titel, datum en de tekst per artikel. Gebruik dit nadat de gebruiker met koop__zoek_regelgeving een specifieke regeling heeft gevonden of een BWB-ID noemt.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "bwb_id": {"type": "string", "description": "BWB-ID, bijv. 'BWBR0001840' (Grondwet) of 'BWBR0038472'"},
+                "fields": _FIELDS_PARAM,
+            },
+            "required": ["bwb_id"],
         },
     },
     {

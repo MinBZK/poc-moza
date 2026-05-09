@@ -66,6 +66,34 @@ async def execute_cli_tool(tool_key: str, arguments: dict) -> str:
         ]
         return await _run_cli(_append_fields(cmd, arguments))
 
+    if tool_key == "kvk__vestigingen":
+        cmd = [
+            str(CLI_DIR / "kvk-cli"),
+            "basisprofiel", "vestigingen",
+            "--provenance",
+            "--output", "raw",
+        ]
+        return await _run_cli(_append_fields(cmd, arguments))
+
+    if tool_key == "kvk__eigenaar":
+        cmd = [
+            str(CLI_DIR / "kvk-cli"),
+            "basisprofiel", "eigenaar",
+            "--provenance",
+            "--output", "raw",
+        ]
+        return await _run_cli(_append_fields(cmd, arguments))
+
+    if tool_key == "koop__lees_regeling":
+        bwb_id = arguments.get("bwb_id", "")
+        cmd = [
+            str(CLI_DIR / "koop-cli"),
+            "regeling", "get", bwb_id,
+            "--provenance",
+            "--output", "raw",
+        ]
+        return await _run_cli(_append_fields(cmd, arguments))
+
     if tool_key == "koop__zoek_regelgeving":
         trefwoord = arguments.get("trefwoord", "")
         cmd = [
