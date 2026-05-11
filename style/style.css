@@ -175,7 +175,7 @@ em, i {
 
 a {
 	color: var(--toepassing-color-interactive-default-text);
-	text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+	text-decoration: var(--toepassing-text-decoration-hyperlink);
 	text-decoration-color: currentcolor;
 	text-decoration-skip-ink: auto;
 	text-underline-offset: 3px;
@@ -262,7 +262,7 @@ pre {
 .icon-link {
 	&:hover {
 		color: var(--toepassing-color-interactive-hover-text);
-		text-decoration: var(--toepassing-text-text-decoration-hyperlink) !important;
+		text-decoration: var(--toepassing-text-decoration-hyperlink) !important;
 	}
 }
 
@@ -380,6 +380,18 @@ button, [type="date"], [type="datetime-local"], [type="email"], [type="month"], 
 	vertical-align: middle;
 }
 .btn-cta[rel~="external"]::after {
+	mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
+	vertical-align: baseline;
+}
+
+/* Extern-link icoon achter overige externe links */
+a[rel~="external"]:not(.btn-cta, .content-link)::after {
+	background-color: currentcolor;
+	block-size: var(--toepassing-size-icon-xs);
+	content: "";
+	display: inline-block;
+	inline-size: var(--toepassing-size-icon-xs);
+	margin-inline-start: var(--toepassing-space-margin-3xs);
 	mask: url("../assets/icons/icon-link-extern.svg") no-repeat center / contain;
 	vertical-align: baseline;
 }
@@ -678,7 +690,7 @@ nav {
 		text-decoration-color: transparent;
 	}
 	[aria-current], a:hover {
-		text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+		text-decoration: var(--toepassing-text-decoration-hyperlink);
 	}
 	[aria-current] {
 		font-weight: var(--toepassing-text-font-weight-bold);
@@ -838,7 +850,7 @@ a[href$=".pdf"]::after {
 		vertical-align: middle;
 	}
 	&:hover {
-		text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+		text-decoration: var(--toepassing-text-decoration-hyperlink);
 	}
 }
 
@@ -852,7 +864,7 @@ footer {
 		text-decoration-color: transparent;
 		&:hover {
 			color: inherit;
-			text-decoration: var(--toepassing-text-text-decoration-hyperlink) !important;
+			text-decoration: var(--toepassing-text-decoration-hyperlink) !important;
 		}
 	}
 }
@@ -889,6 +901,10 @@ dd {
 }
 dd + dt {
 	margin-block-start: var(--toepassing-space-margin-xs);
+}
+
+dl.data-overview div {
+	margin-block-end: var(--toepassing-space-margin-xs);
 }
 
 .list-plain {
@@ -966,7 +982,7 @@ caption {
 		&:hover {
 			h3, h4 {
 				color: var(--toepassing-color-interactive-hover-text);
-				text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+				text-decoration: var(--toepassing-text-decoration-hyperlink);
 				transition: var(--toepassing-transition-default);
 			}
 		}
@@ -1017,7 +1033,7 @@ caption {
 	.content-link {
 		text-decoration: none;
 		h3, h4 {
-			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+			text-decoration: var(--toepassing-text-decoration-hyperlink);
 			text-decoration-color: transparent;
 			transition: var(--toepassing-transition-default);
 		}
@@ -1039,6 +1055,17 @@ caption {
 	inline-size: 100%;
 	inset-block-start: 0;
 	position: absolute;
+}
+
+/* Data-overview: lange lijsten met <div>-wrappers vloeien over 2 kolommen op
+   brede viewports. Drempel is 5 paren: bij gebalanceerde verdeling belanden er
+   dan minimaal 2 in kolom 2. Smal scherm valt automatisch terug naar 1 kolom. */
+.data-overview:has(> div:nth-of-type(5)) {
+	column-gap: var(--toepassing-space-layout-md);
+	columns: 2 22rem;
+	> div {
+		break-inside: avoid;
+	}
 }
 
 /* Tiles: 2-koloms grid, 1 kolom op smal scherm */
@@ -1154,7 +1181,7 @@ dd .feedback {
 			position: absolute;
 		}
 		&:hover a {
-			text-decoration: var(--toepassing-text-text-decoration-hyperlink);
+			text-decoration: var(--toepassing-text-decoration-hyperlink);
 		}
 	}
 	tbody {
