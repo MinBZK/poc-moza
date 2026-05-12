@@ -53,8 +53,8 @@
 			{ "naam": "Stichting Groenrijk", "rol": "Bestuurslid" },
 			{ "naam": "Coöperatie ZuidWest U.A.", "rol": "Aandeelhouder" }
 		],
-		"subsidies": ["wbso", "kia", "bmkb", "mit", "pps-toeslag", "praktijkleren"],
-		"regelgeving": ["minimumloon", "arbowet", "avg", "wwft", "loonbelasting", "transparante-arbeidsvoorwaarden"],
+		"subsidies": ["wbso", "bmkb", "kia", "mit", "eia"],
+		"regelgeving": ["avg", "minimumloon", "arbowet", "wwft", "loonbelasting"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["mkb-digitaliseringssubsidie", "duurzaam-advies-voucher"],
 		"homepageRegelgeving": ["ai-verordening"]
@@ -99,8 +99,8 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [],
-		"subsidies": ["kia", "bmkb", "seba", "praktijkleren", "cyberweerbaarheid", "mkb-groen"],
-		"regelgeving": ["minimumloon", "arbowet", "avg", "warenwet", "handelsregisterwet", "gelijke-behandeling-leeftijd"],
+		"subsidies": ["cyberweerbaarheid", "seba", "mkb-groen", "kia"],
+		"regelgeving": ["warenwet", "minimumloon", "arbowet", "avg", "handelsregisterwet", "gelijke-behandeling-leeftijd"],
 		"buurt": "voorburg",
 		"homepageSubsidies": ["circulaire-retail", "mkb-cyberweerbaarheid-voucher"],
 		"homepageRegelgeving": ["uitgebreide-producentenverantwoordelijkheid"]
@@ -153,8 +153,8 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "NVM", "rol": "Lid" }],
-		"subsidies": ["kia", "bmkb", "mkb-groen", "cyberweerbaarheid", "seba"],
-		"regelgeving": ["minimumloon", "wwft", "wft", "avg", "omgevingswet", "handelsregisterwet", "mededingingswet"],
+		"subsidies": ["bmkb", "kia", "mkb-groen", "isde", "sib", "seba"],
+		"regelgeving": ["wft", "wwft", "minimumloon", "avg", "omgevingswet", "mededingingswet"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["energielabel-c-subsidie", "verduurzaming-bedrijfspanden"],
 		"homepageRegelgeving": ["wwft-verscherpt-clientenonderzoek"]
@@ -209,10 +209,10 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "NEPROM", "rol": "Lid" }],
-		"subsidies": ["bmkb", "kia", "eia", "mia-vamil", "mkb-groen", "sde"],
-		"regelgeving": ["omgevingswet", "milieubeheer", "wwft", "csrd", "arbowet", "was"],
+		"subsidies": ["sde", "kia", "bmkb", "eia", "mia-vamil", "isde", "dei", "mkb-groen"],
+		"regelgeving": ["omgevingswet", "milieubeheer", "csrd", "wwft", "arbowet", "was", "minimumloon"],
 		"buurt": "s-gravenhage",
-		"homepageSubsidies": ["natuurinclusief-bouwen", "circulaire-bouwmaterialen"],
+		"homepageSubsidies": ["natuurinclusief-bouwen"],
 		"homepageRegelgeving": ["omgevingswet-stikstofnorm"]
 	},
 	{
@@ -255,10 +255,10 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [],
-		"subsidies": ["kia", "bbsc", "praktijkleren", "cyberweerbaarheid", "mkb-groen"],
-		"regelgeving": ["avg", "warenwet", "arbowet", "omgevingswet", "handelsregisterwet"],
+		"subsidies": ["cyberweerbaarheid", "kia", "bbsc", "praktijkleren", "mkb-groen"],
+		"regelgeving": ["arbowet", "avg", "warenwet", "transparante-arbeidsvoorwaarden", "gelijke-kansen", "gelijke-behandeling-leeftijd"],
 		"buurt": "s-gravenhage",
-		"homepageSubsidies": ["mkb-cyberweerbaarheid-voucher", "mkb-digitaliseringssubsidie"],
+		"homepageSubsidies": ["mkb-cyberweerbaarheid-voucher"],
 		"homepageRegelgeving": ["arbowet-gevaarlijke-stoffen"]
 	},
 	{
@@ -304,10 +304,10 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "OnderhoudNL", "rol": "Lid" }],
-		"subsidies": ["kia", "bmkb", "praktijkleren", "seba", "mkb-groen", "isde"],
-		"regelgeving": ["minimumloon", "arbowet", "omgevingswet", "milieubeheer", "avg", "was"],
+		"subsidies": ["praktijkleren", "kia", "bmkb", "seba", "mkb-groen", "isde"],
+		"regelgeving": ["arbowet", "minimumloon", "omgevingswet", "milieubeheer", "was"],
 		"buurt": "voorburg",
-		"homepageSubsidies": ["gezond-veilig-werken", "loodvrij-schilderen"],
+		"homepageSubsidies": ["loodvrij-schilderen"],
 		"homepageRegelgeving": ["arbowet-gevaarlijke-stoffen"]
 	},
 	{
@@ -350,10 +350,10 @@
 		},
 		"andereBedrijven": [{ "naam": "Lichtveld B&B", "rol": "Eigenaar" }],
 		"belangen": [],
-		"subsidies": ["kia", "bbsc", "mkb-groen", "cyberweerbaarheid", "isde"],
-		"regelgeving": ["avg", "omgevingswet", "dienstenwet", "warenwet", "transparante-arbeidsvoorwaarden", "mededingingswet"],
+		"subsidies": ["bbsc", "kia", "mkb-groen", "cyberweerbaarheid", "sib"],
+		"regelgeving": ["dienstenwet", "avg", "omgevingswet", "mededingingswet", "transparante-arbeidsvoorwaarden", "warenwet"],
 		"buurt": "s-gravenhage",
-		"homepageSubsidies": ["toeristische-innovatie", "cultureel-ondernemerschap"],
+		"homepageSubsidies": ["cultureel-ondernemerschap"],
 		"homepageRegelgeving": ["dienstenwet-informatieplicht"]
 	},
 	{
@@ -399,8 +399,8 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "LTO Nederland", "rol": "Lid" }],
-		"subsidies": ["kia", "bmkb", "sde", "eia", "mia-vamil", "praktijkleren"],
-		"regelgeving": ["minimumloon", "arbowet", "milieubeheer", "bestrijdingsmiddelen", "omgevingswet", "was"],
+		"subsidies": ["sde", "kia", "bmkb", "eia", "mia-vamil", "groenprojecten"],
+		"regelgeving": ["milieubeheer", "bestrijdingsmiddelen", "minimumloon", "arbowet", "omgevingswet", "was"],
 		"buurt": "voorburg",
 		"homepageSubsidies": ["duurzame-veehouderij", "precisielandbouw"],
 		"homepageRegelgeving": ["meststoffenwet-fosfaatplafond"]
@@ -457,8 +457,8 @@
 		},
 		"andereBedrijven": [],
 		"belangen": [{ "naam": "IAAPA Europe", "rol": "Lid" }],
-		"subsidies": ["wbso", "bmkb", "innovatiekrediet", "mit", "groeifaciliteit"],
-		"regelgeving": ["minimumloon", "arbowet", "avg", "dienstenwet", "arbeid-vreemdelingen", "wor"],
+		"subsidies": ["mit", "wbso", "kia", "bmkb", "innovatiekrediet", "mia-vamil", "eia", "groeifaciliteit", "dggf", "dei"],
+		"regelgeving": ["arbowet", "dienstenwet", "minimumloon", "avg", "arbeid-vreemdelingen", "wor", "csrd", "klokkenluiders", "transparante-arbeidsvoorwaarden", "wet-werk-zekerheid"],
 		"buurt": "s-gravenhage",
 		"homepageSubsidies": ["toeristische-innovatie", "mkb-digitaliseringssubsidie"],
 		"homepageRegelgeving": ["dienstenwet-informatieplicht"]

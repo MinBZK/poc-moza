@@ -10,14 +10,20 @@ title: "MijnOverheid Zakelijk: Home"
 	<div class="tiles">
 		<section class="card">
 			<h3>Subsidies en financiering</h3>
-			<p>
+			<p data-singular-of="subsidies-count" hidden>
+				Er is <a href="{{ '/moza/subsidies/' | url }}">1 nieuwe subsidie en/of financieringsmogelijkheid</a> sinds uw laatste bezoek die mogelijk interessant voor u kan zijn.
+			</p>
+			<p data-plural-of="subsidies-count">
 				Er zijn <a href="{{ '/moza/subsidies/' | url }}"><span data-badge-id="subsidies-count"></span> nieuwe subsidies en/of financieringsmogelijkheden</a> sinds uw laatste bezoek die mogelijk interessant voor u kunnen zijn.
 			</p>
 			<a class="btn-cta" href="{{ '/moza/subsidies/' | url }}">Ga naar Subsidies en financiering</a>
 		</section>
 		<section class="card">
 			<h3>Wetten en regelgeving</h3>
-			<p>
+			<p data-singular-of="regelgeving-count" hidden>
+				Er is <a href="{{ '/moza/regelgeving/' | url }}">1 nieuwe wet of regelgeving</a> die mogelijk op u van toepassing is.
+			</p>
+			<p data-plural-of="regelgeving-count">
 				Er zijn <a href="{{ '/moza/regelgeving/' | url }}"><span data-badge-id="regelgeving-count"></span> nieuwe wetten of regelgeving, of wijzigingen op bestaande wet- of regelgeving</a> die mogelijk op u van toepassing zijn.
 			</p>
 			<ul class="list-content-links" aria-busy="true"></ul>

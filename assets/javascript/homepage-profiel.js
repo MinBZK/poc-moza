@@ -54,7 +54,8 @@
 		dl.innerHTML = "<dt>Verstrekker</dt><dd>" + item.verstrekker + "</dd>"
 			+ "<dt>Type</dt><dd>" + (item.type || "") + "</dd>"
 			+ "<dt>Aanvraagperiode</dt><dd>" + (item.aanvraagperiode || "") + "</dd>"
-			+ (item.maximaalBedrag ? "<dt>Maximaal bedrag</dt><dd>" + item.maximaalBedrag + "</dd>" : "");
+			+ (item.maximaalBedrag ? "<dt>Maximaal bedrag</dt><dd>" + item.maximaalBedrag + "</dd>" : "")
+			+ (item.budgetVergeven ? '<dt>Budget vergeven</dt><dd><div class="progress-bar" role="progressbar" aria-label="Budget vergeven" aria-valuenow="' + item.budgetVergeven + '" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar-fill" style="inline-size: ' + item.budgetVergeven + '%">' + item.budgetVergeven + '%</div></div></dd>' : '');
 		li.appendChild(dl);
 		li.appendChild(maakActionGroup(item.titel));
 		return li;
@@ -180,8 +181,11 @@
 		return items.map(function (item) { return { item: item, maakFn: maakFn }; });
 	}
 
-	var huidigeAlleSubs = [];
-	var huidigeAlleRegs = [];
+	// Telt alleen items uit homepageSubsidies/homepageRegelgeving — de gehoogde
+	// "nieuw sinds uw laatste bezoek"-items. De overzichten tonen meer items,
+	// maar die zijn deel van de algemene branche-lijst en tellen niet als nieuw.
+	var huidigeNieuweSubs = [];
+	var huidigeNieuweRegs = [];
 
 	function isOngelezen(item) {
 		try {
@@ -192,15 +196,23 @@
 	}
 
 	function updateSideNavBadges() {
-		var ongelezenSubs = huidigeAlleSubs.filter(function (entry) { return isOngelezen(entry.item); }).length;
-		var ongelezenRegs = huidigeAlleRegs.filter(function (entry) { return isOngelezen(entry.item); }).length;
-		document.querySelectorAll('[data-badge-id="subsidies-count"]').forEach(function (el) {
-			el.textContent = ongelezenSubs;
-			el.hidden = ongelezenSubs === 0;
+		var ongelezenSubs = huidigeNieuweSubs.filter(function (entry) { return isOngelezen(entry.item); }).length;
+		var ongelezenRegs = huidigeNieuweRegs.filter(function (entry) { return isOngelezen(entry.item); }).length;
+		setTelling("subsidies-count", ongelezenSubs);
+		setTelling("regelgeving-count", ongelezenRegs);
+	}
+
+	// Werkt de badge bij en wisselt tussen enkelvoud-/meervoud-formulering.
+	function setTelling(badgeId, count) {
+		document.querySelectorAll('[data-badge-id="' + badgeId + '"]').forEach(function (el) {
+			el.textContent = count;
+			el.hidden = count === 0;
 		});
-		document.querySelectorAll('[data-badge-id="regelgeving-count"]').forEach(function (el) {
-			el.textContent = ongelezenRegs;
-			el.hidden = ongelezenRegs === 0;
+		document.querySelectorAll('[data-singular-of="' + badgeId + '"]').forEach(function (el) {
+			el.hidden = count !== 1;
+		});
+		document.querySelectorAll('[data-plural-of="' + badgeId + '"]').forEach(function (el) {
+			el.hidden = count === 1;
 		});
 	}
 
@@ -239,9 +251,10 @@
 		if (ovzSub) vulPaginering(ovzSub, alleSubs);
 		if (ovzReg) vulPaginering(ovzReg, alleRegs);
 
-		// Side-nav badges tonen ongelezen aantal per categorie.
-		huidigeAlleSubs = alleSubs;
-		huidigeAlleRegs = alleRegs;
+		// Side-nav badges tonen alleen ongelezen "nieuw sinds uw laatste bezoek"-
+		// items uit homepageSubsidies/homepageRegelgeving, niet de hele branche-lijst.
+		huidigeNieuweSubs = homeSubItems;
+		huidigeNieuweRegs = homeRegItems;
 		updateSideNavBadges();
 	}
 
