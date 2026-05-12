@@ -1320,10 +1320,10 @@ dd .feedback {
 }
 .chat-messages {
 	border: var(--toepassing-border-subtle);
-	border-radius: var(--toepassing-border-radius-lg);
+	border-radius: var(--toepassing-border-radius-md);
 	display: flex;
 	flex-direction: column;
-	gap: var(--toepassing-space-padding-lg);
+	gap: var(--toepassing-space-padding-md);
 	inline-size: 100%;
 	overflow-y: auto;
 	padding: var(--toepassing-space-padding-md);
@@ -1333,6 +1333,7 @@ dd .feedback {
 	display: flex;
 	flex-direction: column;
 	gap: var(--toepassing-space-margin-xs);
+	margin-block-end: var(--toepassing-space-margin-xs);
 	max-inline-size: 80%;
 	padding: var(--toepassing-space-padding-sm) var(--toepassing-space-padding-md);
 	position: relative;
@@ -1374,7 +1375,7 @@ dd .feedback {
 	.thinking-text::before {
 		animation: spin 0.8s linear infinite;
 		block-size: var(--toepassing-size-icon-md);
-		border: var(--toepassing-border-width-lg) solid var(--toepassing-color-feedback-info-border);
+		border: var(--toepassing-border-width-lg) solid var(--toepassing-color-interactive-active-border);
 		border-block-start-color: transparent;
 		border-radius: 50%;
 		content: "";
@@ -1383,6 +1384,9 @@ dd .feedback {
 		margin-inline-end: var(--toepassing-space-margin-xs);
 		vertical-align: middle;
 	}
+}
+#chat-input {
+	min-block-size: 12rem;
 }
 
 /* -- OVERIGE COMPONENTEN -- */
