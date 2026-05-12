@@ -544,7 +544,7 @@ ul.selection {
 
 /* -- KNOPPEN -- */
 
-button, a.btn-cta {
+button, a.btn, a.btn-cta {
 	background: var(--toepassing-color-interactive-default-background);
 	color: var(--toepassing-color-text-inverse);
 	cursor: pointer;
