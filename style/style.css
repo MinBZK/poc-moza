@@ -980,6 +980,7 @@ caption {
 		font-size: var(--toepassing-text-size-title-xl);
 	}
 	a:not(.btn-cta) {
+		text-decoration: none;
 		&:hover {
 			h3, h4 {
 				color: var(--toepassing-color-interactive-hover-text);
