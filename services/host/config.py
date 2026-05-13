@@ -71,9 +71,10 @@ _origins_raw = os.getenv("ALLOWED_ORIGINS", "").strip()
 ALLOWED_ORIGINS: list[str] = (
     [o.strip() for o in _origins_raw.split(",") if o.strip()] if _origins_raw else ["*"]
 )
-# ALLOW_API_KEY_OVERRIDE: als false (default), worden x-vlam-api-key en
-# x-claude-api-key headers genegeerd en alleen server-env keys gebruikt.
-ALLOW_API_KEY_OVERRIDE: bool = os.getenv("ALLOW_API_KEY_OVERRIDE", "false").lower() in (
+# ALLOW_API_KEY_OVERRIDE: als true (PoC-default), worden x-vlam-api-key en
+# x-claude-api-key headers uit de UI gerespecteerd. Zet expliciet op "false"
+# in productie om alleen server-env keys toe te staan.
+ALLOW_API_KEY_OVERRIDE: bool = os.getenv("ALLOW_API_KEY_OVERRIDE", "true").lower() in (
     "true",
     "1",
     "yes",
