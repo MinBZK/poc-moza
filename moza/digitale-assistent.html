@@ -27,7 +27,14 @@ title: "MijnOverheid Zakelijk: Digitale assistent"
 					<li>Rapportages indienen</li>
 				</ul>
 				<p>Hiervoor gebruik ik KvK Handelsregister, KOOP Regelingenbank, RegelRecht en RVO. Controleer belangrijke informatie altijd bij de officiële bron. Voor juridisch advies raadpleegt u een juridisch adviseur of de betreffende overheidsinstantie.</p>
-				<p>Waarmee kan ik u helpen?</p>
+				<p>Probeer bijvoorbeeld:</p>
+				<div class="chat-suggestions">
+					<button type="button" class="secondary chat-suggestion">Wat zijn mijn bedrijfsgegevens?</button>
+					<button type="button" class="secondary chat-suggestion">Geldt de energiebesparingsplicht voor mij?</button>
+					<button type="button" class="secondary chat-suggestion">Welke subsidies kan ik aanvragen?</button>
+					<button type="button" class="secondary chat-suggestion">Zoek de Wet milieubeheer</button>
+				</div>
+				<p>Of stel uw eigen vraag.</p>
 			</div>
 		</div>
 
@@ -255,6 +262,14 @@ title: "MijnOverheid Zakelijk: Digitale assistent"
 	}
 
 	window.addEventListener("setting-changed", handleSwitch);
+
+	messages.addEventListener("click", function (e) {
+		var chip = e.target.closest(".chat-suggestion");
+		if (!chip || submitting) return;
+		input.value = chip.textContent.trim();
+		input.focus();
+		form.requestSubmit();
+	});
 
 	input.addEventListener("input", function () {
 		this.style.blockSize = "auto";

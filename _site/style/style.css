@@ -1474,6 +1474,16 @@ dd .feedback {
 	}
 }
 
+.chat-suggestions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--toepassing-space-layout-2xs);
+	margin-block-start: var(--toepassing-space-padding-sm);
+}
+.chat-suggestion {
+	font: var(--toepassing-text-smalltext);
+}
+
 /* -- OVERIGE COMPONENTEN -- */
 
 /* Uitklapblok (details/summary) */

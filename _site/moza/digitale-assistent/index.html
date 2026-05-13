@@ -341,7 +341,7 @@
 		<div class="chat-status" id="chat-status" aria-live="polite"></div>
 		<div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
 			<div class="chat-message chat-message-assistant">
-				<p>Welkom bij de Digitale Assistent van MijnOverheid Zakelijk.</p>
+				<p>Welkom bij de Digitale Assistent van MijnOverheid Zakelijk. <strong>Ik ben een AI-systeem</strong> dat namens de overheid antwoordt op uw vragen.</p>
 				<p>Dit kan ik voor u doen:</p>
 				<ul>
 					<li>Bedrijfsgegevens opzoeken</li>
@@ -349,8 +349,15 @@
 					<li>Regelgeving, subsidies en rapportages opzoeken</li>
 					<li>Rapportages indienen</li>
 				</ul>
-				<p>Hiervoor gebruik ik KvK Handelsregister, KOOP Regelingenbank, RegelRecht en RVO.</p>
-				<p>Waarmee kan ik u helpen?</p>
+				<p>Hiervoor gebruik ik KvK Handelsregister, KOOP Regelingenbank, RegelRecht en RVO. Controleer belangrijke informatie altijd bij de officiële bron. Voor juridisch advies raadpleegt u een juridisch adviseur of de betreffende overheidsinstantie.</p>
+				<p>Probeer bijvoorbeeld:</p>
+				<div class="chat-suggestions">
+					<button type="button" class="secondary chat-suggestion">Wat zijn mijn bedrijfsgegevens?</button>
+					<button type="button" class="secondary chat-suggestion">Geldt de energiebesparingsplicht voor mij?</button>
+					<button type="button" class="secondary chat-suggestion">Welke subsidies kan ik aanvragen?</button>
+					<button type="button" class="secondary chat-suggestion">Zoek de Wet milieubeheer</button>
+				</div>
+				<p>Of stel uw eigen vraag.</p>
 			</div>
 		</div>
 
@@ -578,6 +585,14 @@
 	}
 
 	window.addEventListener("setting-changed", handleSwitch);
+
+	messages.addEventListener("click", function (e) {
+		var chip = e.target.closest(".chat-suggestion");
+		if (!chip || submitting) return;
+		input.value = chip.textContent.trim();
+		input.focus();
+		form.requestSubmit();
+	});
 
 	input.addEventListener("input", function () {
 		this.style.blockSize = "auto";
