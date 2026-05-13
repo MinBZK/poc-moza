@@ -11,48 +11,24 @@
 			});
 
 			tab.addEventListener("keydown", function (e) {
-				var index = Array.prototype.indexOf.call(tabs, e.currentTarget);
-				var dir =
-					e.key === "ArrowLeft"
-						? index - 1
-						: e.key === "ArrowRight"
-							? index + 1
-							: null;
-
 				if (e.key === "ArrowDown") {
 					e.preventDefault();
 					var panel = tabbed.querySelector(
 						"#" + e.currentTarget.getAttribute("aria-controls"),
 					);
 					if (panel) panel.focus();
-					return;
-				}
-
-				if (dir !== null && tabs[dir]) {
-					e.preventDefault();
-					switchTab(e.currentTarget, tabs[dir]);
 				}
 			});
 		});
 
 		function switchTab(oldTab, newTab) {
 			oldTab.setAttribute("aria-selected", "false");
-			oldTab.setAttribute("tabindex", "-1");
-
 			newTab.setAttribute("aria-selected", "true");
-			newTab.removeAttribute("tabindex");
-			newTab.focus();
+			newTab.focus({ preventScroll: true });
 
 			panels.forEach(function (panel) {
 				panel.hidden = panel.id !== newTab.getAttribute("aria-controls");
 			});
 		}
-
-		// Initialiseer: alle tabs behalve de actieve krijgen tabindex -1
-		tabs.forEach(function (tab) {
-			if (tab.getAttribute("aria-selected") !== "true") {
-				tab.setAttribute("tabindex", "-1");
-			}
-		});
 	});
 })();

@@ -8,7 +8,7 @@ title: "MijnOverheid Zakelijk: Bedrijfsgegevens"
 	<nav class="breadcrumb">
 		<ol>
 			<li><a href="{{ '/moza/' | url }}">Home</a></li>
-			<li aria-current="page">Mijn bedrijfsgegevens</li>
+			<li aria-current="page">Bedrijfsgegevens</li>
 		</ol>
 	</nav>
 
@@ -20,24 +20,54 @@ title: "MijnOverheid Zakelijk: Bedrijfsgegevens"
 			<p>Dit zijn de gegevens die bij de overheid bekend zijn over uw organisatie.</p>
 		</hgroup>
 		<dl class="data-overview">
-			<dt>Handelsnaam</dt>
-			<dd data-profiel="handelsnaam">Bloom B.V.</dd>
-			<dt>KVK-nummer</dt>
-			<dd data-profiel="kvkNummer">12345678</dd>
-			<dt>RSIN-nummer</dt>
-			<dd data-profiel="rsinNummer">12345678</dd>
-			<dt>BTW-identificatienummer</dt>
-			<dd data-profiel="btwNummer">NL00012345678</dd>
-			<dt>Omzetbelastingnummer</dt>
-			<dd data-profiel="omzetbelastingnummer">012345678B01</dd>
-			<dt>Startdatum</dt>
-			<dd data-profiel="startdatum">12 februari 2018</dd>
-			<dt>Rechtsvorm</dt>
-			<dd data-profiel="rechtsvorm">Besloten vennootschap</dd>
-			<dt>Aantal werkzame personen (fulltime)</dt>
-			<dd>3</dd>
-			<dt>Aantal werkzame personen (parttime)</dt>
-			<dd>0</dd>
+			<div>
+				<dt>Handelsnaam</dt>
+				<dd data-profiel="handelsnaam">Bloom B.V.</dd>
+			</div>
+			<div>
+				<dt>KVK-nummer</dt>
+				<dd data-profiel="kvkNummer">12345678</dd>
+			</div>
+			<div>
+				<dt>Vestigingsnummer</dt>
+				<dd data-profiel="vestigingsnummer">000012345678</dd>
+			</div>
+			<div>
+				<dt>RSIN-nummer</dt>
+				<dd data-profiel="rsinNummer">12345678</dd>
+			</div>
+			<div>
+				<dt>BTW-identificatienummer</dt>
+				<dd data-profiel="btwNummer">NL00012345678</dd>
+			</div>
+			<div>
+				<dt>Omzetbelastingnummer</dt>
+				<dd data-profiel="omzetbelastingnummer">012345678B01</dd>
+			</div>
+			<div>
+				<dt>Loonheffingennummer</dt>
+				<dd data-profiel="loonheffingennummer">012345678L01</dd>
+			</div>
+			<div>
+				<dt>Startdatum</dt>
+				<dd data-profiel="startdatum">12 februari 2018</dd>
+			</div>
+			<div>
+				<dt>Rechtsvorm</dt>
+				<dd data-profiel="rechtsvorm">Besloten vennootschap</dd>
+			</div>
+			<div>
+				<dt>Zakelijke IBAN</dt>
+				<dd data-profiel="iban">NL12 INGB 0001 2345 67</dd>
+			</div>
+			<div>
+				<dt>Aantal werkzame personen (fulltime)</dt>
+				<dd data-profiel="werkzamePersonenFulltime">3</dd>
+			</div>
+			<div>
+				<dt>Aantal werkzame personen (parttime)</dt>
+				<dd data-profiel="werkzamePersonenParttime">0</dd>
+			</div>
 		</dl>
 		<p class="metadata">Bron: <a href="https://kvk.nl/">KVK</a> en <a href="https://belastingdienst.nl/">Belastingdienst</a></p>
 	</section>
@@ -46,31 +76,31 @@ title: "MijnOverheid Zakelijk: Bedrijfsgegevens"
 		<section class="card">
 			<h3>Bedrijfsactiviteiten</h3>
 			<p>Bekijk de SBI-codes en omschrijvingen van de activiteiten die bij uw onderneming geregistreerd staan.</p>
-			<a class="btn-cta" href="#">Ga naar Bedrijfsactiviteiten</a>
+			<a class="btn-cta" href="{{ '/moza/bedrijfsactiviteiten/' | url }}">Ga naar Bedrijfsactiviteiten</a>
 		</section>
 
 		<section class="card">
 			<h3>Adresgegevens</h3>
 			<p>Uw vestigings- en postadres zoals geregistreerd bij de Kamer van Koophandel.</p>
-			<a class="btn-cta" href="#">Ga naar Adresgegevens</a>
+			<a class="btn-cta" href="{{ '/moza/adresgegevens/' | url }}">Ga naar Adresgegevens</a>
 		</section>
 
 		<section class="card">
 			<h3>Vestigingen</h3>
 			<p>Overzicht van alle vestigingen die gekoppeld zijn aan uw onderneming, inclusief neven­vestigingen.</p>
-			<a class="btn-cta" href="#">Ga naar Vestigingen</a>
+			<a class="btn-cta" href="{{ '/moza/vestigingen/' | url }}">Ga naar Vestigingen</a>
 		</section>
 
 		<section class="card">
 			<h3>UBO-register</h3>
 			<p>Inzicht in de uiteindelijk belanghebbenden (UBO's) die voor uw organisatie zijn geregistreerd.</p>
-			<a class="btn-cta" href="#">Ga naar UBO-register</a>
+			<a class="btn-cta" href="{{ '/moza/ubo-register/' | url }}">Ga naar UBO-register</a>
 		</section>
 
 		<section class="card">
 			<h3>Jaarrekeningen</h3>
 			<p>Bekijk de bij de KVK gedeponeerde jaarrekeningen en financiële overzichten van uw onderneming.</p>
-			<a class="btn-cta" href="#">Ga naar Jaarrekeningen</a>
+			<a class="btn-cta" href="{{ '/moza/jaarrekeningen/' | url }}">Ga naar Jaarrekeningen</a>
 		</section>
 	</div>
 

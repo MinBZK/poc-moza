@@ -15,6 +15,8 @@
 		"selector-class-pattern": null,
 		"no-duplicate-selectors": null,
 		"@stylistic/declaration-block-semicolon-newline-after": "always",
+		"@stylistic/declaration-colon-space-after": "always",
+		"@stylistic/declaration-colon-space-before": "never",
 		"@stylistic/block-opening-brace-space-before": "always",
 		"@stylistic/indentation": "tab",
 		"@stylistic/selector-list-comma-space-after": "always"

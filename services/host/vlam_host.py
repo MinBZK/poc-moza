@@ -332,7 +332,7 @@ class VLAMHost:
         messages = self.conversations[conv_key]
         messages.append({"role": "user", "content": user_message})
 
-        yield {"type": "status", "message": "Vraag analyseren..."}
+        yield {"type": "status", "message": "Vraag analyseren…"}
 
         # Bepaal LLM en transport
         use_cli = mode.startswith("cli:")

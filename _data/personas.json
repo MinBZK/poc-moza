@@ -1,0 +1,466 @@
+[
+	{
+		"id": "bloom",
+		"actief": true,
+		"label": "Adviseur",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Bloom B.V.",
+			"kvkNummer": "12345678",
+			"rsinNummer": "12345678",
+			"btwNummer": "NL00012345678",
+			"omzetbelastingnummer": "012345678B01",
+			"startdatum": "12 februari 2018",
+			"rechtsvorm": "Besloten vennootschap",
+			"branche": "Advies en consultancy",
+			"vestigingsadres": "Stationsweg 12, 's-Gravenhage",
+			"gemeente": "'s-Gravenhage",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000012345678",
+			"iban": "NL12 INGB 0001 2345 67",
+			"loonheffingennummer": "012345678L01",
+			"werkzamePersonenFulltime": 3,
+			"werkzamePersonenParttime": 0,
+			"sbi": [
+				{ "code": "70221", "omschrijving": "Organisatieadviesbureaus" },
+				{ "code": "70102", "omschrijving": "Financiële holdings" }
+			],
+			"vestigingsadresVolledig": "Stationsweg 12, 2515 BA 's-Gravenhage",
+			"postadres": "Stationsweg 12, 2515 BA 's-Gravenhage",
+			"vestigingen": [
+				{ "nummer": "000012345678", "type": "Hoofdvestiging", "adres": "Stationsweg 12, 2515 BA 's-Gravenhage" }
+			],
+			"ubo": [
+				{ "naam": "R.J. Vogel", "aardVanBelang": "Aandelen", "groottevanBelang": "75% – 100%" }
+			],
+			"jaarrekeningen": [
+				{ "jaar": "2024", "gedeponeerd": "12 juni 2025" },
+				{ "jaar": "2023", "gedeponeerd": "8 juli 2024" },
+				{ "jaar": "2022", "gedeponeerd": "15 mei 2023" },
+				{ "jaar": "2021", "gedeponeerd": "22 juni 2022" },
+				{ "jaar": "2020", "gedeponeerd": "14 juli 2021" }
+			]
+		},
+		"andereBedrijven": [
+			{ "naam": "Vogel & Partners Consultancy", "rol": "Eigenaar" },
+			{ "naam": "Kwartaal Vastgoed B.V.", "rol": "Eigenaar" }
+		],
+		"belangen": [
+			{ "naam": "Stichting Groenrijk", "rol": "Bestuurslid" },
+			{ "naam": "Coöperatie ZuidWest U.A.", "rol": "Aandeelhouder" }
+		],
+		"subsidies": ["wbso", "bmkb", "kia", "mit", "eia"],
+		"regelgeving": ["avg", "minimumloon", "arbowet", "wwft", "loonbelasting"],
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["mkb-digitaliseringssubsidie", "duurzaam-advies-voucher"],
+		"homepageRegelgeving": ["ai-verordening"]
+	},
+	{
+		"id": "dierenwinkel",
+		"actief": false,
+		"label": "Winkelier",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Viervoeter & Co",
+			"kvkNummer": "23456789",
+			"rsinNummer": "23456789",
+			"btwNummer": "NL00023456789",
+			"omzetbelastingnummer": "023456789B01",
+			"startdatum": "1 maart 2019",
+			"rechtsvorm": "Eenmanszaak",
+			"branche": "Retail, groothandel, e-commerce en consumentenartikelen",
+			"vestigingsadres": "Haagweg 45, Voorburg",
+			"gemeente": "Voorburg",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000023456789",
+			"iban": "NL34 RABO 0002 3456 78",
+			"loonheffingennummer": "023456789L01",
+			"werkzamePersonenFulltime": 1,
+			"werkzamePersonenParttime": 2,
+			"sbi": [
+				{ "code": "47762", "omschrijving": "Winkels in dieren, dierbenodigdheden en hengelsportartikelen" },
+				{ "code": "47918", "omschrijving": "Detailhandel via internet in overige non-food" }
+			],
+			"vestigingsadresVolledig": "Haagweg 45, 2275 CK Voorburg",
+			"postadres": "Haagweg 45, 2275 CK Voorburg",
+			"vestigingen": [
+				{ "nummer": "000023456789", "type": "Hoofdvestiging", "adres": "Haagweg 45, 2275 CK Voorburg" }
+			],
+			"ubo": [],
+			"jaarrekeningen": []
+		},
+		"andereBedrijven": [],
+		"belangen": [],
+		"subsidies": ["cyberweerbaarheid", "seba", "mkb-groen", "kia"],
+		"regelgeving": ["warenwet", "minimumloon", "arbowet", "avg", "handelsregisterwet", "gelijke-behandeling-leeftijd"],
+		"buurt": "voorburg",
+		"homepageSubsidies": ["circulaire-retail", "mkb-cyberweerbaarheid-voucher"],
+		"homepageRegelgeving": ["uitgebreide-producentenverantwoordelijkheid"]
+	},
+	{
+		"id": "makelaar",
+		"actief": false,
+		"label": "Makelaar",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Vogel Makelaardij",
+			"kvkNummer": "34567890",
+			"rsinNummer": "34567890",
+			"btwNummer": "NL00034567890",
+			"omzetbelastingnummer": "034567890B01",
+			"startdatum": "15 juni 2016",
+			"rechtsvorm": "Besloten vennootschap",
+			"branche": "Vastgoed en makelaardij",
+			"vestigingsadres": "Laan van Meerdervoort 200, 's-Gravenhage",
+			"gemeente": "'s-Gravenhage",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000034567890",
+			"iban": "NL56 ABNA 0003 4567 89",
+			"loonheffingennummer": "034567890L01",
+			"werkzamePersonenFulltime": 2,
+			"werkzamePersonenParttime": 1,
+			"sbi": [
+				{ "code": "6831", "omschrijving": "Bemiddeling bij handel, huur of verhuur van onroerend goed" },
+				{ "code": "68312", "omschrijving": "Taxatie van en advisering over onroerend goed" }
+			],
+			"vestigingsadresVolledig": "Laan van Meerdervoort 200, 2517 BL 's-Gravenhage",
+			"postadres": "Laan van Meerdervoort 200, 2517 BL 's-Gravenhage",
+			"vestigingen": [
+				{ "nummer": "000034567890", "type": "Hoofdvestiging", "adres": "Laan van Meerdervoort 200, 2517 BL 's-Gravenhage" }
+			],
+			"ubo": [
+				{ "naam": "R.J. Vogel", "aardVanBelang": "Aandelen", "groottevanBelang": "75% – 100%" }
+			],
+			"jaarrekeningen": [
+				{ "jaar": "2024", "gedeponeerd": "20 mei 2025" },
+				{ "jaar": "2023", "gedeponeerd": "11 juni 2024" },
+				{ "jaar": "2022", "gedeponeerd": "5 juli 2023" },
+				{ "jaar": "2021", "gedeponeerd": "18 juni 2022" },
+				{ "jaar": "2020", "gedeponeerd": "9 mei 2021" }
+			]
+		},
+		"andereBedrijven": [],
+		"belangen": [{ "naam": "NVM", "rol": "Lid" }],
+		"subsidies": ["bmkb", "kia", "mkb-groen", "isde", "sib", "seba"],
+		"regelgeving": ["wft", "wwft", "minimumloon", "avg", "omgevingswet", "mededingingswet"],
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["energielabel-c-subsidie", "verduurzaming-bedrijfspanden"],
+		"homepageRegelgeving": ["wwft-verscherpt-clientenonderzoek"]
+	},
+	{
+		"id": "projectontwikkelaar",
+		"actief": false,
+		"label": "Projectontwikkelaar",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Kwartier Ontwikkeling B.V.",
+			"kvkNummer": "45678901",
+			"rsinNummer": "45678901",
+			"btwNummer": "NL00045678901",
+			"omzetbelastingnummer": "045678901B01",
+			"startdatum": "8 januari 2015",
+			"rechtsvorm": "Besloten vennootschap",
+			"branche": "Vastgoed en makelaardij",
+			"vestigingsadres": "Bezuidenhoutseweg 50, 's-Gravenhage",
+			"gemeente": "'s-Gravenhage",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000045678901",
+			"iban": "NL78 ABNA 0004 5678 90",
+			"loonheffingennummer": "045678901L01",
+			"werkzamePersonenFulltime": 8,
+			"werkzamePersonenParttime": 2,
+			"sbi": [
+				{ "code": "4110", "omschrijving": "Projectontwikkeling" },
+				{ "code": "6420", "omschrijving": "Financiële holdings" },
+				{ "code": "41202", "omschrijving": "Algemene burgerlijke en utiliteitsbouw" }
+			],
+			"vestigingsadresVolledig": "Bezuidenhoutseweg 50, 2594 AS 's-Gravenhage",
+			"postadres": "Postbus 12345, 2501 AB 's-Gravenhage",
+			"vestigingen": [
+				{ "nummer": "000045678901", "type": "Hoofdvestiging", "adres": "Bezuidenhoutseweg 50, 2594 AS 's-Gravenhage" },
+				{ "nummer": "000045678902", "type": "Nevenvestiging", "adres": "Kerkplein 8, 2611 GL Delft" }
+			],
+			"ubo": [
+				{ "naam": "R.J. Vogel", "aardVanBelang": "Aandelen", "groottevanBelang": "75% – 100%" }
+			],
+			"jaarrekeningen": [
+				{ "jaar": "2024", "gedeponeerd": "15 juni 2025" },
+				{ "jaar": "2023", "gedeponeerd": "12 juni 2024" },
+				{ "jaar": "2022", "gedeponeerd": "30 juni 2023" },
+				{ "jaar": "2021", "gedeponeerd": "21 juni 2022" },
+				{ "jaar": "2020", "gedeponeerd": "8 juli 2021" }
+			]
+		},
+		"andereBedrijven": [],
+		"belangen": [{ "naam": "NEPROM", "rol": "Lid" }],
+		"subsidies": ["sde", "kia", "bmkb", "eia", "mia-vamil", "isde", "dei", "mkb-groen"],
+		"regelgeving": ["omgevingswet", "milieubeheer", "csrd", "wwft", "arbowet", "was", "minimumloon"],
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["natuurinclusief-bouwen"],
+		"homepageRegelgeving": ["omgevingswet-stikstofnorm"]
+	},
+	{
+		"id": "haarstylist",
+		"actief": false,
+		"label": "Haarstylist",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Roots & Locks",
+			"kvkNummer": "56789012",
+			"rsinNummer": "56789012",
+			"btwNummer": "NL00056789012",
+			"omzetbelastingnummer": "056789012B01",
+			"startdatum": "20 september 2021",
+			"rechtsvorm": "Eenmanszaak",
+			"branche": "Persoonlijke verzorging",
+			"vestigingsadres": "Hobbemastraat 18, 's-Gravenhage",
+			"gemeente": "'s-Gravenhage",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000056789012",
+			"iban": "NL90 KNAB 0005 6789 01",
+			"loonheffingennummer": "",
+			"werkzamePersonenFulltime": 1,
+			"werkzamePersonenParttime": 0,
+			"sbi": [
+				{ "code": "96021", "omschrijving": "Haarverzorging" },
+				{ "code": "47750", "omschrijving": "Winkels in parfums en cosmetica" }
+			],
+			"vestigingsadresVolledig": "Hobbemastraat 18, 2526 JG 's-Gravenhage",
+			"postadres": "Hobbemastraat 18, 2526 JG 's-Gravenhage",
+			"vestigingen": [
+				{ "nummer": "000056789012", "type": "Hoofdvestiging", "adres": "Hobbemastraat 18, 2526 JG 's-Gravenhage" }
+			],
+			"ubo": [],
+			"jaarrekeningen": []
+		},
+		"andereBedrijven": [],
+		"belangen": [],
+		"subsidies": ["cyberweerbaarheid", "kia", "bbsc", "praktijkleren", "mkb-groen"],
+		"regelgeving": ["arbowet", "avg", "warenwet", "transparante-arbeidsvoorwaarden", "gelijke-kansen", "gelijke-behandeling-leeftijd"],
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["mkb-cyberweerbaarheid-voucher"],
+		"homepageRegelgeving": ["arbowet-gevaarlijke-stoffen"]
+	},
+	{
+		"id": "schilder",
+		"actief": false,
+		"label": "Schilder",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Vogel Schilderwerken",
+			"kvkNummer": "67890123",
+			"rsinNummer": "67890123",
+			"btwNummer": "NL00067890123",
+			"omzetbelastingnummer": "067890123B01",
+			"startdatum": "4 april 2013",
+			"rechtsvorm": "Vennootschap onder firma",
+			"branche": "Bouw en infrastructuur",
+			"vestigingsadres": "Industrieweg 7, Voorburg",
+			"gemeente": "Voorburg",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000067890123",
+			"iban": "NL11 RABO 0006 7890 12",
+			"loonheffingennummer": "067890123L01",
+			"werkzamePersonenFulltime": 4,
+			"werkzamePersonenParttime": 1,
+			"sbi": [
+				{ "code": "43341", "omschrijving": "Schilderen" },
+				{ "code": "43342", "omschrijving": "Glaszetten" }
+			],
+			"vestigingsadresVolledig": "Industrieweg 7, 2272 AC Voorburg",
+			"postadres": "Postbus 567, 2270 AA Voorburg",
+			"vestigingen": [
+				{ "nummer": "000067890123", "type": "Hoofdvestiging", "adres": "Industrieweg 7, 2272 AC Voorburg" }
+			],
+			"ubo": [
+				{ "naam": "R.J. Vogel", "aardVanBelang": "Vennoot", "groottevanBelang": "25% – 50%" },
+				{ "naam": "M.S. de Jong", "aardVanBelang": "Vennoot", "groottevanBelang": "25% – 50%" }
+			],
+			"jaarrekeningen": []
+		},
+		"andereBedrijven": [],
+		"belangen": [{ "naam": "OnderhoudNL", "rol": "Lid" }],
+		"subsidies": ["praktijkleren", "kia", "bmkb", "seba", "mkb-groen", "isde"],
+		"regelgeving": ["arbowet", "minimumloon", "omgevingswet", "milieubeheer", "was"],
+		"buurt": "voorburg",
+		"homepageSubsidies": ["loodvrij-schilderen"],
+		"homepageRegelgeving": ["arbowet-gevaarlijke-stoffen"]
+	},
+	{
+		"id": "kunstsalon",
+		"actief": false,
+		"label": "Cultureel ondernemer",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Salon Lichtveld",
+			"kvkNummer": "78901234",
+			"rsinNummer": "78901234",
+			"btwNummer": "NL00078901234",
+			"omzetbelastingnummer": "078901234B01",
+			"startdatum": "12 november 2017",
+			"rechtsvorm": "Eenmanszaak",
+			"branche": "Kunst, cultuur, toerisme, recreatie en amusement",
+			"vestigingsadres": "Denneweg 62, 's-Gravenhage",
+			"gemeente": "'s-Gravenhage",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000078901234",
+			"iban": "NL22 INGB 0007 8901 23",
+			"loonheffingennummer": "",
+			"werkzamePersonenFulltime": 1,
+			"werkzamePersonenParttime": 0,
+			"sbi": [
+				{ "code": "90041", "omschrijving": "Kunstgalerieën en expositieruimten" },
+				{ "code": "47783", "omschrijving": "Winkels in kunstvoorwerpen, schilderijen en lijsten" }
+			],
+			"vestigingsadresVolledig": "Denneweg 62, 2514 CK 's-Gravenhage",
+			"postadres": "Denneweg 62, 2514 CK 's-Gravenhage",
+			"vestigingen": [
+				{ "nummer": "000078901234", "type": "Hoofdvestiging", "adres": "Denneweg 62, 2514 CK 's-Gravenhage" }
+			],
+			"ubo": [],
+			"jaarrekeningen": []
+		},
+		"andereBedrijven": [{ "naam": "Lichtveld B&B", "rol": "Eigenaar" }],
+		"belangen": [],
+		"subsidies": ["bbsc", "kia", "mkb-groen", "cyberweerbaarheid", "sib"],
+		"regelgeving": ["dienstenwet", "avg", "omgevingswet", "mededingingswet", "transparante-arbeidsvoorwaarden", "warenwet"],
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["cultureel-ondernemerschap"],
+		"homepageRegelgeving": ["dienstenwet-informatieplicht"]
+	},
+	{
+		"id": "melkveehouder",
+		"actief": false,
+		"label": "Melkveehouder",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "Hoeve de Groene Weide",
+			"kvkNummer": "89012345",
+			"rsinNummer": "89012345",
+			"btwNummer": "NL00089012345",
+			"omzetbelastingnummer": "089012345B01",
+			"startdatum": "1 januari 2005",
+			"rechtsvorm": "Maatschap",
+			"branche": "Landbouw en veeteelt",
+			"vestigingsadres": "Weidelandweg 3, Voorburg",
+			"gemeente": "Voorburg",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000089012345",
+			"iban": "NL33 RABO 0008 9012 34",
+			"loonheffingennummer": "089012345L01",
+			"werkzamePersonenFulltime": 2,
+			"werkzamePersonenParttime": 1,
+			"sbi": [
+				{ "code": "01411", "omschrijving": "Fokken en houden van melkvee" },
+				{ "code": "01191", "omschrijving": "Teelt van groenvoeders" }
+			],
+			"vestigingsadresVolledig": "Weidelandweg 3, 2272 BV Voorburg",
+			"postadres": "Weidelandweg 3, 2272 BV Voorburg",
+			"vestigingen": [
+				{ "nummer": "000089012345", "type": "Hoofdvestiging", "adres": "Weidelandweg 3, 2272 BV Voorburg" }
+			],
+			"ubo": [
+				{ "naam": "R.J. Vogel", "aardVanBelang": "Maat", "groottevanBelang": "50% – 75%" },
+				{ "naam": "A.J. Vogel-de Wit", "aardVanBelang": "Maat", "groottevanBelang": "25% – 50%" }
+			],
+			"jaarrekeningen": []
+		},
+		"andereBedrijven": [],
+		"belangen": [{ "naam": "LTO Nederland", "rol": "Lid" }],
+		"subsidies": ["sde", "kia", "bmkb", "eia", "mia-vamil", "groenprojecten"],
+		"regelgeving": ["milieubeheer", "bestrijdingsmiddelen", "minimumloon", "arbowet", "omgevingswet", "was"],
+		"buurt": "voorburg",
+		"homepageSubsidies": ["duurzame-veehouderij", "precisielandbouw"],
+		"homepageRegelgeving": ["meststoffenwet-fosfaatplafond"]
+	},
+	{
+		"id": "attracties",
+		"actief": false,
+		"label": "Attractiebouwer",
+		"persoon": {
+			"voornaam": "Robin",
+			"achternaam": "Vogel",
+			"initialen": "R.J."
+		},
+		"bedrijf": {
+			"handelsnaam": "ThemaCraft International B.V.",
+			"kvkNummer": "90123456",
+			"rsinNummer": "90123456",
+			"btwNummer": "NL00090123456",
+			"omzetbelastingnummer": "090123456B01",
+			"startdatum": "22 augustus 2012",
+			"rechtsvorm": "Besloten vennootschap",
+			"branche": "Kunst, cultuur, toerisme, recreatie en amusement",
+			"vestigingsadres": "Binckhorstlaan 36, 's-Gravenhage",
+			"gemeente": "'s-Gravenhage",
+			"rol": "Eigenaar",
+			"vestigingsnummer": "000090123456",
+			"iban": "NL44 ABNA 0009 0123 45",
+			"loonheffingennummer": "090123456L01",
+			"werkzamePersonenFulltime": 25,
+			"werkzamePersonenParttime": 5,
+			"sbi": [
+				{ "code": "25992", "omschrijving": "Vervaardiging van overige producten van metaal" },
+				{ "code": "33200", "omschrijving": "Installatie van industriële machines en apparatuur" },
+				{ "code": "71121", "omschrijving": "Ingenieurs en overig technisch ontwerp en advies" }
+			],
+			"vestigingsadresVolledig": "Binckhorstlaan 36, 2516 BE 's-Gravenhage",
+			"postadres": "Postbus 9876, 2509 CD 's-Gravenhage",
+			"vestigingen": [
+				{ "nummer": "000090123456", "type": "Hoofdvestiging", "adres": "Binckhorstlaan 36, 2516 BE 's-Gravenhage" },
+				{ "nummer": "000090123457", "type": "Nevenvestiging — Werkplaats", "adres": "Plaspoelpolder 22, 2289 EE Rijswijk" }
+			],
+			"ubo": [
+				{ "naam": "R.J. Vogel", "aardVanBelang": "Aandelen", "groottevanBelang": "75% – 100%" }
+			],
+			"jaarrekeningen": [
+				{ "jaar": "2024", "gedeponeerd": "18 mei 2025" },
+				{ "jaar": "2023", "gedeponeerd": "14 juni 2024" },
+				{ "jaar": "2022", "gedeponeerd": "9 mei 2023" },
+				{ "jaar": "2021", "gedeponeerd": "20 juni 2022" },
+				{ "jaar": "2020", "gedeponeerd": "12 juli 2021" },
+				{ "jaar": "2019", "gedeponeerd": "8 juni 2020" },
+				{ "jaar": "2018", "gedeponeerd": "15 mei 2019" }
+			]
+		},
+		"andereBedrijven": [],
+		"belangen": [{ "naam": "IAAPA Europe", "rol": "Lid" }],
+		"subsidies": ["mit", "wbso", "kia", "bmkb", "innovatiekrediet", "mia-vamil", "eia", "groeifaciliteit", "dggf", "dei"],
+		"regelgeving": ["arbowet", "dienstenwet", "minimumloon", "avg", "arbeid-vreemdelingen", "wor", "csrd", "klokkenluiders", "transparante-arbeidsvoorwaarden", "wet-werk-zekerheid"],
+		"buurt": "s-gravenhage",
+		"homepageSubsidies": ["toeristische-innovatie", "mkb-digitaliseringssubsidie"],
+		"homepageRegelgeving": ["dienstenwet-informatieplicht"]
+	}
+]

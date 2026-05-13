@@ -184,15 +184,19 @@ De stylesheets maken gebruik van CSS logical properties (`inline-size`, `margin-
 
 De stylesheets maken gebruik van native CSS nesting voor component-staten en varianten, en CSS custom properties voor alle ontwerp-waarden. Er worden geen preprocessors zoals Sass gebruikt.
 
+### Pagina-layout
+
+`<body>` is een flex column met `min-block-size: 100dvh`, en `<main>` heeft `flex: 1`. Hierdoor staat `<footer>` altijd onderaan het venster bij korte pagina's, en drijft 'ie gewoon mee bij langere. `100dvh` wordt vooraf gegaan door een `100vh`-fallback voor browsers zonder `dvh`-ondersteuning.
+
 ### Layout en spacing
 
-Spacing tussen elementen wordt aangestuurd door één schaal van layout tokens (`--toepassing-space-layout-*`), ongeacht richting. Het juiste CSS-mechanisme wordt gekozen op basis van de context:
+Spacing tussen elementen wordt aangestuurd door één schaal van layout tokens (`--toepassing-space-layout-*`), ongeacht richting.
 
-- **`> * + *` met margin** — voor content flow waar de parent geen specifiek layout-model nodig heeft. Voorbeelden: `body`, `header`, `.card`, `.accordion`, `footer nav`, `ul`/`ol`. Het voordeel is dat het eerste kind geen onnodige marge krijgt en dat spacing alleen ontstaat *tussen* elementen.
+In deze codebase wordt **`gap` op een flex- of grid-container** gebruikt voor alle spacing tussen kinderen. Voorbeelden: `body` (column, voor sticky-footer), `article`/`hgroup`/`form` (column flow), `.card` (column met gestapelde secties), `.action-group` (wisselt van kolom naar rij), `ul`/`ol`, `.icon-link` (icoon naast tekst), `.tiles` (grid), `.footer-links` (wisselt van kolom naar rij).
 
-- **`gap` met flexbox of grid** — voor layouts waarbij alignment, richting-wisseling of een 2D-raster nodig is. Voorbeelden: `.action-group` (wisselt van kolom naar rij), `.tiles` (grid), `.footer-links` (wisselt van kolom naar rij), `.icon-link` (horizontaal, icoon naast tekst), `summary` (icoon naast tekst).
+Het voordeel: het eerste kind krijgt geen onnodige marge, spacing ontstaat alleen *tussen* elementen, en verborgen items (`hidden`) doen niet mee aan de telling — geen lege gaten waar items verborgen zijn. Voor lege dynamische containers die anders nog wél een gap-slot reserveren, geef je ze `class="dynamic-list"`; via `.dynamic-list:empty { display: none }` vallen ze automatisch uit de layout tot er items in zitten.
 
-Per container wordt altijd één van deze twee mechanismes gebruikt, nooit beide tegelijk. De keuze voor `gap` of `> * + *` is een implementatiedetail — de spacing-waarde komt altijd uit dezelfde `layout-*` tokens.
+Het alternatief **`> * + *` met margin** is een geldige techniek voor content-flow waar geen flex-context gewenst is, maar wordt op het moment niet gebruikt in deze codebase. Mocht het ooit weer toegepast worden: nooit combineren met `gap` op dezelfde container.
 
 ### AI-assistentie in het ontwerpproces
 

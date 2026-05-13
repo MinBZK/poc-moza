@@ -15,6 +15,10 @@ title: "MijnOverheid Zakelijk: Digitale assistent"
 	<h1>Digitale assistent</h1>
 
 	<section class="card chat-container">
+		<div class="feedback feedback-error" id="chat-offline" hidden>
+			{% icon "/assets/icons/icon-foutmelding.svg" %}
+			<div><p>Host niet bereikbaar: geen connectie met de bronnen.</p></div>
+		</div>
 		<div class="chat-status" id="chat-status" aria-live="polite"></div>
 		<div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
 			<div class="chat-message chat-message-assistant">
@@ -38,10 +42,10 @@ title: "MijnOverheid Zakelijk: Digitale assistent"
 			</div>
 		</div>
 
-		<form class="chat-input-form" id="chat-form">
+		<form id="chat-form">
 			<label for="chat-input" class="visually-hidden">Uw vraag</label>
-			<textarea id="chat-input" name="message" rows="1" placeholder="Stel uw vraag..." required></textarea>
-			<button type="submit">Verstuur</button>
+			<textarea id="chat-input" placeholder="Waarmee kan ik u helpen?" required></textarea>
+			<button type="submit">Verstuur vraag</button>
 		</form>
 	</section>
 

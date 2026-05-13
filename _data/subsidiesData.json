@@ -13,6 +13,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "1 juni 2026 — zolang budget beschikbaar",
 		"maximaalBedrag": "15.000 euro",
+		"budgetVergeven": 45,
 		"isOngelezen": true
 	},
 	{
@@ -45,6 +46,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Tot 31 december 2026",
 		"maximaalBedrag": "30.000 euro per pand",
+		"budgetVergeven": 88,
 		"isOngelezen": true
 	},
 	{
@@ -61,6 +63,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "20% van investeringskosten",
+		"budgetVergeven": 67,
 		"isOngelezen": true
 	},
 	{
@@ -77,6 +80,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "1 mei 2026 — 31 december 2026",
 		"maximaalBedrag": "50.000 euro per project",
+		"budgetVergeven": 23,
 		"isOngelezen": true
 	},
 	{
@@ -93,6 +97,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "75.000 euro per project",
+		"budgetVergeven": 41,
 		"isOngelezen": true
 	},
 	{
@@ -109,6 +114,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Doorlopend open",
 		"maximaalBedrag": "10.000 euro per jaar",
+		"budgetVergeven": 56,
 		"isOngelezen": true
 	},
 	{
@@ -157,6 +163,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Opengesteld sinds 1 maart 2026",
 		"maximaalBedrag": "12.000 euro",
+		"budgetVergeven": 74,
 		"isOngelezen": true
 	},
 	{
@@ -173,6 +180,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "1 mei 2026 — 30 november 2026",
 		"maximaalBedrag": "80.000 euro",
+		"budgetVergeven": 38,
 		"isOngelezen": true
 	},
 	{
@@ -189,6 +197,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "Opengesteld sinds april 2026",
 		"maximaalBedrag": "25.000 euro",
+		"budgetVergeven": 12,
 		"isOngelezen": true
 	},
 	{
@@ -205,6 +214,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "1 mei 2026 — 30 september 2026",
 		"maximaalBedrag": "25.000 euro",
+		"budgetVergeven": 64,
 		"isOngelezen": true
 	},
 	{
@@ -556,6 +566,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "9 januari 2026 — 31 december 2026",
 		"maximaalBedrag": "€5.000",
+		"budgetVergeven": 31,
 		"isOngelezen": false
 	},
 	{
@@ -606,6 +617,7 @@
 		"type": "Subsidie",
 		"aanvraagperiode": "3 maart 2026 — 31 december 2026",
 		"maximaalBedrag": null,
+		"budgetVergeven": 82,
 		"isOngelezen": false
 	},
 	{
