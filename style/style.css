@@ -1386,19 +1386,17 @@ dd .feedback {
 		}
 	}
 }
-.chat-message-thinking {
-	.thinking-text::before {
-		animation: spin 0.8s linear infinite;
-		block-size: var(--toepassing-size-icon-md);
-		border: var(--toepassing-border-width-lg) solid var(--toepassing-color-interactive-active-border);
-		border-block-start-color: transparent;
-		border-radius: 50%;
-		content: "";
-		display: inline-block;
-		inline-size: var(--toepassing-size-icon-md);
-		margin-inline-end: var(--toepassing-space-margin-xs);
-		vertical-align: middle;
-	}
+.chat-message-thinking .thinking-text::before {
+	animation: spin 0.8s linear infinite;
+	block-size: var(--toepassing-size-icon-md);
+	border: var(--toepassing-border-width-lg) solid var(--toepassing-color-interactive-active-border);
+	border-block-start-color: transparent;
+	border-radius: 50%;
+	content: "";
+	display: inline-block;
+	inline-size: var(--toepassing-size-icon-md);
+	margin-inline-end: var(--toepassing-space-margin-xs);
+	vertical-align: middle;
 }
 
 #chat-input {
