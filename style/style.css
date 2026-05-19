@@ -1895,3 +1895,10 @@ h1, h2, h3, h4, h5, h6, a, button {
 		color: var(--toepassing-color-text-inverse);
 	}
 }
+
+/* Tijdelijk: datum en tijdstip laatste wijziging */
+.poc-date-last-edit {
+	color: var(--toepassing-color-text-disabled);
+	font-size: var(--rijkshuisstijl-text-font-size-xs);
+	text-align: end;
+}
