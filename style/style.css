@@ -617,8 +617,8 @@ a.btn-cta {
 	padding: 0;
 	&:hover, &:focus-visible, &:active {
 		background: inherit !important;
-		color: inherit !important;
-	}
+		color: inherit !important;	
+	}	
 }
 .icon-button {
 	display: flex;
@@ -989,7 +989,7 @@ caption {
 			}
 		}
 		/* Onzichtbare link die de hele card klikbaar maakt */
-		&:focus-visible .card-link {
+		&:focus-visible .card-link {  
 			outline: var(--toepassing-focus-outline);
 			outline-offset: var(--toepassing-focus-outline-offset-lg);
 		}
@@ -1385,17 +1385,8 @@ dd .feedback {
 		vertical-align: middle;
 	}
 }
-.chat-suggestions {
-	display: grid;
-	gap: var(--toepassing-space-padding-xs);
-	grid-template-columns: repeat(2, 1fr);
-}
-.chat-suggestion {
-	inline-size: 100%;
-	text-align: center;
-}
 #chat-input {
-	min-block-size: var(--toepassing-size-xl);
+	min-block-size: 6rem;
 }
 
 /* -- OVERIGE COMPONENTEN -- */
