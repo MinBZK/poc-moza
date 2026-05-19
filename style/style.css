@@ -1388,11 +1388,11 @@ dd .feedback {
 .chat-suggestions {
 	display: grid;
 	gap: var(--toepassing-space-padding-xs);
-	grid-template-columns: repeat(auto-fit, minmax(var(--toepassing-size-2xl), 1fr));
+	grid-template-columns: repeat(2, 1fr);
 }
 .chat-suggestion {
 	inline-size: 100%;
-	text-align: start;
+	text-align: center;
 }
 #chat-input {
 	min-block-size: var(--toepassing-size-xl);
