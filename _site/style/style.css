@@ -1386,7 +1386,7 @@ dd .feedback {
 	}
 }
 #chat-input {
-	min-block-size: 12rem;
+	min-block-size: 6rem;
 }
 
 .chat-suggestions {

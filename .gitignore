@@ -29,3 +29,7 @@ agent-os/standards/index.yml
 
 # Legacy
 MOx.git/
+build-storybook.log
+agent-os/standards/index.yml
+style-dictionary/node_modules/*
+*.log
