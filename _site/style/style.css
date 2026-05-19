@@ -167,7 +167,7 @@ small {
 }
 
 strong, b {
-	font-weight: var(--toepassing-text-font-weight-bold);
+	font-weight: var(--toepassing-text-font-weight-semi-bold);
 }
 em, i {
 	font-style: italic;
@@ -918,7 +918,7 @@ dl.data-overview div {
 }
 
 .list-indent {
-	padding-inline-start: 0;
+	padding-inline-start: var(--toepassing-space-padding-sm);
 	::marker {
 		color: var(--toepassing-color-text-subtle-2);
 		font-size: var(--rijkshuisstijl-text-font-size-md);
@@ -1328,7 +1328,7 @@ dd .feedback {
 	overflow-y: auto;
 	padding: var(--toepassing-space-padding-md);
 }
-.chat-message {
+.chat-message, .chat-suggestions button {
 	border-radius: var(--toepassing-border-radius-lg);
 	display: flex;
 	flex-direction: column;
@@ -1361,7 +1361,7 @@ dd .feedback {
 		inset-inline-start: var(--toepassing-size-2xs);
 	}
 }
-.chat-message-user {
+.chat-message-user, .chat-suggestions button.secondary {
 	align-self: flex-end;
 	background: var(--toepassing-color-interactive-default-background);
 	color: var(--toepassing-color-text-inverse);
@@ -1369,6 +1369,21 @@ dd .feedback {
 		background: var(--toepassing-color-interactive-default-background);
 		clip-path: shape(from 0% 0%, line to 100% 0%, line to 100% 80%, curve to 80% 80% with 100% 100%);
 		inset-inline-end: var(--toepassing-size-2xs);
+	}
+}
+.chat-suggestions {
+	padding: var(--toepassing-space-padding-sm) var(--toepassing-space-padding-md);
+	button {
+		margin-block-end: var(--toepassing-space-margin-sm);
+		&:nth-child(even) {
+			justify-self: end;
+		}
+		&:hover, &:focus-visible {
+			background: var(--toepassing-color-interactive-hover-background);
+		}
+		&:active {
+			background: var(--toepassing-color-interactive-active-background);
+		}
 	}
 }
 .chat-message-thinking {
@@ -1385,18 +1400,9 @@ dd .feedback {
 		vertical-align: middle;
 	}
 }
-#chat-input {
-	min-block-size: 12rem;
-}
 
-.chat-suggestions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--toepassing-space-layout-2xs);
-	margin-block-start: var(--toepassing-space-padding-sm);
-}
-.chat-suggestion {
-	font: var(--toepassing-text-smalltext);
+#chat-input {
+	min-block-size: 6rem;
 }
 
 /* -- OVERIGE COMPONENTEN -- */
