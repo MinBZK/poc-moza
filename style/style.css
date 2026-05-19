@@ -1385,8 +1385,17 @@ dd .feedback {
 		vertical-align: middle;
 	}
 }
+.chat-suggestions {
+	display: grid;
+	gap: var(--toepassing-space-padding-xs);
+	grid-template-columns: repeat(auto-fit, minmax(var(--toepassing-size-2xl), 1fr));
+}
+.chat-suggestion {
+	inline-size: 100%;
+	text-align: start;
+}
 #chat-input {
-	min-block-size: 12rem;
+	min-block-size: var(--toepassing-size-xl);
 }
 
 /* -- OVERIGE COMPONENTEN -- */
