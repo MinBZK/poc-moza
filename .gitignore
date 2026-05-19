@@ -1,22 +1,33 @@
-__pycache__/
-_site/.claude/*
-.claude/*
-.DS_Store
-.env
-*.crdownload
-*/.DS_Store
-agent-os/standards/index.yml
-mcp/host/.env
-node_modules/
-storybook-static/
-*.crdownload
-.env
-mcp/host/.env
-__pycache__/
-.claude/*
+# Build output
 _site/
 _test_build/
 .astro/
+storybook-static/
+style-dictionary/node_modules/
+
+# Python
+__pycache__/
+.ruff_cache/
+
+# Node
+node_modules/
+
+# Secrets
+.env
+services/host/.env
+
+# Caches en temp
+.claude/*
+_site/.claude/*
+agent-os/standards/index.yml
+.DS_Store
+*/.DS_Store
+*.crdownload
+
+# Logs
+*.log
+
+# Legacy
 MOx.git/
 build-storybook.log
 agent-os/standards/index.yml

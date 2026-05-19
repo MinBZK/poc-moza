@@ -31,7 +31,10 @@ logger = logging.getLogger("vlam.host")
 # Gebruiksvriendelijke labels voor tools (getoond in de UI tijdens verwerking)
 TOOL_LABELS = {
     "kvk__mijn_bedrijf": "KvK Handelsregister raadplegen",
+    "kvk__vestigingen": "KvK: vestigingen opzoeken",
+    "kvk__eigenaar": "KvK: eigenaar opzoeken",
     "koop__zoek_regelgeving": "KOOP Regelingenbank doorzoeken",
+    "koop__lees_regeling": "KOOP: wettekst lezen",
     "regelrecht__check": "RegelRecht: verplichting toetsen",
     "rvo__zoek_regeling": "RVO: subsidieregeling zoeken",
     "rvo__indienen": "RVO: rapportage indienen",
@@ -72,15 +75,47 @@ def _log_tokens(backend: str, response) -> None:
 
 
 # Tool-definities voor CLI-modus (onafhankelijk van MCP-registry)
+#
+# `fields` is overal optioneel: als het LLM een lijst velden meegeeft, vertaalt
+# cli_executor dit naar `--fields v1,v2,...` op de onderliggende CLI-aanroep.
+# Hiermee wordt dataminimalisatie afdwingbaar zonder muterende tools te raken.
+_FIELDS_PARAM = {
+    "type": "array",
+    "items": {"type": "string"},
+    "description": "Optioneel: alleen deze velden retourneren (dataminimalisatie). Laat leeg voor de volledige response.",
+}
+
 CLI_TOOL_DEFINITIONS_ANTHROPIC = [
     {
         "name": "kvk__mijn_bedrijf",
-        "description": "Haal het KvK-basisprofiel op van het bedrijf van de ingelogde gebruiker. Geeft bedrijfsnaam, KvK-nummer, rechtsvorm, SBI-activiteiten, vestigingsadres en aantal medewerkers. Het profiel wordt automatisch verrijkt met BAG-gegevens (gebruiksdoel pand en is_woonfunctie) via het Kadaster.",
-        "input_schema": {"type": "object", "properties": {}, "required": []},
+        "description": "Haal het KvK-basisprofiel op van het bedrijf van de ingelogde gebruiker. Geeft bedrijfsnaam, KvK-nummer, rechtsvorm, SBI-activiteiten, vestigingsadres en aantal medewerkers. Het profiel wordt automatisch verrijkt met BAG-gegevens (gebruiksdoel pand en is_woonfunctie) via het Kadaster. Veelgebruikte velden: naam, kvkNummer, statutaireNaam, totaalWerkzamePersonen, sbiActiviteiten, _embedded.hoofdvestiging, bag, is_woonfunctie.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"fields": _FIELDS_PARAM},
+            "required": [],
+        },
+    },
+    {
+        "name": "kvk__vestigingen",
+        "description": "Haal de lijst met vestigingen op van het bedrijf van de ingelogde gebruiker. Geeft per vestiging het adres, vestigingsnummer en de SBI-activiteiten. Sessie-gebonden, geen kvk_nummer nodig.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"fields": _FIELDS_PARAM},
+            "required": [],
+        },
+    },
+    {
+        "name": "kvk__eigenaar",
+        "description": "Haal de eigenaar-informatie op van het bedrijf van de ingelogde gebruiker. Retourneert rechtspersoon- of natuurlijk-persoon-gegevens afhankelijk van de rechtsvorm. Sessie-gebonden, geen kvk_nummer nodig.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"fields": _FIELDS_PARAM},
+            "required": [],
+        },
     },
     {
         "name": "koop__zoek_regelgeving",
-        "description": "Doorzoek de KOOP Regelingenbank (wetten.overheid.nl) op trefwoord. Retourneert titel, identificatie (BWB-ID), type, organisatie en geldigheid.",
+        "description": "Doorzoek de KOOP Regelingenbank (wetten.overheid.nl) op trefwoord. Retourneert titel, identificatie (BWB-ID), type, organisatie en geldigheid. Veelgebruikte velden: titel, identifier, type.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -88,13 +123,26 @@ CLI_TOOL_DEFINITIONS_ANTHROPIC = [
                 "onderwerp": {"type": "string", "description": "Filter op onderwerp (bijv. 'energie', 'milieu')"},
                 "type_regeling": {"type": "string", "description": "Filter op type: 'wet', 'AMvB', 'ministerieleregeling', 'verdrag'"},
                 "max_resultaten": {"type": "integer", "description": "Maximaal aantal resultaten (standaard 10, max 50)"},
+                "fields": _FIELDS_PARAM,
             },
             "required": ["trefwoord"],
         },
     },
     {
+        "name": "koop__lees_regeling",
+        "description": "Haal de volledige inhoud van een regeling op aan de hand van het BWB-ID (begint met BWBR, BWBV of BWBB). Retourneert titel, datum en de tekst per artikel. Gebruik dit nadat de gebruiker met koop__zoek_regelgeving een specifieke regeling heeft gevonden of een BWB-ID noemt.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "bwb_id": {"type": "string", "description": "BWB-ID, bijv. 'BWBR0001840' (Grondwet) of 'BWBR0038472'"},
+                "fields": _FIELDS_PARAM,
+            },
+            "required": ["bwb_id"],
+        },
+    },
+    {
         "name": "regelrecht__check",
-        "description": "Controleer of de Informatieplicht Energiebesparing van toepassing is op een bedrijf, op basis van het Besluit activiteiten leefomgeving.",
+        "description": "Controleer of de Informatieplicht Energiebesparing van toepassing is op een bedrijf, op basis van het Besluit activiteiten leefomgeving. Veelgebruikte velden: voldoet_aan_voorwaarden, wettelijke_grondslag, ontbrekende_gegevens.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -102,17 +150,19 @@ CLI_TOOL_DEFINITIONS_ANTHROPIC = [
                 "jaarlijks_elektriciteitsverbruik_kwh": {"type": "number", "description": "Jaarlijks elektriciteitsverbruik in kWh (drempel: 50.000)"},
                 "jaarlijks_gasverbruik_m3": {"type": "number", "description": "Jaarlijks gasverbruik in m³ (drempel: 25.000)"},
                 "is_woonfunctie": {"type": "boolean", "description": "Of het gebouw uitsluitend een woonfunctie heeft"},
+                "fields": _FIELDS_PARAM,
             },
             "required": ["kvk_nummer"],
         },
     },
     {
         "name": "rvo__zoek_regeling",
-        "description": "Zoek beschikbare RVO-subsidies en regelingen op trefwoord. Retourneert naam, status, deadline en beschrijving.",
+        "description": "Zoek beschikbare RVO-subsidies en regelingen op trefwoord. Retourneert naam, status, deadline en beschrijving. Veelgebruikte velden: naam, status, deadline.",
         "input_schema": {
             "type": "object",
             "properties": {
                 "trefwoord": {"type": "string", "description": "Zoekterm (bijv. 'energiebesparing', 'subsidie', 'warmtepomp')"},
+                "fields": _FIELDS_PARAM,
             },
             "required": ["trefwoord"],
         },
