@@ -546,6 +546,12 @@ ul.selection {
 	}
 }
 
+#verify-code-feedback {
+	display: flex;
+	flex-direction: column;
+	gap: var(--toepassing-space-margin-xs);
+}
+
 /* -- KNOPPEN -- */
 
 button, a.btn, a.btn-cta {

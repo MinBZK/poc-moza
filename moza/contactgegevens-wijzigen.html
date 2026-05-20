@@ -256,17 +256,15 @@ subNavActive: "/moza/contactvoorkeuren/"
 		});
 
 		resendBtn.addEventListener("click", () => {
-			const feedbackDiv = verifyBlock.querySelector("#verify-code-feedback .feedback-info > div");
-			let resendMsg = feedbackDiv.querySelector(".resend-confirmation");
-			if (!resendMsg) {
-				resendMsg = document.createElement("p");
-				resendMsg.className = "resend-confirmation";
-				feedbackDiv.appendChild(resendMsg);
+			const container = document.getElementById("verify-code-feedback");
+			let errorBlock = container.querySelector(".resend-error");
+			if (!errorBlock) {
+				errorBlock = document.createElement("div");
+				errorBlock.className = "feedback feedback-error resend-error";
+				errorBlock.setAttribute("role", "alert");
+				errorBlock.innerHTML = `${icons.error}<div><p>We kunnen op dit moment geen verificatiecode versturen. Probeer het over enkele minuten opnieuw.</p></div>`;
+				container.appendChild(errorBlock);
 			}
-			resendMsg.textContent = "Nieuwe verificatiemail verstuurd.";
-			setTimeout(() => {
-				resendMsg.remove();
-			}, 3000);
 		});
 	}
 
