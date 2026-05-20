@@ -476,8 +476,10 @@
 				<div class="feedback feedback-info">
 					${icons.info}
 					<div>
-						<p>Vul de verificatiecode in die is verzonden naar <strong>${newEmail}</strong> om uw e-mailadres te verifiëren.</p>
-						<p class="text-muted">Geen e-mail ontvangen? Controleer uw spam-folder of <button type="button" class="link-button" id="verify-resend">vraag een nieuwe code aan</button>.</p>
+						<p>We sturen een verificatiecode naar <b>${newEmail}</b> om uw e-mailadres te bevestigen.</p>
+						<p class="text-muted" id="verify-resend-status">Geen e-mail ontvangen? U kunt over <b id="verify-resend-countdown">60</b> seconden een nieuwe code aanvragen.</p>
+						<p class="text-muted" id="verify-spam-hint" hidden>Geen e-mail ontvangen? Controleer uw spam-folder, of <button type="button" class="link-button" id="verify-resend" hidden>vraag een nieuwe code aan</button>.</p>
+						<p class="text-muted" id="verify-typo-hint">Klopt het adres niet? <button type="button" class="link-button" id="verify-change-email">Annuleer en wijzig het e-mailadres</button>.</p>
 					</div>
 				</div>
 			</div>
@@ -559,7 +561,30 @@
 			form.addEventListener("submit", handleSubmit);
 		});
 
-		document.getElementById("verify-resend").addEventListener("click", () => {
+		const resendBtn = document.getElementById("verify-resend");
+		const resendStatus = document.getElementById("verify-resend-status");
+		const resendCountdown = document.getElementById("verify-resend-countdown");
+		const spamHint = document.getElementById("verify-spam-hint");
+
+		let resendSeconds = 60;
+		const resendTimer = setInterval(() => {
+			resendSeconds -= 1;
+			if (resendSeconds > 0) {
+				resendCountdown.textContent = resendSeconds;
+			} else {
+				clearInterval(resendTimer);
+				resendStatus.hidden = true;
+				spamHint.hidden = false;
+				resendBtn.hidden = false;
+			}
+		}, 1000);
+
+		document.getElementById("verify-change-email").addEventListener("click", () => {
+			document.getElementById("verify-cancel").click();
+			emailInput.focus();
+		});
+
+		resendBtn.addEventListener("click", () => {
 			const feedbackDiv = verifyBlock.querySelector("#verify-code-feedback .feedback-info > div");
 			let resendMsg = feedbackDiv.querySelector(".resend-confirmation");
 			if (!resendMsg) {
@@ -567,7 +592,7 @@
 				resendMsg.className = "resend-confirmation";
 				feedbackDiv.appendChild(resendMsg);
 			}
-			resendMsg.textContent = "Nieuwe verificatiemail verstuurd!";
+			resendMsg.textContent = "Nieuwe verificatiemail verstuurd.";
 			setTimeout(() => {
 				resendMsg.remove();
 			}, 3000);
@@ -624,7 +649,7 @@
 			</ul>
 		</nav>
 	</div>
-	<p class="poc-date-last-edit">Laatst gewijzigd op 19 mei 2026 om 22:24</p>
+	<p class="poc-date-last-edit">Laatst gewijzigd op 20 mei 2026 om 11:44</p>
 </footer>
 
     

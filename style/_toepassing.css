@@ -97,7 +97,7 @@
 	--toepassing-color-interactive-default-icon: var(--toepassing-color-interactive-default-text); /** Ruststaat van klikbaar/tikbaar element */
 	--toepassing-color-interactive-default-surface: var(--toepassing-color-background-default);
 	--toepassing-color-interactive-default-text: var(--rijkshuisstijl-color-lintblauw-500); /** Ruststaat van klikbaar/tikbaar element */
-	--toepassing-color-interactive-disabled-background: var(--rijkshuisstijl-color-grijs-300); /** Inactief element */
+	--toepassing-color-interactive-disabled-background: var(--rijkshuisstijl-color-grijs-200); /** Inactief element */
 	--toepassing-color-interactive-disabled-border: var(--toepassing-color-interactive-disabled-background); /** Inactief element */
 	--toepassing-color-interactive-disabled-text: var(--toepassing-color-text-disabled); /** Inactief element */
 	--toepassing-color-interactive-focus-background: var(--rijkshuisstijl-color-lintblauw-50); /** Bij toetsenbord-, spraak-, en switchfocus */

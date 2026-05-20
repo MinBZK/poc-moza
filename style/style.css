@@ -420,6 +420,10 @@ label {
 	~ .feedback, ~ * .feedback {
 		margin-block-start: var(--toepassing-space-margin-2xs);
 	}
+	&[readonly] {
+		background: var(--toepassing-color-interactive-disabled-background);
+		cursor: not-allowed;
+	}
 }
 textarea {
 	resize: block; /* Alleen verticaal resizen zodat de breedte-layout intact blijft */
