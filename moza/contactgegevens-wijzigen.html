@@ -148,7 +148,7 @@ subNavActive: "/moza/contactvoorkeuren/"
 					${icons.info}
 					<div>
 						<p>We sturen een verificatiecode naar <b>${newEmail}</b> om uw e-mailadres te bevestigen.</p>
-						<p class="text-muted" id="verify-resend-status">Geen e-mail ontvangen? U kunt over <b id="verify-resend-countdown">60</b> seconden een nieuwe code aanvragen.</p>
+						<p class="text-muted" id="verify-resend-status">Geen e-mail ontvangen? U kunt over <b id="verify-resend-countdown">10</b> seconden een nieuwe code aanvragen.</p>
 						<p class="text-muted" id="verify-spam-hint" hidden>Geen e-mail ontvangen? Controleer uw spam-folder, of <button type="button" class="link-button" id="verify-resend" hidden>vraag een nieuwe code aan</button>.</p>
 						<p class="text-muted" id="verify-typo-hint">Klopt het adres niet? <button type="button" class="link-button" id="verify-change-email">Annuleer en wijzig het e-mailadres</button>.</p>
 					</div>
@@ -237,7 +237,7 @@ subNavActive: "/moza/contactvoorkeuren/"
 		const resendCountdown = document.getElementById("verify-resend-countdown");
 		const spamHint = document.getElementById("verify-spam-hint");
 
-		let resendSeconds = 60;
+		let resendSeconds = 10;
 		const resendTimer = setInterval(() => {
 			resendSeconds -= 1;
 			if (resendSeconds > 0) {
