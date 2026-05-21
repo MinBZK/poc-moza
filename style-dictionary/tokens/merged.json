@@ -865,7 +865,7 @@
       "disabled": {
         "background": {
           "$type": "color",
-          "$value": "{color.grijs.300}",
+          "$value": "{color.grijs.200}",
           "$description": "Inactief element"
         },
         "border": {
