@@ -52,6 +52,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("assets");
     eleventyConfig.addPassthroughCopy("style");
     eleventyConfig.addPassthroughCopy("moza/ondernemersplein/*.png");
+    eleventyConfig.addPassthroughCopy("mailbox");
 
     return {
         pathPrefix: "/",
